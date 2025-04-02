@@ -17,9 +17,11 @@ import gregtech.api.unification.material.Materials;
 import gregtech.api.util.LocalizationUtils;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
+import gregtech.common.ConfigHolder;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -31,6 +33,8 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import gregtech.common.blocks.wood.BlockGregPlanks;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -40,6 +44,8 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static gregtech.api.unification.material.Materials.Water;
+import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
+import static gregtech.client.renderer.texture.Textures.SOLID_STEEL_CASING;
 
 public class MetaTileEntityPrimitiveWaterPump extends MultiblockControllerBase implements IPrimitivePump {
     private IFluidTank waterTank;
@@ -75,7 +81,7 @@ public class MetaTileEntityPrimitiveWaterPump extends MultiblockControllerBase i
             Biome biome = this.getWorld().getBiome(this.getPos());
             Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(biome);
             if (biomeTypes.contains(BiomeDictionary.Type.NETHER)) {
-                return -1;
+                return 0;
             } else if (biomeTypes.contains(BiomeDictionary.Type.WATER)) {
                 return 1000;
             } else if (!biomeTypes.contains(BiomeDictionary.Type.SWAMP) && !biomeTypes.contains(BiomeDictionary.Type.WET)) {
@@ -96,7 +102,7 @@ public class MetaTileEntityPrimitiveWaterPump extends MultiblockControllerBase i
                 return 800;
             }
         } else {
-            return -1;
+            return 0;
         }
     }
 
@@ -153,17 +159,23 @@ public class MetaTileEntityPrimitiveWaterPump extends MultiblockControllerBase i
                 .where('S', selfPredicate())
                 .where('A', frames(Materials.TreatedWood))
                 .where('B', states(MetaBlocks.PLANKS.getState(BlockGregPlanks.BlockType.TREATED_PLANK)))
-                .where('C', states(MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS))
-                        .or(metaTileEntities(MetaTileEntities.FLUID_EXPORT_HATCH[0], MetaTileEntities.FLUID_EXPORT_HATCH[1], MetaTileEntities.PUMP_OUTPUT_HATCH).setExactLimit(1)))
+                .where('C', states(getCasingState())
+                        .or(metaTileEntities(MetaTileEntities.FLUID_EXPORT_HATCH[0], MetaTileEntities.FLUID_EXPORT_HATCH[1]).setExactLimit(1)))
                 .where(' ', any())
                 .build();
     }
 
-    @Override
-    public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
-        return Textures.STEAM_CASING_BRONZE;
+    public IBlockState getCasingState() {
+        return ConfigHolder.machines.steelSteamMultiblocks ?
+                MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID) :
+                MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
     }
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
+        return ConfigHolder.machines.steelSteamMultiblocks ? SOLID_STEEL_CASING : BRONZE_PLATED_BRICKS;
+    }
     @Nonnull
     @Override
     protected ICubeRenderer getFrontOverlay() {

@@ -25,14 +25,27 @@ gtsteam.machine.steam_extractor.name=大型蒸汽提取机
 gtsteam.machine.steam_compressor.name=大型蒸汽压缩机
 gtsteam.machine.steam_blast_furnace.name=大型蒸汽高炉
 
-gtsteam.machine.ak.tooltip.1=消耗岩浆提升热量，温度达到一定范围开始工作。
-gtsteam.machine.ak.tooltip.2=温度越高，机器效率越高。
-gtsteam.machine.ak.tooltip.3=不工作时温度会降低至室温.
-
+#工业焦炉
 gtsteam.machine.alloy_klin.name=合金窑
-gtsteam.multiblock.ak.temp=温度：%sK(最高温度 %s K)
-gtsteam.multiblock.ak.level=效率提升：%s
-gtsteam.multiblock.ak.amount=岩浆储量：%s
+gtsteam.machine.alloy_klin_import_hatch.name=合金窑输入仓
+gtsteam.machine.alloy_klin_export_hatch.name=合金窑输出仓
 
+#工业土高炉
+gtsteam.machine.industrial_primitive_blast_furnace.name=工业级土高炉
+gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace=附属高炉： %s 座
+
+gtsteam.multiblock.ip1.amount=风量：%sL(风量上限 %s L)
+gtsteam.multiblock.ip2.amount=温度：%sK(最高温度 %s K)
+gtsteam.multiblock.ip3.amount=耗时减免-工作时间缩短%s倍。
+gtsteam.multiblock.ip.threshold_decrement=§c降低一单位风量 /n§7升温速度降低一倍。
+gtsteam.multiblock.ip.threshold_increment=§a增加一单位风量 /n§7升温速度增加一倍。
+
+gtsteam.machine.industrial_primitive_blast_furnace.tooltip.1=可拓展两个附属高炉，附属高炉数量决定进风量上限。
+gtsteam.machine.industrial_primitive_blast_furnace.tooltip.2=调节风量节流阀可以控制升温速率,机器工作时会增加温度，
+gtsteam.machine.industrial_primitive_blast_furnace.tooltip.3=当机器不工作时温度会缓缓降低,降温速度由当前温度决定（降温曲线）。
+gtsteam.machine.industrial_primitive_blast_furnace.tooltip.4=温度区间决定定总耗时减免，上升每500会增加对应指数倍的耗时减免。
+gtsteam.machine.industrial_primitive_blast_furnace.tooltip.5=全部升级完毕后最高十倍耗时减免。
+
+#大型原始水泵
 gtsteam.machine.primitive_water_pump.name=大型原始水泵
 gregtech.multiblock.water_pump.description=大型原始水泵是一台蒸汽时代的多方块机器。当它的控制器方块处于河流生物群系，且高度介于 Y = 64 与 Y = 80（含）之间时将每秒收集一次100mb的水。它可以使用 ULV、LV 输出仓或水泵输出仓。

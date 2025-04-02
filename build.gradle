@@ -52,16 +52,13 @@ tasks.decompressDecompiledSources.enabled !propertyBool('change_minecraft_source
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(propertyBool('use_modern_java_syntax') ? 16 : 8))
+        languageVersion.set(JavaLanguageVersion.of(8))
         // Azul covers the most platforms for Java 8 toolchains, crucially including MacOS arm64
-        vendor.set(JvmVendorSpec.AZUL)
+        vendor.set(org.gradle.jvm.toolchain.JvmVendorSpec.AZUL)
     }
-    if (propertyBool('generate_sources_jar')) {
-        withSourcesJar()
-    }
-    if (propertyBool('generate_javadocs_jar')) {
-        withJavadocJar()
-    }
+    // Generate sources and javadocs jars when building and publishing
+    withSourcesJar()
+    // withJavadocJar()
 }
 
 configurations {
@@ -147,10 +144,10 @@ dependencies {
 
 
     implementation rfg.deobf("curse.maven:code-chicken-lib-1-8-242818:2779848")
-    implementation rfg.deobf(files("libs/gregtech-1.12.2-2.8.10-beta.jar"))
+    implementation rfg.deobf(files("libs/gregtech-1.12.2-2.9.0-MeowmelMuku.jar"))
     implementation rfg.deobf(files("libs/!mixinbooter-8.9.jar"))
-    implementation rfg.deobf(files("libs/groovyscript-1.1.1.jar"))
-    implementation rfg.deobf(files("libs/modularui-2.4.3.jar"))
+    api("com.cleanroommc:groovyscript:1.2.0-hotfix1") { transitive = false }
+    api("com.cleanroommc:modularui:2.5.0-rc4") { transitive = false }
 
 }
 

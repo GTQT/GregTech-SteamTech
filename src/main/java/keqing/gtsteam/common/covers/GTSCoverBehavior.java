@@ -11,6 +11,8 @@ import keqing.gtsteam.GTSteam;
 import keqing.gtsteam.common.item.GTSMetaitems;
 import net.minecraft.util.ResourceLocation;
 
+import static gregtech.common.covers.CoverBehaviors.registerCover;
+
 public class GTSCoverBehavior {
 
     public static void init() {
@@ -29,7 +31,7 @@ public class GTSCoverBehavior {
     public static void registerBehavior(ResourceLocation coverId,
                                         MetaItem.MetaValueItem placerItem,
                                         CoverDefinition.CoverCreator behaviorCreator) {
-        CoverDefinition coverDefinition = gregtech.common.covers.CoverBehaviors.registerCover(coverId, placerItem.getStackForm(), behaviorCreator);
+        CoverDefinition coverDefinition = registerCover(coverId, placerItem.getStackForm(), behaviorCreator);
         placerItem.addComponents(new CoverItemBehavior(coverDefinition));
     }
 }

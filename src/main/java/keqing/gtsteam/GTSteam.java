@@ -1,6 +1,9 @@
 package keqing.gtsteam;
 
+import gregtech.api.GregTechAPI;
+import gregtech.api.metatileentity.registry.MTEManager;
 import gregtech.common.ConfigHolder;
+import gregtech.datafix.migration.lib.MTERegistriesMigrator;
 import keqing.gtsteam.client.ClientProxy;
 import keqing.gtsteam.common.CommonProxy;
 import keqing.gtsteam.common.item.GTSMetaitems;
@@ -9,6 +12,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod(
         modid = "gtsteam",
@@ -33,11 +37,14 @@ public class GTSteam {
     )
     public static CommonProxy proxy;
     public static ClientProxy cproxy;
+
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        GTSMetaitems.initialization();
         GTSteamMetaTileEntities.initialization();
+        GTSMetaitems.initialization();
+
     }
     @Mod.EventHandler
     public void init(FMLInitializationEvent event)

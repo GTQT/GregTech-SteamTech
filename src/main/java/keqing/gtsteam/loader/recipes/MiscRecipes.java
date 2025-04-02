@@ -9,6 +9,8 @@ import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import keqing.gtsteam.api.recipes.GTSRecipeMaps;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 
 import static gregtech.api.unification.material.MarkerMaterials.Tier.LV;
 import static gregtech.api.unification.material.Materials.*;
@@ -32,6 +34,39 @@ public class MiscRecipes {
     }
 
     private static void MachineRecipes() {
+        //合金窑
+        ModHandler.addShapedRecipe(true, "alloy_kiln", ALLOY_KILN.getStackForm(),
+                "PIP", "IwI", "PIP",
+                'P', MetaBlocks.METAL_CASING.getItemVariant(BlockMetalCasing.MetalCasingType.PRIMITIVE_BRICKS),
+                'I', new UnificationEntry(OrePrefix.plate, Iron));
+
+        ModHandler.addShapedRecipe(true, "alloy_kiln_import_hatch", ALLOY_KILN_IMPORT_HATCH.getStackForm(),
+                "wh", "CB",
+                'C', Blocks.CHEST,
+                'B', MetaBlocks.METAL_CASING.getItemVariant(BlockMetalCasing.MetalCasingType.PRIMITIVE_BRICKS));
+
+        ModHandler.addShapedRecipe(true, "alloy_kiln_export_hatch", ALLOY_KILN_EXPORT_HATCH.getStackForm(),
+                "hw", "CB",
+                'C', Blocks.CHEST,
+                'B', MetaBlocks.METAL_CASING.getItemVariant(BlockMetalCasing.MetalCasingType.PRIMITIVE_BRICKS));
+
+        //工业土高炉
+        ModHandler.addShapedRecipe(true, "industrial_primitive_blast_furnace",
+                INDUSTRIAL_PRIMITIVE_BLAST_FURNACE.getStackForm(),
+                "PPP", "CFC", "BBB",
+                'C', new UnificationEntry(circuit, LV),
+                'P', new UnificationEntry(plate, Steel),
+                'F', new UnificationEntry(frameGt, Steel),
+                'B', PRIMITIVE_BLAST_FURNACE.getStackForm());
+
+        //大型原始水泵
+        ModHandler.addShapedRecipe(true, "large_primitive_water_pump", WATER_PUMP.getStackForm(),
+                "PPP", "CFC", "BBB",
+                'C', new UnificationEntry(circuit, LV),
+                'P', new UnificationEntry(plate, Steel),
+                'F', new UnificationEntry(frameGt, Steel),
+                'B', PRIMITIVE_WATER_PUMP.getStackForm());
+
         ModHandler.addShapedRecipe(true, "steam_compressor", STEAM_COMPRESSOR.getStackForm(),
                 "GGG", "CFC", "PPP",
                 'G', ELECTRIC_PISTON_ULV,
@@ -82,10 +117,7 @@ public class MiscRecipes {
                 'P',  new UnificationEntry(circuit, LV),
                 'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
 
-        ModHandler.addShapedRecipe(true, "alloy_kiln", ALLOY_KILN.getStackForm(),
-                "PIP", "IwI", "PIP",
-                'P', MetaBlocks.METAL_CASING.getItemVariant(BlockMetalCasing.MetalCasingType.PRIMITIVE_BRICKS),
-                'I', new UnificationEntry(OrePrefix.plate, Potin));
+
 
         ModHandler.addShapedRecipe(true, "bronze_multiblock_tank", BRONZE_TANK.getStackForm(), " R ",
                 "hCw", " R ", 'R', new UnificationEntry(OrePrefix.ring, Tin), 'C',
@@ -96,12 +128,7 @@ public class MiscRecipes {
                 new UnificationEntry(OrePrefix.ring, Bronze), 'C',
                 MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
 
-        //  Large Primitive Blast Furnace
-        ModHandler.addShapedRecipe(true, "large_primitive_water_pump", WATER_PUMP.getStackForm(),
-                "PMP", "MFM", "PMP",
-                'P', new UnificationEntry(plate, Potin),
-                'F', new UnificationEntry(frameGt, Steel),
-                'M', PRIMITIVE_WATER_PUMP.getStackForm());
+
 
         //  ULV
         ModHandler.addShapedRecipe(true, "electric_motor.ulv", ELECTRIC_MOTOR_ULV.getStackForm(),

@@ -7,7 +7,6 @@ public class GTSMetaitem extends StandardMetaItem {
 
     public GTSMetaitem() {
         this.setRegistryName("gts_meta_item_1");
-        setCreativeTab(GregTechAPI.TAB_GREGTECH);
     }
 
 

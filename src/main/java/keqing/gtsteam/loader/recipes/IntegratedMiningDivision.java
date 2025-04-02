@@ -31,12 +31,15 @@ public class IntegratedMiningDivision {
                 if (material.hasProperty(PropertyKey.ORE)) {
                     addIntegratedMiningRecipe10(material, 1)
                             .EUt(16).duration(160)
+                            .fluidInputs(Water.getFluid(100))
                             .buildAndRegister();
                     addIntegratedMiningRecipe11(material, 1)
                             .EUt(16).duration(160)
+                            .fluidInputs(Water.getFluid(100))
                             .buildAndRegister();
                     addIntegratedMiningRecipe12(material, 1)
                             .EUt(16).duration(160)
+                            .fluidInputs(Water.getFluid(100))
                             .buildAndRegister();
                 }
             }
