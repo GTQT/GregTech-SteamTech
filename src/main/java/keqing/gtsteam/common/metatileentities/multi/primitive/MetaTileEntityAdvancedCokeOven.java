@@ -42,7 +42,7 @@ public class MetaTileEntityAdvancedCokeOven extends RecipeMapPrimitiveMultiblock
 
     public MetaTileEntityAdvancedCokeOven(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.COKE_OVEN_RECIPES);
-        this.recipeMapWorkable = new AdvancedCokeOveLogic(this, RecipeMaps.PRIMITIVE_BLAST_FURNACE_RECIPES);
+        this.recipeMapWorkable = new AdvancedCokeOveLogic(this, RecipeMaps.COKE_OVEN_RECIPES);
     }
 
     protected static class AdvancedCokeOveLogic extends PrimitiveRecipeLogic {
