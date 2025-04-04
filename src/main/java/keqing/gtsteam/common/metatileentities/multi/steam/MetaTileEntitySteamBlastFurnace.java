@@ -47,7 +47,7 @@ import static gregtech.client.renderer.texture.Textures.SOLID_STEEL_CASING;
 
 public class MetaTileEntitySteamBlastFurnace extends RecipeMapSteamMultiblockController {
 
-    private static final int PARALLEL_LIMIT = 4;
+    private static final int PARALLEL_LIMIT = 8;
 
     public MetaTileEntitySteamBlastFurnace(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GTSRecipeMaps.STEAM_BLAST_FURNACE_RECIPES, CONVERSION_RATE);
@@ -92,7 +92,9 @@ public class MetaTileEntitySteamBlastFurnace extends RecipeMapSteamMultiblockCon
                 MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
     }
     public IBlockState getCasingState1() {
-        return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
+        return ConfigHolder.machines.steelSteamMultiblocks ?
+                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX):
+                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
     }
 
     @SideOnly(Side.CLIENT)

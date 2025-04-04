@@ -10,6 +10,6 @@ public class GTSRecipeManger {
         AlloyKlinRecipes.init();
         IntegratedMiningDivision.init();
         MiscRecipes.init();
-
+        BiomimeticFactoryRecipes.init();
     }
 }

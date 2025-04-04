@@ -1,7 +1,5 @@
 package keqing.gtsteam.common.metatileentities.multi.steam;
 
-import com.cleanroommc.modularui.factory.PosGuiData;
-import com.cleanroommc.modularui.screen.ModularPanel;
 import gregtech.api.capability.impl.SteamMultiWorkable;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
@@ -14,6 +12,7 @@ import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.client.utils.TooltipHelper;
 import gregtech.common.ConfigHolder;
+import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import net.minecraft.block.state.IBlockState;
@@ -48,14 +47,21 @@ public class MetaTileEntitySteamCentrifuge extends RecipeMapSteamMultiblockContr
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
                 .aisle(" XXX ", " XXX ", "  X  ", "     ")
-                .aisle("XXXXX", "XX XX", "     ", "  X  ")
+                .aisle("XXXXX", "XT TX", "     ", "  X  ")
                 .aisle("XXXXX", "X X X", "X X X", " XXX ")
-                .aisle("XXXXX", "XX XX", "     ", "  X  ")
+                .aisle("XXXXX", "XT TX", "     ", "  X  ")
                 .aisle(" XXX ", " XSX ", "  X  ", "     ")
                 .where('S', selfPredicate())
                 .where('X', states(getCasingState()).setMinGlobalLimited(43).or(autoAbilities()))
+                .where('T', states(getBoilerState()))
                 .where(' ', any())
                 .build();
+    }
+
+    private IBlockState getBoilerState() {
+        return ConfigHolder.machines.steelSteamMultiblocks ?
+                MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE) :
+                MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.BRONZE_PIPE);
     }
 
     public IBlockState getCasingState() {

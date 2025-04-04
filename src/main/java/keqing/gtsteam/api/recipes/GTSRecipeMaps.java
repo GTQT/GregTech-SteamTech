@@ -12,11 +12,20 @@ import gregtech.core.sound.GTSoundEvents;
 
 public class GTSRecipeMaps {
     public static final RecipeMap<SimpleRecipeBuilder> STEAM_BLAST_FURNACE_RECIPES;
+    public static final RecipeMap<SimpleRecipeBuilder> BIOMIMETIC_FACTORY_RECIPES;
     public static final RecipeMap<SimpleRecipeBuilder> STEAM_ORE_WASHER_RECIPES;
     public static final RecipeMap<PrimitiveRecipeBuilder> ALLOY_kILN;
 
     private GTSRecipeMaps() {}
     static {
+        BIOMIMETIC_FACTORY_RECIPES = new RecipeMapBuilder<>("biomimetic_factory_recipes",
+                new SimpleRecipeBuilder())
+                .itemInputs(1)
+                .itemOutputs(16)
+                .fluidInputs(0)
+                .fluidOutputs(0)
+                .sound(GTSoundEvents.ARC)
+                .build();
 
         STEAM_BLAST_FURNACE_RECIPES = new RecipeMapBuilder<>("steam_blast_furnace",
                 new SimpleRecipeBuilder())

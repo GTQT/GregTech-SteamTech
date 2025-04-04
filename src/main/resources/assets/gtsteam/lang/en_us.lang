@@ -1,6 +1,7 @@
 recipemap.alloy_klin.name=Alloy Kiln
 recipemap.steam_ore_washer.name=Steam Ore Washer
 recipemap.steam_blast_furnace.name=Large Steam Blast Furnace
+recipemap.biomimetic_factory_recipes.name=Matter Simulacrum
 
 metaitem.cover.electric_motor.ulv.name=Electric Motor (ULV)
 metaitem.cover.electric_piston.ulv.name=Electric Piston (ULV)
@@ -14,9 +15,6 @@ metaitem.cover.emitter.ulv.name=Emitter (ULV)
 metaitem.cover.sensor.ulv.name=Sensor (ULV)
 metaitem.cover.field_generator.ulv.name=Field Generator (ULV)
 
-gtsteam.machine.tank_valve.bronze.name=Bronze Tank Value
-gregtech.machine.tank.bronze.name=Bronze Tank
-
 gtsteam.machine.steam_ore_washer.name=Steam Ore Washer
 gtsteam.machine.steam_hammer.name=Steam Forge Hammer
 gtsteam.machine.steam_centrifuge.name=Steam Centrifuge
@@ -24,6 +22,9 @@ gtsteam.machine.steam_mixer.name=Steam Mixer
 gtsteam.machine.steam_extractor.name=Large Steam Extractor
 gtsteam.machine.steam_compressor.name=Large Steam Compressor
 gtsteam.machine.steam_blast_furnace.name=Large Blast Furnace
+gtsteam.machine.steam_sifter.name=Steam Sifter
+gtsteam.machine.steam_bender.name=Steam Bender
+gtsteam.machine.steam_wire_mill.name=Steam Wire Mill
 
 gtsteam.machine.ak.tooltip.1=Consumes lava to increase heat, starting to work once a certain temperature range is reached.
 gtsteam.machine.ak.tooltip.2=The higher the temperature, the higher the machine's efficiency.
@@ -36,3 +37,11 @@ gtsteam.multiblock.ak.amount=Lava Reserve: %s
 
 gtsteam.machine.primitive_water_pump.name=Large Primitive Water Pump
 gregtech.multiblock.water_pump.description=The Large Primitive Water Pump is a multiblock machine from the steam age. It collects 100mb of water per second when its controller block is in a river biome and at a height between Y = 64 and Y = 80 (inclusive). It can use ULV, LV output hatches, or water pump output hatches.
+
+gtsteam.machine.steam_fermentation_vat.name=Steam Fermentation Vat
+gtsteam.machine.advanced_coke_oven.name=Advanced Coke Oven
+gtsteam.machine.steam_transcendent_plasma_forge.name=Extradimensional steam forge
+gtsteam.machine.steam_biomimetic_factory.name=The Eye of Martial Virtue
+
+gtsteam.machine.tank_valve.bronze.name=Bronze tank valves
+gtsteam.machine.tank.bronze.name=Bronze multi-block storage tank

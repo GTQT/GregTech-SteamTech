@@ -1,6 +1,7 @@
 recipemap.alloy_klin.name=合金窑
 recipemap.steam_ore_washer.name=蒸汽洗矿厂
 recipemap.steam_blast_furnace.name=大型蒸汽高炉
+recipemap.biomimetic_factory_recipes.name=物质拟生
 
 metaitem.cover.electric_motor.ulv.name=电动马达（ULV）
 metaitem.cover.electric_piston.ulv.name=电力活塞（ULV）
@@ -14,9 +15,6 @@ metaitem.cover.emitter.ulv.name=发射器（ULV）
 metaitem.cover.sensor.ulv.name=传感器（ULV）
 metaitem.cover.field_generator.ulv.name=力场发生器（ULV）
 
-gtsteam.machine.tank_valve.bronze.name=青铜储罐阀门
-gregtech.machine.tank.bronze.name=青铜多方块储罐
-
 gtsteam.machine.steam_ore_washer.name=蒸汽洗矿厂
 gtsteam.machine.steam_hammer.name=蒸汽锻造锤
 gtsteam.machine.steam_centrifuge.name=蒸汽离心机
@@ -24,6 +22,9 @@ gtsteam.machine.steam_mixer.name=蒸汽搅拌机
 gtsteam.machine.steam_extractor.name=大型蒸汽提取机
 gtsteam.machine.steam_compressor.name=大型蒸汽压缩机
 gtsteam.machine.steam_blast_furnace.name=大型蒸汽高炉
+gtsteam.machine.steam_sifter.name=蒸汽筛选机
+gtsteam.machine.steam_bender.name=蒸汽卷板机
+gtsteam.machine.steam_wire_mill.name=蒸汽线材轧机
 
 #工业焦炉
 gtsteam.machine.alloy_klin.name=合金窑
@@ -49,3 +50,11 @@ gtsteam.machine.industrial_primitive_blast_furnace.tooltip.5=全部升级完毕�
 #大型原始水泵
 gtsteam.machine.primitive_water_pump.name=大型原始水泵
 gregtech.multiblock.water_pump.description=大型原始水泵是一台蒸汽时代的多方块机器。当它的控制器方块处于河流生物群系，且高度介于 Y = 64 与 Y = 80（含）之间时将每秒收集一次100mb的水。它可以使用 ULV、LV 输出仓或水泵输出仓。
+
+gtsteam.machine.steam_fermentation_vat.name=蒸汽发酵池
+gtsteam.machine.advanced_coke_oven.name=高级焦炉
+gtsteam.machine.steam_transcendent_plasma_forge.name=超维度蒸汽锻炉
+gtsteam.machine.steam_biomimetic_factory.name=武德之眼
+
+gtsteam.machine.tank_valve.bronze.name=青铜储罐阀门
+gtsteam.machine.tank.bronze.name=青铜多方块储罐

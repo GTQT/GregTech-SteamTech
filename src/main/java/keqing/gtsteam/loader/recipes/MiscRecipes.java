@@ -59,6 +59,15 @@ public class MiscRecipes {
                 'F', new UnificationEntry(frameGt, Steel),
                 'B', PRIMITIVE_BLAST_FURNACE.getStackForm());
 
+        //高级焦炉
+        ModHandler.addShapedRecipe(true, "advanced_coke_oven",
+                ADVANCED_COKE_OVEN.getStackForm(),
+                "PPP", "CFC", "BBB",
+                'C', new UnificationEntry(circuit, LV),
+                'P', new UnificationEntry(plate, Steel),
+                'F', new UnificationEntry(frameGt, Steel),
+                'B', COKE_OVEN.getStackForm());
+
         //大型原始水泵
         ModHandler.addShapedRecipe(true, "large_primitive_water_pump", WATER_PUMP.getStackForm(),
                 "PPP", "CFC", "BBB",
@@ -109,6 +118,34 @@ public class MiscRecipes {
                 'F', STEAM_MACERATOR_BRONZE.getStackForm(),
                 'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
 
+        ModHandler.addShapedRecipe(true, "steam_sifter", STEAM_SIFTER.getStackForm(),
+                "GGG", "CFC", "PPP",
+                'G', ELECTRIC_PISTON_ULV,
+                'P', ELECTRIC_MOTOR_ULV,
+                'F', STEAM_MACERATOR_BRONZE.getStackForm(),
+                'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
+
+        ModHandler.addShapedRecipe(true, "steam_bender", STEAM_BENDER.getStackForm(),
+                "GGG", "CFC", "PPP",
+                'G', ELECTRIC_PISTON_ULV,
+                'P', ELECTRIC_MOTOR_ULV,
+                'F', STEAM_HAMMER_BRONZE.getStackForm(),
+                'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
+
+        ModHandler.addShapedRecipe(true, "steam_wire_mill", STEAM_WIRE_MILL.getStackForm(),
+                "GGG", "CFC", "PPP",
+                'G', ELECTRIC_PISTON_ULV,
+                'P', ELECTRIC_MOTOR_ULV,
+                'F', STEAM_COMPRESSOR_BRONZE.getStackForm(),
+                'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
+
+        ModHandler.addShapedRecipe(true, "steam_fermentation_vat", STEAM_FERMENTATION_VAT.getStackForm(),
+                "GGG", "CFC", "PPP",
+                'G', ELECTRIC_MOTOR_ULV,
+                'P', ELECTRIC_PUMP_ULV,
+                'F', STEAM_MIXER.getStackForm(),
+                'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
+
         ModHandler.addShapedRecipe(true, "steam_blast_furance", STEAM_BLAST_FURNACE.getStackForm(),
                 "GGG", "CFC", "PPP",
                 'G', CONVEYOR_MODULE_ULV,
@@ -117,18 +154,14 @@ public class MiscRecipes {
                 'P',  new UnificationEntry(circuit, LV),
                 'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
 
-
-
         ModHandler.addShapedRecipe(true, "bronze_multiblock_tank", BRONZE_TANK.getStackForm(), " R ",
-                "hCw", " R ", 'R', new UnificationEntry(OrePrefix.ring, Tin), 'C',
+                "hCw", " R ", 'R', new UnificationEntry(OrePrefix.ring, Materials.Bronze), 'C',
                 MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
 
         ModHandler.addShapedRecipe(true, "bronze_tank_valve", BRONZE_TANK_VALVE.getStackForm(), " R ",
-                "hCw", " O ", 'O', new UnificationEntry(OrePrefix.rotor, Materials.Tin), 'R',
-                new UnificationEntry(OrePrefix.ring, Bronze), 'C',
+                "hCw", " O ", 'O', new UnificationEntry(OrePrefix.rotor, Materials.Bronze), 'R',
+                new UnificationEntry(OrePrefix.ring, Materials.Bronze), 'C',
                 MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
-
-
 
         //  ULV
         ModHandler.addShapedRecipe(true, "electric_motor.ulv", ELECTRIC_MOTOR_ULV.getStackForm(),

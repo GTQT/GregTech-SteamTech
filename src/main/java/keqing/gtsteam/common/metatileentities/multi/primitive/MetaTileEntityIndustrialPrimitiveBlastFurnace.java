@@ -1,4 +1,4 @@
-package keqing.gtsteam.common.metatileentities.multi;
+package keqing.gtsteam.common.metatileentities.multi.primitive;
 
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;

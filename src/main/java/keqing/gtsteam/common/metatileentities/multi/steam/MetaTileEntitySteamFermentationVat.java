@@ -25,28 +25,7 @@ public class MetaTileEntitySteamFermentationVat extends RecipeMapMultiblockContr
         super(metaTileEntityId, RecipeMaps.FERMENTING_RECIPES);
         this.recipeMapWorkable = new SteamFermentationVatWorkableHandler(this);
     }
-    protected class SteamFermentationVatWorkableHandler extends MultiblockRecipeLogic {
 
-        public boolean checkRecipe( Recipe recipe) {
-            return true;
-        }
-
-        public SteamFermentationVatWorkableHandler(RecipeMapMultiblockController tileEntity) {
-            super(tileEntity);
-        }
-        public long getMaxVoltage() {
-            return 30;
-        }
-        @Override
-        public int getParallelLimit() {
-            return 8;
-        }
-        @Override
-        public void setMaxProgress(int maxProgress)
-        {
-            this.maxProgressTime = maxProgress*4;
-        }
-    }
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity iGregTechTileEntity) {
         return new MetaTileEntitySteamFermentationVat(metaTileEntityId);
@@ -88,5 +67,30 @@ public class MetaTileEntitySteamFermentationVat extends RecipeMapMultiblockContr
 
     public boolean hasMufflerMechanics() {
         return true;
+    }
+
+    protected static class SteamFermentationVatWorkableHandler extends MultiblockRecipeLogic {
+
+        public SteamFermentationVatWorkableHandler(RecipeMapMultiblockController tileEntity) {
+            super(tileEntity);
+        }
+
+        public boolean checkRecipe(Recipe recipe) {
+            return true;
+        }
+
+        public long getMaxVoltage() {
+            return 30;
+        }
+
+        @Override
+        public int getParallelLimit() {
+            return 8;
+        }
+
+        @Override
+        public void setMaxProgress(int maxProgress) {
+            this.maxProgressTime = maxProgress * 4;
+        }
     }
 }
