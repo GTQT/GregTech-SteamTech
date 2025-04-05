@@ -45,3 +45,65 @@ gtsteam.machine.steam_biomimetic_factory.name=The Eye of Martial Virtue
 
 gtsteam.machine.tank_valve.bronze.name=Bronze tank valves
 gtsteam.machine.tank.bronze.name=Bronze multi-block storage tank
+
+# Machine Names and Tooltips
+gtsteam.machine.electric_furnace.ulv.name=Simple Electric Furnace
+gtsteam.machine.electric_furnace.ulv.tooltip=A Simple electric furnace for smelting items.
+
+gtsteam.machine.macerator.ulv.name=Simple Macerator
+gtsteam.machine.macerator.ulv.tooltip=A Simple macerator for crushing ores.
+
+gtsteam.machine.alloy_smelter.ulv.name=Simple Alloy Smelter
+gtsteam.machine.alloy_smelter.ulv.tooltip=A Simple alloy smelter for melting alloys.
+
+gtsteam.machine.bender.ulv.name=Simple Bender
+gtsteam.machine.bender.ulv.tooltip=A Simple bender for bending metals.
+
+gtsteam.machine.brewery.ulv.name=Simple Brewery
+gtsteam.machine.brewery.ulv.tooltip=A Simple brewery for brewing items.
+
+gtsteam.machine.centrifuge.ulv.name=Simple Centrifuge
+gtsteam.machine.centrifuge.ulv.tooltip=A Simple centrifuge for separating materials.
+
+gtsteam.machine.chemical_bath.ulv.name=Simple Chemical Bath
+gtsteam.machine.chemical_bath.ulv.tooltip=A Simple chemical bath for chemical processing.
+
+gtsteam.machine.compressor.ulv.name=Simple Compressor
+gtsteam.machine.compressor.ulv.tooltip=A Simple compressor for compressing items.
+
+gtsteam.machine.cutter.ulv.name=Simple Cutter
+gtsteam.machine.cutter.ulv.tooltip=A Simple cutter for cutting materials.
+
+gtsteam.machine.extractor.ulv.name=Simple Extractor
+gtsteam.machine.extractor.ulv.tooltip=A Simple extractor for extracting liquids or materials.
+
+gtsteam.machine.fermenter.ulv.name=Simple Fermenter
+gtsteam.machine.fermenter.ulv.tooltip=A Simple fermenter for fermenting items.
+
+gtsteam.machine.forge_hammer.ulv.name=Simple Forge Hammer
+gtsteam.machine.forge_hammer.ulv.tooltip=A Simple forge hammer for forging metals.
+
+gtsteam.machine.lathe.ulv.name=Simple Lathe
+gtsteam.machine.lathe.ulv.tooltip=A Simple lathe for processing materials.
+
+gtsteam.machine.mixer.ulv.name=Simple Mixer
+gtsteam.machine.mixer.ulv.tooltip=A Simple mixer for mixing materials.
+
+gtsteam.machine.ore_washer.ulv.name=Simple Ore Washer
+gtsteam.machine.ore_washer.ulv.tooltip=A Simple ore washer for cleaning ores.
+
+gtsteam.machine.packer.ulv.name=Simple Packer
+gtsteam.machine.packer.ulv.tooltip=A Simple packer for packing items.
+
+gtsteam.machine.sifter.ulv.name=Simple Sifter
+gtsteam.machine.sifter.ulv.tooltip=A Simple sifter for sifting materials.
+
+gtsteam.machine.wiremill.ulv.name=Simple Wiremill
+gtsteam.machine.wiremill.ulv.tooltip=A Simple wiremill for producing wires.
+
+# Generator Names and Tooltips
+gtsteam.machine.steam_turbine.ulv.name=Simple Steam Turbine
+gtsteam.machine.steam_turbine.ulv.tooltip=A Simple steam turbine for generating power.
+
+gtsteam.machine.combustion_generator.ulv.name=Simple Combustion Generator
+gtsteam.machine.combustion_generator.ulv.tooltip=A Simple combustion generator for generating power.
