@@ -25,6 +25,7 @@ gtsteam.machine.steam_blast_furnace.name=大型蒸汽高炉
 gtsteam.machine.steam_sifter.name=蒸汽筛选机
 gtsteam.machine.steam_bender.name=蒸汽卷板机
 gtsteam.machine.steam_wire_mill.name=蒸汽线材轧机
+gtsteam.machine.steam_lathe.name=蒸汽车床
 
 #工业焦炉
 gtsteam.machine.alloy_klin.name=合金窑

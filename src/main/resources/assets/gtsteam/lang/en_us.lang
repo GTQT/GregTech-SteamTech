@@ -25,6 +25,7 @@ gtsteam.machine.steam_blast_furnace.name=Large Blast Furnace
 gtsteam.machine.steam_sifter.name=Steam Sifter
 gtsteam.machine.steam_bender.name=Steam Bender
 gtsteam.machine.steam_wire_mill.name=Steam Wire Mill
+gtsteam.machine.steam_lathe.name=Steam Lathe
 
 gtsteam.machine.ak.tooltip.1=Consumes lava to increase heat, starting to work once a certain temperature range is reached.
 gtsteam.machine.ak.tooltip.2=The higher the temperature, the higher the machine's efficiency.

@@ -176,6 +176,13 @@ public class MiscRecipes {
                 'F', STEAM_MACERATOR_BRONZE.getStackForm(),
                 'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
 
+        ModHandler.addShapedRecipe(true, "steam_lathe", STEAM_LATHE.getStackForm(),
+                "GPG", "CFC", "GPG",
+                'G', ELECTRIC_PISTON_ULV,
+                'P', ELECTRIC_MOTOR_ULV,
+                'F', STEAM_HAMMER_BRONZE.getStackForm(),
+                'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
+
         ModHandler.addShapedRecipe(true, "steam_bender", STEAM_BENDER.getStackForm(),
                 "GGG", "CFC", "PPP",
                 'G', ELECTRIC_PISTON_ULV,

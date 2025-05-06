@@ -42,6 +42,7 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntitySteamWireMill STEAM_WIRE_MILL;
     public static MetaTileEntitySteamBender STEAM_BENDER;
     public static MetaTileEntitySteamSifter STEAM_SIFTER;
+    public static MetaTileEntitySteamLathe STEAM_LATHE;
 
     public static MetaTileEntitySteamTranscendentPlasmaForge STEAM_TRANSCENDENT_PLASMA_FORGE;
     public static MetaTileEntitySteamBiomimeticFactory STEAM_BIOMIMETIC_FACTORY;
@@ -95,6 +96,7 @@ public class GTSteamMetaTileEntities {
         STEAM_WIRE_MILL = registerMetaTileEntity(12, new MetaTileEntitySteamWireMill(gtsId("steam_wire_mill")));
         STEAM_BENDER = registerMetaTileEntity(13, new MetaTileEntitySteamBender(gtsId("steam_bender")));
         STEAM_SIFTER = registerMetaTileEntity(14, new MetaTileEntitySteamSifter(gtsId("steam_sifter")));
+        STEAM_LATHE =  registerMetaTileEntity(15, new MetaTileEntitySteamLathe(gtsId("steam_lathe")));
 
         WATER_PUMP = registerMetaTileEntity(20, new MetaTileEntityPrimitiveWaterPump(gtsId("primitive_water_pump")));
         STEAM_FERMENTATION_VAT = registerMetaTileEntity(21, new MetaTileEntitySteamFermentationVat(gtsId("steam_fermentation_vat")));
