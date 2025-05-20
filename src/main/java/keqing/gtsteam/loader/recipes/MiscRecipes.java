@@ -12,6 +12,8 @@ import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.items.MetaItems;
 import gregtech.common.metatileentities.MetaTileEntities;
 import keqing.gtsteam.api.recipes.GTSRecipeMaps;
+import keqing.gtsteam.common.block.GTSteamMetaBlocks;
+import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing0;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
@@ -88,18 +90,18 @@ public class MiscRecipes {
         //合金窑
         ModHandler.addShapedRecipe(true, "alloy_kiln", ALLOY_KILN.getStackForm(),
                 "PIP", "IwI", "PIP",
-                'P', MetaBlocks.METAL_CASING.getItemVariant(BlockMetalCasing.MetalCasingType.PRIMITIVE_BRICKS),
+                'P', GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES),
                 'I', new UnificationEntry(OrePrefix.plate, Iron));
 
         ModHandler.addShapedRecipe(true, "alloy_kiln_import_hatch", ALLOY_KILN_IMPORT_HATCH.getStackForm(),
                 "wh", "CB",
                 'C', Blocks.CHEST,
-                'B', MetaBlocks.METAL_CASING.getItemVariant(BlockMetalCasing.MetalCasingType.PRIMITIVE_BRICKS));
+                'B', GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES));
 
         ModHandler.addShapedRecipe(true, "alloy_kiln_export_hatch", ALLOY_KILN_EXPORT_HATCH.getStackForm(),
                 "hw", "CB",
                 'C', Blocks.CHEST,
-                'B', MetaBlocks.METAL_CASING.getItemVariant(BlockMetalCasing.MetalCasingType.PRIMITIVE_BRICKS));
+                'B', GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES));
 
         //工业土高炉
         ModHandler.addShapedRecipe(true, "industrial_primitive_blast_furnace",
@@ -220,6 +222,12 @@ public class MiscRecipes {
                 "hCw", " O ", 'O', new UnificationEntry(OrePrefix.rotor, Materials.Bronze), 'R',
                 new UnificationEntry(OrePrefix.ring, Materials.Bronze), 'C',
                 MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
+
+        ModHandler.addShapedRecipe(true, "saw_mill", SAW_MILL.getStackForm(),
+                "BPB", "PCP", "BPB",
+                'C', new UnificationEntry(circuit, ULV),
+                'P', new UnificationEntry(plate, Wood),
+                'B', new UnificationEntry(frameGt, Bronze));
 
         //  ULV
         ModHandler.addShapedRecipe(true, "electric_motor.ulv", ELECTRIC_MOTOR_ULV.getStackForm(),

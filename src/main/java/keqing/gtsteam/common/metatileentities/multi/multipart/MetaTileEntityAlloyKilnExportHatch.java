@@ -15,6 +15,7 @@ import gregtech.api.util.GTTransferUtils;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.metatileentities.multi.multiblockpart.MetaTileEntityMultiblockPart;
+import keqing.gtsteam.client.textures.GTSteamTextures;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -39,7 +40,7 @@ public class MetaTileEntityAlloyKilnExportHatch extends MetaTileEntityMultiblock
 
     @Override
     public ICubeRenderer getBaseTexture() {
-        return Textures.PRIMITIVE_BRICKS;
+        return GTSteamTextures.PORCELAIN_TILES;
     }
 
     @Override

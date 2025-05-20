@@ -9,10 +9,7 @@ import gregtech.common.metatileentities.electric.MetaTileEntitySingleCombustion;
 import gregtech.common.metatileentities.electric.MetaTileEntitySingleTurbine;
 import keqing.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnExportHatch;
 import keqing.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnImportHatch;
-import keqing.gtsteam.common.metatileentities.multi.primitive.MetaTileEntityAdvancedCokeOven;
-import keqing.gtsteam.common.metatileentities.multi.primitive.MetaTileEntityAlloyKiln;
-import keqing.gtsteam.common.metatileentities.multi.primitive.MetaTileEntityIndustrialPrimitiveBlastFurnace;
-import keqing.gtsteam.common.metatileentities.multi.primitive.MetaTileEntityPrimitiveWaterPump;
+import keqing.gtsteam.common.metatileentities.multi.primitive.*;
 import keqing.gtsteam.common.metatileentities.multi.steam.*;
 import keqing.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamBiomimeticFactory;
 import keqing.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamTranscendentPlasmaForge;
@@ -43,6 +40,7 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntitySteamBender STEAM_BENDER;
     public static MetaTileEntitySteamSifter STEAM_SIFTER;
     public static MetaTileEntitySteamLathe STEAM_LATHE;
+    public static MetaTileEntitySawMill SAW_MILL;;
 
     public static MetaTileEntitySteamTranscendentPlasmaForge STEAM_TRANSCENDENT_PLASMA_FORGE;
     public static MetaTileEntitySteamBiomimeticFactory STEAM_BIOMIMETIC_FACTORY;
@@ -97,6 +95,7 @@ public class GTSteamMetaTileEntities {
         STEAM_BENDER = registerMetaTileEntity(13, new MetaTileEntitySteamBender(gtsId("steam_bender")));
         STEAM_SIFTER = registerMetaTileEntity(14, new MetaTileEntitySteamSifter(gtsId("steam_sifter")));
         STEAM_LATHE =  registerMetaTileEntity(15, new MetaTileEntitySteamLathe(gtsId("steam_lathe")));
+        SAW_MILL=  registerMetaTileEntity(16, new MetaTileEntitySawMill(gtsId("saw_mill")));
 
         WATER_PUMP = registerMetaTileEntity(20, new MetaTileEntityPrimitiveWaterPump(gtsId("primitive_water_pump")));
         STEAM_FERMENTATION_VAT = registerMetaTileEntity(21, new MetaTileEntitySteamFermentationVat(gtsId("steam_fermentation_vat")));

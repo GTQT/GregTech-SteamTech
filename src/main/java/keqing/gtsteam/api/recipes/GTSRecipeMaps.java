@@ -10,11 +10,14 @@ import gregtech.api.recipes.builders.SimpleRecipeBuilder;
 import gregtech.api.recipes.ui.impl.CokeOvenUI;
 import gregtech.core.sound.GTSoundEvents;
 
+import static gregtech.api.gui.widgets.ProgressWidget.MoveType.HORIZONTAL;
+
 public class GTSRecipeMaps {
     public static final RecipeMap<SimpleRecipeBuilder> STEAM_BLAST_FURNACE_RECIPES;
     public static final RecipeMap<SimpleRecipeBuilder> BIOMIMETIC_FACTORY_RECIPES;
     public static final RecipeMap<SimpleRecipeBuilder> STEAM_ORE_WASHER_RECIPES;
     public static final RecipeMap<PrimitiveRecipeBuilder> ALLOY_kILN;
+    public static final RecipeMap<PrimitiveRecipeBuilder> SAW_MILL;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_STEAM_TURBINE_FUELS;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_COMBUSTION_GENERATOR_FUELS;
 
@@ -76,6 +79,14 @@ public class GTSRecipeMaps {
                 .fluidInputs(1)
                 .fluidOutputs(0)
                 .sound(GTSoundEvents.FIRE)
+                .build();
+
+        SAW_MILL = new RecipeMapBuilder<>("saw_mill",
+                new PrimitiveRecipeBuilder())
+                .itemInputs(2)
+                .itemOutputs(2)
+                .progressBar(GuiTextures.PROGRESS_BAR_ARROW_MULTIPLE, HORIZONTAL)
+                .sound(GTSoundEvents.CUT)
                 .build();
     }
 }

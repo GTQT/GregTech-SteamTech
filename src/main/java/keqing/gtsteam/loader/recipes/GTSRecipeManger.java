@@ -11,5 +11,7 @@ public class GTSRecipeManger {
         IntegratedMiningDivision.init();
         MiscRecipes.init();
         BiomimeticFactoryRecipes.init();
+        SawmillChain.init();
+        CeramicChain.init();
     }
 }

@@ -1,8 +1,13 @@
+#配方
 recipemap.alloy_klin.name=合金窑
 recipemap.steam_ore_washer.name=蒸汽洗矿厂
 recipemap.steam_blast_furnace.name=大型蒸汽高炉
 recipemap.biomimetic_factory_recipes.name=物质拟生
-
+#材料
+gtsteam.material.bone_ceramic_clay=骨陶瓷粘土
+#方块
+tile.multiblock_casing.galvanized_porcelain_tiles.name=镀锌瓷瓦砖
+#物品
 metaitem.cover.electric_motor.ulv.name=电动马达（ULV）
 metaitem.cover.electric_piston.ulv.name=电力活塞（ULV）
 metaitem.cover.electric_pump.ulv.name=电动泵（ULV）
@@ -15,6 +20,11 @@ metaitem.cover.emitter.ulv.name=发射器（ULV）
 metaitem.cover.sensor.ulv.name=传感器（ULV）
 metaitem.cover.field_generator.ulv.name=力场发生器（ULV）
 
+metaitem.unburned_ceramic_tiles.name=未烧制的陶瓷瓦
+metaitem.burned_ceramic_tiles.name=已烧制的陶瓷瓦
+metaitem.galvanized_ceramic_tile.name=镀锌的陶瓷瓦
+
+#多方块
 gtsteam.machine.steam_ore_washer.name=蒸汽洗矿厂
 gtsteam.machine.steam_hammer.name=蒸汽锻造锤
 gtsteam.machine.steam_centrifuge.name=蒸汽离心机

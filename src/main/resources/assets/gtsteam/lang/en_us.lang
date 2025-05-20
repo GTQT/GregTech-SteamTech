@@ -1,8 +1,13 @@
+#配方
 recipemap.alloy_klin.name=Alloy Kiln
 recipemap.steam_ore_washer.name=Steam Ore Washer
 recipemap.steam_blast_furnace.name=Large Steam Blast Furnace
 recipemap.biomimetic_factory_recipes.name=Matter Simulacrum
-
+#材料
+gtsteam.material.bone_ceramic_clay=Bone Ceramic Clay
+#方块
+tile.multiblock_casing.galvanized_porcelain_tiles.name=Galvanized Porcelain Tiles
+#物品
 metaitem.cover.electric_motor.ulv.name=Electric Motor (ULV)
 metaitem.cover.electric_piston.ulv.name=Electric Piston (ULV)
 metaitem.cover.electric_pump.ulv.name=Electric Pump (ULV)
@@ -15,6 +20,11 @@ metaitem.cover.emitter.ulv.name=Emitter (ULV)
 metaitem.cover.sensor.ulv.name=Sensor (ULV)
 metaitem.cover.field_generator.ulv.name=Field Generator (ULV)
 
+metaitem.unburned_ceramic_tiles.name=Unfired Ceramic Tiles
+metaitem.burned_ceramic_tiles.name=Burned Ceramic Tiles
+metaitem.galvanized_ceramic_tile.name=Galvanized Ceramic Tiles
+
+#多方块
 gtsteam.machine.steam_ore_washer.name=Steam Ore Washer
 gtsteam.machine.steam_hammer.name=Steam Forge Hammer
 gtsteam.machine.steam_centrifuge.name=Steam Centrifuge

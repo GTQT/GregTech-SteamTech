@@ -13,6 +13,10 @@ public class GTSMetaitems {
     public static MetaItem<?>.MetaValueItem SENSOR_ULV;
     public static MetaItem<?>.MetaValueItem FIELD_GENERATOR_ULV;
 
+    public static MetaItem<?>.MetaValueItem UNBURNED_CERAMIC_TILES;
+    public static MetaItem<?>.MetaValueItem BURNED_CERAMIC_TILES;
+    public static MetaItem<?>.MetaValueItem GALVANIZED_CERAMIC_TILE;
+
     public static GTSMetaitem GTS_META_ITEM;
     public static void initialization() {
         GTS_META_ITEM = new GTSMetaitem();

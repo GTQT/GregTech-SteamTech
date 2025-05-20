@@ -19,6 +19,9 @@ import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import keqing.gtsteam.api.recipes.GTSRecipeMaps;
+import keqing.gtsteam.client.textures.GTSteamTextures;
+import keqing.gtsteam.common.block.GTSteamMetaBlocks;
+import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing0;
 import keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -48,7 +51,7 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
                 .aisle("XXX", "XXX", "XXX")
                 .aisle("XXX", "X&X", "XXX")
                 .aisle("XXX", "XYX", "XXX")
-                .where('X', states(MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.PRIMITIVE_BRICKS))
+                .where('X', states(GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES))
                         .or(metaTileEntities(GTSteamMetaTileEntities.ALLOY_KILN_IMPORT_HATCH).setMaxGlobalLimited(1))
                         .or(metaTileEntities(GTSteamMetaTileEntities.ALLOY_KILN_EXPORT_HATCH).setMaxGlobalLimited(1))
                 )
@@ -90,7 +93,7 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
     @SideOnly(Side.CLIENT)
     @Override
     public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
-        return Textures.PRIMITIVE_BRICKS;
+        return GTSteamTextures.PORCELAIN_TILES;
     }
 
 
