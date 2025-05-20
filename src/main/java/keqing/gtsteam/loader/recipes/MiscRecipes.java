@@ -23,10 +23,12 @@ import static gregtech.api.unification.material.MarkerMaterials.Tier.ULV;
 import static gregtech.api.unification.material.Materials.*;
 import static gregtech.api.unification.ore.OrePrefix.*;
 import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.BRONZE_BRICKS;
+import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.PRIMITIVE_BRICKS;
 import static gregtech.common.metatileentities.MetaTileEntities.*;
 
 import static keqing.gtsteam.api.recipes.GTSRecipeMaps.PRIMITIVE_COMBUSTION_GENERATOR_FUELS;
 import static keqing.gtsteam.api.recipes.GTSRecipeMaps.PRIMITIVE_STEAM_TURBINE_FUELS;
+import static keqing.gtsteam.common.block.blocks.BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES;
 import static keqing.gtsteam.common.item.GTSMetaitems.*;
 import static keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities.ALLOY_SMELTER;
 import static keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities.BENDER;
@@ -90,18 +92,25 @@ public class MiscRecipes {
         //合金窑
         ModHandler.addShapedRecipe(true, "alloy_kiln", ALLOY_KILN.getStackForm(),
                 "PIP", "IwI", "PIP",
-                'P', GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES),
+                'P', GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(GALVANIZED_PORCELAIN_TILES),
                 'I', new UnificationEntry(OrePrefix.plate, Iron));
 
         ModHandler.addShapedRecipe(true, "alloy_kiln_import_hatch", ALLOY_KILN_IMPORT_HATCH.getStackForm(),
                 "wh", "CB",
                 'C', Blocks.CHEST,
-                'B', GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES));
+                'B', GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(GALVANIZED_PORCELAIN_TILES));
 
         ModHandler.addShapedRecipe(true, "alloy_kiln_export_hatch", ALLOY_KILN_EXPORT_HATCH.getStackForm(),
                 "hw", "CB",
                 'C', Blocks.CHEST,
-                'B', GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES));
+                'B', GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(GALVANIZED_PORCELAIN_TILES));
+
+        ModHandler.addShapedRecipe(true, "advance_primitive_blast_furnace",
+                ADVANCE_PRIMITIVE_BLAST_FURNACE.getStackForm(), "hRS", "PBR", "dRS", 'R',
+                new UnificationEntry(OrePrefix.stick, Steel), 'S',
+                new UnificationEntry(OrePrefix.screw, Materials.Steel), 'P',
+                new UnificationEntry(OrePrefix.plate, Materials.Steel), 'B',
+                GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(GALVANIZED_PORCELAIN_TILES));
 
         //工业土高炉
         ModHandler.addShapedRecipe(true, "industrial_primitive_blast_furnace",

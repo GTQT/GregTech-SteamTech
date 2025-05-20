@@ -64,30 +64,29 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
 
     @Override
     protected ModularUI.Builder createUITemplate(EntityPlayer entityPlayer) {
-        return ModularUI.builder(GuiTextures.PRIMITIVE_BACKGROUND, 176, 166)
+        return ModularUI.builder(GuiTextures.BACKGROUND_STEAM.get(true), 176, 166)
                 .shouldColor(false)
 
                 .widget(new LabelWidget(5, 5, getMetaFullName()))
                 .widget(new SlotWidget(importItems, 0, 52, 30, true, true)
-                        .setBackgroundTexture(GuiTextures.PRIMITIVE_SLOT, GuiTextures.PRIMITIVE_FURNACE_OVERLAY))
+                        .setBackgroundTexture(GuiTextures.SLOT_STEAM.get(true)))
                 .widget(new SlotWidget(importItems, 1, 52, 48, true, true)
-                        .setBackgroundTexture(GuiTextures.PRIMITIVE_SLOT, GuiTextures.PRIMITIVE_FURNACE_OVERLAY))
+                        .setBackgroundTexture(GuiTextures.SLOT_STEAM.get(true)))
 
                 .widget(new RecipeProgressWidget(recipeMapWorkable::getProgressPercent, 76, 41, 20, 15,
-                        GuiTextures.PRIMITIVE_BLAST_FURNACE_PROGRESS_BAR, ProgressWidget.MoveType.HORIZONTAL,
+                        GuiTextures.PROGRESS_BAR_COMPRESS_STEAM.get(true), ProgressWidget.MoveType.HORIZONTAL,
                         GTSRecipeMaps.ALLOY_kILN))
 
                 .widget(new SlotWidget(exportItems, 0, 103, 30, true, false)
-                        .setBackgroundTexture(GuiTextures.PRIMITIVE_SLOT, GuiTextures.PRIMITIVE_FURNACE_OVERLAY))
+                        .setBackgroundTexture(GuiTextures.SLOT_STEAM.get(true)))
                 .widget(new SlotWidget(exportItems, 1, 103, 48, true, false)
-                        .setBackgroundTexture(GuiTextures.PRIMITIVE_SLOT, GuiTextures.PRIMITIVE_FURNACE_OVERLAY))
+                        .setBackgroundTexture(GuiTextures.SLOT_STEAM.get(true)))
 
                 .widget(new TankWidget(importFluids.getTankAt(0), 10, 22, 20, 58)
-                        .setBackgroundTexture(GuiTextures.PRIMITIVE_LARGE_FLUID_TANK)
-                        .setOverlayTexture(GuiTextures.PRIMITIVE_LARGE_FLUID_TANK_OVERLAY)
+                        .setBackgroundTexture(GuiTextures.PROGRESS_BAR_BOILER_EMPTY.get(true))
                         .setContainerClicking(true, true))
 
-                .bindPlayerInventory(entityPlayer.inventory, GuiTextures.PRIMITIVE_SLOT, 0);
+                .bindPlayerInventory(entityPlayer.inventory, GuiTextures.SLOT_STEAM.get(true), 0);
     }
 
     @SideOnly(Side.CLIENT)
