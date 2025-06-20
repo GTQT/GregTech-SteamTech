@@ -201,6 +201,10 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends RecipeMapNoEn
     }
 
     @Override
+    public boolean usesMui2() {
+        return false;
+    }
+    @Override
     protected void addDisplayText(List<ITextComponent> textList) {
         super.addDisplayText(textList);
         if (isStructureFormed()) {

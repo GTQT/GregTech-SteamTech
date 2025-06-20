@@ -114,6 +114,11 @@ public class MetaTileEntityAdvancedCokeOven extends RecipeMapPrimitiveMultiblock
     }
 
     @Override
+    public boolean usesMui2() {
+        return false;
+    }
+
+    @Override
     protected ModularUI.Builder createUITemplate(EntityPlayer entityPlayer) {
         return ModularUI.builder(GuiTextures.PRIMITIVE_BACKGROUND, 176, 166)
                 .shouldColor(false)

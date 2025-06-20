@@ -90,6 +90,11 @@ public class MetaTileEntityAdvancePrimitiveBlastFurnace extends RecipeMapPrimiti
     }
 
     @Override
+    public boolean usesMui2() {
+        return false;
+    }
+
+    @Override
     protected ModularUI.Builder createUITemplate(EntityPlayer entityPlayer) {
         return ModularUI.builder(GuiTextures.BACKGROUND_STEAM.get(true), 176, 166)
                 .shouldColor(false)

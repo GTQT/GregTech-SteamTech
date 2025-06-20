@@ -30,7 +30,8 @@ public class FirstDegreeMaterials {
                 .dust()
                 .color(0xC4C4C4)
                 .flags(DISABLE_DECOMPOSITION)
-                .build();
+                .build()
+                .setTooltips("最原始的复合陶瓷粘土");
 
     }
 }
