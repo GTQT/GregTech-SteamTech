@@ -36,15 +36,28 @@ gtsteam.machine.steam_sifter.name=Steam Sifter
 gtsteam.machine.steam_bender.name=Steam Bender
 gtsteam.machine.steam_wire_mill.name=Steam Wire Mill
 gtsteam.machine.steam_lathe.name=Steam Lathe
+gtsteam.machine.saw_mill.name=Saw Mill
+#工业焦炉
+gtsteam.machine.alloy_klin.name=Alloy Klin
+gtsteam.machine.alloy_klin_import_hatch.name=Alloy Klin Import Hatch
+gtsteam.machine.alloy_klin_export_hatch.name=Alloy Klin Export Hatch
+#土高炉
+gtsteam.machine.advance_primitive_blast_furnace.name=Advance Primitive Blast Furnace
+#工业土高炉
+gtsteam.machine.industrial_primitive_blast_furnace.name=Industrial Primitive Blast Furnace
+gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace=Attached blast furnace:%s
 
-gtsteam.machine.ak.tooltip.1=Consumes lava to increase heat, starting to work once a certain temperature range is reached.
-gtsteam.machine.ak.tooltip.2=The higher the temperature, the higher the machine's efficiency.
-gtsteam.machine.ak.tooltip.3=Temperature will drop to room temperature when not in use.
+gtsteam.multiblock.ip1.amount=Airflow: %sL (maximum airflow %sL)
+gtsteam.multiblock.ip2.amount=Temperature: %sK (maximum temperature %sK)
+gtsteam.multiblock.ip3.amount=Time-consuming reduction - working time is reduced by %s times.
+gtsteam.multiblock.ip.threshold_decrement=§cDecrease the air volume by one unit /n§7Heat up rate by two times.
+gtsteam.multiblock.ip.threshold_increment=§aIncrease the air volume by one unit /n§7The heating rate is doubled.
 
-gtsteam.machine.alloy_klin.name=Alloy Kiln
-gtsteam.multiblock.ak.temp=Temperature: %sK (Max Temperature %s K)
-gtsteam.multiblock.ak.level=Efficiency Boost: %s
-gtsteam.multiblock.ak.amount=Lava Reserve: %s
+gtsteam.machine.industrial_primitive_blast_furnace.tooltip.1=Two auxiliary blast furnaces can be expanded, and the number of auxiliary blast furnaces determines the upper limit of air intake.
+gtsteam.machine.industrial_primitive_blast_furnace.tooltip.2=Adjusting the air volume throttle valve can control the heating rate, and the temperature will increase when the machine is working,
+gtsteam.machine.industrial_primitive_blast_furnace.tooltip.3=When the machine is not working, the temperature decreases slowly, and the cooling rate is determined by the current temperature (cooling curve).
+gtsteam.machine.industrial_primitive_blast_furnace.tooltip.4=The temperature range determines the total time reduction, and every 500 increase will increase the corresponding exponential time reduction.
+gtsteam.machine.industrial_primitive_blast_furnace.tooltip.5=Up to 10 times reduction in time spent after all upgrades are completed.
 
 gtsteam.machine.primitive_water_pump.name=Large Primitive Water Pump
 gregtech.multiblock.water_pump.description=The Large Primitive Water Pump is a multiblock machine from the steam age. It collects 100mb of water per second when its controller block is in a river biome and at a height between Y = 64 and Y = 80 (inclusive). It can use ULV, LV output hatches, or water pump output hatches.

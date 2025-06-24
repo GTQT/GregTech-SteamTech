@@ -36,12 +36,13 @@ gtsteam.machine.steam_sifter.name=蒸汽筛选机
 gtsteam.machine.steam_bender.name=蒸汽卷板机
 gtsteam.machine.steam_wire_mill.name=蒸汽线材轧机
 gtsteam.machine.steam_lathe.name=蒸汽车床
-
+gtsteam.machine.saw_mill.name=锯木机
 #工业焦炉
 gtsteam.machine.alloy_klin.name=合金窑
 gtsteam.machine.alloy_klin_import_hatch.name=合金窑输入仓
 gtsteam.machine.alloy_klin_export_hatch.name=合金窑输出仓
-
+#土高炉
+gtsteam.machine.advance_primitive_blast_furnace.name=强化土高炉
 #工业土高炉
 gtsteam.machine.industrial_primitive_blast_furnace.name=工业级土高炉
 gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace=附属高炉： %s 座
