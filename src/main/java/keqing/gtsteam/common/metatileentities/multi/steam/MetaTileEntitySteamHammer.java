@@ -1,10 +1,10 @@
 package keqing.gtsteam.common.metatileentities.multi.steam;
 
 import gregtech.api.GTValues;
-import gregtech.api.capability.impl.SteamMultiWorkable;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
@@ -33,17 +33,20 @@ import java.util.List;
 
 import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
 import static gregtech.client.renderer.texture.Textures.SOLID_STEEL_CASING;
-import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.BRONZE_PIPE;
-import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.STEEL_PIPE;
 
-public class MetaTileEntitySteamHammer extends RecipeMapSteamMultiblockController{
+public class MetaTileEntitySteamHammer extends RecipeMapSteamMultiblockController {
 
     private static final int PARALLEL_LIMIT = 8;
 
     public MetaTileEntitySteamHammer(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, RecipeMaps.FORGE_HAMMER_RECIPES, CONVERSION_RATE);
-        this.recipeMapWorkable = new SteamMultiWorkable(this, CONVERSION_RATE);
+        super(metaTileEntityId, RecipeMaps.FORGE_HAMMER_RECIPES, CONVERSION_RATE, ParallelLogicType.APPEND_ITEMS);
         this.recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
+    }
+
+    private static IBlockState getFrameState() {
+        return ConfigHolder.machines.steelSteamMultiblocks ?
+                MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel) :
+                MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
     }
 
     @Override
@@ -63,11 +66,7 @@ public class MetaTileEntitySteamHammer extends RecipeMapSteamMultiblockControlle
                 .where('#', air())
                 .build();
     }
-    private static IBlockState getFrameState() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel):
-                MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
-    }
+
     public IBlockState getCasingState() {
         return ConfigHolder.machines.steelSteamMultiblocks ?
                 MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID) :
@@ -97,7 +96,7 @@ public class MetaTileEntitySteamHammer extends RecipeMapSteamMultiblockControlle
     }
 
     @Override
-    public void addInformation(ItemStack stack,  World player,  List<String> tooltip,
+    public void addInformation(ItemStack stack, World player, List<String> tooltip,
                                boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         tooltip.add(I18n.format("gregtech.multiblock.steam_.duration_modifier"));

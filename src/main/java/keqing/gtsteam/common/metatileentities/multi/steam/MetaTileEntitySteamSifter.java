@@ -1,9 +1,9 @@
 package keqing.gtsteam.common.metatileentities.multi.steam;
 
-import gregtech.api.capability.impl.SteamMultiWorkable;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
@@ -35,9 +35,14 @@ public class MetaTileEntitySteamSifter extends RecipeMapSteamMultiblockControlle
     private static final int PARALLEL_LIMIT = 8;
 
     public MetaTileEntitySteamSifter(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, RecipeMaps.SIFTER_RECIPES, CONVERSION_RATE);
-        this.recipeMapWorkable = new SteamMultiWorkable(this, CONVERSION_RATE);
+        super(metaTileEntityId, RecipeMaps.SIFTER_RECIPES, CONVERSION_RATE, ParallelLogicType.APPEND_ITEMS);
         this.recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
+    }
+
+    private static IBlockState getFrameState() {
+        return ConfigHolder.machines.steelSteamMultiblocks ?
+                MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel) :
+                MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
     }
 
     @Override
@@ -66,11 +71,7 @@ public class MetaTileEntitySteamSifter extends RecipeMapSteamMultiblockControlle
                 MetaBlocks.BOILER_CASING.getState(STEEL_PIPE) :
                 MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
     }
-    private static IBlockState getFrameState() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel):
-                MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
-    }
+
     public IBlockState getCasingState() {
         return ConfigHolder.machines.steelSteamMultiblocks ?
                 MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID) :

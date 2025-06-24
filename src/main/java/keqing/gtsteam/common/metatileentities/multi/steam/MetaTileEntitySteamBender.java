@@ -1,9 +1,9 @@
 package keqing.gtsteam.common.metatileentities.multi.steam;
 
-import gregtech.api.capability.impl.SteamMultiWorkable;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
@@ -13,7 +13,6 @@ import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.client.utils.TooltipHelper;
 import gregtech.common.ConfigHolder;
-import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import net.minecraft.block.state.IBlockState;
@@ -36,9 +35,14 @@ public class MetaTileEntitySteamBender extends RecipeMapSteamMultiblockControlle
     private static final int PARALLEL_LIMIT = 8;
 
     public MetaTileEntitySteamBender(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, RecipeMaps.BENDER_RECIPES, CONVERSION_RATE);
-        this.recipeMapWorkable = new SteamMultiWorkable(this, CONVERSION_RATE);
+        super(metaTileEntityId, RecipeMaps.BENDER_RECIPES, CONVERSION_RATE, ParallelLogicType.MULTIPLY);
         this.recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
+    }
+
+    private static IBlockState getFrameState() {
+        return ConfigHolder.machines.steelSteamMultiblocks ?
+                MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel) :
+                MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
     }
 
     @Override
@@ -49,9 +53,9 @@ public class MetaTileEntitySteamBender extends RecipeMapSteamMultiblockControlle
     @Override
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
-                .aisle("XXXXXXX", "XXFFFFX","XXXXXXX")
-                .aisle("XXXXXXX", "XTTTTTX","XXXXXXX")
-                .aisle("XXXXXXX", "XSFFFFX","XXXXXXX")
+                .aisle("XXXXXXX", "XXFFFFX", "XXXXXXX")
+                .aisle("XXXXXXX", "XTTTTTX", "XXXXXXX")
+                .aisle("XXXXXXX", "XSFFFFX", "XXXXXXX")
                 .where('S', selfPredicate())
                 .where('X', states(getCasingState()).setMinGlobalLimited(20).or(autoAbilities()))
                 .where('T', states(getBoilerState()))
@@ -65,11 +69,7 @@ public class MetaTileEntitySteamBender extends RecipeMapSteamMultiblockControlle
                 MetaBlocks.BOILER_CASING.getState(STEEL_PIPE) :
                 MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
     }
-    private static IBlockState getFrameState() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel):
-                MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
-    }
+
     public IBlockState getCasingState() {
         return ConfigHolder.machines.steelSteamMultiblocks ?
                 MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID) :

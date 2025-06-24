@@ -4,10 +4,10 @@ import gregtech.api.capability.impl.SteamMultiWorkable;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
-import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.unification.material.Materials;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
@@ -38,9 +38,20 @@ public class MetaTileEntitySteamBiomimeticFactory extends RecipeMapSteamMultiblo
     private static final int PARALLEL_LIMIT = 32768;
 
     public MetaTileEntitySteamBiomimeticFactory(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, GTSRecipeMaps.BIOMIMETIC_FACTORY_RECIPES, CONVERSION_RATE);
-        this.recipeMapWorkable = new SteamMultiWorkable(this, CONVERSION_RATE);
+        super(metaTileEntityId, GTSRecipeMaps.BIOMIMETIC_FACTORY_RECIPES, CONVERSION_RATE, ParallelLogicType.MULTIPLY);
         this.recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
+    }
+
+    private static IBlockState getFrameState() {
+        return ConfigHolder.machines.steelSteamMultiblocks ?
+                MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel) :
+                MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
+    }
+
+    private static IBlockState getBoilerState() {
+        return ConfigHolder.machines.steelSteamMultiblocks ?
+                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX) :
+                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
     }
 
     @Override
@@ -102,21 +113,13 @@ public class MetaTileEntitySteamBiomimeticFactory extends RecipeMapSteamMultiblo
                 .where(' ', any());
         return pattern.build();
     }
-    private static IBlockState getFrameState() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel):
-                MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
-    }
+
     private IBlockState getPipeState() {
         return ConfigHolder.machines.steelSteamMultiblocks ?
                 MetaBlocks.BOILER_CASING.getState(STEEL_PIPE) :
                 MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
     }
-    private static IBlockState getBoilerState() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX):
-                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
-    }
+
     public IBlockState getCasingState() {
         return ConfigHolder.machines.steelSteamMultiblocks ?
                 MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID) :

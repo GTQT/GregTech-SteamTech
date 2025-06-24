@@ -1,9 +1,9 @@
 package keqing.gtsteam.common.metatileentities.multi.steam;
 
-import gregtech.api.capability.impl.SteamMultiWorkable;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
@@ -33,8 +33,7 @@ public class MetaTileEntitySteamCentrifuge extends RecipeMapSteamMultiblockContr
     private static final int PARALLEL_LIMIT = 8;
 
     public MetaTileEntitySteamCentrifuge(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, RecipeMaps.CENTRIFUGE_RECIPES, CONVERSION_RATE);
-        this.recipeMapWorkable = new SteamMultiWorkable(this, CONVERSION_RATE);
+        super(metaTileEntityId, RecipeMaps.CENTRIFUGE_RECIPES, CONVERSION_RATE, ParallelLogicType.APPEND_ITEMS);
         this.recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 

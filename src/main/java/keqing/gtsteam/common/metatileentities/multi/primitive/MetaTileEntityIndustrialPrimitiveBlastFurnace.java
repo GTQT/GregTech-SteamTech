@@ -1,10 +1,6 @@
 package keqing.gtsteam.common.metatileentities.multi.primitive;
 
-import codechicken.lib.render.CCRenderState;
-import codechicken.lib.render.pipeline.IVertexOperation;
-import codechicken.lib.vec.Matrix4;
 import gregtech.api.GTValues;
-import gregtech.api.capability.impl.PrimitiveRecipeLogic;
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.gui.Widget;
 import gregtech.api.gui.widgets.ClickButtonWidget;
@@ -18,7 +14,6 @@ import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.pattern.MultiblockShapeInfo;
 import gregtech.api.pattern.PatternMatchContext;
 import gregtech.api.recipes.RecipeMap;
-import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.unification.material.Materials;
 import gregtech.api.util.GTUtility;
 import gregtech.client.renderer.ICubeRenderer;
@@ -29,7 +24,8 @@ import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
-import keqing.gtsteam.api.metatileentity.multiblock.RecipeMapNoEnergyMultiblockController;
+import keqing.gtsteam.api.capability.impl.NoEnergyMultiblockRecipeLogic;
+import keqing.gtsteam.api.metatileentity.multiblock.NoEnergyMultiblockController;
 import keqing.gtsteam.api.pattern.TraceabilityPredicate;
 import keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
 import net.minecraft.block.state.IBlockState;
@@ -52,7 +48,9 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends RecipeMapNoEnergyMultiblockController {
+import static gregtech.api.recipes.RecipeMaps.PRIMITIVE_BLAST_FURNACE_RECIPES;
+
+public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMultiblockController {
 
     private static final gregtech.api.pattern.TraceabilityPredicate SNOW_PREDICATE = new gregtech.api.pattern.TraceabilityPredicate(
             bws -> GTUtility.isBlockSnow(bws.getBlockState()));
@@ -62,8 +60,8 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends RecipeMapNoEn
     private byte auxiliaryBlastFurnaceNumber = 0;
 
     public MetaTileEntityIndustrialPrimitiveBlastFurnace(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, RecipeMaps.PRIMITIVE_BLAST_FURNACE_RECIPES);
-        this.recipeMapWorkable = new IndustrialPrimitiveBlastFurnaceLogic(this, RecipeMaps.PRIMITIVE_BLAST_FURNACE_RECIPES);
+        super(metaTileEntityId, PRIMITIVE_BLAST_FURNACE_RECIPES);
+        this.recipeMapWorkable = new IndustrialPrimitiveBlastFurnaceLogic(this, PRIMITIVE_BLAST_FURNACE_RECIPES);
     }
 
     private static IBlockState getCasingState() {
@@ -188,22 +186,15 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends RecipeMapNoEn
         return Textures.PRIMITIVE_BLAST_FURNACE_OVERLAY;
     }
 
-
-    @Override
-    public void renderMetaTileEntity(CCRenderState renderState, Matrix4 translation, IVertexOperation[] pipeline) {
-        super.renderMetaTileEntity(renderState, translation, pipeline);
-        getFrontOverlay().renderOrientedState(renderState, translation, pipeline, getFrontFacing(),
-                recipeMapWorkable.isActive(), recipeMapWorkable.isWorkingEnabled());
-    }
-
     public int cost() {
-        return (int) Math.pow(2, (double) Temp / 7500);
+        return Temp / 3000;
     }
 
     @Override
     public boolean usesMui2() {
         return false;
     }
+
     @Override
     protected void addDisplayText(List<ITextComponent> textList) {
         super.addDisplayText(textList);
@@ -299,9 +290,9 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends RecipeMapNoEn
         this.getWorld().spawnParticle(EnumParticleTypes.SMOKE_LARGE, xPos, yPos, zPos, xSpd, ySpd, zSpd);
     }
 
-    protected class IndustrialPrimitiveBlastFurnaceLogic extends PrimitiveRecipeLogic {
+    protected class IndustrialPrimitiveBlastFurnaceLogic extends NoEnergyMultiblockRecipeLogic {
 
-        public IndustrialPrimitiveBlastFurnaceLogic(RecipeMapNoEnergyMultiblockController tileEntity, RecipeMap<?> recipeMap) {
+        public IndustrialPrimitiveBlastFurnaceLogic(NoEnergyMultiblockController tileEntity, RecipeMap<?> recipeMap) {
             super(tileEntity, recipeMap);
         }
 

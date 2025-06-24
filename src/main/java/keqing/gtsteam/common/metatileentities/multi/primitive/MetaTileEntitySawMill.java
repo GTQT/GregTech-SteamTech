@@ -12,13 +12,13 @@ import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.BlockSteamCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.blocks.wood.BlockGregPlanks;
-import keqing.gtsteam.api.metatileentity.multiblock.RecipeMapNoEnergyMultiblockController;
+import keqing.gtsteam.api.metatileentity.multiblock.NoEnergyMultiblockController;
 import keqing.gtsteam.api.recipes.GTSRecipeMaps;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class MetaTileEntitySawMill extends RecipeMapNoEnergyMultiblockController {
+public class MetaTileEntitySawMill extends NoEnergyMultiblockController {
 
     public MetaTileEntitySawMill(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GTSRecipeMaps.SAW_MILL);

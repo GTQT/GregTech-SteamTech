@@ -6,10 +6,10 @@ import codechicken.lib.texture.TextureUtils;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Matrix4;
 import gregtech.api.GTValues;
-import gregtech.api.capability.impl.SteamMultiWorkable;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
@@ -50,8 +50,7 @@ public class MetaTileEntitySteamBlastFurnace extends RecipeMapSteamMultiblockCon
     private static final int PARALLEL_LIMIT = 8;
 
     public MetaTileEntitySteamBlastFurnace(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, GTSRecipeMaps.STEAM_BLAST_FURNACE_RECIPES, CONVERSION_RATE);
-        this.recipeMapWorkable = new SteamMultiWorkable(this, CONVERSION_RATE);
+        super(metaTileEntityId, GTSRecipeMaps.STEAM_BLAST_FURNACE_RECIPES, CONVERSION_RATE, ParallelLogicType.MULTIPLY);
         this.recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 
@@ -91,9 +90,10 @@ public class MetaTileEntitySteamBlastFurnace extends RecipeMapSteamMultiblockCon
                 MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID) :
                 MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
     }
+
     public IBlockState getCasingState1() {
         return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX):
+                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX) :
                 MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
     }
 
@@ -143,6 +143,7 @@ public class MetaTileEntitySteamBlastFurnace extends RecipeMapSteamMultiblockCon
         tooltip.add(I18n.format("gregtech.universal.tooltip.parallel", PARALLEL_LIMIT));
         tooltip.add(TooltipHelper.BLINKING_ORANGE + I18n.format("gregtech.multiblock.require_steam_parts"));
     }
+
     private void pollutionParticles() {
         BlockPos pos = this.getPos();
         EnumFacing facing = this.getFrontFacing().getOpposite();
@@ -153,8 +154,9 @@ public class MetaTileEntitySteamBlastFurnace extends RecipeMapSteamMultiblockCon
         float ySpd = facing.getYOffset() * 0.1F + 0.2F + 0.1F * GTValues.RNG.nextFloat();
         runMufflerEffecta(xPos, yPos, zPos, 0, ySpd, 0);
     }
+
     public void runMufflerEffecta(float xPos, float yPos, float zPos, float xSpd, float ySpd, float zSpd) {
-        this.getWorld().spawnParticle(EnumParticleTypes.SMOKE_LARGE, (double)xPos, (double)yPos, (double)zPos, (double)xSpd, (double)ySpd, (double)zSpd, new int[0]);
+        this.getWorld().spawnParticle(EnumParticleTypes.SMOKE_LARGE, xPos, yPos, zPos, xSpd, ySpd, zSpd);
     }
 
     private void damageEntitiesAndBreakSnow() {
