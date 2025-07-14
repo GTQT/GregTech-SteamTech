@@ -36,6 +36,7 @@ gtsteam.machine.steam_sifter.name=Steam Sifter
 gtsteam.machine.steam_bender.name=Steam Bender
 gtsteam.machine.steam_wire_mill.name=Steam Wire Mill
 gtsteam.machine.steam_lathe.name=Steam Lathe
+gtsteam.machine.steam_alloy_furnace.name=Steam Alloy Furnace
 gtsteam.machine.saw_mill.name=Saw Mill
 #工业焦炉
 gtsteam.machine.alloy_klin.name=Alloy Klin

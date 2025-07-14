@@ -51,7 +51,7 @@ public class MetaTileEntitySteamCentrifuge extends RecipeMapSteamMultiblockContr
                 .aisle("XXXXX", "XT TX", "     ", "  X  ")
                 .aisle(" XXX ", " XSX ", "  X  ", "     ")
                 .where('S', selfPredicate())
-                .where('X', states(getCasingState()).setMinGlobalLimited(43).or(autoAbilities()))
+                .where('X', states(getCasingState()).setMinGlobalLimited(20).or(autoAbilities()))
                 .where('T', states(getBoilerState()))
                 .where(' ', any())
                 .build();

@@ -39,6 +39,7 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntitySteamCentrifuge STEAM_CENTRIFUGE;
     public static MetaTileEntitySteamWireMill STEAM_WIRE_MILL;
     public static MetaTileEntitySteamBender STEAM_BENDER;
+    public static MetaTileEntitySteamAlloyFurnace STEAM_ALLOY_FURNACE;
     public static MetaTileEntitySteamSifter STEAM_SIFTER;
     public static MetaTileEntitySteamLathe STEAM_LATHE;
     public static MetaTileEntitySawMill SAW_MILL;;
@@ -99,7 +100,9 @@ public class GTSteamMetaTileEntities {
         STEAM_BENDER = registerMetaTileEntity(18, new MetaTileEntitySteamBender(gtsId("steam_bender")));
         STEAM_SIFTER = registerMetaTileEntity(19, new MetaTileEntitySteamSifter(gtsId("steam_sifter")));
         STEAM_LATHE =  registerMetaTileEntity(20, new MetaTileEntitySteamLathe(gtsId("steam_lathe")));
-        SAW_MILL=  registerMetaTileEntity(21, new MetaTileEntitySawMill(gtsId("saw_mill")));
+        STEAM_ALLOY_FURNACE=registerMetaTileEntity(21, new MetaTileEntitySteamAlloyFurnace(gtsId("steam_alloy_furnace")));
+
+        SAW_MILL=  registerMetaTileEntity(29, new MetaTileEntitySawMill(gtsId("saw_mill")));
 
         WATER_PUMP = registerMetaTileEntity(30, new MetaTileEntityPrimitiveWaterPump(gtsId("primitive_water_pump")));
         STEAM_FERMENTATION_VAT = registerMetaTileEntity(31, new MetaTileEntitySteamFermentationVat(gtsId("steam_fermentation_vat")));

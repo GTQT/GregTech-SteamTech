@@ -36,6 +36,7 @@ gtsteam.machine.steam_sifter.name=蒸汽筛选机
 gtsteam.machine.steam_bender.name=蒸汽卷板机
 gtsteam.machine.steam_wire_mill.name=蒸汽线材轧机
 gtsteam.machine.steam_lathe.name=蒸汽车床
+gtsteam.machine.steam_alloy_furnace.name=蒸汽合金炉
 gtsteam.machine.saw_mill.name=锯木机
 #工业焦炉
 gtsteam.machine.alloy_klin.name=合金窑
