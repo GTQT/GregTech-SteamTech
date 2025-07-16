@@ -298,7 +298,7 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
 
         @Override
         public void setMaxProgress(int maxProgress) {
-            this.maxProgressTime = maxProgress / cost();
+            super.setMaxProgress(maxProgress/ cost());
         }
 
         protected void updateRecipeProgress() {
