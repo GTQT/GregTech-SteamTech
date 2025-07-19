@@ -22,14 +22,17 @@ public class AlloyKlinRecipes {
             List<GTRecipeInput> itemInputs = recipe.getInputs();
             List<ItemStack> itemOutputs = recipe.getOutputs();
 
-            int baseDuration = (int) (recipe.getDuration() * 2.4);
-
             long EUt = recipe.getEUt();
+
+            int tier = GTUtility.getTierByVoltage(EUt);
+
             if(EUt>128)return;
 
+            int baseDuration = recipe.getDuration() ;
+
             ALLOY_kILN.recipeBuilder()
-                    .duration(baseDuration)
-                    .fluidInputs(Lava.getFluid(recipe.getDuration()/20 +1))
+                    .duration(baseDuration/20)
+                    .fluidInputs(Lava.getFluid(tier*baseDuration))
                     .inputIngredients(itemInputs)
                     .outputs(itemOutputs)
                     .buildAndRegister();
