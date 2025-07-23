@@ -198,7 +198,7 @@ public class MiscRecipes {
                 "GPG", "CFC", "GPG",
                 'G', ELECTRIC_PISTON_ULV,
                 'P', ELECTRIC_MOTOR_ULV,
-                'F', STEAM_ALLOY_FURNACE.getStackForm(),
+                'F', STEAM_ALLOY_SMELTER_BRONZE.getStackForm(),
                 'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
 
         ModHandler.addShapedRecipe(true, "steam_bender", STEAM_BENDER.getStackForm(),
