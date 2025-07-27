@@ -187,7 +187,12 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
     }
 
     public int cost() {
-        return Temp / 3000;
+        if(Temp > 2500)return 10;
+        if(Temp > 2000)return 8;
+        if(Temp > 1500)return 6;
+        if(Temp > 1000)return 4;
+        if(Temp > 500)return 2;
+        return 1;
     }
 
     @Override
@@ -200,7 +205,7 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
         super.addDisplayText(textList);
         if (isStructureFormed()) {
             textList.add(new TextComponentTranslation("gtsteam.multiblock.ip1.amount", thresholdPercentage * 10, 40));
-            textList.add(new TextComponentTranslation("gtsteam.multiblock.ip2.amount", Temp / 10, 3000));
+            textList.add(new TextComponentTranslation("gtsteam.multiblock.ip2.amount", cost(), 3000));
             textList.add(new TextComponentTranslation("gtsteam.multiblock.ip3.amount", cost()));
             textList.add(new TextComponentTranslation("gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace", auxiliaryBlastFurnaceNumber));
         }
