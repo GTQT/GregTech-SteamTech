@@ -183,7 +183,7 @@ public class MiscRecipes {
         ModHandler.addShapedRecipe(true, "steam_sifter", STEAM_SIFTER.getStackForm(),
                 "GGG", "CFC", "PPP",
                 'G', ELECTRIC_PISTON_ULV,
-                'P', ELECTRIC_MOTOR_ULV,
+                'P', CONVEYOR_MODULE_ULV,
                 'F', STEAM_MACERATOR_BRONZE.getStackForm(),
                 'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
 
@@ -203,15 +203,15 @@ public class MiscRecipes {
 
         ModHandler.addShapedRecipe(true, "steam_bender", STEAM_BENDER.getStackForm(),
                 "GGG", "CFC", "PPP",
-                'G', ELECTRIC_PISTON_ULV,
-                'P', ELECTRIC_MOTOR_ULV,
+                'G', CONVEYOR_MODULE_ULV,
+                'P', ELECTRIC_PISTON_ULV,
                 'F', STEAM_HAMMER_BRONZE.getStackForm(),
                 'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
 
         ModHandler.addShapedRecipe(true, "steam_wire_mill", STEAM_WIRE_MILL.getStackForm(),
                 "GGG", "CFC", "PPP",
-                'G', ELECTRIC_PISTON_ULV,
-                'P', ELECTRIC_MOTOR_ULV,
+                'G', CONVEYOR_MODULE_ULV,
+                'P', ELECTRIC_PISTON_ULV,
                 'F', STEAM_COMPRESSOR_BRONZE.getStackForm(),
                 'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
 

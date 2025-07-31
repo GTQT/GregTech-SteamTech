@@ -36,13 +36,12 @@ public class MetaTileEntitySteamAlloyFurnace extends RecipeMapSteamMultiblockCon
 
     public MetaTileEntitySteamAlloyFurnace(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.ALLOY_SMELTER_RECIPES, CONVERSION_RATE, ParallelLogicType.MULTIPLY);
-        this.recipeMapWorkable = new SteamMultiWorkable(this, CONVERSION_RATE, ParallelLogicType.APPEND_ITEMS);
         this.recipeMapWorkable.setParallelLimit(MAX_PARALLELS);
     }
 
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity tileEntity) {
-        return new MetaTileEntitySteamOven(metaTileEntityId);
+        return new MetaTileEntitySteamAlloyFurnace(metaTileEntityId);
     }
 
     @Override

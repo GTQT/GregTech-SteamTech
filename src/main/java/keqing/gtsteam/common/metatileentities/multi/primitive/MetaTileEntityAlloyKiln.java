@@ -52,7 +52,7 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
                 .aisle("XXX", "X&X", "XXX")
                 .aisle("XXX", "XYX", "XXX")
                 .where('X', states(GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES))
-                        .or(metaTileEntities(GTSteamMetaTileEntities.ALLOY_KILN_IMPORT_HATCH).setMaxGlobalLimited(1))
+                        .or(metaTileEntities(GTSteamMetaTileEntities.ALLOY_KILN_IMPORT_HATCH).setMaxGlobalLimited(2))
                         .or(metaTileEntities(GTSteamMetaTileEntities.ALLOY_KILN_EXPORT_HATCH).setMaxGlobalLimited(1))
                 )
                 .where('#', any())
