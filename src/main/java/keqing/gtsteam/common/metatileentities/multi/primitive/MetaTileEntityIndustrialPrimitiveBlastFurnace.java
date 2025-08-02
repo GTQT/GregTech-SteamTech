@@ -308,7 +308,7 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
 
         protected void updateRecipeProgress() {
             if (canRecipeProgress) {
-                if (Temp < 30000) Temp = Math.min(Temp + thresholdPercentage, 30000);
+                if (Temp < 30000) Temp = Math.min(Temp + thresholdPercentage, (auxiliaryBlastFurnaceNumber+1)*10000);
                 if (++progressTime > maxProgressTime) {
                     completeRecipe();
                 }

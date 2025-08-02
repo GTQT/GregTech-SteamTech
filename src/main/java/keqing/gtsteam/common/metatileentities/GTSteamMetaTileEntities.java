@@ -1,12 +1,15 @@
 package keqing.gtsteam.common.metatileentities;
 
+import gregtech.api.GTValues;
 import gregtech.api.metatileentity.SimpleGeneratorMetaTileEntity;
 import gregtech.api.metatileentity.SimpleMachineMetaTileEntity;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.util.GTUtility;
+import gregtech.client.particle.VanillaParticleEffects;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.metatileentities.electric.MetaTileEntitySingleCombustion;
 import gregtech.common.metatileentities.electric.MetaTileEntitySingleTurbine;
+import gregtech.common.metatileentities.electric.SimpleMachineMetaTileEntityResizable;
 import keqing.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnExportHatch;
 import keqing.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnImportHatch;
 import keqing.gtsteam.common.metatileentities.multi.primitive.*;
@@ -17,6 +20,8 @@ import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityMultiblo
 import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityTankValve;
 import net.minecraft.util.ResourceLocation;
 
+import static gregtech.api.util.GTUtility.gregtechId;
+import static gregtech.common.metatileentities.MetaTileEntities.registerMetaTileEntities;
 import static gregtech.common.metatileentities.MetaTileEntities.registerMetaTileEntity;
 import static keqing.gtsteam.GTSteam.MODID;
 import static keqing.gtsteam.api.recipes.GTSRecipeMaps.PRIMITIVE_COMBUSTION_GENERATOR_FUELS;
@@ -116,7 +121,7 @@ public class GTSteamMetaTileEntities {
 
         //单方块ULV
         ELECTRIC_FURNACE = registerMetaTileEntity(40, new SimpleMachineMetaTileEntity(gtsId("electric_furnace.ulv"), RecipeMaps.FURNACE_RECIPES, Textures.FURNACE_OVERLAY, 0, false));
-        MACERATOR = registerMetaTileEntity(41, new SimpleMachineMetaTileEntity(gtsId("macerator.ulv"), RecipeMaps.MACERATOR_RECIPES, Textures.MACERATOR_OVERLAY, 0, false));
+        MACERATOR = registerMetaTileEntity(41, new SimpleMachineMetaTileEntityResizable(gtsId("macerator.ulv"), RecipeMaps.MACERATOR_RECIPES, -1, 1, Textures.MACERATOR_OVERLAY, 0, true, GTUtility.defaultTankSizeFunction, VanillaParticleEffects.TOP_SMOKE_SMALL, null));
         ALLOY_SMELTER = registerMetaTileEntity(42, new SimpleMachineMetaTileEntity(gtsId("alloy_smelter.ulv"), RecipeMaps.ALLOY_SMELTER_RECIPES, Textures.ALLOY_SMELTER_OVERLAY, 0, false));
         BENDER = registerMetaTileEntity(43, new SimpleMachineMetaTileEntity(gtsId("bender.ulv"), RecipeMaps.BENDER_RECIPES, Textures.BENDER_OVERLAY, 0, true));
         BREWERY = registerMetaTileEntity(44, new SimpleMachineMetaTileEntity(gtsId("brewery.ulv"), RecipeMaps.BREWING_RECIPES, Textures.BREWERY_OVERLAY, 0, true, GTUtility.hvCappedTankSizeFunction));
