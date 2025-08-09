@@ -20,6 +20,7 @@ import gregtech.client.renderer.texture.Textures;
 import gregtech.common.ConfigHolder;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
+import gregtech.common.blocks.wood.BlockGregPlanks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -31,7 +32,6 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
-import gregtech.common.blocks.wood.BlockGregPlanks;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -145,6 +145,7 @@ public class MetaTileEntityPrimitiveWaterPump extends MultiblockControllerBase i
     private void resetTileAbilities() {
         this.waterTank = new FluidTank(0);
     }
+
     @Override
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
@@ -173,6 +174,7 @@ public class MetaTileEntityPrimitiveWaterPump extends MultiblockControllerBase i
     public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
         return ConfigHolder.machines.steelSteamMultiblocks ? SOLID_STEEL_CASING : BRONZE_PLATED_BRICKS;
     }
+
     @Nonnull
     @Override
     protected ICubeRenderer getFrontOverlay() {
@@ -199,7 +201,7 @@ public class MetaTileEntityPrimitiveWaterPump extends MultiblockControllerBase i
     }
 
     public int getFluidProduction() {
-        return (int)((double)(this.biomeModifier * this.hatchModifier) * (this.isRainingInBiome() ? 1.5 : 1.0))*4;
+        return (int) ((double) (this.biomeModifier * this.hatchModifier) * (this.isRainingInBiome() ? 1.5 : 1.0)) * 4;
     }
 
     public boolean allowsExtendedFacing() {

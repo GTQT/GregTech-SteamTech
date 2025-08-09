@@ -4,20 +4,24 @@ import codechicken.lib.raytracer.CuboidRayTraceResult;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
-import gregtech.api.gui.GuiTextures;
-import gregtech.api.gui.ModularUI;
-import gregtech.api.gui.widgets.*;
+import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.utils.Alignment;
+import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
+import com.cleanroommc.modularui.widgets.ItemSlot;
+import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityUIFactory;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.RecipeMapPrimitiveMultiblockController;
+import gregtech.api.metatileentity.multiblock.ui.MultiblockUIFactory;
+import gregtech.api.mui.GTGuiTextures;
+import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
-import gregtech.common.blocks.BlockMetalCasing;
-import gregtech.common.blocks.MetaBlocks;
+import gregtech.common.mui.widget.GTFluidSlot;
 import keqing.gtsteam.api.recipes.GTSRecipeMaps;
 import keqing.gtsteam.client.textures.GTSteamTextures;
 import keqing.gtsteam.common.block.GTSteamMetaBlocks;
@@ -63,35 +67,53 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
     }
 
     @Override
-    public boolean usesMui2() {
-        return false;
+    protected MultiblockUIFactory createUIFactory() {
+        return new MultiblockUIFactory(this)
+                .disableButtons()
+                .disableDisplay()
+                .setSize(176, 166)
+                .addScreenChildren((parent, syncManager) -> {
+                    parent.child(IKey.lang(getMetaFullName()).asWidget().pos(5, 5))
+                            .child(new ItemSlot()
+                                    .slot(new ModularSlot(importItems, 0)
+                                            .singletonSlotGroup())
+                                    .pos(52, 30))
+                            .child(new ItemSlot()
+                                    .slot(new ModularSlot(importItems, 0)
+                                            .singletonSlotGroup())
+                                    .pos(52, 48))
+                            .child(new gregtech.api.mui.widget.RecipeProgressWidget()
+                                    .recipeMap(this.recipeMapWorkable.recipeMap)
+                                    .size(20, 15)
+                                    .pos(76, 32)
+                                    .value(new DoubleSyncValue(recipeMapWorkable::getProgressPercent))
+                                    .texture(GTGuiTextures.PRIMITIVE_BLAST_FURNACE_PROGRESS_BAR, -1)
+                                    .direction(com.cleanroommc.modularui.widgets.ProgressWidget.Direction.RIGHT))
+                            .child(new ItemSlot()
+                                    .slot(new ModularSlot(exportItems, 0)
+                                            .accessibility(false, true))
+                                    .pos(103, 30))
+                            .child(new ItemSlot()
+                                    .slot(new ModularSlot(exportItems, 1)
+                                            .accessibility(false, true))
+                                    .pos(103, 48))
+                            .child(new GTFluidSlot()
+                                    .overlay(GTGuiTextures.PRIMITIVE_LARGE_FLUID_TANK_OVERLAY.asIcon()
+                                            .alignment(Alignment.CenterRight)
+                                            .marginLeft(1))
+                                    .syncHandler(GTFluidSlot.sync(importFluids.getTankAt(0))
+                                            .drawAlwaysFull(false)
+                                            .showAmountOnSlot(false)
+                                            .accessibility(true, true))
+                                    .pos(10, 22)
+                                    .size(20, 58));
+                });
     }
 
+
     @Override
-    protected ModularUI.Builder createUITemplate(EntityPlayer entityPlayer) {
-        return ModularUI.builder(GuiTextures.BACKGROUND_STEAM.get(true), 176, 166)
-                .shouldColor(false)
-
-                .widget(new LabelWidget(5, 5, getMetaFullName()))
-                .widget(new SlotWidget(importItems, 0, 52, 30, true, true)
-                        .setBackgroundTexture(GuiTextures.SLOT_STEAM.get(true)))
-                .widget(new SlotWidget(importItems, 1, 52, 48, true, true)
-                        .setBackgroundTexture(GuiTextures.SLOT_STEAM.get(true)))
-
-                .widget(new RecipeProgressWidget(recipeMapWorkable::getProgressPercent, 76, 41, 20, 15,
-                        GuiTextures.PROGRESS_BAR_COMPRESS_STEAM.get(true), ProgressWidget.MoveType.HORIZONTAL,
-                        GTSRecipeMaps.ALLOY_kILN))
-
-                .widget(new SlotWidget(exportItems, 0, 103, 30, true, false)
-                        .setBackgroundTexture(GuiTextures.SLOT_STEAM.get(true)))
-                .widget(new SlotWidget(exportItems, 1, 103, 48, true, false)
-                        .setBackgroundTexture(GuiTextures.SLOT_STEAM.get(true)))
-
-                .widget(new TankWidget(importFluids.getTankAt(0), 10, 22, 20, 58)
-                        .setBackgroundTexture(GuiTextures.PROGRESS_BAR_BOILER_EMPTY.get(true))
-                        .setContainerClicking(true, true))
-
-                .bindPlayerInventory(entityPlayer.inventory, GuiTextures.SLOT_STEAM.get(true), 0);
+    public GTGuiTheme getUITheme() {
+        return GTGuiTheme.PRIMITIVE;
     }
 
     @SideOnly(Side.CLIENT)

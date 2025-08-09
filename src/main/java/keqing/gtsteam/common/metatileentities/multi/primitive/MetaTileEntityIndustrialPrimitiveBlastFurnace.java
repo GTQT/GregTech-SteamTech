@@ -9,6 +9,8 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
+import gregtech.api.metatileentity.multiblock.ui.KeyManager;
+import gregtech.api.metatileentity.multiblock.ui.UISyncer;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.pattern.MultiblockShapeInfo;
@@ -16,6 +18,7 @@ import gregtech.api.pattern.PatternMatchContext;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.unification.material.Materials;
 import gregtech.api.util.GTUtility;
+import gregtech.api.util.KeyUtil;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.client.utils.TooltipHelper;
@@ -38,8 +41,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -187,28 +189,20 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
     }
 
     public int cost() {
-        if(Temp > 2500)return 10;
-        if(Temp > 2000)return 8;
-        if(Temp > 1500)return 6;
-        if(Temp > 1000)return 4;
-        if(Temp > 500)return 2;
+        if (Temp > 2500) return 10;
+        if (Temp > 2000) return 8;
+        if (Temp > 1500) return 6;
+        if (Temp > 1000) return 4;
+        if (Temp > 500) return 2;
         return 1;
     }
 
     @Override
-    public boolean usesMui2() {
-        return false;
-    }
-
-    @Override
-    protected void addDisplayText(List<ITextComponent> textList) {
-        super.addDisplayText(textList);
-        if (isStructureFormed()) {
-            textList.add(new TextComponentTranslation("gtsteam.multiblock.ip1.amount", thresholdPercentage * 10, 40));
-            textList.add(new TextComponentTranslation("gtsteam.multiblock.ip2.amount", cost(), 3000));
-            textList.add(new TextComponentTranslation("gtsteam.multiblock.ip3.amount", cost()));
-            textList.add(new TextComponentTranslation("gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace", auxiliaryBlastFurnaceNumber));
-        }
+    public void addCustomCapacity(KeyManager keyManager, UISyncer syncer) {
+        keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.multiblock.ip1.amount", syncer.syncInt(thresholdPercentage * 10), 40));
+        keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.multiblock.ip2.amount", syncer.syncInt(Temp / 10), 3000));
+        keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.multiblock.ip3.amount", syncer.syncInt(cost())));
+        keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace", syncer.syncInt(auxiliaryBlastFurnaceNumber)));
     }
 
     @Override
@@ -303,12 +297,13 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
 
         @Override
         public void setMaxProgress(int maxProgress) {
-            super.setMaxProgress(maxProgress/ cost());
+            super.setMaxProgress(maxProgress / cost());
         }
 
         protected void updateRecipeProgress() {
             if (canRecipeProgress) {
-                if (Temp < 30000) Temp = Math.min(Temp + thresholdPercentage, (auxiliaryBlastFurnaceNumber+1)*10000);
+                if (Temp < 30000)
+                    Temp = Math.min(Temp + thresholdPercentage, (auxiliaryBlastFurnaceNumber + 1) * 10000);
                 if (++progressTime > maxProgressTime) {
                     completeRecipe();
                 }

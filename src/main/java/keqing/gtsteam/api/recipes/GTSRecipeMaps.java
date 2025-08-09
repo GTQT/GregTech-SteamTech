@@ -48,8 +48,6 @@ public class GTSRecipeMaps {
                 new SimpleRecipeBuilder())
                 .itemInputs(1)
                 .itemOutputs(16)
-                .fluidInputs(0)
-                .fluidOutputs(0)
                 .sound(GTSoundEvents.ARC)
                 .build();
 
@@ -57,8 +55,6 @@ public class GTSRecipeMaps {
                 new SimpleRecipeBuilder())
                 .itemInputs(3)
                 .itemOutputs(1)
-                .fluidInputs(0)
-                .fluidOutputs(0)
                 .sound(GTSoundEvents.FIRE)
                 .build();
 
@@ -66,8 +62,6 @@ public class GTSRecipeMaps {
                 new SimpleRecipeBuilder())
                 .itemInputs(3)
                 .itemOutputs(1)
-                .fluidInputs(1)
-                .fluidOutputs(0)
                 .sound(GTSoundEvents.FIRE)
                 .build();
 

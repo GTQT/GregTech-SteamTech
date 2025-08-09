@@ -4,16 +4,23 @@ import codechicken.lib.raytracer.CuboidRayTraceResult;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
+import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.utils.Alignment;
+import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
+import com.cleanroommc.modularui.widgets.ItemSlot;
+import com.cleanroommc.modularui.widgets.ProgressWidget;
+import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import gregtech.api.GTValues;
 import gregtech.api.capability.impl.PrimitiveRecipeLogic;
-import gregtech.api.gui.GuiTextures;
-import gregtech.api.gui.ModularUI;
-import gregtech.api.gui.widgets.*;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityUIFactory;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.RecipeMapPrimitiveMultiblockController;
+import gregtech.api.metatileentity.multiblock.ui.MultiblockUIFactory;
+import gregtech.api.mui.GTGuiTextures;
+import gregtech.api.mui.GTGuiTheme;
+import gregtech.api.mui.widget.RecipeProgressWidget;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.recipes.RecipeMap;
@@ -26,6 +33,7 @@ import gregtech.common.ConfigHolder;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
+import gregtech.common.mui.widget.GTFluidSlot;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -45,19 +53,13 @@ public class MetaTileEntityAdvancedCokeOven extends RecipeMapPrimitiveMultiblock
         this.recipeMapWorkable = new AdvancedCokeOveLogic(this, RecipeMaps.COKE_OVEN_RECIPES);
     }
 
-    protected static class AdvancedCokeOveLogic extends PrimitiveRecipeLogic {
-
-        public AdvancedCokeOveLogic(RecipeMapPrimitiveMultiblockController tileEntity, RecipeMap<?> recipeMap) {
-            super(tileEntity, recipeMap);
-        }
-
-        @Override
-        public void setMaxProgress(int maxProgress) {
-            this.maxProgressTime = (int) (maxProgress *0.2);
-        }
+    private static IBlockState getFrameState() {
+        return ConfigHolder.machines.steelSteamMultiblocks ?
+                MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel) :
+                MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
     }
 
-        @Override
+    @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity tileEntity) {
         return new MetaTileEntityAdvancedCokeOven(metaTileEntityId);
     }
@@ -78,11 +80,6 @@ public class MetaTileEntityAdvancedCokeOven extends RecipeMapPrimitiveMultiblock
                 .where('F', states(getFrameState()))
                 .where('Y', selfPredicate())
                 .build();
-    }
-    private static IBlockState getFrameState() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel):
-                MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
     }
 
     protected IBlockState getCasingState() {
@@ -114,27 +111,44 @@ public class MetaTileEntityAdvancedCokeOven extends RecipeMapPrimitiveMultiblock
     }
 
     @Override
-    public boolean usesMui2() {
-        return false;
+    protected MultiblockUIFactory createUIFactory() {
+        return new MultiblockUIFactory(this)
+                .disableButtons()
+                .disableDisplay()
+                .setSize(176, 166)
+                .addScreenChildren((parent, syncManager) -> {
+                    parent.child(IKey.lang(getMetaFullName()).asWidget().pos(5, 5))
+                            .child(new ItemSlot()
+                                    .slot(new ModularSlot(importItems, 0)
+                                            .singletonSlotGroup())
+                                    .pos(52, 30))
+                            .child(new RecipeProgressWidget()
+                                    .recipeMap(this.recipeMapWorkable.recipeMap)
+                                    .size(20, 15)
+                                    .pos(76, 32)
+                                    .value(new DoubleSyncValue(recipeMapWorkable::getProgressPercent))
+                                    .texture(GTGuiTextures.PRIMITIVE_BLAST_FURNACE_PROGRESS_BAR, -1)
+                                    .direction(ProgressWidget.Direction.RIGHT))
+                            .child(new ItemSlot()
+                                    .slot(new ModularSlot(exportItems, 0)
+                                            .accessibility(false, true))
+                                    .pos(103, 30))
+                            .child(new GTFluidSlot()
+                                    .overlay(GTGuiTextures.PRIMITIVE_LARGE_FLUID_TANK_OVERLAY.asIcon()
+                                            .alignment(Alignment.CenterLeft)
+                                            .marginLeft(1))
+                                    .syncHandler(GTFluidSlot.sync(exportFluids.getTankAt(0))
+                                            .drawAlwaysFull(false)
+                                            .showAmountOnSlot(false)
+                                            .accessibility(true, false))
+                                    .pos(134, 13)
+                                    .size(20, 58));
+                });
     }
 
     @Override
-    protected ModularUI.Builder createUITemplate(EntityPlayer entityPlayer) {
-        return ModularUI.builder(GuiTextures.PRIMITIVE_BACKGROUND, 176, 166)
-                .shouldColor(false)
-                .widget(new LabelWidget(5, 5, getMetaFullName()))
-                .widget(new SlotWidget(importItems, 0, 52, 30, true, true)
-                        .setBackgroundTexture(GuiTextures.PRIMITIVE_SLOT, GuiTextures.PRIMITIVE_FURNACE_OVERLAY))
-                .widget(new RecipeProgressWidget(recipeMapWorkable::getProgressPercent, 76, 32, 20, 15,
-                        GuiTextures.PRIMITIVE_BLAST_FURNACE_PROGRESS_BAR, ProgressWidget.MoveType.HORIZONTAL,
-                        RecipeMaps.COKE_OVEN_RECIPES))
-                .widget(new SlotWidget(exportItems, 0, 103, 30, true, false)
-                        .setBackgroundTexture(GuiTextures.PRIMITIVE_SLOT, GuiTextures.PRIMITIVE_FURNACE_OVERLAY))
-                .widget(new TankWidget(exportFluids.getTankAt(0), 134, 13, 20, 58)
-                        .setBackgroundTexture(GuiTextures.PRIMITIVE_LARGE_FLUID_TANK)
-                        .setOverlayTexture(GuiTextures.PRIMITIVE_LARGE_FLUID_TANK_OVERLAY)
-                        .setContainerClicking(true, false))
-                .bindPlayerInventory(entityPlayer.inventory, GuiTextures.PRIMITIVE_SLOT, 0);
+    public GTGuiTheme getUITheme() {
+        return GTGuiTheme.PRIMITIVE;
     }
 
     @Override
@@ -166,6 +180,18 @@ public class MetaTileEntityAdvancedCokeOven extends RecipeMapPrimitiveMultiblock
             }
         }
         return super.onRightClick(playerIn, hand, facing, hitResult);
+    }
+
+    protected static class AdvancedCokeOveLogic extends PrimitiveRecipeLogic {
+
+        public AdvancedCokeOveLogic(RecipeMapPrimitiveMultiblockController tileEntity, RecipeMap<?> recipeMap) {
+            super(tileEntity, recipeMap);
+        }
+
+        @Override
+        public void setMaxProgress(int maxProgress) {
+            this.maxProgressTime = (int) (maxProgress * 0.2);
+        }
     }
 }
 
