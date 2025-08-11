@@ -132,7 +132,7 @@ public class MetaTileEntityAdvancePrimitiveBlastFurnace extends RecipeMapPrimiti
                             .child(new RecipeProgressWidget()
                                     .recipeMap(this.recipeMapWorkable.recipeMap)
                                     .size(20, 15)
-                                    .pos(61, 41)
+                                    .pos(61, 32)
                                     .value(new DoubleSyncValue(recipeMapWorkable::getProgressPercent))
                                     .texture(GTGuiTextures.PRIMITIVE_BLAST_FURNACE_PROGRESS_BAR, -1)
                                     .direction(ProgressWidget.Direction.RIGHT))

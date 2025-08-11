@@ -85,7 +85,7 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
                             .child(new gregtech.api.mui.widget.RecipeProgressWidget()
                                     .recipeMap(this.recipeMapWorkable.recipeMap)
                                     .size(20, 15)
-                                    .pos(76, 32)
+                                    .pos(76, 41)
                                     .value(new DoubleSyncValue(recipeMapWorkable::getProgressPercent))
                                     .texture(GTGuiTextures.PRIMITIVE_BLAST_FURNACE_PROGRESS_BAR, -1)
                                     .direction(com.cleanroommc.modularui.widgets.ProgressWidget.Direction.RIGHT))
