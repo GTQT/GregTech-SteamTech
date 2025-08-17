@@ -30,13 +30,13 @@ public class IntegratedMiningDivision {
             for (Material material : materialRegistry) {
                 if (material.hasProperty(PropertyKey.ORE)) {
                     addIntegratedMiningRecipe10(material, 1)
-                            .EUt(16).duration(160)
+                            .EUt(30).duration(80)
                             .buildAndRegister();
                     addIntegratedMiningRecipe11(material, 1)
-                            .EUt(16).duration(160)
+                            .EUt(30).duration(80)
                             .buildAndRegister();
                     addIntegratedMiningRecipe12(material, 1)
-                            .EUt(16).duration(160)
+                            .EUt(30).duration(80)
                             .buildAndRegister();
                 }
             }
@@ -46,16 +46,19 @@ public class IntegratedMiningDivision {
     private static SimpleRecipeBuilder addIntegratedMiningRecipe10(Material material, int output) {
         return GTSRecipeMaps.STEAM_ORE_WASHER_RECIPES.recipeBuilder()
                 .input(OrePrefix.crushed, material)
+                .fluidInputs(Water, 1000)
                 .output(OrePrefix.crushedPurified, material, output);
     }
     private static SimpleRecipeBuilder addIntegratedMiningRecipe11(Material material, int output) {
         return GTSRecipeMaps.STEAM_ORE_WASHER_RECIPES.recipeBuilder()
                 .input(OrePrefix.dustPure, material)
+                .fluidInputs(Water, 1000)
                 .output(OrePrefix.dust, material, output);
     }
     private static SimpleRecipeBuilder addIntegratedMiningRecipe12(Material material, int output) {
         return GTSRecipeMaps.STEAM_ORE_WASHER_RECIPES.recipeBuilder()
                 .input(OrePrefix.dustImpure, material)
+                .fluidInputs(Water, 1000)
                 .output(OrePrefix.dust, material, output);
     }
 }

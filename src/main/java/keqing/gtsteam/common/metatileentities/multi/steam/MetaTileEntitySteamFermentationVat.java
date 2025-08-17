@@ -23,7 +23,7 @@ public class MetaTileEntitySteamFermentationVat extends RecipeMapMultiblockContr
 
     public MetaTileEntitySteamFermentationVat(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.FERMENTING_RECIPES);
-        this.recipeMapWorkable = new SteamFermentationVatWorkableHandler(this);
+        this.recipeMapWorkable = new FermentationVatWorkableHandler(this);
     }
 
     @Override
@@ -69,9 +69,9 @@ public class MetaTileEntitySteamFermentationVat extends RecipeMapMultiblockContr
         return true;
     }
 
-    protected static class SteamFermentationVatWorkableHandler extends MultiblockRecipeLogic {
+    protected static class FermentationVatWorkableHandler extends MultiblockRecipeLogic {
 
-        public SteamFermentationVatWorkableHandler(RecipeMapMultiblockController tileEntity) {
+        public FermentationVatWorkableHandler(RecipeMapMultiblockController tileEntity) {
             super(tileEntity);
         }
 

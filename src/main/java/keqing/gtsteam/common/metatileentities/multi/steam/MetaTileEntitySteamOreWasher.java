@@ -1,18 +1,22 @@
 package keqing.gtsteam.common.metatileentities.multi.steam;
 
+import gregtech.api.capability.impl.MultiblockRecipeLogic;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.ParallelLogicType;
+import gregtech.api.metatileentity.multiblock.RecipeMapMultiblockController;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.recipes.Recipe;
 import gregtech.api.unification.material.Materials;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.client.utils.TooltipHelper;
 import gregtech.common.ConfigHolder;
 import gregtech.common.blocks.BlockFireboxCasing;
+import gregtech.common.blocks.BlockMachineCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import keqing.gtsteam.api.recipes.GTSRecipeMaps;
@@ -33,19 +37,15 @@ import static gregtech.client.renderer.texture.Textures.SOLID_STEEL_CASING;
 import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.BRONZE_PIPE;
 import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.STEEL_PIPE;
 
-public class MetaTileEntitySteamOreWasher extends RecipeMapSteamMultiblockController {
-
-    private static final int PARALLEL_LIMIT = 8;
+public class MetaTileEntitySteamOreWasher extends RecipeMapMultiblockController {
 
     public MetaTileEntitySteamOreWasher(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, GTSRecipeMaps.STEAM_ORE_WASHER_RECIPES, CONVERSION_RATE, ParallelLogicType.MULTIPLY);
-        this.recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
+        super(metaTileEntityId, GTSRecipeMaps.STEAM_ORE_WASHER_RECIPES);
+        this.recipeMapWorkable = new OreWasherWorkableHandler(this);
     }
 
     private static IBlockState getFrameState() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel) :
-                MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
+        return MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel);
     }
 
     @Override
@@ -56,67 +56,63 @@ public class MetaTileEntitySteamOreWasher extends RecipeMapSteamMultiblockContro
     @Override
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
-                .aisle("NNNNN", "MMMMM", "MMMMM")
-                .aisle("NDDDN", "MFFFM", "M###M")
-                .aisle("NDDDN", "MFFFM", "M###M")
-                .aisle("NDDDN", "MFFFM", "M###M")
-                .aisle("NNNNN", "MMCMM", "MMMMM")
+                .aisle("MMMMM", "MMMMM", "MMMMM")
+                .aisle("MMMMM", "MFFFM", "M###M")
+                .aisle("MMMMM", "MFFFM", "M###M")
+                .aisle("MMMMM", "MFFFM", "M###M")
+                .aisle("MMMMM", "MMCMM", "MMMMM")
                 .where('C', selfPredicate())
-                .where('M', states(getCasingState()).setMinGlobalLimited(20).or(autoAbilities()))
-                .where('N', states(getCasingState1()))
-                .where('D', states(getCasingState2()))
+                .where('M', states(getCasingState()).setMinGlobalLimited(40).or(autoAbilities()))
                 .where('F', states(getFrameState()))
                 .where('#', air())
                 .build();
     }
 
     public IBlockState getCasingState() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID) :
-                MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
+        return MetaBlocks.MACHINE_CASING.getState(BlockMachineCasing.MachineCasingType.ULV);
     }
 
-    public IBlockState getCasingState1() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX) :
-                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
-    }
-
-    public IBlockState getCasingState2() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.BOILER_CASING.getState(STEEL_PIPE) :
-                MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
-    }
-
-    @SideOnly(Side.CLIENT)
     @Override
-    public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
-        return ConfigHolder.machines.steelSteamMultiblocks ? SOLID_STEEL_CASING : BRONZE_PLATED_BRICKS;
+    public ICubeRenderer getBaseTexture(IMultiblockPart iMultiblockPart) {
+        return Textures.VOLTAGE_CASINGS[0];
     }
 
-    @SideOnly(Side.CLIENT)
     @Nonnull
     @Override
     protected ICubeRenderer getFrontOverlay() {
-        return Textures.PRIMITIVE_BLAST_FURNACE_OVERLAY;
+        return Textures.PYROLYSE_OVEN_OVERLAY;
     }
 
-    @Override
     public boolean hasMaintenanceMechanics() {
         return false;
     }
 
-    @Override
-    public int getItemOutputLimit() {
-        return 1;
+    public boolean hasMufflerMechanics() {
+        return true;
     }
 
+    protected static class OreWasherWorkableHandler extends MultiblockRecipeLogic {
 
-    @Override
-    public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, player, tooltip, advanced);
-        tooltip.add(I18n.format("gregtech.multiblock.steam_.duration_modifier"));
-        tooltip.add(I18n.format("gregtech.universal.tooltip.parallel", PARALLEL_LIMIT));
-        tooltip.add(TooltipHelper.BLINKING_ORANGE + I18n.format("gregtech.multiblock.require_steam_parts"));
+        public OreWasherWorkableHandler(RecipeMapMultiblockController tileEntity) {
+            super(tileEntity);
+        }
+
+        public boolean checkRecipe(Recipe recipe) {
+            return true;
+        }
+
+        public long getMaxVoltage() {
+            return 30;
+        }
+
+        @Override
+        public int getParallelLimit() {
+            return 8;
+        }
+
+        @Override
+        public void setMaxProgress(int maxProgress) {
+            this.maxProgressTime = maxProgress * 4;
+        }
     }
 }

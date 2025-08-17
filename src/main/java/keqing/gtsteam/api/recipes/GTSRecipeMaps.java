@@ -61,6 +61,7 @@ public class GTSRecipeMaps {
         STEAM_ORE_WASHER_RECIPES = new RecipeMapBuilder<>("steam_ore_washer",
                 new SimpleRecipeBuilder())
                 .itemInputs(3)
+                .fluidInputs(1)
                 .itemOutputs(1)
                 .sound(GTSoundEvents.FIRE)
                 .build();
