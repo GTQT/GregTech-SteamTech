@@ -79,7 +79,7 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
                                             .singletonSlotGroup())
                                     .pos(52, 30))
                             .child(new ItemSlot()
-                                    .slot(new ModularSlot(importItems, 0)
+                                    .slot(new ModularSlot(importItems, 1)
                                             .singletonSlotGroup())
                                     .pos(52, 48))
                             .child(new gregtech.api.mui.widget.RecipeProgressWidget()
