@@ -27,7 +27,7 @@ public class GTSteam {
 
     public static final String MODID = "gtsteam";
     public static final String NAME = "GTSteam";
-    public static final String VERSION = "0.1";
+    public static final String VERSION = "0.1.0";
 
     @Mod.Instance(GTSteam.MODID)
     public static GTSteam instance;

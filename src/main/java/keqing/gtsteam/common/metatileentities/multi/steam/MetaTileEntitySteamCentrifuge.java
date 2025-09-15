@@ -1,12 +1,15 @@
 package keqing.gtsteam.common.metatileentities.multi.steam;
 
+import com.google.common.base.Predicates;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.TraceabilityPredicate;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
@@ -20,6 +23,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.event.terraingen.OreGenEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -33,7 +37,7 @@ public class MetaTileEntitySteamCentrifuge extends RecipeMapSteamMultiblockContr
     private static final int PARALLEL_LIMIT = 8;
 
     public MetaTileEntitySteamCentrifuge(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, RecipeMaps.CENTRIFUGE_RECIPES, CONVERSION_RATE, ParallelLogicType.APPEND_ITEMS);
+        super(metaTileEntityId, RecipeMaps.CENTRIFUGE_RECIPES, CONVERSION_RATE, ParallelLogicType.MULTIPLY);
         this.recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 
@@ -44,6 +48,9 @@ public class MetaTileEntitySteamCentrifuge extends RecipeMapSteamMultiblockContr
 
     @Override
     protected BlockPattern createStructurePattern() {
+        TraceabilityPredicate predicate = states(getCasingState()).setMinGlobalLimited(20).or(autoAbilities());
+        predicate = predicate.or(abilities(new MultiblockAbility[]{MultiblockAbility.EXPORT_FLUIDS}));
+        predicate = predicate.or(abilities(new MultiblockAbility[]{MultiblockAbility.IMPORT_FLUIDS}));
         return FactoryBlockPattern.start()
                 .aisle(" XXX ", " XXX ", "  X  ", "     ")
                 .aisle("XXXXX", "XT TX", "     ", "  X  ")
@@ -51,7 +58,7 @@ public class MetaTileEntitySteamCentrifuge extends RecipeMapSteamMultiblockContr
                 .aisle("XXXXX", "XT TX", "     ", "  X  ")
                 .aisle(" XXX ", " XSX ", "  X  ", "     ")
                 .where('S', selfPredicate())
-                .where('X', states(getCasingState()).setMinGlobalLimited(20).or(autoAbilities()))
+                .where('X', predicate)
                 .where('T', states(getBoilerState()))
                 .where(' ', any())
                 .build();
@@ -88,8 +95,10 @@ public class MetaTileEntitySteamCentrifuge extends RecipeMapSteamMultiblockContr
 
     @Override
     public int getItemOutputLimit() {
-        return 1;
+        return 100;
     }
+    @Override
+    public int getFluidOutputLimit() {return 100000000;}
 
     @Override
     public void addInformation(ItemStack stack, World player, List<String> tooltip,
