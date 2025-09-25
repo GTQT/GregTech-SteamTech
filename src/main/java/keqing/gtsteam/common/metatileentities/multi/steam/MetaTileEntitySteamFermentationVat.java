@@ -1,14 +1,13 @@
 package keqing.gtsteam.common.metatileentities.multi.steam;
 
-import gregtech.api.capability.impl.MultiblockRecipeLogic;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
-import gregtech.api.metatileentity.multiblock.RecipeMapMultiblockController;
+import gregtech.api.metatileentity.multiblock.ParallelLogicType;
+import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
-import gregtech.api.recipes.Recipe;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.unification.material.Materials;
 import gregtech.client.renderer.ICubeRenderer;
@@ -19,11 +18,12 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
-public class MetaTileEntitySteamFermentationVat extends RecipeMapMultiblockController {
+public class MetaTileEntitySteamFermentationVat extends RecipeMapSteamMultiblockController {
+    private static final int PARALLEL_LIMIT = 8;
 
     public MetaTileEntitySteamFermentationVat(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, RecipeMaps.FERMENTING_RECIPES);
-        this.recipeMapWorkable = new FermentationVatWorkableHandler(this);
+        super(metaTileEntityId, RecipeMaps.FERMENTING_RECIPES, CONVERSION_RATE, ParallelLogicType.APPEND_ITEMS);
+        this.recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 
     @Override
@@ -61,36 +61,4 @@ public class MetaTileEntitySteamFermentationVat extends RecipeMapMultiblockContr
         return Textures.PYROLYSE_OVEN_OVERLAY;
     }
 
-    public boolean hasMaintenanceMechanics() {
-        return false;
-    }
-
-    public boolean hasMufflerMechanics() {
-        return true;
-    }
-
-    protected static class FermentationVatWorkableHandler extends MultiblockRecipeLogic {
-
-        public FermentationVatWorkableHandler(RecipeMapMultiblockController tileEntity) {
-            super(tileEntity);
-        }
-
-        public boolean checkRecipe(Recipe recipe) {
-            return true;
-        }
-
-        public long getMaxVoltage() {
-            return 30;
-        }
-
-        @Override
-        public int getParallelLimit() {
-            return 8;
-        }
-
-        @Override
-        public void setMaxProgress(int maxProgress) {
-            this.maxProgressTime = maxProgress * 4;
-        }
-    }
 }

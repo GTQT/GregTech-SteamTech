@@ -54,13 +54,6 @@ import static keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities.*;
 
 public class MiscRecipes {
     public static void init() {
-        GTSRecipeMaps.STEAM_BLAST_FURNACE_RECIPES.recipeBuilder()
-                .input(ingot, WroughtIron)
-                .output(ingot, Steel)
-                .duration(3600)
-                .EUt(24)
-                .buildAndRegister();
-
         MachineRecipes();
         GenerateRecipes();
 

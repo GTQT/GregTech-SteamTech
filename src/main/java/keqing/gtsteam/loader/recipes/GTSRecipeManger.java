@@ -8,7 +8,6 @@ public class GTSRecipeManger {
     }
     public static void init() {
         AlloyKlinRecipes.init();
-        IntegratedMiningDivision.init();
         MiscRecipes.init();
         BiomimeticFactoryRecipes.init();
         SawmillChain.init();

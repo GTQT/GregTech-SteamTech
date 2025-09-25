@@ -65,13 +65,13 @@ public class MetaTileEntitySteamExtractor extends RecipeMapSteamMultiblockContro
                 .aisle("XXX", "XSX", "XXX")
                 .where('S', selfPredicate())
                 .where('X', states(getCasingState()).setMinGlobalLimited(16).or(autoAbilities()))
-                .where('T', states(getBoilerState()))
+                .where('T', states(getPipeState()))
                 .where('F', states(getFrameState()))
                 .where('#', any())
                 .build();
     }
 
-    private IBlockState getBoilerState() {
+    private IBlockState getPipeState() {
         return ConfigHolder.machines.steelSteamMultiblocks ?
                 MetaBlocks.BOILER_CASING.getState(STEEL_PIPE) :
                 MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);

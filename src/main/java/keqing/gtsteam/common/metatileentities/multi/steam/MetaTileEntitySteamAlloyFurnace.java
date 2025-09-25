@@ -1,7 +1,6 @@
 package keqing.gtsteam.common.metatileentities.multi.steam;
 
 import gregtech.api.GTValues;
-import gregtech.api.capability.impl.SteamMultiWorkable;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
@@ -18,7 +17,6 @@ import gregtech.common.ConfigHolder;
 import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
-import gregtech.common.metatileentities.multi.steam.MetaTileEntitySteamOven;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -52,10 +50,10 @@ public class MetaTileEntitySteamAlloyFurnace extends RecipeMapSteamMultiblockCon
                 .aisle("XXX", "CSC", "CCC")
                 .where('S', selfPredicate())
                 .where('X', states(getFireboxState())
-                        .or(autoAbilities(true, false, false, false, false).setMinGlobalLimited(1)
+                        .or(autoAbilities(true, false, false, false,false, false, false).setMinGlobalLimited(1)
                                 .setMaxGlobalLimited(3)))
                 .where('C', states(getCasingState()).setMinGlobalLimited(6)
-                        .or(autoAbilities(false, false, true, true, false)))
+                        .or(autoAbilities(false, false, true, true,false, false, false)))
                 .where('#', any())
                 .build();
     }
