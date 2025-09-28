@@ -150,7 +150,6 @@ dependencies {
     implementation rfg.deobf("curse.maven:ae2-fluid-crafting-rework-623955:5751930") // AE2FC 2.6.6
     implementation rfg.deobf("curse.maven:ae2-extended-life-570458:6302098") // AE2FC 2.6.6
     implementation rfg.deobf("curse.maven:mixin-booter-419286:6344449")
-
 }
 
 apply from: 'gradle/scripts/dependencies.gradle'
