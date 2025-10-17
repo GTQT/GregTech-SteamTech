@@ -132,3 +132,5 @@ gtsteam.machine.steam_turbine.ulv.tooltip=A Simple steam turbine for generating 
 
 gtsteam.machine.combustion_generator.ulv.name=Simple Combustion Generator
 gtsteam.machine.combustion_generator.ulv.tooltip=A Simple combustion generator for generating power.
+
+gtsteam.machine.steam_solar_boiler.name=A Steam solar boiler

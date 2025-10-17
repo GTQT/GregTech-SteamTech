@@ -78,10 +78,9 @@ public class GTSteamMetaTileEntities {
     public static SimpleMachineMetaTileEntity PACKER;
     public static SimpleMachineMetaTileEntity SIFTER;
     public static SimpleMachineMetaTileEntity WIREMILL;
-
     public static SimpleGeneratorMetaTileEntity STEAM_TURBINE;
     public static SimpleGeneratorMetaTileEntity COMBUSTION_GENERATOR;
-
+    public static MetaTileEntitySteamSolarBoiler STEAM_SOLAR_BOILER;
     public static ResourceLocation gtsId(String id) {
         return new ResourceLocation(MODID, id);
     }
@@ -142,6 +141,6 @@ public class GTSteamMetaTileEntities {
         //发电机ULV
         STEAM_TURBINE = registerMetaTileEntity(60, new MetaTileEntitySingleTurbine(gtsId("steam_turbine.ulv"), PRIMITIVE_STEAM_TURBINE_FUELS, Textures.STEAM_TURBINE_OVERLAY, 0, tier -> 2000));
         COMBUSTION_GENERATOR = registerMetaTileEntity(61, new MetaTileEntitySingleCombustion(gtsId("combustion_generator.ulv"), PRIMITIVE_COMBUSTION_GENERATOR_FUELS, Textures.COMBUSTION_GENERATOR_OVERLAY, 0, tier -> 2000));
-
+        STEAM_SOLAR_BOILER = registerMetaTileEntity(62,new MetaTileEntitySteamSolarBoiler(gtsId("steam_solar_boiler")));
     }
 }
