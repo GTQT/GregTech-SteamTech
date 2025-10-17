@@ -8,6 +8,7 @@ import gregtech.api.unification.material.Materials;
 import gregtech.api.unification.ore.OrePrefix;
 import gregtech.api.unification.stack.UnificationEntry;
 import gregtech.common.ConfigHolder;
+import gregtech.common.blocks.BlockMachineCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.items.MetaItems;
@@ -296,7 +297,13 @@ public class MiscRecipes {
                     'P', ELECTRIC_MOTOR_ULV,
                     'F', STEAM_ALLOY_SMELTER_BRONZE.getStackForm(),
                     'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
-
+            ModHandler.addShapedRecipe(true,"steam_solar_boiler",STEAM_SOLAR_BOILER.getStackForm(),
+                    "GPG","CFC","GPG",
+                    'G',ELECTRIC_PISTON_ULV,
+                    'P',ELECTRIC_MOTOR_ULV,
+                    'F',STEAM_BOILER_SOLAR_STEEL.getStackForm(),
+                    'C',MetaBlocks.MACHINE_CASING.getItemVariant(BlockMachineCasing.MachineCasingType.ULV)
+            );
             ModHandler.addShapedRecipe(true, "steam_bender", STEAM_BENDER.getStackForm(),
                     "GGG", "CFC", "PPP",
                     'G', CONVEYOR_MODULE_ULV,

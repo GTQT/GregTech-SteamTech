@@ -107,6 +107,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.jetbrains:annotations:24.1.0'
     if (propertyBool('use_modern_java_syntax')) {
         annotationProcessor 'com.github.bsideup.jabel:jabel-javac-plugin:1.0.0'
         // Workaround for https://github.com/bsideup/jabel/issues/174
