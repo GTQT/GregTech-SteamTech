@@ -146,3 +146,4 @@ gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip=需要§f%d秒§7预热,
 gtsteam.multiblock.steam_solar_boiler.explosion_tooltip=无水时将爆炸!
 gtsteam.multiblock.steam_solar_boiler.structure_tooltip=结构边长 ∈ [3, 5, 7, 9, 11, 13, 15]
 gtsteam.multiblock.steam_solar_boiler.final_tooltip=蒸气输出量 = 效率 * 结构边长 * 结构边长 * 20
+gtsteam.multiblock.steam_solar_boiler.throttle_button.tooltip=配置锅炉节流
