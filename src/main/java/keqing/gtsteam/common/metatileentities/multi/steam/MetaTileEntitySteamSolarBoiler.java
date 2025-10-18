@@ -31,10 +31,7 @@ import gregtech.api.metatileentity.multiblock.ui.*;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.mui.GTGuis;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
-import gregtech.api.pattern.PatternMatchContext;
-import gregtech.api.pattern.TraceabilityPredicate;
+import gregtech.api.pattern.*;
 import gregtech.api.util.GTLog;
 import gregtech.api.util.KeyUtil;
 import gregtech.api.util.TextFormattingUtil;
@@ -44,9 +41,11 @@ import gregtech.client.renderer.texture.cube.SimpleOverlayRenderer;
 import gregtech.client.utils.TooltipHelper;
 import gregtech.common.blocks.BlockMachineCasing;
 import gregtech.common.blocks.MetaBlocks;
+import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.core.sound.GTSoundEvents;
 import keqing.gtsteam.GTSteam;
 import keqing.gtsteam.api.capability.impl.SolarBoilerRecipeLogic;
+import keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -67,11 +66,14 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
+import static gregtech.api.GTValues.LV;
+import static gregtech.api.GTValues.ULV;
 import static gregtech.common.blocks.MetaBlocks.MACHINE_CASING;
 
 public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase implements ProgressBarMultiblock,
@@ -359,6 +361,38 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
             reinitializeStructurePattern();
         }
         super.checkStructurePattern();
+    }
+    @Override
+    public List<MultiblockShapeInfo> getMatchingShapes() {
+        ArrayList<MultiblockShapeInfo> shapeInfo = new ArrayList<>();
+        for(int lDist = 2;lDist <= MAX_RADIUS;lDist++){
+            var pattern = MultiblockShapeInfo.builder();
+            for(int i = 0; i < lDist * 2 - 1;i++) {
+                StringBuilder str = new StringBuilder();
+                for (int j = 0; j < 1; j++) {
+                    if (i == (lDist * 2 - 1) - 1) {
+                        str.append("M").append(repeat("X", (lDist - 2))).append("S").append(repeat("X", lDist - 2)).append("Q");
+                        continue;
+                    }
+                    if(i == 0){
+                        str.append("L").append(repeat("X", lDist * 2 - 3)).append("P");
+                        continue;
+                    }
+                    str.append(repeat("X",lDist * 2 - 1));
+                }
+                pattern = pattern.aisle(str.toString());
+            }
+                    shapeInfo.add(pattern
+                                    .where('S', GTSteamMetaTileEntities.STEAM_SOLAR_BOILER,EnumFacing.SOUTH)
+                                    .where('X',getULVCasingState())
+                                    .where('L', MetaTileEntities.MAINTENANCE_HATCH,EnumFacing.NORTH)
+                                    .where('P',MetaTileEntities.MUFFLER_HATCH[LV],EnumFacing.NORTH)
+                                    .where('M',MetaTileEntities.FLUID_IMPORT_HATCH[LV],EnumFacing.SOUTH)
+                                    .where('Q',MetaTileEntities.FLUID_EXPORT_HATCH[LV],EnumFacing.SOUTH)
+
+                    .build());
+        }
+        return shapeInfo;
     }
     private boolean updateStructureDimensions() {
         World world = getWorld();
