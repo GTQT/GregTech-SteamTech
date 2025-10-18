@@ -148,3 +148,4 @@ gtsteam.multiblock.steam_solar_boiler.structure_tooltip=结构边长 ∈ [3, 5, 
 gtsteam.multiblock.steam_solar_boiler.final_tooltip=蒸气输出量 = 效率 * 结构边长 * 结构边长 * 20
 gtsteam.multiblock.steam_solar_boiler.throttle_button.tooltip=配置锅炉节流
 gtsteam.multiblock.steam_solar_boiler.throttle.title=锅炉节流
+gtsteam.multiblock.steam_solar_boiler.description=一个多方块太阳能锅炉

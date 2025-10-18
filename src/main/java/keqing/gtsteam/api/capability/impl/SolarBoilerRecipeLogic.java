@@ -339,15 +339,6 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
         return drainedWater;
     }
 
-    @Override
-    public @NotNull RecipeMap<?> @NotNull [] getJEIRecipeMapCategoryOverrides() {
-        return new RecipeMap<?>[] { RecipeMaps.COMBUSTION_GENERATOR_FUELS, RecipeMaps.SEMI_FLUID_GENERATOR_FUELS };
-    }
-
-    @Override
-    public @NotNull String @NotNull [] getJEICategoryOverrides() {
-        return new String[] { "minecraft.fuel" };
-    }
 
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
         data.setBoolean("isActive", this.isActive);
