@@ -11,7 +11,7 @@
       "galvanized_porcelain_tiles": {
         "model": "minecraft:cube_all",
         "textures": {
-          "all": "gregtech:blocks/casings/galvanized_porcelain_tiles"
+          "all": "gtsteam:blocks/casings/galvanized_porcelain_tiles"
         }
       }
     }

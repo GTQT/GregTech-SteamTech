@@ -33,11 +33,13 @@ public class CommonProxy {
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         IForgeRegistry<Block> registry = event.getRegistry();
         registry.register(GTSteamMetaBlocks.blockMultiblockCasing0);
+        registry.register(GTSteamMetaBlocks.blockMultiblockCasing1);
     }
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> registry = event.getRegistry();
         registry.register(createItemBlock(GTSteamMetaBlocks.blockMultiblockCasing0, VariantItemBlock::new));
+        registry.register(createItemBlock(GTSteamMetaBlocks.blockMultiblockCasing1, VariantItemBlock::new));
     }
     private static <T extends Block> ItemBlock createItemBlock(T block, Function<T, ItemBlock> producer) {
         ItemBlock itemBlock = producer.apply(block);

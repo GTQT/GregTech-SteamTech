@@ -3,7 +3,6 @@ package keqing.gtsteam.common.metatileentities.multi.steam;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
-import com.cleanroommc.groovyscript.compat.mods.draconicevolution.helpers.BlockStates;
 import com.cleanroommc.modularui.api.GuiAxis;
 import com.cleanroommc.modularui.api.IPanelHandler;
 import com.cleanroommc.modularui.api.drawable.IKey;
@@ -19,34 +18,37 @@ import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.SliderWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
-import gregtech.GregTechMod;
-import gregtech.api.capability.GregtechDataCodes;
 import gregtech.api.capability.IControllable;
-import gregtech.api.capability.impl.*;
+import gregtech.api.capability.impl.BoilerRecipeLogic;
+import gregtech.api.capability.impl.CommonFluidFilters;
+import gregtech.api.capability.impl.FluidTankList;
+import gregtech.api.capability.impl.ItemHandlerList;
 import gregtech.api.metatileentity.MTETrait;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
-import gregtech.api.metatileentity.multiblock.*;
+import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.MultiblockAbility;
+import gregtech.api.metatileentity.multiblock.MultiblockWithDisplayBase;
+import gregtech.api.metatileentity.multiblock.ProgressBarMultiblock;
 import gregtech.api.metatileentity.multiblock.ui.*;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.mui.GTGuis;
-import gregtech.api.pattern.*;
-import gregtech.api.util.GTLog;
+import gregtech.api.pattern.BlockPattern;
+import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.MultiblockShapeInfo;
+import gregtech.api.pattern.PatternMatchContext;
 import gregtech.api.util.KeyUtil;
-import gregtech.api.util.TextFormattingUtil;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
-import gregtech.client.renderer.texture.cube.SimpleOverlayRenderer;
 import gregtech.client.utils.TooltipHelper;
 import gregtech.common.blocks.BlockMachineCasing;
-import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.core.sound.GTSoundEvents;
-import keqing.gtsteam.GTSteam;
 import keqing.gtsteam.api.capability.impl.SolarBoilerRecipeLogic;
+import keqing.gtsteam.common.block.GTSteamMetaBlocks;
+import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing1;
 import keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
@@ -69,43 +71,53 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
-import static gregtech.api.GTValues.LV;
 import static gregtech.api.GTValues.ULV;
 import static gregtech.common.blocks.MetaBlocks.MACHINE_CASING;
+import static net.minecraft.util.EnumFacing.SOUTH;
 
 public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase implements ProgressBarMultiblock,
         IControllable {
-    public static final int STEAM_PER_BLOCK =  20;
+    public static final int STEAM_PER_BLOCK = 20;
     //private static final ICubeRenderer ULV_CASING_TEXTURES = new SimpleOverlayRenderer("casings/ulv_machine_hull");;
     public static final int HEAT_INCREMENT_PER_BLOCK = 5;
     public static final int HEAT_REDUCTION_PER_BLOCK = 2;
     public static final int HEAT_MAXIMUM_PER_BLOCK = 10000;
+    private final int MIN_RADIUS = 2;
+    private final int MAX_RADIUS = 8;
+    private final int radius = 0;
+    private final @NotNull ICubeRenderer frontOverlay;
     protected SolarBoilerRecipeLogic recipeLogic;
     private FluidTankList fluidImportInventory;
     private ItemHandlerList itemImportInventory;
     private FluidTankList steamOutputTank;
-    private int radius = 0;
     private int lDist = 0;
     private int rDist = 0;
     private int bDist = 0;
     private int fDist = 0;
     private int hDist = 0;
     private int throttlePercentage = 100;
-    private final int MIN_RADIUS = 2;
-    private final int MAX_RADIUS = 8;
-    private @NotNull ICubeRenderer frontOverlay;
-    public int getlDist(){
-        return this.lDist;
-    }
+
     public MetaTileEntitySteamSolarBoiler(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId);
         this.frontOverlay = Textures.LARGE_STEEL_BOILER;
         this.recipeLogic = new SolarBoilerRecipeLogic(this);
         resetTileAbilities();
     }
+
+    public static String repeat(String a, int count) {
+        String b = "";
+        for (int i = 0; i < count; i++) {
+            b += a;
+        }
+        return b;
+    }
+
+    public int getlDist() {
+        return this.lDist;
+    }
+
     public int runtimeBoost(int tick) {
         return tick;
     }
@@ -291,58 +303,17 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
                                 .background(GTGuiTextures.DISPLAY)));
     }
 
+    private int getThrottlePercentage() {
+        return this.throttlePercentage;
+    }
+
     private void setThrottlePercentage(int amount) {
         this.throttlePercentage = Math.max(20, Math.min(amount, 100));
     }
 
-    private int getThrottlePercentage() {
-        return this.throttlePercentage;
-    }
-    public static String repeat(String a,int count){
-        String b = "";
-        for (int i = 0; i < count; i++) {
-            b += a;
-        }
-        return b;
-    }
     @Override
     public boolean isActive() {
         return super.isActive() && recipeLogic.isActive() && recipeLogic.isWorkingEnabled();
-    }
-
-    @Override
-    protected BlockPattern createStructurePattern() {
-        if (getWorld() != null) updateStructureDimensions();
-        var pattern = FactoryBlockPattern.start();
-        if (lDist < MIN_RADIUS) lDist = MIN_RADIUS;
-        if (rDist < MIN_RADIUS) rDist = MIN_RADIUS;
-        if (this.frontFacing == EnumFacing.EAST || this.frontFacing == EnumFacing.WEST) {
-            int tmp = lDist;
-            lDist = rDist;
-            rDist = tmp;
-        }
-
-        if(lDist > MAX_RADIUS) lDist = MAX_RADIUS;
-        for(int i = 0; i < lDist * 2 - 1;i++) {
-            StringBuilder str = new StringBuilder();
-            for (int j = 0; j < 1; j++) {
-                if (i == (lDist * 2 - 1) - 1) {
-                    str.append(repeat("X",(lDist - 1))).append("S").append(repeat("X",lDist - 1));
-                    continue;
-                }
-                str.append(repeat("X",lDist * 2 - 1));
-            }
-            pattern = pattern.aisle(str.toString());
-        }
-       return    pattern
-                .where('S',selfPredicate())
-                .where('X',states(getULVCasingState())
-                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setMinGlobalLimited(1,1))
-                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMinGlobalLimited(1,1))
-                        .or(abilities(MultiblockAbility.MAINTENANCE_HATCH).setMinGlobalLimited(1,1))
-                        .or(abilities(MultiblockAbility.MUFFLER_HATCH).setMinGlobalLimited(1,1))
-                )
-                .build();
     }
 
     @SideOnly(Side.CLIENT)
@@ -355,6 +326,7 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
                                @NotNull EnumFacing direction) {
         return world.getBlockState(pos.move(direction)).getBlock() == Blocks.AIR;
     }
+
     @Override
     public void checkStructurePattern() {
         if (!this.isStructureFormed()) {
@@ -362,84 +334,145 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
         }
         super.checkStructurePattern();
     }
+
+    @Override
+    protected BlockPattern createStructurePattern() {
+        if (getWorld() != null) updateStructureDimensions();
+        var pattern = FactoryBlockPattern.start();
+
+        // 确保边长为奇数且对称
+        int size = Math.max(MIN_RADIUS * 2 - 1, Math.min(MAX_RADIUS * 2 - 1, lDist));
+        if (size % 2 == 0) size++;
+        this.lDist = size;
+        this.rDist = size;
+
+        // 创建单层太阳能结构
+        for (int i = 0; i < size; i++) {
+            StringBuilder str = new StringBuilder();
+            for (int j = 0; j < size; j++) {
+                // 最底行中间位置放控制器
+                if (i == size - 1 && j == size / 2) {
+                    str.append('S');
+                }
+                // 边界（第一行、最后一行、第一列、最后一列）使用X
+                else if (i == 0 || i == size - 1 || j == 0 || j == size - 1) {
+                    str.append('X');
+                }
+                // 中间区域使用Y
+                else {
+                    str.append('Y');
+                }
+            }
+            pattern = pattern.aisle(str.toString());
+        }
+
+        return pattern
+                .where('S', selfPredicate())
+                .where('X', states(getULVCasingState())
+                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setMinGlobalLimited(1, 1))
+                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMinGlobalLimited(1, 1))
+                )
+                .where('Y', states(getSolarCasingState()))
+                .build();
+    }
+
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
-        ArrayList<MultiblockShapeInfo> shapeInfo = new ArrayList<>();
-        for(int lDist = 2;lDist <= MAX_RADIUS;lDist++){
-            var pattern = MultiblockShapeInfo.builder();
-            for(int i = 0; i < lDist * 2 - 1;i++) {
-                StringBuilder str = new StringBuilder();
-                for (int j = 0; j < 1; j++) {
-                    if (i == (lDist * 2 - 1) - 1) {
-                        str.append("M").append(repeat("X", (lDist - 2))).append("S").append(repeat("X", lDist - 2)).append("Q");
-                        continue;
-                    }
-                    if(i == 0){
-                        str.append("L").append(repeat("X", lDist * 2 - 3)).append("P");
-                        continue;
-                    }
-                    str.append(repeat("X",lDist * 2 - 1));
-                }
-                pattern = pattern.aisle(str.toString());
-            }
-                    shapeInfo.add(pattern
-                                    .where('S', GTSteamMetaTileEntities.STEAM_SOLAR_BOILER,EnumFacing.SOUTH)
-                                    .where('X',getULVCasingState())
-                                    .where('L', MetaTileEntities.MAINTENANCE_HATCH,EnumFacing.NORTH)
-                                    .where('P',MetaTileEntities.MUFFLER_HATCH[LV],EnumFacing.NORTH)
-                                    .where('M',MetaTileEntities.FLUID_IMPORT_HATCH[LV],EnumFacing.SOUTH)
-                                    .where('Q',MetaTileEntities.FLUID_EXPORT_HATCH[LV],EnumFacing.SOUTH)
+        List<MultiblockShapeInfo> shapeInfo = new ArrayList<>();
 
-                    .build());
+        // 生成从3到15的所有奇数尺寸预览结构
+        for (int size = 3; size <= 15; size += 2) {
+            MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder();
+
+            // 构建每一层
+            for (int i = 0; i < size; i++) {
+                StringBuilder aisle = new StringBuilder();
+                for (int j = 0; j < size; j++) {
+                    // 最底行中间位置放控制器，两侧放舱室
+                    if (i == size - 1) {
+                        if (j == size / 2) {
+                            aisle.append('S'); // 控制器
+                        } else if (j == size / 2 - 1) {
+                            aisle.append('M'); // 流体输入舱
+                        } else if (j == size / 2 + 1) {
+                            aisle.append('Q'); // 流体输出舱
+                        } else {
+                            // 最底行的其他位置按边界处理
+                            aisle.append('X');
+                        }
+                    } else {
+                        // 其他行：边界用X，内部用Y
+                        if (i == 0 || i == size - 1 || j == 0 || j == size - 1) {
+                            aisle.append('X'); // 边界
+                        } else {
+                            aisle.append('Y'); // 内部
+                        }
+                    }
+                }
+                builder.aisle(aisle.toString());
+            }
+
+            // 设置方块映射
+            builder
+                    .where('S', GTSteamMetaTileEntities.STEAM_SOLAR_BOILER, SOUTH)
+                    .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[ULV], SOUTH)
+                    .where('Q', MetaTileEntities.FLUID_EXPORT_HATCH[ULV], SOUTH)
+                    .where('X', getULVCasingState())
+                    .where('Y', getSolarCasingState());
+
+            shapeInfo.add(builder.build());
         }
+
         return shapeInfo;
     }
+
     private boolean updateStructureDimensions() {
         World world = getWorld();
         EnumFacing front = getFrontFacing();
-        EnumFacing back = front.getOpposite();
         EnumFacing left = front.rotateYCCW();
         EnumFacing right = left.getOpposite();
 
         BlockPos.MutableBlockPos lPos = new BlockPos.MutableBlockPos(getPos());
         BlockPos.MutableBlockPos rPos = new BlockPos.MutableBlockPos(getPos());
-        BlockPos.MutableBlockPos fPos = new BlockPos.MutableBlockPos(getPos());
-        BlockPos.MutableBlockPos bPos = new BlockPos.MutableBlockPos(getPos());
-        BlockPos.MutableBlockPos hPos = new BlockPos.MutableBlockPos(getPos());
 
-        // find the distances from the controller to the plascrete blocks on one horizontal axis and the Y axis
-        // repeatable aisles take care of the second horizontal axis
+        // 重置距离
         int lDist = 0;
         int rDist = 0;
-        int bDist = 0;
-        int fDist = 0;
-        int hDist = 0;
 
-        // find the left, right, back, and front distances for the structure pattern
-        // maximum size is 15x15x15 including walls, so check 7 block radius around the controller for blocks
+        // 只检测左右方向的边界
         for (int i = 1; i <= MAX_RADIUS; i++) {
             if (lDist == 0 && isBlockEdge(world, lPos, left)) lDist = i;
-            if(rDist == 0 && isBlockEdge(world, rPos, right)) rDist = i;
-            if(lDist != 0 && rDist != 0) break;
+            if (rDist == 0 && isBlockEdge(world, rPos, right)) rDist = i;
+            if (lDist != 0 && rDist != 0) break;
         }
 
-        // height is diameter instead of radius, so it needs to be done separately
+        // 计算总直径（左右距离之和 + 1，因为控制器在中间）
+        int totalDiameter = lDist + rDist - 1;
 
-        if (lDist < MIN_RADIUS || rDist < MIN_RADIUS) {
-            invalidateStructure();
-            return false;
+        // 确保直径在有效范围内且为奇数
+        totalDiameter = Math.max(MIN_RADIUS * 2 - 1, Math.min(MAX_RADIUS * 2 - 1, totalDiameter));
+        if (totalDiameter % 2 == 0) {
+            totalDiameter++; // 强制转换为奇数
         }
-        this.lDist = lDist;
-        this.rDist = rDist;
+
+        // 设置左右距离（对称结构）
+        this.lDist = totalDiameter;
+        this.rDist = totalDiameter;
+
         return true;
     }
 
     public IBlockState getULVCasingState() {
         return MACHINE_CASING.getState(BlockMachineCasing.MachineCasingType.ULV);
     }
+
+    public IBlockState getSolarCasingState() {
+        return GTSteamMetaBlocks.blockMultiblockCasing1.getState(BlockMultiblockCasing1.CasingType.SOLAR_COLLECTOR);
+    }
+
     @Override
     public String[] getDescription() {
-        return new String[] { I18n.format("gtsteam.multiblock.steam_solar_boiler.description") };
+        return new String[]{I18n.format("gtsteam.multiblock.steam_solar_boiler.description")};
     }
 
     @Override
@@ -452,13 +485,14 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
         tooltip.add(TooltipHelper.BLINKING_RED + I18n.format("gtsteam.multiblock.steam_solar_boiler.explosion_tooltip"));
         tooltip.add(I18n.format("gtsteam.multiblock.steam_solar_boiler.final_tooltip"));
     }
+
     public int getTicksToBoiling() {
-         return HEAT_MAXIMUM_PER_BLOCK / HEAT_INCREMENT_PER_BLOCK;
+        return HEAT_MAXIMUM_PER_BLOCK / HEAT_INCREMENT_PER_BLOCK;
     }
 
     public int steamPerTick() {
         int tmp = lDist * 2 - 1;
-        return  tmp * tmp * STEAM_PER_BLOCK;
+        return tmp * tmp * STEAM_PER_BLOCK;
     }
 
     @Override
@@ -479,12 +513,6 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
         return isStructureFormed() && (((MetaTileEntity) sourcePart).getPos().getY() < getPos().getY());
     }
 
-
-    @Override
-    public boolean hasMufflerMechanics() {
-        return true;
-    }
-
     @Override
     public SoundEvent getSound() {
         return GTSoundEvents.BOILER;
@@ -494,15 +522,16 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
     protected void updateFormedValid() {
         this.recipeLogic.update();
     }
+
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
         super.writeToNBT(data);
         data.setInteger("ThrottlePercentage", throttlePercentage);
-        data.setInteger("lDist",lDist);
-        data.setInteger("rDist",rDist);
-        data.setInteger("bDist",bDist);
-        data.setInteger("fDist",fDist);
-        data.setInteger("hDist",hDist);
+        data.setInteger("lDist", lDist);
+        data.setInteger("rDist", rDist);
+        data.setInteger("bDist", bDist);
+        data.setInteger("fDist", fDist);
+        data.setInteger("hDist", hDist);
         return this.recipeLogic.writeToNBT(data);
     }
 
@@ -646,4 +675,11 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
         return tmp * tmp * HEAT_MAXIMUM_PER_BLOCK;
     }
 
+    public boolean hasMaintenanceMechanics() {
+        return false;
+    }
+
+    public boolean hasMufflerMechanics() {
+        return false;
+    }
 }

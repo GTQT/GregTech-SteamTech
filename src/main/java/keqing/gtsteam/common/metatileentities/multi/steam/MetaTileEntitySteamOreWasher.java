@@ -11,12 +11,21 @@ import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.unification.material.Materials;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
+import gregtech.common.ConfigHolder;
 import gregtech.common.blocks.BlockMachineCasing;
+import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+
+import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
+import static gregtech.client.renderer.texture.Textures.SOLID_STEEL_CASING;
+import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.BRONZE_PIPE;
+import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.STEEL_PIPE;
 
 public class MetaTileEntitySteamOreWasher extends RecipeMapSteamMultiblockController {
     private static final int PARALLEL_LIMIT = 8;
@@ -25,9 +34,6 @@ public class MetaTileEntitySteamOreWasher extends RecipeMapSteamMultiblockContro
         this.recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 
-    private static IBlockState getFrameState() {
-        return MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel);
-    }
 
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity metaTileEntityHolder) {
@@ -38,24 +44,40 @@ public class MetaTileEntitySteamOreWasher extends RecipeMapSteamMultiblockContro
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
                 .aisle("MMMMM", "MMMMM", "MMMMM")
-                .aisle("MMMMM", "MFFFM", "M###M")
-                .aisle("MMMMM", "MFFFM", "M###M")
-                .aisle("MMMMM", "MFFFM", "M###M")
+                .aisle("MPPPM", "MFFFM", "M###M")
+                .aisle("MPPPM", "MFFFM", "M###M")
+                .aisle("MPPPM", "MFFFM", "M###M")
                 .aisle("MMMMM", "MMCMM", "MMMMM")
                 .where('C', selfPredicate())
                 .where('M', states(getCasingState()).setMinGlobalLimited(40).or(autoAbilities()))
                 .where('F', states(getFrameState()))
+                .where('P', states(getBoilerState()))
                 .where('#', air())
                 .build();
     }
-
-    public IBlockState getCasingState() {
-        return MetaBlocks.MACHINE_CASING.getState(BlockMachineCasing.MachineCasingType.ULV);
+    private IBlockState getBoilerState() {
+        return ConfigHolder.machines.steelSteamMultiblocks ?
+                MetaBlocks.BOILER_CASING.getState(STEEL_PIPE) :
+                MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
     }
 
+    private static IBlockState getFrameState() {
+        return ConfigHolder.machines.steelSteamMultiblocks ?
+                MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel) :
+                MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
+    }
+
+
+    public IBlockState getCasingState() {
+        return ConfigHolder.machines.steelSteamMultiblocks ?
+                MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID) :
+                MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
+    }
+
+    @SideOnly(Side.CLIENT)
     @Override
-    public ICubeRenderer getBaseTexture(IMultiblockPart iMultiblockPart) {
-        return Textures.VOLTAGE_CASINGS[0];
+    public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
+        return ConfigHolder.machines.steelSteamMultiblocks ? SOLID_STEEL_CASING : BRONZE_PLATED_BRICKS;
     }
 
     @Nonnull

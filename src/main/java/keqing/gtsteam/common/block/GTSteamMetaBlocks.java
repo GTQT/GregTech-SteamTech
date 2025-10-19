@@ -2,6 +2,7 @@ package keqing.gtsteam.common.block;
 
 import gregtech.common.blocks.MetaBlocks;
 import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing0;
+import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing1;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -12,17 +13,24 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class GTSteamMetaBlocks {
     public static BlockMultiblockCasing0 blockMultiblockCasing0;
+    public static BlockMultiblockCasing1 blockMultiblockCasing1;
     private GTSteamMetaBlocks() {
     }
 
     public static void init() {
         blockMultiblockCasing0 = new BlockMultiblockCasing0();
         blockMultiblockCasing0.setRegistryName("multiblock_casing0");
+
+        blockMultiblockCasing1 = new BlockMultiblockCasing1();
+        blockMultiblockCasing1.setRegistryName("multiblock_casing1");
+
+
     }
 
     @SideOnly(Side.CLIENT)
     public static void registerItemModels() {
         registerItemModel(blockMultiblockCasing0);
+        registerItemModel(blockMultiblockCasing1);
     }
 
     @SideOnly(Side.CLIENT)
