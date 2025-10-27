@@ -48,7 +48,7 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntitySteamSifter STEAM_SIFTER;
     public static MetaTileEntitySteamLathe STEAM_LATHE;
     public static MetaTileEntitySawMill SAW_MILL;;
-
+    public static MetaTileEntitySteamWaterPump STEAM_WATER_PUMP;
     public static MetaTileEntitySteamTranscendentPlasmaForge STEAM_TRANSCENDENT_PLASMA_FORGE;
     public static MetaTileEntitySteamBiomimeticFactory STEAM_BIOMIMETIC_FACTORY;
 
@@ -142,5 +142,7 @@ public class GTSteamMetaTileEntities {
         STEAM_TURBINE = registerMetaTileEntity(60, new MetaTileEntitySingleTurbine(gtsId("steam_turbine.ulv"), PRIMITIVE_STEAM_TURBINE_FUELS, Textures.STEAM_TURBINE_OVERLAY, 0, tier -> 2000));
         COMBUSTION_GENERATOR = registerMetaTileEntity(61, new MetaTileEntitySingleCombustion(gtsId("combustion_generator.ulv"), PRIMITIVE_COMBUSTION_GENERATOR_FUELS, Textures.COMBUSTION_GENERATOR_OVERLAY, 0, tier -> 2000));
         STEAM_SOLAR_BOILER = registerMetaTileEntity(62,new MetaTileEntitySteamSolarBoiler(gtsId("steam_solar_boiler")));
+
+        STEAM_WATER_PUMP = registerMetaTileEntity(63,new MetaTileEntitySteamWaterPump(gtsId("steam_water_pump")));
     }
 }
