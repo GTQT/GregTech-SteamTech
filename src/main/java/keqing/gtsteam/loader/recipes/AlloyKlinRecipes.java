@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static gregtech.api.unification.material.Materials.Lava;
-import static keqing.gtsteam.api.recipes.GTSRecipeMaps.ALLOY_kILN;
+import static keqing.gtsteam.api.recipes.GTSRecipeMaps.ALLOY_KILN;
 
 public class AlloyKlinRecipes {
 
@@ -30,7 +30,7 @@ public class AlloyKlinRecipes {
 
             int baseDuration = recipe.getDuration();
 
-            ALLOY_kILN.recipeBuilder()
+            ALLOY_KILN.recipeBuilder()
                     .duration(baseDuration / 20)
                     .fluidInputs(Lava.getFluid(Math.max(1, tier * baseDuration / 80)))
                     .inputIngredients(itemInputs)

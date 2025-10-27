@@ -41,7 +41,7 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
 
 
     public MetaTileEntityAlloyKiln(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, GTSRecipeMaps.ALLOY_kILN);
+        super(metaTileEntityId, GTSRecipeMaps.ALLOY_KILN);
     }
 
     @Override

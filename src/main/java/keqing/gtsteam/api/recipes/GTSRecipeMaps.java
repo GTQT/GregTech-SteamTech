@@ -1,22 +1,18 @@
 package keqing.gtsteam.api.recipes;
 
-import gregtech.api.gui.GuiTextures;
-import gregtech.api.gui.widgets.ProgressWidget;
+import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.recipes.RecipeMapBuilder;
 import gregtech.api.recipes.builders.FuelRecipeBuilder;
 import gregtech.api.recipes.builders.PrimitiveRecipeBuilder;
 import gregtech.api.recipes.builders.SimpleRecipeBuilder;
-import gregtech.api.recipes.ui.impl.CokeOvenUI;
 import gregtech.core.sound.GTSoundEvents;
-
-import static gregtech.api.gui.widgets.ProgressWidget.MoveType.HORIZONTAL;
 
 public class GTSRecipeMaps {
     public static final RecipeMap<SimpleRecipeBuilder> STEAM_BLAST_FURNACE_RECIPES;
     public static final RecipeMap<SimpleRecipeBuilder> BIOMIMETIC_FACTORY_RECIPES;
     public static final RecipeMap<SimpleRecipeBuilder> LAVA_FURNACE_RECIPES;
-    public static final RecipeMap<PrimitiveRecipeBuilder> ALLOY_kILN;
+    public static final RecipeMap<PrimitiveRecipeBuilder> ALLOY_KILN;
     public static final RecipeMap<PrimitiveRecipeBuilder> SAW_MILL;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_STEAM_TURBINE_FUELS;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_COMBUSTION_GENERATOR_FUELS;
@@ -27,8 +23,10 @@ public class GTSRecipeMaps {
                 new FuelRecipeBuilder())
                 .fluidInputs(1)
                 .fluidOutputs(1)
-                .fluidSlotOverlay(GuiTextures.CENTRIFUGE_OVERLAY, false)
-                .progressBar(GuiTextures.PROGRESS_BAR_GAS_COLLECTOR)
+                .uiBuilder((b) -> b
+                        .fluidSlotOverlay(GTGuiTextures.CENTRIFUGE_OVERLAY, false, true)
+                        .progressBar(GTGuiTextures.PROGRESS_BAR_GAS_COLLECTOR)
+                )
                 .sound(GTSoundEvents.TURBINE)
                 .allowEmptyOutputs()
                 .generator()
@@ -37,8 +35,10 @@ public class GTSRecipeMaps {
         PRIMITIVE_COMBUSTION_GENERATOR_FUELS = new RecipeMapBuilder<>(
                 "primitive_combustion_generator", new FuelRecipeBuilder())
                 .fluidInputs(1)
-                .fluidSlotOverlay(GuiTextures.FURNACE_OVERLAY_2, false)
-                .progressBar(GuiTextures.PROGRESS_BAR_ARROW_MULTIPLE)
+                .uiBuilder((b) -> b
+                        .fluidSlotOverlay(GTGuiTextures.FURNACE_OVERLAY_2, false, true)
+                        .progressBar(GTGuiTextures.PROGRESS_BAR_ARROW_MULTIPLE)
+                )
                 .sound(GTSoundEvents.COMBUSTION)
                 .allowEmptyOutputs()
                 .generator()
@@ -65,7 +65,7 @@ public class GTSRecipeMaps {
                 .sound(GTSoundEvents.FIRE)
                 .build();
 
-        ALLOY_kILN = new RecipeMapBuilder<>("alloy_klin",
+        ALLOY_KILN = new RecipeMapBuilder<>("alloy_klin",
                 new PrimitiveRecipeBuilder())
                 .itemInputs(2)
                 .itemOutputs(2)
@@ -78,7 +78,9 @@ public class GTSRecipeMaps {
                 new PrimitiveRecipeBuilder())
                 .itemInputs(2)
                 .itemOutputs(2)
-                .progressBar(GuiTextures.PROGRESS_BAR_ARROW_MULTIPLE, HORIZONTAL)
+                .uiBuilder((b) -> b
+                        .progressBar(GTGuiTextures.PROGRESS_BAR_ARROW_MULTIPLE)
+                )
                 .sound(GTSoundEvents.CUT)
                 .build();
     }

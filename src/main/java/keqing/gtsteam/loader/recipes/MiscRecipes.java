@@ -89,7 +89,14 @@ public class MiscRecipes {
                 .buildAndRegister();
 
         LAVA_FURNACE_RECIPES.recipeBuilder()
-                .input(block, Stone)
+                .input("stoneCobble")
+                .fluidOutputs(Lava.getFluid(1000))
+                .duration(1200)
+                .EUt(V[GTValues.ULV])
+                .buildAndRegister();
+
+        LAVA_FURNACE_RECIPES.recipeBuilder()
+                .input("stoneSmooth")
                 .fluidOutputs(Lava.getFluid(1000))
                 .duration(1200)
                 .EUt(V[GTValues.ULV])
@@ -98,7 +105,7 @@ public class MiscRecipes {
 
     private static void MachineRecipes() {
         //合金窑
-        ModHandler.addShapedRecipe(true, "alloy_kiln", ALLOY_KILN.getStackForm(),
+        ModHandler.addShapedRecipe(true, "alloy_kiln",GTSteamMetaTileEntities.ALLOY_KILN.getStackForm(),
                 "PIP", "IwI", "PIP",
                 'P', GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(GALVANIZED_PORCELAIN_TILES),
                 'I', new UnificationEntry(OrePrefix.plate, Iron));

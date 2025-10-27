@@ -2,6 +2,7 @@
 recipemap.alloy_klin.name=合金窑
 recipemap.steam_ore_washer.name=蒸汽洗矿厂
 recipemap.steam_blast_furnace.name=大型蒸汽高炉
+recipemap.lava_furnace.name=熔岩炉
 recipemap.biomimetic_factory_recipes.name=物质拟生
 #材料
 gtsteam.material.bone_ceramic_clay=骨陶瓷粘土
