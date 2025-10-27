@@ -106,6 +106,7 @@ public class GTSteamMetaTileEntities {
         STEAM_LATHE =  registerMetaTileEntity(20, new MetaTileEntitySteamLathe(gtsId("steam_lathe")));
         STEAM_ALLOY_FURNACE=registerMetaTileEntity(21, new MetaTileEntitySteamAlloyFurnace(gtsId("steam_alloy_furnace")));
 
+        STEAM_WATER_PUMP = registerMetaTileEntity(25,new MetaTileEntitySteamWaterPump(gtsId("steam_water_pump")));
         SAW_MILL=  registerMetaTileEntity(29, new MetaTileEntitySawMill(gtsId("saw_mill")));
 
         WATER_PUMP = registerMetaTileEntity(30, new MetaTileEntityPrimitiveWaterPump(gtsId("primitive_water_pump")));
@@ -143,6 +144,6 @@ public class GTSteamMetaTileEntities {
         COMBUSTION_GENERATOR = registerMetaTileEntity(61, new MetaTileEntitySingleCombustion(gtsId("combustion_generator.ulv"), PRIMITIVE_COMBUSTION_GENERATOR_FUELS, Textures.COMBUSTION_GENERATOR_OVERLAY, 0, tier -> 2000));
         STEAM_SOLAR_BOILER = registerMetaTileEntity(62,new MetaTileEntitySteamSolarBoiler(gtsId("steam_solar_boiler")));
 
-        STEAM_WATER_PUMP = registerMetaTileEntity(63,new MetaTileEntitySteamWaterPump(gtsId("steam_water_pump")));
+
     }
 }

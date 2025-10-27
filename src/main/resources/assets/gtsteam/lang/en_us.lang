@@ -7,6 +7,8 @@ recipemap.biomimetic_factory_recipes.name=Matter Simulacrum
 gtsteam.material.bone_ceramic_clay=Bone Ceramic Clay
 #方块
 tile.multiblock_casing.galvanized_porcelain_tiles.name=Galvanized Porcelain Tiles
+
+tile.multiblock_casing.solar_collector.name=Solar collector tubes
 #物品
 metaitem.cover.electric_motor.ulv.name=Electric Motor (ULV)
 metaitem.cover.electric_piston.ulv.name=Electric Piston (ULV)
@@ -60,8 +62,31 @@ gtsteam.machine.industrial_primitive_blast_furnace.tooltip.3=When the machine is
 gtsteam.machine.industrial_primitive_blast_furnace.tooltip.4=The temperature range determines the total time reduction, and every 500 increase will increase the corresponding exponential time reduction.
 gtsteam.machine.industrial_primitive_blast_furnace.tooltip.5=Up to 10 times reduction in time spent after all upgrades are completed.
 
+#Large Primitive Water Pump
 gtsteam.machine.primitive_water_pump.name=Large Primitive Water Pump
-gregtech.multiblock.water_pump.description=The Large Primitive Water Pump is a multiblock machine from the steam age. It collects 100mb of water per second when its controller block is in a river biome and at a height between Y = 64 and Y = 80 (inclusive). It can use ULV, LV output hatches, or water pump output hatches.
+gregtech.multiblock.water_pump.description=The Large Primitive Water Pump is a steam age multiblock machine. When its controller block is in a river biome and at a height between Y=64 and Y=80 (inclusive), it collects 100mb of water per second. It can use ULV, LV output hatches or water pump output hatches.
+
+#Solar Boiler
+gtsteam.machine.steam_solar_boiler.name=Solar Boiler
+gtsteam.multiblock.steam_solar_boiler.steam_output=Steam Output: %s
+gtsteam.multiblock.steam_solar_boiler.efficiency=Efficiency: %s
+gtsteam.multiblock.steam_solar_boiler.throttle=Throttle: %s
+gtsteam.multiblock.steam_solar_boiler.throttle.tooltip=The boiler can be throttled to reduce fuel consumption and steam output without losing efficiency or affecting heating time.
+gtsteam.multiblock.steam_solar_boiler.throttle_increment=Throttle §a+5%%§r/n§7Reduces fuel consumption and steam output without losing efficiency or affecting heating time.
+gtsteam.multiblock.steam_solar_boiler.throttle_decrement=Throttle §c-5%%§r/n§7Reduces fuel consumption and steam output without losing efficiency or affecting heating time.
+gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip=Requires §f%d seconds§7 to preheat, heat increases during daytime and decreases at night
+
+gtsteam.multiblock.steam_solar_boiler.no_water=Boiler water shortage!
+gtsteam.multiblock.steam_solar_boiler.explosion_tooltip=Will explode without water!
+gtsteam.multiblock.steam_solar_boiler.structure_tooltip=Structure side length ∈ [3, 5, 7, 9, 11, 13, 15]
+gtsteam.multiblock.steam_solar_boiler.final_tooltip=Steam output = Efficiency * Structure side length * Structure side length * 20
+gtsteam.multiblock.steam_solar_boiler.throttle_button.tooltip=Configure boiler throttle
+gtsteam.multiblock.steam_solar_boiler.throttle.title=Boiler Throttle
+gtsteam.multiblock.steam_solar_boiler.description=A multiblock solar boiler
+
+#Steam Water Pump
+gtsteam.machine.steam_water_pump.name=Steam Water Pump
+gtsteam.machine.steam_water_pump.description=Consumes steam and outputs an equal amount of water
 
 gtsteam.machine.steam_fermentation_vat.name=Steam Fermentation Vat
 gtsteam.machine.advanced_coke_oven.name=Advanced Coke Oven
@@ -132,5 +157,3 @@ gtsteam.machine.steam_turbine.ulv.tooltip=A Simple steam turbine for generating 
 
 gtsteam.machine.combustion_generator.ulv.name=Simple Combustion Generator
 gtsteam.machine.combustion_generator.ulv.tooltip=A Simple combustion generator for generating power.
-
-gtsteam.machine.steam_solar_boiler.name=A Steam solar boiler

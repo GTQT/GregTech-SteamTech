@@ -66,9 +66,10 @@ public class MetaTileEntitySteamWaterPump extends MultiblockControllerBase imple
             if (this.biomeModifier == 0) {
                 this.biomeModifier = this.getAmount();
             } else if (this.biomeModifier > 0) {
-                if(steamTank.getFluidAmount() >= (this.getFluidProduction())) {
-                    steamTank.drain(this.getFluidProduction(),true);
-                    this.waterTank.fill(Materials.Water.getFluid(this.getFluidProduction()), true);
+                int production = this.getFluidProduction();
+                if (steamTank.getFluidAmount() >= production) {
+                    steamTank.drain(production, true);
+                    this.waterTank.fill(Materials.Water.getFluid(production), true);
                 }
             }
         }

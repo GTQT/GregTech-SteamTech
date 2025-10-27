@@ -617,7 +617,7 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
                 .tooltipBuilder(tooltip -> {
                     if (isStructureFormed()) {
                         if (waterFilledValue.getIntValue() == 0) {
-                            tooltip.addLine(IKey.lang("gregtech.multiblock.large_solar_boiler.no_water"));
+                            tooltip.addLine(IKey.lang("gtsteam.multiblock.steam_solar_boiler.no_water"));
                         } else {
                             tooltip.addLine(IKey.lang("gregtech.multiblock.large_solar_boiler.water_bar_hover",
                                     waterFilledValue.getIntValue(), waterCapacityValue.getIntValue()));

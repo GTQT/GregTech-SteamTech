@@ -7,6 +7,9 @@ recipemap.biomimetic_factory_recipes.name=物质拟生
 gtsteam.material.bone_ceramic_clay=骨陶瓷粘土
 #方块
 tile.multiblock_casing.galvanized_porcelain_tiles.name=镀锌瓷瓦砖
+
+tile.multiblock_casing.solar_collector.name=太阳能集热管
+
 #物品
 metaitem.cover.electric_motor.ulv.name=电动马达（ULV）
 metaitem.cover.electric_piston.ulv.name=电力活塞（ULV）
@@ -63,6 +66,30 @@ gtsteam.machine.industrial_primitive_blast_furnace.tooltip.5=全部升级完毕�
 #大型原始水泵
 gtsteam.machine.primitive_water_pump.name=大型原始水泵
 gregtech.multiblock.water_pump.description=大型原始水泵是一台蒸汽时代的多方块机器。当它的控制器方块处于河流生物群系，且高度介于 Y = 64 与 Y = 80（含）之间时将每秒收集一次100mb的水。它可以使用 ULV、LV 输出仓或水泵输出仓。
+
+#太阳能锅炉
+gtsteam.machine.steam_solar_boiler.name=太阳能锅炉
+gtsteam.multiblock.steam_solar_boiler.steam_output=蒸汽输出：%s
+gtsteam.multiblock.steam_solar_boiler.efficiency=效率：%s
+gtsteam.multiblock.steam_solar_boiler.throttle=节流：%s
+gtsteam.multiblock.steam_solar_boiler.throttle.tooltip=锅炉可以节流，以减少燃料消耗与蒸汽产出，并且不损失效率，不影响加热时间。
+gtsteam.multiblock.steam_solar_boiler.throttle_increment=节流阀§a+5%%§r/n§7减少燃料消耗与蒸汽产出，并且不损失效率，不影响加热时间。
+gtsteam.multiblock.steam_solar_boiler.throttle_decrement=节流阀§c-5%%§r/n§7减少燃料消耗与蒸汽产出，并且不损失效率，不影响加热时间。
+gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip=需要§f%d秒§7预热,白天时热量上升，夜晚热量下降
+
+gtsteam.multiblock.steam_solar_boiler.no_water=锅炉缺水!
+gtsteam.multiblock.steam_solar_boiler.explosion_tooltip=无水时将爆炸!
+gtsteam.multiblock.steam_solar_boiler.structure_tooltip=结构边长 ∈ [3, 5, 7, 9, 11, 13, 15]
+gtsteam.multiblock.steam_solar_boiler.final_tooltip=蒸气输出量 = 效率 * 结构边长 * 结构边长 * 20
+gtsteam.multiblock.steam_solar_boiler.throttle_button.tooltip=配置锅炉节流
+gtsteam.multiblock.steam_solar_boiler.throttle.title=锅炉节流
+gtsteam.multiblock.steam_solar_boiler.description=一个多方块太阳能锅炉
+
+#蒸汽水泵
+gtsteam.machine.steam_water_pump.name=蒸汽水泵
+gtsteam.machine.steam_water_pump.description=消耗蒸汽输出等量的水
+
+
 
 gtsteam.machine.steam_fermentation_vat.name=蒸汽发酵池
 gtsteam.machine.advanced_coke_oven.name=高级焦炉
@@ -134,20 +161,3 @@ gtsteam.machine.steam_turbine.ulv.tooltip=烧开水发电
 gtsteam.machine.combustion_generator.ulv.name=简易内燃发电机
 gtsteam.machine.combustion_generator.ulv.tooltip=吃燃料吐电火花
 
-gtsteam.machine.steam_solar_boiler.name=太阳能锅炉
-gtsteam.multiblock.steam_solar_boiler.steam_output=蒸汽输出：%s
-gtsteam.multiblock.steam_solar_boiler.efficiency=效率：%s
-gtsteam.multiblock.steam_solar_boiler.throttle=节流：%s
-gtsteam.multiblock.steam_solar_boiler.throttle.tooltip=锅炉可以节流，以减少燃料消耗与蒸汽产出，并且不损失效率，不影响加热时间。
-gtsteam.multiblock.steam_solar_boiler.throttle_increment=节流阀§a+5%%§r/n§7减少燃料消耗与蒸汽产出，并且不损失效率，不影响加热时间。
-gtsteam.multiblock.steam_solar_boiler.throttle_decrement=节流阀§c-5%%§r/n§7减少燃料消耗与蒸汽产出，并且不损失效率，不影响加热时间。
-gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip=需要§f%d秒§7预热,白天时热量上升，夜晚热量下降
-
-gtsteam.multiblock.steam_solar_boiler.explosion_tooltip=无水时将爆炸!
-gtsteam.multiblock.steam_solar_boiler.structure_tooltip=结构边长 ∈ [3, 5, 7, 9, 11, 13, 15]
-gtsteam.multiblock.steam_solar_boiler.final_tooltip=蒸气输出量 = 效率 * 结构边长 * 结构边长 * 20
-gtsteam.multiblock.steam_solar_boiler.throttle_button.tooltip=配置锅炉节流
-gtsteam.multiblock.steam_solar_boiler.throttle.title=锅炉节流
-gtsteam.multiblock.steam_solar_boiler.description=一个多方块太阳能锅炉
-gtsteam.machine.steam_water_pump.name=蒸汽水泵
-gtsteam.machine.steam_water_pump.description=消耗蒸汽输出等量的水
