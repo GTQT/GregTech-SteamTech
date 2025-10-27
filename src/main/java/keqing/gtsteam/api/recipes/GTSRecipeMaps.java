@@ -15,6 +15,7 @@ import static gregtech.api.gui.widgets.ProgressWidget.MoveType.HORIZONTAL;
 public class GTSRecipeMaps {
     public static final RecipeMap<SimpleRecipeBuilder> STEAM_BLAST_FURNACE_RECIPES;
     public static final RecipeMap<SimpleRecipeBuilder> BIOMIMETIC_FACTORY_RECIPES;
+    public static final RecipeMap<SimpleRecipeBuilder> LAVA_FURNACE_RECIPES;
     public static final RecipeMap<PrimitiveRecipeBuilder> ALLOY_kILN;
     public static final RecipeMap<PrimitiveRecipeBuilder> SAW_MILL;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_STEAM_TURBINE_FUELS;
@@ -48,6 +49,13 @@ public class GTSRecipeMaps {
                 .itemInputs(1)
                 .itemOutputs(16)
                 .sound(GTSoundEvents.ARC)
+                .build();
+
+        LAVA_FURNACE_RECIPES= new RecipeMapBuilder<>("lava_furnace",
+                new SimpleRecipeBuilder())
+                .itemInputs(1)
+                .fluidOutputs(1)
+                .sound(GTSoundEvents.FIRE)
                 .build();
 
         STEAM_BLAST_FURNACE_RECIPES = new RecipeMapBuilder<>("steam_blast_furnace",

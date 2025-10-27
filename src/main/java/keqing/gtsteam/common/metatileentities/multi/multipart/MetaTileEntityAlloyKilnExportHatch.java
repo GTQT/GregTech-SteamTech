@@ -72,7 +72,7 @@ public class MetaTileEntityAlloyKilnExportHatch extends MetaTileEntityMultiblock
     @Override
     public void addToMultiBlock(MultiblockControllerBase controllerBase) {
         super.addToMultiBlock(controllerBase);
-        this.itemInventory = new ItemHandlerProxy(controllerBase.getImportItems(), controllerBase.getExportItems());
+        this.itemInventory = new ItemHandlerProxy(controllerBase.getExportItems(), controllerBase.getExportItems());
     }
 
     @Override

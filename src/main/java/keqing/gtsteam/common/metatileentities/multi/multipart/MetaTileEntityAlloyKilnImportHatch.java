@@ -4,8 +4,6 @@ import codechicken.lib.raytracer.CuboidRayTraceResult;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
-import gregtech.api.capability.impl.FluidHandlerProxy;
-import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.capability.impl.ItemHandlerProxy;
 import gregtech.api.items.itemhandlers.GTItemStackHandler;
 import gregtech.api.metatileentity.MetaTileEntity;
@@ -57,7 +55,7 @@ public class MetaTileEntityAlloyKilnImportHatch extends MetaTileEntityMultiblock
             IFluidHandler fluidHandler = tileEntity == null ? null : tileEntity
                     .getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, getFrontFacing().getOpposite());
             if (fluidHandler != null) {
-                GTTransferUtils.transferFluids(fluidHandler, fluidInventory);
+                GTTransferUtils.transferFluids(fluidHandler, getController().getImportFluids());
             }
             IItemHandler itemHandler = tileEntity == null ? null : tileEntity
                     .getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, getFrontFacing().getOpposite());
@@ -70,21 +68,18 @@ public class MetaTileEntityAlloyKilnImportHatch extends MetaTileEntityMultiblock
     @Override
     protected void initializeInventory() {
         super.initializeInventory();
-        this.fluidInventory = new FluidTankList(false);
         this.itemInventory = new GTItemStackHandler(this, 0);
     }
 
     @Override
     public void addToMultiBlock(MultiblockControllerBase controllerBase) {
         super.addToMultiBlock(controllerBase);
-        this.fluidInventory = new FluidHandlerProxy(new FluidTankList(false), controllerBase.getImportFluids());
         this.itemInventory = new ItemHandlerProxy(controllerBase.getImportItems(), controllerBase.getImportItems());
     }
 
     @Override
     public void removeFromMultiBlock(MultiblockControllerBase controllerBase) {
         super.removeFromMultiBlock(controllerBase);
-        this.fluidInventory = new FluidTankList(false);
         this.itemInventory = new GTItemStackHandler(this, 0);
     }
 
@@ -109,7 +104,7 @@ public class MetaTileEntityAlloyKilnImportHatch extends MetaTileEntityMultiblock
     }
 
     @Override
-    public void addToolUsages(ItemStack stack,  World world, List<String> tooltip, boolean advanced) {
+    public void addToolUsages(ItemStack stack, World world, List<String> tooltip, boolean advanced) {
         tooltip.add(I18n.format("gregtech.tool_action.screwdriver.access_covers"));
         tooltip.add(I18n.format("gregtech.tool_action.wrench.set_facing"));
         super.addToolUsages(stack, world, tooltip, advanced);
@@ -118,9 +113,9 @@ public class MetaTileEntityAlloyKilnImportHatch extends MetaTileEntityMultiblock
     @Override
     public boolean onRightClick(EntityPlayer playerIn, EnumHand hand, EnumFacing facing,
                                 CuboidRayTraceResult hitResult) {
-        if (!playerIn.isSneaking() &&
+        if (!playerIn.isSneaking() && isAttachedToMultiBlock() &&
                 playerIn.getHeldItem(hand).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
-            return getWorld().isRemote || FluidUtil.interactWithFluidHandler(playerIn, hand, fluidInventory);
+            return getWorld().isRemote || FluidUtil.interactWithFluidHandler(playerIn, hand, getController().getImportFluids());
         }
         return super.onRightClick(playerIn, hand, facing, hitResult);
     }
