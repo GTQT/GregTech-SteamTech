@@ -90,6 +90,8 @@ gtsteam.multiblock.steam_solar_boiler.description=一个多方块太阳能锅炉
 #蒸汽水泵
 gtsteam.machine.steam_water_pump.name=蒸汽水泵
 gtsteam.machine.steam_water_pump.description=消耗蒸汽输出等量的水
+gtsteam.machine.large_steam_tank.name=大型蒸汽储罐
+gtsteam.machine.large_steam_tank.fluid_amount_text=蒸汽数量:
 
 
 
