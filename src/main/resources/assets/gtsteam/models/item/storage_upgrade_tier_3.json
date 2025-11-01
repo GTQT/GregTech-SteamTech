@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "gtsteam:item/storage_upgrade_tier_3"
+  }
+}

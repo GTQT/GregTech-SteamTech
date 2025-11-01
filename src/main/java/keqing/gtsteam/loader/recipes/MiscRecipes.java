@@ -3,6 +3,7 @@ package keqing.gtsteam.loader.recipes;
 import gregtech.api.GTValues;
 import gregtech.api.items.OreDictNames;
 import gregtech.api.recipes.ModHandler;
+import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.unification.material.MarkerMaterials;
 import gregtech.api.unification.material.Materials;
 import gregtech.api.unification.ore.OrePrefix;
@@ -17,7 +18,9 @@ import keqing.gtsteam.api.recipes.GTSRecipeMaps;
 import keqing.gtsteam.common.block.GTSteamMetaBlocks;
 import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing0;
 import keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
+import keqing.gtsteam.common.metatileentities.multi.store.storageupdate.ModItems;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import static gregtech.api.GTValues.V;
@@ -623,5 +626,50 @@ public class MiscRecipes {
                 'C', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.ULV),
                 'W', new UnificationEntry(OrePrefix.cableGtSingle, RedAlloy),
                 'G', new UnificationEntry(OrePrefix.gear, WroughtIron));
+
+        RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
+                .input(OrePrefix.plate, Materials.Steel, 4)
+                .input(OrePrefix.wireFine, Materials.RedAlloy, 16)
+                .input(OrePrefix.gear, Materials.WroughtIron, 2)
+                .fluidInputs(Materials.SolderingAlloy.getFluid(144))
+                .outputs(new ItemStack(ModItems.STORAGE_UPGRADE_TIER_1))
+                .duration(200)
+                .EUt(30)
+                .buildAndRegister();
+
+        // Advanced Storage Upgrade - MV Tier (120 EU/t)
+        RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
+                .input(OrePrefix.plate, Materials.Aluminium, 4)
+                .input(OrePrefix.wireFine, Materials.Aluminium, 16)
+                .input(OrePrefix.plate, Materials.RoseGold, 4)
+                .input(OrePrefix.gear, Materials.Steel, 2)
+                .fluidInputs(Materials.SolderingAlloy.getFluid(288))
+                .outputs(new ItemStack(ModItems.STORAGE_UPGRADE_TIER_2))
+                .duration(400)
+                .EUt(120)
+                .buildAndRegister();
+
+        // Elite Storage Upgrade - HV Tier (480 EU/t)
+        RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
+                .input(OrePrefix.plate, Materials.StainlessSteel, 4)
+                .input(OrePrefix.wireFine, Materials.Electrum, 8)
+                .input(OrePrefix.gear, Materials.StainlessSteel, 2)
+                .fluidInputs(Materials.SolderingAlloy.getFluid(576))
+                .outputs(new ItemStack(ModItems.STORAGE_UPGRADE_TIER_3))
+                .duration(600)
+                .EUt(480)
+                .buildAndRegister();
+
+        // Void Upgrade - MV Tier (120 EU/t)
+        RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
+                .input(OrePrefix.plate, Materials.Iron, 4)
+                .input(OrePrefix.wireFine, Materials.Copper, 8)
+                .input(Items.GLASS_BOTTLE, 1)
+                .input(OrePrefix.gear, Materials.Bronze, 1)
+                .fluidInputs(Materials.SolderingAlloy.getFluid(144))
+                .outputs(new ItemStack(ModItems.VOID_UPGRADE))
+                .duration(300)
+                .EUt(120)
+                .buildAndRegister();
     }
 }

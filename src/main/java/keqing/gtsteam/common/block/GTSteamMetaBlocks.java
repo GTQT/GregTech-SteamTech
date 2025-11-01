@@ -3,6 +3,7 @@ package keqing.gtsteam.common.block;
 import gregtech.common.blocks.MetaBlocks;
 import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing0;
 import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing1;
+import keqing.gtsteam.common.metatileentities.multi.store.storageupdate.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -31,8 +32,15 @@ public class GTSteamMetaBlocks {
     public static void registerItemModels() {
         registerItemModel(blockMultiblockCasing0);
         registerItemModel(blockMultiblockCasing1);
+        registerModel(ModItems.STORAGE_UPGRADE_TIER_1);
+        registerModel(ModItems.STORAGE_UPGRADE_TIER_2);
+        registerModel(ModItems.STORAGE_UPGRADE_TIER_3);
+        registerModel(ModItems.VOID_UPGRADE);
     }
-
+    private static void registerModel(Item item) {
+        ModelLoader.setCustomModelResourceLocation(item, 0,
+                new ModelResourceLocation(item.getRegistryName(), "inventory"));
+    }
     @SideOnly(Side.CLIENT)
     private static void registerItemModel(Block block) {
 

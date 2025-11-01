@@ -1,5 +1,6 @@
 package keqing.gtsteam.client;
 
+import keqing.gtsteam.GTSteam;
 import keqing.gtsteam.client.textures.GTSteamTextures;
 import keqing.gtsteam.common.CommonProxy;
 import keqing.gtsteam.common.block.GTSteamMetaBlocks;

@@ -17,6 +17,7 @@ import keqing.gtsteam.common.metatileentities.multi.steam.*;
 import keqing.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamBiomimeticFactory;
 import keqing.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamTranscendentPlasmaForge;
 import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityMultiblockTank;
+import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityScalableStorage;
 import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityTankValve;
 import net.minecraft.util.ResourceLocation;
 
@@ -82,6 +83,8 @@ public class GTSteamMetaTileEntities {
     public static SimpleGeneratorMetaTileEntity COMBUSTION_GENERATOR;
     public static MetaTileEntitySteamSolarBoiler STEAM_SOLAR_BOILER;
     public static MetaTileEntityLargeSteamTank LARGE_STEAM_TANK;
+    public static MetaTileEntityScalableStorage SCALABLE_STORAGE; //MIT License //Author iristhepianist //https://github.com/iristhepianist/ScalableStorageCEu/
+    public static MetaTileEntitySteamLavaFurnace STEAM_LAVA_FURNACE;
     public static ResourceLocation gtsId(String id) {
         return new ResourceLocation(MODID, id);
     }
@@ -140,11 +143,14 @@ public class GTSteamMetaTileEntities {
         WIREMILL = registerMetaTileEntity(57, new SimpleMachineMetaTileEntity(gtsId("wiremill.ulv"), RecipeMaps.WIREMILL_RECIPES, Textures.WIREMILL_OVERLAY, 0, true));
 
         //发电机ULV
-        STEAM_TURBINE = registerMetaTileEntity(60, new MetaTileEntitySingleTurbine(gtsId("steam_turbine.ulv"), PRIMITIVE_STEAM_TURBINE_FUELS, Textures.STEAM_TURBINE_OVERLAY, 0, tier -> 2000));
-        COMBUSTION_GENERATOR = registerMetaTileEntity(61, new MetaTileEntitySingleCombustion(gtsId("combustion_generator.ulv"), PRIMITIVE_COMBUSTION_GENERATOR_FUELS, Textures.COMBUSTION_GENERATOR_OVERLAY, 0, tier -> 2000));
+        STEAM_TURBINE = registerMetaTileEntity(60, new MetaTileEntitySingleTurbine(gtsId("steam_turbine.ulv"), PRIMITIVE_STEAM_TURBINE_FUELS, Textures.STEAM_TURBINE_OVERLAY, 0, tier -> 2000,true));
+        COMBUSTION_GENERATOR = registerMetaTileEntity(61, new MetaTileEntitySingleCombustion(gtsId("combustion_generator.ulv"), PRIMITIVE_COMBUSTION_GENERATOR_FUELS, Textures.COMBUSTION_GENERATOR_OVERLAY, 0, tier -> 2000,true));
         STEAM_SOLAR_BOILER = registerMetaTileEntity(62,new MetaTileEntitySteamSolarBoiler(gtsId("steam_solar_boiler")));
 
         STEAM_WATER_PUMP = registerMetaTileEntity(63,new MetaTileEntitySteamWaterPump(gtsId("steam_water_pump")));
         LARGE_STEAM_TANK = registerMetaTileEntity(64,new MetaTileEntityLargeSteamTank(gtsId("large_steam_tank"),216000000));
+        SCALABLE_STORAGE = registerMetaTileEntity(65, new MetaTileEntityScalableStorage(
+                      gtsId("scalable_storage")));
+        STEAM_LAVA_FURNACE = registerMetaTileEntity(66,new MetaTileEntitySteamLavaFurnace(gtsId("steam_lava_furnace")));
     }
 }
