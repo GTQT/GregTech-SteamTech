@@ -50,10 +50,10 @@ public class MetaTileEntitySteamAlloyFurnace extends RecipeMapSteamMultiblockCon
                 .aisle("XXX", "CSC", "CCC")
                 .where('S', selfPredicate())
                 .where('X', states(getFireboxState())
-                        .or(autoAbilities(true, false, false, false,false, false, false).setMinGlobalLimited(1)
+                        .or(autoAbilities(true, false, false, false, false, false, false).setMinGlobalLimited(1)
                                 .setMaxGlobalLimited(3)))
                 .where('C', states(getCasingState()).setMinGlobalLimited(6)
-                        .or(autoAbilities(false, false, true, true,false, false, false)))
+                        .or(autoAbilities(false, false, true, true, false, false, false)))
                 .where('#', any())
                 .build();
     }
@@ -108,7 +108,7 @@ public class MetaTileEntitySteamAlloyFurnace extends RecipeMapSteamMultiblockCon
     }
 
     @Override
-    public void addInformation(ItemStack stack,  World player,  List<String> tooltip,
+    public void addInformation(ItemStack stack, World player, List<String> tooltip,
                                boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         tooltip.add(I18n.format("gregtech.multiblock.steam_.duration_modifier"));

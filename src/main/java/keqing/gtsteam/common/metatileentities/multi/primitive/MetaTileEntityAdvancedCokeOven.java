@@ -10,8 +10,6 @@ import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
 import com.cleanroommc.modularui.widgets.ItemSlot;
 import com.cleanroommc.modularui.widgets.ProgressWidget;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
-import gregtech.api.GTValues;
-import gregtech.api.capability.impl.PrimitiveRecipeLogic;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityUIFactory;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
@@ -23,40 +21,37 @@ import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.mui.widget.RecipeProgressWidget;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
-import gregtech.api.recipes.RecipeMap;
 import gregtech.api.recipes.RecipeMaps;
-import gregtech.api.unification.material.Materials;
-import gregtech.client.particle.VanillaParticleEffects;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
-import gregtech.common.ConfigHolder;
-import gregtech.common.blocks.BlockMetalCasing;
-import gregtech.common.blocks.MetaBlocks;
+import gregtech.client.utils.TooltipHelper;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.common.mui.widget.GTFluidSlot;
+import keqing.gtsteam.client.textures.GTSteamTextures;
+import keqing.gtsteam.common.block.GTSteamMetaBlocks;
+import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing0;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 
 public class MetaTileEntityAdvancedCokeOven extends RecipeMapPrimitiveMultiblockController {
 
     public MetaTileEntityAdvancedCokeOven(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.COKE_OVEN_RECIPES);
-        this.recipeMapWorkable = new AdvancedCokeOveLogic(this, RecipeMaps.COKE_OVEN_RECIPES);
-    }
-
-    private static IBlockState getFrameState() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel) :
-                MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
+        recipeMapWorkable.setSpeedBonus(0.6);
     }
 
     @Override
@@ -67,29 +62,25 @@ public class MetaTileEntityAdvancedCokeOven extends RecipeMapPrimitiveMultiblock
     @Override
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
-                .aisle("XXXXX", "XXXXX", "XXXXX", " XXX ", " XXX ")
-                .aisle("XXXXX", "XFFFX", "XFFFX", " XFX ", " XXX ")
-                .aisle("XXXXX", "X###X", "X###X", " X#X ", " XXX ")
-                .aisle("XXXXX", "XFFFX", "XFFFX", " XFX ", " XXX ")
-                .aisle("XXXXX", "XXYXX", "XXXXX", " XXX ", " XXX ")
+                .aisle("XXX", "XXX", "XXX")
+                .aisle("XXX", "X#X", "XXX")
+                .aisle("XXX", "XYX", "XXX")
                 .where('X',
                         states(getCasingState())
-                                .or(metaTileEntities(MetaTileEntities.COKE_OVEN_HATCH).setMaxGlobalLimited(10)))
+                                .or(metaTileEntities(MetaTileEntities.COKE_OVEN_HATCH).setMaxGlobalLimited(5)))
                 .where('#', air())
-                .where(' ', any())
-                .where('F', states(getFrameState()))
                 .where('Y', selfPredicate())
                 .build();
     }
 
     protected IBlockState getCasingState() {
-        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.COKE_BRICKS);
+        return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
-        return Textures.COKE_BRICKS;
+        return GTSteamTextures.PORCELAIN_TILES;
     }
 
     @Override
@@ -152,19 +143,6 @@ public class MetaTileEntityAdvancedCokeOven extends RecipeMapPrimitiveMultiblock
     }
 
     @Override
-    public void randomDisplayTick() {
-        if (this.isActive()) {
-            VanillaParticleEffects.defaultFrontEffect(this, 0.3F, EnumParticleTypes.SMOKE_LARGE,
-                    EnumParticleTypes.FLAME);
-            if (ConfigHolder.machines.machineSounds && GTValues.RNG.nextDouble() < 0.1) {
-                BlockPos pos = getPos();
-                getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(),
-                        SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
-            }
-        }
-    }
-
-    @Override
     public boolean onRightClick(EntityPlayer playerIn, EnumHand hand, EnumFacing facing,
                                 CuboidRayTraceResult hitResult) {
         // try to fill a bucket (or similar) with creosote on right click (if not sneaking)
@@ -182,16 +160,11 @@ public class MetaTileEntityAdvancedCokeOven extends RecipeMapPrimitiveMultiblock
         return super.onRightClick(playerIn, hand, facing, hitResult);
     }
 
-    protected static class AdvancedCokeOveLogic extends PrimitiveRecipeLogic {
-
-        public AdvancedCokeOveLogic(RecipeMapPrimitiveMultiblockController tileEntity, RecipeMap<?> recipeMap) {
-            super(tileEntity, recipeMap);
-        }
-
-        @Override
-        public void setMaxProgress(int maxProgress) {
-            this.maxProgressTime = (int) (maxProgress * 0.2);
-        }
+    @Override
+    public void addInformation(ItemStack stack, World player, List<String> tooltip, boolean advanced) {
+        super.addInformation(stack, player, tooltip, advanced);
+        tooltip.add(TooltipHelper.RAINBOW_SLOW + I18n.format("高级焦炉？", new Object[0]));
+        tooltip.add(I18n.format("比普通的焦炉快40%%"));
     }
 }
 

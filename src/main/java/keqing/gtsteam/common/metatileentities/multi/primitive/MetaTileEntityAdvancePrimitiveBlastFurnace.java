@@ -86,12 +86,16 @@ public class MetaTileEntityAdvancePrimitiveBlastFurnace extends RecipeMapPrimiti
                 .aisle("XXX", "XXX", "XXX", "XXX")
                 .aisle("XXX", "X&X", "X#X", "X#X")
                 .aisle("XXX", "XYX", "XXX", "XXX")
-                .where('X', states(GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES)))
+                .where('X', states(getCasingState()))
                 .where('#', air())
                 .where('&', air().or(SNOW_PREDICATE)) // this won't stay in the structure, and will be broken while
                 // running
                 .where('Y', selfPredicate())
                 .build();
+    }
+
+    protected IBlockState getCasingState() {
+        return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES);
     }
 
     @SideOnly(Side.CLIENT)

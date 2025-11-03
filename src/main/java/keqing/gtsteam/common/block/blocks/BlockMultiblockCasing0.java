@@ -27,7 +27,7 @@ public class BlockMultiblockCasing0 extends VariantBlock<BlockMultiblockCasing0.
         return false;
     }
 
-    public static enum CasingType implements IStringSerializable {
+    public enum CasingType implements IStringSerializable {
 
         //镀锌瓷瓦砖
         GALVANIZED_PORCELAIN_TILES("galvanized_porcelain_tiles");

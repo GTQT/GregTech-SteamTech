@@ -2,31 +2,11 @@
 //Author iristhepianist
 //https://github.com/iristhepianist/ScalableStorageCEu/
 package keqing.gtsteam.common.metatileentities.multi.store;
-import java.util.List;
-import gregtech.api.capability.impl.ItemHandlerList;
-import gregtech.common.blocks.BlockMetalCasing;
-import keqing.gtsteam.common.metatileentities.multi.store.storageupdate.ItemStorageUpgrade;
-import keqing.gtsteam.common.metatileentities.multi.store.storageupdate.ItemVoidUpgrade;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.ItemStackHandler;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
+import gregtech.api.capability.impl.ItemHandlerList;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
@@ -36,14 +16,34 @@ import gregtech.api.metatileentity.multiblock.MultiblockWithDisplayBase;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.pattern.PatternMatchContext;
-import gregtech.api.util.RelativeDirection;
 import gregtech.api.util.TextFormattingUtil;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
+import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
+import keqing.gtsteam.common.item.storageupdate.ItemStorageUpgrade;
+import keqing.gtsteam.common.item.storageupdate.ItemVoidUpgrade;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class MetaTileEntityScalableStorage extends MultiblockWithDisplayBase {
 
+    private static final int BASE_CAPACITY = 4000000;
+    private static final int DURABILITY_INTERVAL = 200;
     private ItemStackHandler storageHandler;
     private ItemStack storedItemType = ItemStack.EMPTY;
     private int virtualStoredCount = 0;
@@ -52,12 +52,14 @@ public class MetaTileEntityScalableStorage extends MultiblockWithDisplayBase {
     private boolean hasValidUpgrade = true;
     private boolean hasVoidUpgrade = false;
     private int durabilityTimer = 0;
-    private static final int BASE_CAPACITY = 4000000;
-    private static final int DURABILITY_INTERVAL = 200;
 
     public MetaTileEntityScalableStorage(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId);
         initializeStorageHandler();
+    }
+
+    private static IBlockState getCasingState() {
+        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
     }
 
     @Override
@@ -152,8 +154,7 @@ public class MetaTileEntityScalableStorage extends MultiblockWithDisplayBase {
             for (int i = 0; i < importItems.getSlots(); i++) {
                 ItemStack stack = importItems.getStackInSlot(i);
                 if (stack != null && !stack.isEmpty() && stack.getItem() != null) {
-                    if (stack.getItem() instanceof ItemStorageUpgrade) {
-                        ItemStorageUpgrade upgrade = (ItemStorageUpgrade) stack.getItem();
+                    if (stack.getItem() instanceof ItemStorageUpgrade upgrade) {
                         if (upgrade.getTier() != 3 && stack.getMaxDamage() > 0) {
                             if (stack.getItemDamage() < stack.getMaxDamage()) {
                                 try {
@@ -185,8 +186,7 @@ public class MetaTileEntityScalableStorage extends MultiblockWithDisplayBase {
                 if (stack != null && !stack.isEmpty() && stack.getItem() != null) {
                     if (stack.getItem() instanceof ItemVoidUpgrade) {
                         foundVoidUpgrade = true;
-                    } else if (stack.getItem() instanceof ItemStorageUpgrade) {
-                        ItemStorageUpgrade upgrade = (ItemStorageUpgrade) stack.getItem();
+                    } else if (stack.getItem() instanceof ItemStorageUpgrade upgrade) {
 
                         if (upgrade.getTier() == 3 ||
                                 (stack.getMaxDamage() > 0 && stack.getItemDamage() < stack.getMaxDamage())) {
@@ -268,8 +268,7 @@ public class MetaTileEntityScalableStorage extends MultiblockWithDisplayBase {
                                     list.add(new TextComponentString(TextFormatting.DARK_RED + "Void Upgrade: " +
                                             TextFormatting.RED + "Active"));
                                     foundAnyUpgrade = true;
-                                } else if (stack.getItem() instanceof ItemStorageUpgrade) {
-                                    ItemStorageUpgrade upgrade = (ItemStorageUpgrade) stack.getItem();
+                                } else if (stack.getItem() instanceof ItemStorageUpgrade upgrade) {
                                     foundAnyUpgrade = true;
                                     if (upgrade.getTier() == 3) {
                                         list.add(new TextComponentString(TextFormatting.AQUA + "Elite Upgrade: " +
@@ -320,10 +319,6 @@ public class MetaTileEntityScalableStorage extends MultiblockWithDisplayBase {
                 .build();
     }
 
-    private static IBlockState getCasingState() {
-        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
-    }
-
     @Override
     protected void formStructure(PatternMatchContext context) {
         super.formStructure(context);
@@ -352,11 +347,20 @@ public class MetaTileEntityScalableStorage extends MultiblockWithDisplayBase {
 
     private void calculateStorageCapacity() {
         switch (currentUpgradeTier) {
-            case 0: this.maxStorageCapacity = BASE_CAPACITY; break;
-            case 1: this.maxStorageCapacity = 32000000; break;
-            case 2: this.maxStorageCapacity = 64000000; break;
-            case 3: this.maxStorageCapacity = 256000000; break;
-            default: this.maxStorageCapacity = BASE_CAPACITY;
+            case 0:
+                this.maxStorageCapacity = BASE_CAPACITY;
+                break;
+            case 1:
+                this.maxStorageCapacity = 32000000;
+                break;
+            case 2:
+                this.maxStorageCapacity = 64000000;
+                break;
+            case 3:
+                this.maxStorageCapacity = 256000000;
+                break;
+            default:
+                this.maxStorageCapacity = BASE_CAPACITY;
         }
     }
 

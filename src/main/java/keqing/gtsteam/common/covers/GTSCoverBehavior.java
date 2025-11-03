@@ -16,7 +16,7 @@ import static gregtech.common.covers.CoverBehaviors.registerCover;
 public class GTSCoverBehavior {
 
     public static void init() {
-        
+
         registerBehavior(new ResourceLocation(GTSteam.MODID, "pump.ulv"), GTSMetaitems.ELECTRIC_PUMP_ULV,
                 (def, tile, side) -> new CoverPump(def, tile, side, GTValues.ULV, 320));
         registerBehavior(new ResourceLocation(GTSteam.MODID, "conveyor.ulv"), GTSMetaitems.CONVEYOR_MODULE_ULV,

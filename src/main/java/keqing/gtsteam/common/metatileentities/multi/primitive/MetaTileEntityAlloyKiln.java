@@ -27,6 +27,7 @@ import keqing.gtsteam.client.textures.GTSteamTextures;
 import keqing.gtsteam.common.block.GTSteamMetaBlocks;
 import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing0;
 import keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
@@ -52,10 +53,10 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
     @Override
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
-                .aisle("XXX", "XXX", "XXX")
-                .aisle("XXX", "X&X", "XXX")
-                .aisle("XXX", "XYX", "XXX")
-                .where('X', states(GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES))
+                .aisle("XXX", "XXX", "#X#")
+                .aisle("XXX", "X&X", "#X#")
+                .aisle("XXX", "XYX", "#X#")
+                .where('X', states(getCasingState())
                         .or(metaTileEntities(GTSteamMetaTileEntities.ALLOY_KILN_IMPORT_HATCH).setMaxGlobalLimited(2))
                         .or(metaTileEntities(GTSteamMetaTileEntities.ALLOY_KILN_EXPORT_HATCH).setMaxGlobalLimited(1))
                 )
@@ -64,6 +65,10 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
 
                 .where('Y', selfPredicate())
                 .build();
+    }
+
+    protected IBlockState getCasingState() {
+        return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES);
     }
 
     @Override

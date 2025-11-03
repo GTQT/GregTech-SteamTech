@@ -90,8 +90,11 @@ public class MetaTileEntitySteamCentrifuge extends RecipeMapSteamMultiblockContr
     public int getItemOutputLimit() {
         return 100;
     }
+
     @Override
-    public int getFluidOutputLimit() {return 100000000;}
+    public int getFluidOutputLimit() {
+        return 100000000;
+    }
 
     @Override
     public void addInformation(ItemStack stack, World player, List<String> tooltip,
