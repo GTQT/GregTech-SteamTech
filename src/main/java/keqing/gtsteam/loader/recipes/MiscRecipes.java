@@ -81,6 +81,13 @@ public class MiscRecipes {
                 .EUt(V[GTValues.ULV])
                 .buildAndRegister();
 
+        PRIMITIVE_COMBUSTION_GENERATOR_FUELS.recipeBuilder()
+                .fluidInputs(NaturalGas.getFluid(8))
+                .duration(20)
+                .EUt(V[GTValues.ULV])
+                .buildAndRegister();
+
+
         LAVA_FURNACE_RECIPES.recipeBuilder()
                 .input(dust, Stone)
                 .fluidOutputs(Lava.getFluid(1000))
