@@ -4,6 +4,8 @@ recipemap.steam_ore_washer.name=蒸汽洗矿厂
 recipemap.steam_blast_furnace.name=大型蒸汽高炉
 recipemap.lava_furnace.name=熔岩炉
 recipemap.biomimetic_factory_recipes.name=物质拟生
+recipemap.primitive_steam_turbine.name=原始蒸汽轮机
+recipemap.primitive_combustion_generator.name=原始燃气/燃油热机
 #材料
 gtsteam.material.bone_ceramic_clay=骨陶瓷粘土
 #方块

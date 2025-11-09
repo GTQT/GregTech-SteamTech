@@ -77,8 +77,10 @@ public class GTSteamMetaTileEntities {
     public static SimpleMachineMetaTileEntity PACKER;
     public static SimpleMachineMetaTileEntity SIFTER;
     public static SimpleMachineMetaTileEntity WIREMILL;
-    public static SimpleGeneratorMetaTileEntity STEAM_TURBINE;
-    public static SimpleGeneratorMetaTileEntity COMBUSTION_GENERATOR;
+
+    public static MetaTileEntitySingleTurbine STEAM_TURBINE;
+    public static MetaTileEntitySingleCombustion COMBUSTION_GENERATOR;
+
     public static MetaTileEntitySteamSolarBoiler STEAM_SOLAR_BOILER;
     public static MetaTileEntityLargeSteamTank LARGE_STEAM_TANK;
     public static MetaTileEntityScalableStorage SCALABLE_STORAGE; //MIT License //Author iristhepianist //https://github.com/iristhepianist/ScalableStorageCEu/
@@ -147,7 +149,7 @@ public class GTSteamMetaTileEntities {
         WIREMILL = registerMetaTileEntity(57, new SimpleMachineMetaTileEntity(gtsId("wiremill.ulv"), RecipeMaps.WIREMILL_RECIPES, Textures.WIREMILL_OVERLAY, 0, true));
 
         //发电机ULV
-        STEAM_TURBINE = registerMetaTileEntity(60, new MetaTileEntitySingleTurbine(gtsId("steam_turbine.ulv"), PRIMITIVE_STEAM_TURBINE_FUELS, Textures.STEAM_TURBINE_OVERLAY, 0, tier -> 2000, true));
-        COMBUSTION_GENERATOR = registerMetaTileEntity(61, new MetaTileEntitySingleCombustion(gtsId("combustion_generator.ulv"), PRIMITIVE_COMBUSTION_GENERATOR_FUELS, Textures.COMBUSTION_GENERATOR_OVERLAY, 0, tier -> 2000, true));
+        STEAM_TURBINE = registerMetaTileEntity(60, new MetaTileEntitySingleTurbine(gtsId("steam_turbine.ulv"), PRIMITIVE_STEAM_TURBINE_FUELS, Textures.STEAM_TURBINE_OVERLAY, 0, tier -> 2000, 100));
+        COMBUSTION_GENERATOR = registerMetaTileEntity(61, new MetaTileEntitySingleCombustion(gtsId("combustion_generator.ulv"), PRIMITIVE_COMBUSTION_GENERATOR_FUELS, Textures.COMBUSTION_GENERATOR_OVERLAY, 0, tier -> 2000, 100));
     }
 }

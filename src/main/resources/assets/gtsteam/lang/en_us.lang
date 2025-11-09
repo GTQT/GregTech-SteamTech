@@ -4,6 +4,8 @@ recipemap.steam_ore_washer.name=Steam Ore Washer
 recipemap.steam_blast_furnace.name=Large Steam Blast Furnace
 recipemap.lava_furnace.name=Lava Furnace
 recipemap.biomimetic_factory_recipes.name=Matter Simulacrum
+recipemap.primitive_steam_turbine.name=Primitive Steam Turbine
+recipemap.primitive_combustion_generator.name=Primitive Combustion Generator
 #材料
 gtsteam.material.bone_ceramic_clay=Bone Ceramic Clay
 #方块
