@@ -16,6 +16,7 @@ import keqing.gtsteam.common.metatileentities.multi.primitive.*;
 import keqing.gtsteam.common.metatileentities.multi.steam.*;
 import keqing.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamBiomimeticFactory;
 import keqing.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamTranscendentPlasmaForge;
+import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityLargeFluidTank;
 import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityMultiblockTank;
 import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityScalableStorage;
 import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityTankValve;
@@ -85,6 +86,7 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntityLargeSteamTank LARGE_STEAM_TANK;
     public static MetaTileEntityScalableStorage SCALABLE_STORAGE; //MIT License //Author iristhepianist //https://github.com/iristhepianist/ScalableStorageCEu/
     public static MetaTileEntitySteamLavaFurnace STEAM_LAVA_FURNACE;
+    public static MetaTileEntityLargeFluidTank LARGE_FLUID_TANK;
     public static ResourceLocation gtsId(String id) {
         return new ResourceLocation(MODID, id);
     }
@@ -152,5 +154,6 @@ public class GTSteamMetaTileEntities {
         SCALABLE_STORAGE = registerMetaTileEntity(65, new MetaTileEntityScalableStorage(
                       gtsId("scalable_storage")));
         STEAM_LAVA_FURNACE = registerMetaTileEntity(66,new MetaTileEntitySteamLavaFurnace(gtsId("steam_lava_furnace")));
+        LARGE_FLUID_TANK = registerMetaTileEntity(67,new MetaTileEntityLargeFluidTank(gtsId("large_fluid_tank")));
     }
 }

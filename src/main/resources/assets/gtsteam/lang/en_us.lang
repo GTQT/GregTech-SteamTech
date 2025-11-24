@@ -185,3 +185,10 @@ gtsteam.void_upgrade.tooltip=Destroys excess items when storage and output are f
 
 # Controller Block
 tile.scalable_storage_controller.tooltip=Author: iristhpianist
+gtsteam.machine.large_steam_tank.name=Large Steam Tank
+gtsteam.machine.large_steam_tank.fluid_amount_text=Steam Amount:
+gtsteam.machine.large_fluid_tank.fluid_amount_text=Fluid Type: %s
+gtsteam.machine.large_fluid_tank.empty= "Empty"
+gtsteam.machine.large_fluid_tank.information=可存储(体积x16000)L的流体
+gtsteam.machine.large_fluid_tank.fluid_capacity_text=流体容量: %d
+gtsteam.machine.large_fluid_tank.name=Large Fluid Tank

@@ -92,9 +92,11 @@ gtsteam.machine.steam_water_pump.name=蒸汽水泵
 gtsteam.machine.steam_water_pump.description=消耗蒸汽输出等量的水
 gtsteam.machine.large_steam_tank.name=大型蒸汽储罐
 gtsteam.machine.large_steam_tank.fluid_amount_text=蒸汽数量:
-
-
-
+gtsteam.machine.large_fluid_tank.name=大型流体储罐
+gtsteam.machine.large_fluid_tank.fluid_amount_text=流体类型: %s
+gtsteam.machine.large_fluid_tank.empty=空
+gtsteam.machine.large_fluid_tank.information=可存储(体积x16000)L的流体
+gtsteam.machine.large_fluid_tank.fluid_capacity_text=流体容量: %d
 gtsteam.machine.steam_fermentation_vat.name=蒸汽发酵池
 gtsteam.machine.advanced_coke_oven.name=高级焦炉
 gtsteam.machine.steam_transcendent_plasma_forge.name=超维度蒸汽锻炉
@@ -200,6 +202,8 @@ gtsteam.storage_upgrade_tier_2.tooltip=将存储容量升级至 6400 万（10000
 gtsteam.storage_upgrade_tier_3.tooltip=将存储容量升级至 2.56 亿（永久：永不过期）
 
 gtsteam.void_upgrade.tooltip=存储和输出满时销毁多余物品
+
+
 
 # 控制器方块
 
