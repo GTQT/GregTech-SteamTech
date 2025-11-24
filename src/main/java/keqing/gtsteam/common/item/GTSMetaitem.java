@@ -1,6 +1,5 @@
 package keqing.gtsteam.common.item;
 
-import gregtech.api.GregTechAPI;
 import gregtech.api.items.metaitem.StandardMetaItem;
 
 public class GTSMetaitem extends StandardMetaItem {

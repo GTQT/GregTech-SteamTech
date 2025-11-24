@@ -4,6 +4,8 @@ recipemap.steam_ore_washer.name=蒸汽洗矿厂
 recipemap.steam_blast_furnace.name=大型蒸汽高炉
 recipemap.lava_furnace.name=熔岩炉
 recipemap.biomimetic_factory_recipes.name=物质拟生
+recipemap.primitive_steam_turbine.name=原始蒸汽轮机
+recipemap.primitive_combustion_generator.name=原始燃气/燃油热机
 #材料
 gtsteam.material.bone_ceramic_clay=骨陶瓷粘土
 #方块
@@ -28,6 +30,15 @@ metaitem.unburned_ceramic_tiles.name=未烧制的陶瓷瓦
 metaitem.burned_ceramic_tiles.name=已烧制的陶瓷瓦
 metaitem.galvanized_ceramic_tile.name=镀锌的陶瓷瓦
 
+item.storage_upgrade_tier_1.name=基础存储升级
+item.storage_upgrade_tier_2.name=高级存储升级
+item.storage_upgrade_tier_3.name=精英存储升级
+item.void_upgrade.name=虚空存储升级
+
+gtsteam.storage_upgrade_tier_1.tooltip=将存储容量升级至 3200 万（10000 次使用：约 27.8 小时）
+gtsteam.storage_upgrade_tier_2.tooltip=将存储容量升级至 6400 万（100000 次使用：约 277.8 小时）
+gtsteam.storage_upgrade_tier_3.tooltip=将存储容量升级至 2.56 亿（永久：永不过期）
+gtsteam.void_upgrade.tooltip=存储和输出满时销毁多余物品
 #多方块
 gtsteam.machine.steam_ore_washer.name=蒸汽洗矿厂
 gtsteam.machine.steam_hammer.name=蒸汽锻造锤
@@ -52,6 +63,9 @@ gtsteam.machine.advance_primitive_blast_furnace.name=强化土高炉
 #工业土高炉
 gtsteam.machine.industrial_primitive_blast_furnace.name=工业级土高炉
 gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace=附属高炉： %s 座
+
+#高级焦炉
+gtsteam.machine.advanced_coke_oven.name=高级焦炉
 
 gtsteam.multiblock.ip1.amount=风量：%sL(风量上限 %s L)
 gtsteam.multiblock.ip2.amount=温度：%sK(最高温度 %s K)
@@ -90,8 +104,13 @@ gtsteam.multiblock.steam_solar_boiler.description=一个多方块太阳能锅炉
 #蒸汽水泵
 gtsteam.machine.steam_water_pump.name=蒸汽水泵
 gtsteam.machine.steam_water_pump.description=消耗蒸汽输出等量的水
+
+gtsteam.machine.tank_valve.bronze.name=青铜储罐阀门
+gtsteam.machine.tank.bronze.name=青铜多方块储罐
+#大型蒸汽储罐
 gtsteam.machine.large_steam_tank.name=大型蒸汽储罐
 gtsteam.machine.large_steam_tank.fluid_amount_text=蒸汽数量:
+
 gtsteam.machine.large_fluid_tank.name=大型流体储罐
 gtsteam.machine.large_fluid_tank.fluid_amount_text=流体类型: %s
 gtsteam.machine.large_fluid_tank.empty=空
@@ -102,9 +121,13 @@ gtsteam.machine.advanced_coke_oven.name=高级焦炉
 gtsteam.machine.steam_transcendent_plasma_forge.name=超维度蒸汽锻炉
 gtsteam.machine.steam_biomimetic_factory.name=武德之眼
 
-gtsteam.machine.tank_valve.bronze.name=青铜储罐阀门
-gtsteam.machine.tank.bronze.name=青铜多方块储罐
-
+gtsteam.machine.scalable_storage.name=可扩展存储筒仓
+gtsteam.machine.scalable_storage.capacity=最大容量：%s 个物品
+gtsteam.machine.scalable_storage.stored=已存储：%s 个物品（%s/%s 个物品 - %.1f%% 已满）
+gtsteam.machine.scalable_storage.empty=空 - 插入任意物品以设置类型
+gtsteam.machine.scalable_storage.tooltip1=可存储大量单一类型的物品
+gtsteam.machine.scalable_storage.tooltip2=可升级以增加存储容量和功能
+tile.scalable_storage_controller.tooltip=源项目：ScalableStorageCEu 作者：iristhpianist
 # 机器名称和工具提示
 gtsteam.machine.electric_furnace.ulv.name=简易电炉
 gtsteam.machine.electric_furnace.ulv.tooltip=慢速版"电生热"基础课

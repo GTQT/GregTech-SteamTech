@@ -18,12 +18,13 @@ public class GTSMetaitems {
     public static MetaItem<?>.MetaValueItem GALVANIZED_CERAMIC_TILE;
 
     public static GTSMetaitem GTS_META_ITEM;
+
     public static void initialization() {
         GTS_META_ITEM = new GTSMetaitem();
 
     }
-    public static void initSubItems()
-    {
+
+    public static void initSubItems() {
         GTSMetaitem.registerItems();
     }
 

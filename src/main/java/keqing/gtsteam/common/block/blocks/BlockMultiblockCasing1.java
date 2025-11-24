@@ -27,7 +27,7 @@ public class BlockMultiblockCasing1 extends VariantBlock<BlockMultiblockCasing1.
         return false;
     }
 
-    public static enum CasingType implements IStringSerializable {
+    public enum CasingType implements IStringSerializable {
 
         SOLAR_COLLECTOR("solar_collector");
 

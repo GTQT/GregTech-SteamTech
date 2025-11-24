@@ -10,15 +10,12 @@ import gregtech.api.unification.ore.OrePrefix;
 import gregtech.api.unification.stack.UnificationEntry;
 import gregtech.common.ConfigHolder;
 import gregtech.common.blocks.BlockMachineCasing;
-import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.items.MetaItems;
 import gregtech.common.metatileentities.MetaTileEntities;
-import keqing.gtsteam.api.recipes.GTSRecipeMaps;
 import keqing.gtsteam.common.block.GTSteamMetaBlocks;
-import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing0;
 import keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
-import keqing.gtsteam.common.metatileentities.multi.store.storageupdate.ModItems;
+import keqing.gtsteam.common.item.storageupdate.ModItems;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -83,6 +80,13 @@ public class MiscRecipes {
                 .duration(20)
                 .EUt(V[GTValues.ULV])
                 .buildAndRegister();
+
+        PRIMITIVE_COMBUSTION_GENERATOR_FUELS.recipeBuilder()
+                .fluidInputs(NaturalGas.getFluid(8))
+                .duration(20)
+                .EUt(V[GTValues.ULV])
+                .buildAndRegister();
+
 
         LAVA_FURNACE_RECIPES.recipeBuilder()
                 .input(dust, Stone)

@@ -1,6 +1,5 @@
 package keqing.gtsteam.common.metatileentities;
 
-import gregtech.api.GTValues;
 import gregtech.api.metatileentity.SimpleGeneratorMetaTileEntity;
 import gregtech.api.metatileentity.SimpleMachineMetaTileEntity;
 import gregtech.api.recipes.RecipeMaps;
@@ -17,13 +16,12 @@ import keqing.gtsteam.common.metatileentities.multi.steam.*;
 import keqing.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamBiomimeticFactory;
 import keqing.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamTranscendentPlasmaForge;
 import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityLargeFluidTank;
+import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityLargeSteamTank;
 import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityMultiblockTank;
 import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityScalableStorage;
 import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityTankValve;
 import net.minecraft.util.ResourceLocation;
 
-import static gregtech.api.util.GTUtility.gregtechId;
-import static gregtech.common.metatileentities.MetaTileEntities.registerMetaTileEntities;
 import static gregtech.common.metatileentities.MetaTileEntities.registerMetaTileEntity;
 import static keqing.gtsteam.GTSteam.MODID;
 import static keqing.gtsteam.api.recipes.GTSRecipeMaps.PRIMITIVE_COMBUSTION_GENERATOR_FUELS;
@@ -49,7 +47,7 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntitySteamAlloyFurnace STEAM_ALLOY_FURNACE;
     public static MetaTileEntitySteamSifter STEAM_SIFTER;
     public static MetaTileEntitySteamLathe STEAM_LATHE;
-    public static MetaTileEntitySawMill SAW_MILL;;
+    public static MetaTileEntitySawMill SAW_MILL;
     public static MetaTileEntitySteamWaterPump STEAM_WATER_PUMP;
     public static MetaTileEntitySteamTranscendentPlasmaForge STEAM_TRANSCENDENT_PLASMA_FORGE;
     public static MetaTileEntitySteamBiomimeticFactory STEAM_BIOMIMETIC_FACTORY;
@@ -80,8 +78,10 @@ public class GTSteamMetaTileEntities {
     public static SimpleMachineMetaTileEntity PACKER;
     public static SimpleMachineMetaTileEntity SIFTER;
     public static SimpleMachineMetaTileEntity WIREMILL;
-    public static SimpleGeneratorMetaTileEntity STEAM_TURBINE;
-    public static SimpleGeneratorMetaTileEntity COMBUSTION_GENERATOR;
+
+    public static MetaTileEntitySingleTurbine STEAM_TURBINE;
+    public static MetaTileEntitySingleCombustion COMBUSTION_GENERATOR;
+
     public static MetaTileEntitySteamSolarBoiler STEAM_SOLAR_BOILER;
     public static MetaTileEntityLargeSteamTank LARGE_STEAM_TANK;
     public static MetaTileEntityScalableStorage SCALABLE_STORAGE; //MIT License //Author iristhepianist //https://github.com/iristhepianist/ScalableStorageCEu/
@@ -96,8 +96,9 @@ public class GTSteamMetaTileEntities {
         ALLOY_KILN_IMPORT_HATCH = registerMetaTileEntity(2, new MetaTileEntityAlloyKilnImportHatch(gtsId("alloy_klin_import_hatch")));
         ALLOY_KILN_EXPORT_HATCH = registerMetaTileEntity(3, new MetaTileEntityAlloyKilnExportHatch(gtsId("alloy_klin_export_hatch")));
 
-        ADVANCE_PRIMITIVE_BLAST_FURNACE=registerMetaTileEntity(5, new MetaTileEntityAdvancePrimitiveBlastFurnace(gtsId("advance_primitive_blast_furnace")));
+        ADVANCE_PRIMITIVE_BLAST_FURNACE = registerMetaTileEntity(5, new MetaTileEntityAdvancePrimitiveBlastFurnace(gtsId("advance_primitive_blast_furnace")));
         INDUSTRIAL_PRIMITIVE_BLAST_FURNACE = registerMetaTileEntity(6, new MetaTileEntityIndustrialPrimitiveBlastFurnace(gtsId("industrial_primitive_blast_furnace")));
+        ADVANCED_COKE_OVEN = registerMetaTileEntity(7, new MetaTileEntityAdvancedCokeOven(gtsId("advanced_coke_oven")));
 
         STEAM_COMPRESSOR = registerMetaTileEntity(10, new MetaTileEntitySteamCompressor(gtsId("steam_compressor")));
         STEAM_EXTRACTOR = registerMetaTileEntity(11, new MetaTileEntitySteamExtractor(gtsId("steam_extractor")));
@@ -109,14 +110,18 @@ public class GTSteamMetaTileEntities {
         STEAM_WIRE_MILL = registerMetaTileEntity(17, new MetaTileEntitySteamWireMill(gtsId("steam_wire_mill")));
         STEAM_BENDER = registerMetaTileEntity(18, new MetaTileEntitySteamBender(gtsId("steam_bender")));
         STEAM_SIFTER = registerMetaTileEntity(19, new MetaTileEntitySteamSifter(gtsId("steam_sifter")));
-        STEAM_LATHE =  registerMetaTileEntity(20, new MetaTileEntitySteamLathe(gtsId("steam_lathe")));
-        STEAM_ALLOY_FURNACE=registerMetaTileEntity(21, new MetaTileEntitySteamAlloyFurnace(gtsId("steam_alloy_furnace")));
+        STEAM_LATHE = registerMetaTileEntity(20, new MetaTileEntitySteamLathe(gtsId("steam_lathe")));
+        STEAM_ALLOY_FURNACE = registerMetaTileEntity(21, new MetaTileEntitySteamAlloyFurnace(gtsId("steam_alloy_furnace")));
+        STEAM_LAVA_FURNACE = registerMetaTileEntity(22, new MetaTileEntitySteamLavaFurnace(gtsId("steam_lava_furnace")));
+        STEAM_FERMENTATION_VAT = registerMetaTileEntity(23, new MetaTileEntitySteamFermentationVat(gtsId("steam_fermentation_vat")));
+        SAW_MILL = registerMetaTileEntity(24, new MetaTileEntitySawMill(gtsId("saw_mill")));
+        SCALABLE_STORAGE = registerMetaTileEntity(25, new MetaTileEntityScalableStorage(gtsId("scalable_storage")));
 
-        SAW_MILL=  registerMetaTileEntity(29, new MetaTileEntitySawMill(gtsId("saw_mill")));
+        STEAM_SOLAR_BOILER = registerMetaTileEntity(26, new MetaTileEntitySteamSolarBoiler(gtsId("steam_solar_boiler")));
 
-        WATER_PUMP = registerMetaTileEntity(30, new MetaTileEntityPrimitiveWaterPump(gtsId("primitive_water_pump")));
-        STEAM_FERMENTATION_VAT = registerMetaTileEntity(31, new MetaTileEntitySteamFermentationVat(gtsId("steam_fermentation_vat")));
-        ADVANCED_COKE_OVEN = registerMetaTileEntity(32, new MetaTileEntityAdvancedCokeOven(gtsId("advanced_coke_oven")));
+        BRONZE_TANK_VALVE = registerMetaTileEntity(30, new MetaTileEntityTankValve(gtsId("tank_valve.bronze")));
+        BRONZE_TANK = registerMetaTileEntity(31, new MetaTileEntityMultiblockTank(gtsId("tank.bronze"), 750 * 1000));
+        LARGE_STEAM_TANK = registerMetaTileEntity(32, new MetaTileEntityLargeSteamTank(gtsId("large_steam_tank"), 216000000));
 
         BRONZE_TANK_VALVE = registerMetaTileEntity(33, new MetaTileEntityTankValve(gtsId("tank_valve.bronze")));
         BRONZE_TANK = registerMetaTileEntity(34, new MetaTileEntityMultiblockTank(gtsId("tank.bronze"), 750 * 1000));
@@ -154,6 +159,5 @@ public class GTSteamMetaTileEntities {
         SCALABLE_STORAGE = registerMetaTileEntity(65, new MetaTileEntityScalableStorage(
                       gtsId("scalable_storage")));
         STEAM_LAVA_FURNACE = registerMetaTileEntity(66,new MetaTileEntitySteamLavaFurnace(gtsId("steam_lava_furnace")));
-        LARGE_FLUID_TANK = registerMetaTileEntity(67,new MetaTileEntityLargeFluidTank(gtsId("large_fluid_tank")));
     }
 }

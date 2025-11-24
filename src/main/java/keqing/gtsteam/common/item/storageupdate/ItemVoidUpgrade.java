@@ -1,7 +1,7 @@
 //MIT License
 //Author iristhepianist
 //https://github.com/iristhepianist/ScalableStorageCEu/
-package keqing.gtsteam.common.metatileentities.multi.store.storageupdate;
+package keqing.gtsteam.common.item.storageupdate;
 
 import keqing.gtsteam.GTSteam;
 import net.minecraft.client.resources.I18n;

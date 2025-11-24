@@ -324,11 +324,7 @@ public class NoEnergyMultiblockRecipeLogic extends AbstractRecipeLogic {
         if (metaTileEntity instanceof MultiblockWithDisplayBase controller) {
             // output muffler items
             if (controller.hasMufflerMechanics()) {
-                if (parallelRecipesPerformed > 1) {
-                    controller.outputRecoveryItems(parallelRecipesPerformed);
-                } else {
-                    controller.outputRecoveryItems();
-                }
+                controller.outputRecoveryItems(Math.max(parallelRecipesPerformed, 1));
             }
         }
     }

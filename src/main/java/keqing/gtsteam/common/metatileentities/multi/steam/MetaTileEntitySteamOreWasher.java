@@ -12,7 +12,6 @@ import gregtech.api.unification.material.Materials;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.ConfigHolder;
-import gregtech.common.blocks.BlockMachineCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import net.minecraft.block.state.IBlockState;
@@ -29,11 +28,17 @@ import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.STEEL_PI
 
 public class MetaTileEntitySteamOreWasher extends RecipeMapSteamMultiblockController {
     private static final int PARALLEL_LIMIT = 8;
+
     public MetaTileEntitySteamOreWasher(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.ORE_WASHER_RECIPES, CONVERSION_RATE, ParallelLogicType.MULTIPLY);
         this.recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 
+    private static IBlockState getFrameState() {
+        return ConfigHolder.machines.steelSteamMultiblocks ?
+                MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel) :
+                MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
+    }
 
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity metaTileEntityHolder) {
@@ -55,18 +60,12 @@ public class MetaTileEntitySteamOreWasher extends RecipeMapSteamMultiblockContro
                 .where('#', air())
                 .build();
     }
+
     private IBlockState getBoilerState() {
         return ConfigHolder.machines.steelSteamMultiblocks ?
                 MetaBlocks.BOILER_CASING.getState(STEEL_PIPE) :
                 MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
     }
-
-    private static IBlockState getFrameState() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel) :
-                MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
-    }
-
 
     public IBlockState getCasingState() {
         return ConfigHolder.machines.steelSteamMultiblocks ?

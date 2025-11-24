@@ -1,9 +1,8 @@
 //MIT License
 //Author iristhepianist
 //https://github.com/iristhepianist/ScalableStorageCEu/
-package keqing.gtsteam.common.metatileentities.multi.store.storageupdate;
+package keqing.gtsteam.common.item.storageupdate;
 
-import gregtech.GregTechMod;
 import keqing.gtsteam.GTSteam;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -15,7 +14,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
