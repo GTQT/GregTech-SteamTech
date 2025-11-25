@@ -10,6 +10,7 @@ recipemap.primitive_combustion_generator.name=Primitive Combustion Generator
 gtsteam.material.bone_ceramic_clay=Bone Ceramic Clay
 #方块
 tile.multiblock_casing.galvanized_porcelain_tiles.name=Galvanized Porcelain Tiles
+tile.multiblock_casing.tank_wall.name=Tank outer wall
 
 tile.multiblock_casing.solar_collector.name=Solar collector tubes
 #物品
@@ -52,6 +53,7 @@ gtsteam.machine.steam_wire_mill.name=Steam Wire Mill
 gtsteam.machine.steam_lathe.name=Steam Lathe
 gtsteam.machine.steam_alloy_furnace.name=Steam Alloy Furnace
 gtsteam.machine.steam_lava_furnace.name=Steam Lava Furnace
+gtsteam.machine.saw_mill.name=Saw Mill
 #工业焦炉
 gtsteam.machine.alloy_klin.name=Alloy Klin
 gtsteam.machine.alloy_klin_import_hatch.name=Alloy Klin Import Hatch
@@ -110,6 +112,15 @@ gtsteam.machine.large_steam_tank.name=Large Steam Tank
 gtsteam.machine.large_steam_tank.fluid_amount_text=Steam Quantity:
 
 gtsteam.machine.steam_fermentation_vat.name=Steam Fermentation Vat
+
+gtsteam.machine.large_fluid_tank.name=Large Fluid Storage Tanks
+gtsteam.machine.large_fluid_tank.fluid_amount_text=Fluid Type: %s
+gtsteam.machine.large_fluid_tank.empty=Fluid Type: "Empty"
+gtsteam.machine.large_fluid_tank.fluid_capacity_text=Fluid Capacity: %d
+
+gtsteam.machine.large_fluid_tank.tooltip.1=Stored fluid: Capacity (L*W*H) × 16000 L, where each side length is odd, and each side length does not have to be equal, ranging from 3 to 15.
+gtsteam.machine.large_fluid_tank.tooltip.2=The structure is cuboid, with a minimum volume of 3×3×3 and a maximum volume of 15×15×15. Except for the border (shell), the rest of the face can be filled with glass, and the inside of the cuboid remains hollow.
+gtsteam.machine.large_fluid_tank.tooltip.3=In the glass-filled position, input and output bins can be installed.
 
 gtsteam.machine.steam_transcendent_plasma_forge.name=Extradimensional steam forge
 gtsteam.machine.steam_biomimetic_factory.name=The Eye of Martial Virtue
@@ -184,19 +195,3 @@ gtsteam.machine.steam_turbine.ulv.tooltip=A Simple steam turbine for generating 
 
 gtsteam.machine.combustion_generator.ulv.name=Simple Combustion Generator
 gtsteam.machine.combustion_generator.ulv.tooltip=A Simple combustion generator for generating power.
-
-# Item Tooltips
-gtsteam.storage_upgrade_tier_1.tooltip=Upgrades storage to 32M items (10,000 uses :- ~27.8 hours)
-gtsteam.storage_upgrade_tier_2.tooltip=Upgrades storage to 64M items (100,000 uses :- ~277.8 hours)
-gtsteam.storage_upgrade_tier_3.tooltip=Upgrades storage to 256M items (Permanent :- Never expires)
-gtsteam.void_upgrade.tooltip=Destroys excess items when storage and output are full
-
-# Controller Block
-tile.scalable_storage_controller.tooltip=Author: iristhpianist
-gtsteam.machine.large_steam_tank.name=Large Steam Tank
-gtsteam.machine.large_steam_tank.fluid_amount_text=Steam Amount:
-gtsteam.machine.large_fluid_tank.fluid_amount_text=Fluid Type: %s
-gtsteam.machine.large_fluid_tank.empty= "Empty"
-gtsteam.machine.large_fluid_tank.information=可存储(体积x16000)L的流体
-gtsteam.machine.large_fluid_tank.fluid_capacity_text=流体容量: %d
-gtsteam.machine.large_fluid_tank.name=Large Fluid Tank

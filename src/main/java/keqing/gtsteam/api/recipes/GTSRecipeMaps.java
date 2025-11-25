@@ -13,7 +13,6 @@ public class GTSRecipeMaps {
     public static final RecipeMap<SimpleRecipeBuilder> BIOMIMETIC_FACTORY_RECIPES;
     public static final RecipeMap<SimpleRecipeBuilder> LAVA_FURNACE_RECIPES;
     public static final RecipeMap<PrimitiveRecipeBuilder> ALLOY_KILN;
-    public static final RecipeMap<PrimitiveRecipeBuilder> SAW_MILL;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_STEAM_TURBINE_FUELS;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_COMBUSTION_GENERATOR_FUELS;
 

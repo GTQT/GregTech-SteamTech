@@ -13,6 +13,12 @@
         "textures": {
           "all": "gtsteam:blocks/casings/galvanized_porcelain_tiles"
         }
+      },
+      "tank_wall": {
+        "model": "minecraft:cube_all",
+        "textures": {
+          "all": "gtsteam:blocks/casings/tank_wall"
+        }
       }
     }
   }

@@ -15,11 +15,7 @@ import keqing.gtsteam.common.metatileentities.multi.primitive.*;
 import keqing.gtsteam.common.metatileentities.multi.steam.*;
 import keqing.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamBiomimeticFactory;
 import keqing.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamTranscendentPlasmaForge;
-import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityLargeFluidTank;
-import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityLargeSteamTank;
-import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityMultiblockTank;
-import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityScalableStorage;
-import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityTankValve;
+import keqing.gtsteam.common.metatileentities.multi.store.*;
 import net.minecraft.util.ResourceLocation;
 
 import static gregtech.common.metatileentities.MetaTileEntities.registerMetaTileEntity;
@@ -57,6 +53,7 @@ public class GTSteamMetaTileEntities {
 
     public static MetaTileEntityTankValve BRONZE_TANK_VALVE;
     public static MetaTileEntityMultiblockTank BRONZE_TANK;
+    public static MetaTileEntityLargeFluidTank LARGE_FLUID_TANK;
 
     // SIMPLE MACHINES SECTION
     public static SimpleMachineMetaTileEntity ELECTRIC_FURNACE;
@@ -85,7 +82,7 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntityLargeSteamTank LARGE_STEAM_TANK;
     public static MetaTileEntityScalableStorage SCALABLE_STORAGE; //MIT License //Author iristhepianist //https://github.com/iristhepianist/ScalableStorageCEu/
     public static MetaTileEntitySteamLavaFurnace STEAM_LAVA_FURNACE;
-    public static MetaTileEntityLargeFluidTank LARGE_FLUID_TANK;
+
     public static ResourceLocation gtsId(String id) {
         return new ResourceLocation(MODID, id);
     }
@@ -113,49 +110,45 @@ public class GTSteamMetaTileEntities {
         STEAM_ALLOY_FURNACE = registerMetaTileEntity(21, new MetaTileEntitySteamAlloyFurnace(gtsId("steam_alloy_furnace")));
         STEAM_LAVA_FURNACE = registerMetaTileEntity(22, new MetaTileEntitySteamLavaFurnace(gtsId("steam_lava_furnace")));
         STEAM_FERMENTATION_VAT = registerMetaTileEntity(23, new MetaTileEntitySteamFermentationVat(gtsId("steam_fermentation_vat")));
+
         SCALABLE_STORAGE = registerMetaTileEntity(25, new MetaTileEntityScalableStorage(gtsId("scalable_storage")));
 
-        STEAM_SOLAR_BOILER = registerMetaTileEntity(26, new MetaTileEntitySteamSolarBoiler(gtsId("steam_solar_boiler")));
+        STEAM_SOLAR_BOILER = registerMetaTileEntity(30, new MetaTileEntitySteamSolarBoiler(gtsId("steam_solar_boiler")));
 
-        BRONZE_TANK_VALVE = registerMetaTileEntity(30, new MetaTileEntityTankValve(gtsId("tank_valve.bronze")));
-        BRONZE_TANK = registerMetaTileEntity(31, new MetaTileEntityMultiblockTank(gtsId("tank.bronze"), 750 * 1000));
-        LARGE_STEAM_TANK = registerMetaTileEntity(32, new MetaTileEntityLargeSteamTank(gtsId("large_steam_tank"), 216000000));
+        BRONZE_TANK_VALVE = registerMetaTileEntity(40, new MetaTileEntityTankValve(gtsId("tank_valve.bronze")));
+        BRONZE_TANK = registerMetaTileEntity(41, new MetaTileEntityMultiblockTank(gtsId("tank.bronze"), 750 * 1000));
+        LARGE_STEAM_TANK = registerMetaTileEntity(42, new MetaTileEntityLargeSteamTank(gtsId("large_steam_tank"), 216000000));
 
-        BRONZE_TANK_VALVE = registerMetaTileEntity(33, new MetaTileEntityTankValve(gtsId("tank_valve.bronze")));
-        BRONZE_TANK = registerMetaTileEntity(34, new MetaTileEntityMultiblockTank(gtsId("tank.bronze"), 750 * 1000));
+        LARGE_FLUID_TANK = registerMetaTileEntity(45, new MetaTileEntityLargeFluidTank(gtsId("large_fluid_tank")));
 
-        STEAM_TRANSCENDENT_PLASMA_FORGE = registerMetaTileEntity(35, new MetaTileEntitySteamTranscendentPlasmaForge(gtsId("steam_transcendent_plasma_forge")));
-        STEAM_BIOMIMETIC_FACTORY = registerMetaTileEntity(36, new MetaTileEntitySteamBiomimeticFactory(gtsId("steam_biomimetic_factory")));
+        WATER_PUMP = registerMetaTileEntity(50, new MetaTileEntityPrimitiveWaterPump(gtsId("primitive_water_pump")));
+        STEAM_WATER_PUMP = registerMetaTileEntity(51, new MetaTileEntitySteamWaterPump(gtsId("steam_water_pump")));
+
+        STEAM_TRANSCENDENT_PLASMA_FORGE = registerMetaTileEntity(60, new MetaTileEntitySteamTranscendentPlasmaForge(gtsId("steam_transcendent_plasma_forge")));
+        STEAM_BIOMIMETIC_FACTORY = registerMetaTileEntity(61, new MetaTileEntitySteamBiomimeticFactory(gtsId("steam_biomimetic_factory")));
 
         //单方块ULV
-        ELECTRIC_FURNACE = registerMetaTileEntity(40, new SimpleMachineMetaTileEntity(gtsId("electric_furnace.ulv"), RecipeMaps.FURNACE_RECIPES, Textures.FURNACE_OVERLAY, 0, false));
-        MACERATOR = registerMetaTileEntity(41, new SimpleMachineMetaTileEntityResizable(gtsId("macerator.ulv"), RecipeMaps.MACERATOR_RECIPES, -1, 1, Textures.MACERATOR_OVERLAY, 0, true, GTUtility.defaultTankSizeFunction, VanillaParticleEffects.TOP_SMOKE_SMALL, null));
-        ALLOY_SMELTER = registerMetaTileEntity(42, new SimpleMachineMetaTileEntity(gtsId("alloy_smelter.ulv"), RecipeMaps.ALLOY_SMELTER_RECIPES, Textures.ALLOY_SMELTER_OVERLAY, 0, false));
-        BENDER = registerMetaTileEntity(43, new SimpleMachineMetaTileEntity(gtsId("bender.ulv"), RecipeMaps.BENDER_RECIPES, Textures.BENDER_OVERLAY, 0, true));
-        BREWERY = registerMetaTileEntity(44, new SimpleMachineMetaTileEntity(gtsId("brewery.ulv"), RecipeMaps.BREWING_RECIPES, Textures.BREWERY_OVERLAY, 0, true, GTUtility.hvCappedTankSizeFunction));
-        CENTRIFUGE = registerMetaTileEntity(45, new SimpleMachineMetaTileEntity(gtsId("centrifuge.ulv"), RecipeMaps.CENTRIFUGE_RECIPES, Textures.CENTRIFUGE_OVERLAY, 0, false, GTUtility.largeTankSizeFunction));
-        CHEMICAL_BATH = registerMetaTileEntity(46, new SimpleMachineMetaTileEntity(gtsId("chemical_bath.ulv"), RecipeMaps.CHEMICAL_BATH_RECIPES, Textures.CHEMICAL_BATH_OVERLAY, 0, true, GTUtility.hvCappedTankSizeFunction));
-        COMPRESSOR = registerMetaTileEntity(47, new SimpleMachineMetaTileEntity(gtsId("compressor.ulv"), RecipeMaps.COMPRESSOR_RECIPES, Textures.COMPRESSOR_OVERLAY, 0, true));
-        CUTTER = registerMetaTileEntity(48, new SimpleMachineMetaTileEntity(gtsId("cutter.ulv"), RecipeMaps.CUTTER_RECIPES, Textures.CUTTER_OVERLAY, 0, true));
-        EXTRACTOR = registerMetaTileEntity(49, new SimpleMachineMetaTileEntity(gtsId("extractor.ulv"), RecipeMaps.EXTRACTOR_RECIPES, Textures.EXTRACTOR_OVERLAY, 0, true));
-        FERMENTER = registerMetaTileEntity(50, new SimpleMachineMetaTileEntity(gtsId("fermenter.ulv"), RecipeMaps.FERMENTING_RECIPES, Textures.FERMENTER_OVERLAY, 0, true, GTUtility.hvCappedTankSizeFunction));
-        FORGE_HAMMER = registerMetaTileEntity(51, new SimpleMachineMetaTileEntity(gtsId("forge_hammer.ulv"), RecipeMaps.FORGE_HAMMER_RECIPES, Textures.FORGE_HAMMER_OVERLAY, 0, true));
-        LATHE = registerMetaTileEntity(52, new SimpleMachineMetaTileEntity(gtsId("lathe.ulv"), RecipeMaps.LATHE_RECIPES, Textures.LATHE_OVERLAY, 0, true));
-        MIXER = registerMetaTileEntity(53, new SimpleMachineMetaTileEntity(gtsId("mixer.ulv"), RecipeMaps.MIXER_RECIPES, Textures.MIXER_OVERLAY, 0, false, GTUtility.hvCappedTankSizeFunction));
-        ORE_WASHER = registerMetaTileEntity(54, new SimpleMachineMetaTileEntity(gtsId("ore_washer.ulv"), RecipeMaps.ORE_WASHER_RECIPES, Textures.ORE_WASHER_OVERLAY, 0, true));
-        PACKER = registerMetaTileEntity(55, new SimpleMachineMetaTileEntity(gtsId("packer.ulv"), RecipeMaps.PACKER_RECIPES, Textures.PACKER_OVERLAY, 0, true));
-        SIFTER = registerMetaTileEntity(56, new SimpleMachineMetaTileEntity(gtsId("sifter.ulv"), RecipeMaps.SIFTER_RECIPES, Textures.SIFTER_OVERLAY, 0, true));
-        WIREMILL = registerMetaTileEntity(57, new SimpleMachineMetaTileEntity(gtsId("wiremill.ulv"), RecipeMaps.WIREMILL_RECIPES, Textures.WIREMILL_OVERLAY, 0, true));
+        ELECTRIC_FURNACE = registerMetaTileEntity(100, new SimpleMachineMetaTileEntity(gtsId("electric_furnace.ulv"), RecipeMaps.FURNACE_RECIPES, Textures.FURNACE_OVERLAY, 0, false));
+        MACERATOR = registerMetaTileEntity(101, new SimpleMachineMetaTileEntityResizable(gtsId("macerator.ulv"), RecipeMaps.MACERATOR_RECIPES, -1, 1, Textures.MACERATOR_OVERLAY, 0, true, GTUtility.defaultTankSizeFunction, VanillaParticleEffects.TOP_SMOKE_SMALL, null));
+        ALLOY_SMELTER = registerMetaTileEntity(102, new SimpleMachineMetaTileEntity(gtsId("alloy_smelter.ulv"), RecipeMaps.ALLOY_SMELTER_RECIPES, Textures.ALLOY_SMELTER_OVERLAY, 0, false));
+        BENDER = registerMetaTileEntity(103, new SimpleMachineMetaTileEntity(gtsId("bender.ulv"), RecipeMaps.BENDER_RECIPES, Textures.BENDER_OVERLAY, 0, true));
+        BREWERY = registerMetaTileEntity(104, new SimpleMachineMetaTileEntity(gtsId("brewery.ulv"), RecipeMaps.BREWING_RECIPES, Textures.BREWERY_OVERLAY, 0, true, GTUtility.hvCappedTankSizeFunction));
+        CENTRIFUGE = registerMetaTileEntity(105, new SimpleMachineMetaTileEntity(gtsId("centrifuge.ulv"), RecipeMaps.CENTRIFUGE_RECIPES, Textures.CENTRIFUGE_OVERLAY, 0, false, GTUtility.largeTankSizeFunction));
+        CHEMICAL_BATH = registerMetaTileEntity(106, new SimpleMachineMetaTileEntity(gtsId("chemical_bath.ulv"), RecipeMaps.CHEMICAL_BATH_RECIPES, Textures.CHEMICAL_BATH_OVERLAY, 0, true, GTUtility.hvCappedTankSizeFunction));
+        COMPRESSOR = registerMetaTileEntity(107, new SimpleMachineMetaTileEntity(gtsId("compressor.ulv"), RecipeMaps.COMPRESSOR_RECIPES, Textures.COMPRESSOR_OVERLAY, 0, true));
+        CUTTER = registerMetaTileEntity(108, new SimpleMachineMetaTileEntity(gtsId("cutter.ulv"), RecipeMaps.CUTTER_RECIPES, Textures.CUTTER_OVERLAY, 0, true));
+        EXTRACTOR = registerMetaTileEntity(109, new SimpleMachineMetaTileEntity(gtsId("extractor.ulv"), RecipeMaps.EXTRACTOR_RECIPES, Textures.EXTRACTOR_OVERLAY, 0, true));
+        FERMENTER = registerMetaTileEntity(110, new SimpleMachineMetaTileEntity(gtsId("fermenter.ulv"), RecipeMaps.FERMENTING_RECIPES, Textures.FERMENTER_OVERLAY, 0, true, GTUtility.hvCappedTankSizeFunction));
+        FORGE_HAMMER = registerMetaTileEntity(111, new SimpleMachineMetaTileEntity(gtsId("forge_hammer.ulv"), RecipeMaps.FORGE_HAMMER_RECIPES, Textures.FORGE_HAMMER_OVERLAY, 0, true));
+        LATHE = registerMetaTileEntity(112, new SimpleMachineMetaTileEntity(gtsId("lathe.ulv"), RecipeMaps.LATHE_RECIPES, Textures.LATHE_OVERLAY, 0, true));
+        MIXER = registerMetaTileEntity(113, new SimpleMachineMetaTileEntity(gtsId("mixer.ulv"), RecipeMaps.MIXER_RECIPES, Textures.MIXER_OVERLAY, 0, false, GTUtility.hvCappedTankSizeFunction));
+        ORE_WASHER = registerMetaTileEntity(114, new SimpleMachineMetaTileEntity(gtsId("ore_washer.ulv"), RecipeMaps.ORE_WASHER_RECIPES, Textures.ORE_WASHER_OVERLAY, 0, true));
+        PACKER = registerMetaTileEntity(115, new SimpleMachineMetaTileEntity(gtsId("packer.ulv"), RecipeMaps.PACKER_RECIPES, Textures.PACKER_OVERLAY, 0, true));
+        SIFTER = registerMetaTileEntity(116, new SimpleMachineMetaTileEntity(gtsId("sifter.ulv"), RecipeMaps.SIFTER_RECIPES, Textures.SIFTER_OVERLAY, 0, true));
+        WIREMILL = registerMetaTileEntity(117, new SimpleMachineMetaTileEntity(gtsId("wiremill.ulv"), RecipeMaps.WIREMILL_RECIPES, Textures.WIREMILL_OVERLAY, 0, true));
 
         //发电机ULV
-        STEAM_TURBINE = registerMetaTileEntity(60, new MetaTileEntitySingleTurbine(gtsId("steam_turbine.ulv"), PRIMITIVE_STEAM_TURBINE_FUELS, Textures.STEAM_TURBINE_OVERLAY, 0, tier -> 2000,true));
-        COMBUSTION_GENERATOR = registerMetaTileEntity(61, new MetaTileEntitySingleCombustion(gtsId("combustion_generator.ulv"), PRIMITIVE_COMBUSTION_GENERATOR_FUELS, Textures.COMBUSTION_GENERATOR_OVERLAY, 0, tier -> 2000,true));
-        STEAM_SOLAR_BOILER = registerMetaTileEntity(62,new MetaTileEntitySteamSolarBoiler(gtsId("steam_solar_boiler")));
-
-        STEAM_WATER_PUMP = registerMetaTileEntity(63,new MetaTileEntitySteamWaterPump(gtsId("steam_water_pump")));
-        LARGE_STEAM_TANK = registerMetaTileEntity(64,new MetaTileEntityLargeSteamTank(gtsId("large_steam_tank"),216000000));
-        SCALABLE_STORAGE = registerMetaTileEntity(65, new MetaTileEntityScalableStorage(
-                      gtsId("scalable_storage")));
-        STEAM_LAVA_FURNACE = registerMetaTileEntity(66,new MetaTileEntitySteamLavaFurnace(gtsId("steam_lava_furnace")));
+        STEAM_TURBINE = registerMetaTileEntity(120, new MetaTileEntitySingleTurbine(gtsId("steam_turbine.ulv"), PRIMITIVE_STEAM_TURBINE_FUELS, Textures.STEAM_TURBINE_OVERLAY, 0, tier -> 2000, 100));
+        COMBUSTION_GENERATOR = registerMetaTileEntity(121, new MetaTileEntitySingleCombustion(gtsId("combustion_generator.ulv"), PRIMITIVE_COMBUSTION_GENERATOR_FUELS, Textures.COMBUSTION_GENERATOR_OVERLAY, 0, tier -> 2000, 100));
     }
 }

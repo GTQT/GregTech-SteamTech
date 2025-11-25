@@ -30,7 +30,9 @@ public class BlockMultiblockCasing0 extends VariantBlock<BlockMultiblockCasing0.
     public enum CasingType implements IStringSerializable {
 
         //镀锌瓷瓦砖
-        GALVANIZED_PORCELAIN_TILES("galvanized_porcelain_tiles");
+        GALVANIZED_PORCELAIN_TILES("galvanized_porcelain_tiles"),
+        //蓄水器壁板
+        TANK_WALL("tank_wall");
 
         private final String name;
 

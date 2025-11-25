@@ -1,15 +1,13 @@
 package keqing.gtsteam.common.metatileentities.multi.store;
+
 import codechicken.lib.raytracer.CuboidRayTraceResult;
 import codechicken.lib.render.CCRenderState;
-import codechicken.lib.render.pipeline.ColourMultiplier;
 import codechicken.lib.render.pipeline.IVertexOperation;
-import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Matrix4;
-import gregicality.multiblocks.common.block.GCYMMetaBlocks;
-import gregicality.multiblocks.common.block.blocks.BlockLargeMultiblockCasing;
-import gregtech.GregTechMod;
-import gregtech.api.capability.impl.FilteredFluidHandler;
-import gregtech.api.capability.impl.FluidTankList;
+import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.value.sync.IntSyncValue;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import gregtech.api.GTValues;
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.gui.ModularUI;
 import gregtech.api.gui.widgets.LabelWidget;
@@ -19,44 +17,32 @@ import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.*;
 import gregtech.api.metatileentity.multiblock.ui.KeyManager;
 import gregtech.api.metatileentity.multiblock.ui.MultiblockUIBuilder;
+import gregtech.api.metatileentity.multiblock.ui.TemplateBarBuilder;
 import gregtech.api.metatileentity.multiblock.ui.UISyncer;
+import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.MultiblockShapeInfo;
 import gregtech.api.pattern.PatternMatchContext;
-import gregtech.api.unification.material.Materials;
-import gregtech.api.util.GTLog;
-import gregtech.api.util.GTUtility;
 import gregtech.api.util.KeyUtil;
-import gregtech.api.util.NetworkUtil;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
-import gregtech.client.renderer.texture.custom.QuantumStorageRenderer;
-import gregtech.common.blocks.BlockMachineCasing;
-import gregtech.common.blocks.BlockMetalCasing;
-import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
-import keqing.gtsteam.GTSteam;
-import keqing.gtsteam.common.metatileentities.multi.store.MetaTileEntityMultiblockTank;
-import net.minecraft.block.Block;
+import keqing.gtsteam.client.textures.GTSteamTextures;
+import keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.b3d.B3DModel;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -65,22 +51,17 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
-import static gregtech.api.capability.GregtechDataCodes.UPDATE_FLUID;
-import static gregtech.api.capability.GregtechDataCodes.UPDATE_FLUID_AMOUNT;
-import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.BRONZE_PIPE;
-import static gregtech.common.blocks.MetaBlocks.MACHINE_CASING;
-import static keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities.BRONZE_TANK_VALVE;
+import static keqing.gtsteam.common.block.GTSteamMetaBlocks.blockMultiblockCasing0;
+import static keqing.gtsteam.common.block.blocks.BlockMultiblockCasing0.CasingType.TANK_WALL;
+import static net.minecraft.util.EnumFacing.*;
 
-public class MetaTileEntityLargeFluidTank  extends MultiblockWithDisplayBase {
+public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase implements ProgressBarMultiblock {
     private int capacity = 0;
     private int Length = 0;
     private int Height = 0;
@@ -88,13 +69,21 @@ public class MetaTileEntityLargeFluidTank  extends MultiblockWithDisplayBase {
     private IFluidTank inputFluidsTank;
     private IFluidTank outputFluidsTank;
     private FluidTank StoragefluidTank = null;
-    private final int MIN_RADIUS = 2;
+
     public MetaTileEntityLargeFluidTank(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId);
         resetTileAbilities();
-        //this.capacity = 256000;
-        //initializeInventory();
     }
+
+    public static String repeat(String a, int count) {
+        //return String.valueOf(a).repeat(Math.max(0, count));
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            builder.append(a);
+        }
+        return builder.toString();
+    }
+
     @Override
     public boolean allowsExtendedFacing() {
         return false;
@@ -104,55 +93,53 @@ public class MetaTileEntityLargeFluidTank  extends MultiblockWithDisplayBase {
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity tileEntity) {
         return new MetaTileEntityLargeFluidTank(metaTileEntityId);
     }
+
     @SideOnly(Side.CLIENT)
     @Override
     public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
-        return Textures.VOLTAGE_CASINGS[0];
+        return GTSteamTextures.TANK_WALL;
     }
+
     @Override
     protected void updateFormedValid() {
     }
+
     @Override
-    public void formStructure(PatternMatchContext context){
+    public void formStructure(PatternMatchContext context) {
         super.formStructure(context);
         initializeAbilities();
     }
-    private static IBlockState getCasingState() {
-        return GCYMMetaBlocks.LARGE_MULTIBLOCK_CASING.getState(BlockLargeMultiblockCasing.CasingType.STEAM_CASING);
-    }
+
     @Override
     protected void configureDisplayText(MultiblockUIBuilder builder) {
         builder.addCustom(this::addFluidAmountCapacity);
     }
+
     private void addFluidAmountCapacity(KeyManager keyManager, UISyncer syncer) {
         if (isStructureFormed()) {
             var FluidAmountString = KeyUtil.number(TextFormatting.WHITE,
                     syncer.syncInt(this.StoragefluidTank.getFluidAmount()), "L");
             String FluidString;
-            if(StoragefluidTank.getFluid() != null){
+            if (StoragefluidTank.getFluid() != null) {
                 FluidString = syncer.syncString(StoragefluidTank.getFluid().getLocalizedName());
-            }else{
+                keyManager.add(FluidAmountString);
+            } else {
                 FluidString = syncer.syncString(I18n.format("gtsteam.machine.large_fluid_tank.empty"));
             }
-            keyManager.add(KeyUtil.lang(TextFormatting.GRAY,"gtsteam.machine.large_fluid_tank.fluid_amount_text",FluidString));
-            keyManager.add(FluidAmountString);
-            keyManager.add(KeyUtil.lang(TextFormatting.GRAY,"gtsteam.machine.large_fluid_tank.fluid_capacity_text",syncer.syncInt(this.capacity)));
+            keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.machine.large_fluid_tank.fluid_amount_text", FluidString));
+            keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.machine.large_fluid_tank.fluid_capacity_text", syncer.syncInt(this.capacity)));
         }
     }
-    public static String repeat(String a, int count) {
-        StringBuilder b = new StringBuilder();
-        for (int i = 0; i < count; i++) {
-            b.append(a);
-        }
-        return b.toString();
-    }
+
     public IBlockState getULVCasingState() {
-        return MACHINE_CASING.getState(BlockMachineCasing.MachineCasingType.ULV);
+        return blockMultiblockCasing0.getState(TANK_WALL);
     }
+
     @Override
-    public void invalidateStructure(){
+    public void invalidateStructure() {
         super.invalidateStructure();
     }
+
     @Override
     public void checkStructurePattern() {
         if (!this.isStructureFormed()) {
@@ -160,6 +147,7 @@ public class MetaTileEntityLargeFluidTank  extends MultiblockWithDisplayBase {
         }
         super.checkStructurePattern();
     }
+
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
@@ -171,10 +159,11 @@ public class MetaTileEntityLargeFluidTank  extends MultiblockWithDisplayBase {
         reinitializeStructurePattern();
         this.StoragefluidTank = new FluidTank(this.capacity);
         int StorageFluidTankAmount = compound.getInteger("StorageFluidTankAmount");
-        if(StorageFluidTankAmount > 0){
-            this.StoragefluidTank.fill(FluidRegistry.getFluidStack(FluidType,StorageFluidTankAmount),true);
+        if (StorageFluidTankAmount > 0) {
+            this.StoragefluidTank.fill(FluidRegistry.getFluidStack(FluidType, StorageFluidTankAmount), true);
         }
     }
+
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
         super.writeToNBT(data);
@@ -183,14 +172,15 @@ public class MetaTileEntityLargeFluidTank  extends MultiblockWithDisplayBase {
         data.setInteger("Height", this.Height);
         data.setInteger("Width", this.Width);
         data.setInteger("StorageFluidTankAmount", this.StoragefluidTank.getFluidAmount());
-        if(this.StoragefluidTank.getFluid() != null) {
+        if (this.StoragefluidTank.getFluid() != null) {
             data.setString("FluidType", FluidRegistry.getFluidName(this.StoragefluidTank.getFluid()));
-        }else {
+        } else {
             data.setString("FluidType", "Empty");
         }
         //this.StoragefluidTank.writeToNBT(data);
         return data;
     }
+
     @Override
     protected @NotNull BlockPattern createStructurePattern() {
         if (getWorld() != null) updateStructureDimensions();
@@ -200,12 +190,12 @@ public class MetaTileEntityLargeFluidTank  extends MultiblockWithDisplayBase {
             Height = 3;
             Length = 3;
         }
-        if(Width < 3 || Height < 3 || Length < 3){
+        if (Width < 3 || Height < 3 || Length < 3) {
             Width = 3;
             Height = 3;
             Length = 3;
         }
-        if(Width > 15 || Height > 15 || Length > 15){
+        if (Width > 15 || Height > 15 || Length > 15) {
             Width = 3;
             Height = 3;
 
@@ -239,22 +229,144 @@ public class MetaTileEntityLargeFluidTank  extends MultiblockWithDisplayBase {
                 .where('#', selfPredicate())
                 .where('A', states(getULVCasingState())
                 )
-                .where('B',states(getULVCasingState())
+                .where('B', states(getULVCasingState())
                         .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setExactLimit(1))
                         .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setExactLimit(1))
                         .or(states(Blocks.GLASS.getDefaultState())))
-                .where('C',air())
+                .where('C', air())
                 .build();
     }
+
+    @Override
+    public List<MultiblockShapeInfo> getMatchingShapes() {
+        List<MultiblockShapeInfo> shapeInfo = new ArrayList<>();
+
+        MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder();
+        builder.aisle("CCC", "CNC", "CCC");
+        builder.aisle("CMC", "G G", "CGC");
+        builder.aisle("CSC", "CGC", "CCC");
+
+        // 设置方块映射
+        builder
+                .where('S', GTSteamMetaTileEntities.LARGE_FLUID_TANK, SOUTH)
+                .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], DOWN)
+                .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], NORTH)
+                .where('C', getULVCasingState())
+                .where('G', Blocks.GLASS.getDefaultState())
+                .where(' ', Blocks.AIR.getDefaultState());
+
+        shapeInfo.add(builder.build());
+
+        builder = MultiblockShapeInfo.builder();
+        builder.aisle("CCCCC", "CGGGC", "CGGGC", "CGGGC", "CCCCC");
+        builder.aisle("CCCCC", "G   G", "G   G", "G   G", "CCCCC");
+        builder.aisle("CCCCC", "G   G", "G   G", "G   G", "CCCCC");
+        builder.aisle("CCCCC", "G   G", "G   G", "G   G", "CCCCC");
+        builder.aisle("CCSCC", "CMGNC", "CGGGC", "CGGGC", "CCCCC");
+
+        // 设置方块映射
+        builder
+                .where('S', GTSteamMetaTileEntities.LARGE_FLUID_TANK, SOUTH)
+                .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], SOUTH)
+                .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], SOUTH)
+                .where('C', getULVCasingState())
+                .where('G', Blocks.GLASS.getDefaultState())
+                .where(' ', Blocks.AIR.getDefaultState());
+
+        shapeInfo.add(builder.build());
+
+        builder = MultiblockShapeInfo.builder();
+        builder.aisle("CCCCCCC", "CGGGGGC", "CGGGGGC", "CGGGGGC", "CGGGGGC", "CGGGGGC", "CCCCCCC");
+        builder.aisle("CCCCCCC", "G     G", "G     G", "G     G", "G     G", "G     G", "CCCCCCC");
+        builder.aisle("CCCCCCC", "G     G", "G     G", "G     G", "G     G", "G     G", "CCCCCCC");
+        builder.aisle("CCCCCCC", "G     G", "G     G", "G     G", "G     G", "G     G", "CCCCCCC");
+        builder.aisle("CCCCCCC", "G     G", "G     G", "G     G", "G     G", "G     G", "CCCCCCC");
+        builder.aisle("CCCCCCC", "G     G", "G     G", "G     G", "G     G", "G     G", "CCCCCCC");
+        builder.aisle("CCCSCCC", "CMGGGNC", "CGGGGGC", "CGGGGGC", "CGGGGGC", "CGGGGGC", "CCCCCCC");
+
+        // 设置方块映射
+        builder
+                .where('S', GTSteamMetaTileEntities.LARGE_FLUID_TANK, SOUTH)
+                .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], SOUTH)
+                .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], SOUTH)
+                .where('C', getULVCasingState())
+                .where('G', Blocks.GLASS.getDefaultState())
+                .where(' ', Blocks.AIR.getDefaultState());
+
+        shapeInfo.add(builder.build());
+
+        // 7x7x7 结构
+        builder = MultiblockShapeInfo.builder();
+        builder.aisle("CCCCCCC", "CGGGGGC", "CGGGGGC", "CGGGGGC", "CGGGGGC", "CGGGGGC", "CCCCCCC");
+        builder.aisle("CCCCCCC", "G     G", "G     G", "G     G", "G     G", "G     G", "CCCCCCC");
+        builder.aisle("CCCCCCC", "G     G", "G     G", "G     G", "G     G", "G     G", "CCCCCCC");
+        builder.aisle("CCCCCCC", "G     G", "G     G", "G     G", "G     G", "G     G", "CCCCCCC");
+        builder.aisle("CCCCCCC", "G     G", "G     G", "G     G", "G     G", "G     G", "CCCCCCC");
+        builder.aisle("CCCCCCC", "G     G", "G     G", "G     G", "G     G", "G     G", "CCCCCCC");
+        builder.aisle("CCCSCCC", "CMGGGNC", "CGGGGGC", "CGGGGGC", "CGGGGGC", "CGGGGGC", "CCCCCCC");
+        builder
+                .where('S', GTSteamMetaTileEntities.LARGE_FLUID_TANK, SOUTH)
+                .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], SOUTH)
+                .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], SOUTH)
+                .where('C', getULVCasingState())
+                .where('G', Blocks.GLASS.getDefaultState())
+                .where(' ', Blocks.AIR.getDefaultState());
+        shapeInfo.add(builder.build());
+
+        // 9x9x9 结构
+        builder = MultiblockShapeInfo.builder();
+        builder.aisle("CCCCCCCCC", "CGGGGGGGC", "CGGGGGGGC", "CGGGGGGGC", "CGGGGGGGC", "CGGGGGGGC", "CGGGGGGGC", "CGGGGGGGC", "CCCCCCCCC");
+        builder.aisle("CCCCCCCCC", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "CCCCCCCCC");
+        builder.aisle("CCCCCCCCC", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "CCCCCCCCC");
+        builder.aisle("CCCCCCCCC", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "CCCCCCCCC");
+        builder.aisle("CCCCCCCCC", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "CCCCCCCCC");
+        builder.aisle("CCCCCCCCC", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "CCCCCCCCC");
+        builder.aisle("CCCCCCCCC", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "CCCCCCCCC");
+        builder.aisle("CCCCCCCCC", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "CCCCCCCCC");
+        builder.aisle("CCCCSCCCC", "CMGGGGGNC", "CGGGGGGGC", "CGGGGGGGC", "CGGGGGGGC", "CGGGGGGGC", "CGGGGGGGC", "CGGGGGGGC", "CCCCCCCCC");
+        builder
+                .where('S', GTSteamMetaTileEntities.LARGE_FLUID_TANK, SOUTH)
+                .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], SOUTH)
+                .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], SOUTH)
+                .where('C', getULVCasingState())
+                .where('G', Blocks.GLASS.getDefaultState())
+                .where(' ', Blocks.AIR.getDefaultState());
+        shapeInfo.add(builder.build());
+
+        // 11x11x11 结构
+        builder = MultiblockShapeInfo.builder();
+        builder.aisle("CCCCCCCCCCC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CCCCCCCCCCC");
+        builder.aisle("CCCCCCCCCCC", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "CCCCCCCCCCC");
+        builder.aisle("CCCCCCCCCCC", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "CCCCCCCCCCC");
+        builder.aisle("CCCCCCCCCCC", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "CCCCCCCCCCC");
+        builder.aisle("CCCCCCCCCCC", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "CCCCCCCCCCC");
+        builder.aisle("CCCCCCCCCCC", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "CCCCCCCCCCC");
+        builder.aisle("CCCCCCCCCCC", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "CCCCCCCCCCC");
+        builder.aisle("CCCCCCCCCCC", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "CCCCCCCCCCC");
+        builder.aisle("CCCCCCCCCCC", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "CCCCCCCCCCC");
+        builder.aisle("CCCCCCCCCCC", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "CCCCCCCCCCC");
+        builder.aisle("CCCCCSCCCCC", "CMGGGGGGGNC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CCCCCCCCCCC");
+        builder
+                .where('S', GTSteamMetaTileEntities.LARGE_FLUID_TANK, SOUTH)
+                .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], SOUTH)
+                .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], SOUTH)
+                .where('C', getULVCasingState())
+                .where('G', Blocks.GLASS.getDefaultState())
+                .where(' ', Blocks.AIR.getDefaultState());
+        shapeInfo.add(builder.build());
+
+        return shapeInfo;
+    }
+
     public boolean isBlockEdge(@NotNull World world, @NotNull BlockPos.MutableBlockPos pos,
                                @NotNull EnumFacing direction) {
         IBlockState block = world.getBlockState(pos.move(direction));
         TileEntity entity = world.getTileEntity(pos);
         if (entity instanceof IGregTechTileEntity iGregTechTileEntity) {
             MetaTileEntity metaTileEntity = iGregTechTileEntity.getMetaTileEntity();
-            if(metaTileEntity instanceof IMultiblockAbilityPart<?> iMultiblockAbilityPart){
-               return false;
-            }else{
+            if (metaTileEntity instanceof IMultiblockAbilityPart<?> iMultiblockAbilityPart) {
+                return false;
+            } else {
                 return (block != getULVCasingState())
                         && (block != Blocks.GLASS.getDefaultState());
             }
@@ -263,6 +375,7 @@ public class MetaTileEntityLargeFluidTank  extends MultiblockWithDisplayBase {
                     && (block != Blocks.GLASS.getDefaultState());
         }
     }
+
     private void updateStructureDimensions() {
         World world = getWorld();
         EnumFacing front = getFrontFacing();
@@ -287,9 +400,9 @@ public class MetaTileEntityLargeFluidTank  extends MultiblockWithDisplayBase {
             if (lDist != 0 && rDist != 0) break;
         }
         this.Length = lDist + rDist - 1;
-        for(int i = 1; i <= MAX_RADIUS * 2 - 1; i++){
-            if((isBlockEdge(world,bPos,back))) bDist = i;
-            if(bDist != 0) break;
+        for (int i = 1; i <= MAX_RADIUS * 2 - 1; i++) {
+            if ((isBlockEdge(world, bPos, back))) bDist = i;
+            if (bDist != 0) break;
         }
         for (int i = 1; i <= 15; i++) {
             if (isBlockEdge(world, hPos, EnumFacing.UP)) hDist = i;
@@ -308,13 +421,15 @@ public class MetaTileEntityLargeFluidTank  extends MultiblockWithDisplayBase {
             this.StoragefluidTank = new FluidTank(capacity);
         }
     }
+
     private void resetTileAbilities() {
         this.inputFluidsTank = new FluidTank(0);
         this.outputFluidsTank = new FluidTank(0);
-        if(this.StoragefluidTank == null) {
+        if (this.StoragefluidTank == null) {
             this.StoragefluidTank = new FluidTank(capacity);
         }
     }
+
     @Override
     public void update() {
         super.update();
@@ -328,11 +443,6 @@ public class MetaTileEntityLargeFluidTank  extends MultiblockWithDisplayBase {
             int RemovedFluidAmount = outputFluidsTank.fill(StoragefluidTank.getFluid(), true);
             StoragefluidTank.drain(RemovedFluidAmount, true);
         }
-    }
-
-
-    public int getCapacity() {
-        return capacity;
     }
 
     @Override
@@ -364,7 +474,11 @@ public class MetaTileEntityLargeFluidTank  extends MultiblockWithDisplayBase {
     }
 
 
-
+    @Override
+    public void renderMetaTileEntity(CCRenderState renderState, Matrix4 translation, IVertexOperation[] pipeline) {
+        super.renderMetaTileEntity(renderState, translation, pipeline);
+        getFrontOverlay().renderSided(getFrontFacing(), renderState, translation, pipeline);
+    }
 
     @SideOnly(Side.CLIENT)
     @Override
@@ -376,8 +490,9 @@ public class MetaTileEntityLargeFluidTank  extends MultiblockWithDisplayBase {
     public void addInformation(ItemStack stack, World player, @NotNull List<String> tooltip,
                                boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
-        tooltip.add(I18n.format("gtsteam.machine.large_fluid_tank.information"));
-
+        tooltip.add(I18n.format("gtsteam.machine.large_fluid_tank.tooltip.1"));
+        tooltip.add(I18n.format("gtsteam.machine.large_fluid_tank.tooltip.2"));
+        tooltip.add(I18n.format("gtsteam.machine.large_fluid_tank.tooltip.3"));
     }
 
     @Override
@@ -390,5 +505,40 @@ public class MetaTileEntityLargeFluidTank  extends MultiblockWithDisplayBase {
             }
         }
         return super.getCapability(capability, side);
+    }
+
+    @Override
+    public int getProgressBarCount() {
+        return 1;
+    }
+
+    @Override
+    public void registerBars(List<UnaryOperator<TemplateBarBuilder>> bars, PanelSyncManager syncManager) {
+        IntSyncValue fluidAmountValue = new IntSyncValue(() ->
+                isStructureFormed() && StoragefluidTank != null ? StoragefluidTank.getFluidAmount() : 0);
+        IntSyncValue fluidCapacityValue = new IntSyncValue(() ->
+                isStructureFormed() ? capacity : 0);
+
+        syncManager.syncValue("fluid_amount", fluidAmountValue);
+        syncManager.syncValue("fluid_capacity", fluidCapacityValue);
+
+        bars.add(barBuilder -> barBuilder
+                .progress(() -> fluidCapacityValue.getIntValue() == 0 ? 0 :
+                        (double) fluidAmountValue.getIntValue() / fluidCapacityValue.getIntValue())
+                .texture(GTGuiTextures.PROGRESS_BAR_FLUID_RIG_DEPLETION) // 或者使用其他合适的进度条纹理
+                .tooltipBuilder(tooltip -> {
+                    if (isStructureFormed()) {
+                        String fluidName = StoragefluidTank.getFluid() != null ?
+                                StoragefluidTank.getFluid().getLocalizedName() :
+                                I18n.format("gtsteam.machine.large_fluid_tank.empty");
+
+                        tooltip.addLine(IKey.lang("gtsteam.machine.large_fluid_tank.fluid_type",
+                                fluidName));
+                        tooltip.addLine(IKey.lang("gtsteam.machine.large_fluid_tank.amount",
+                                fluidAmountValue.getIntValue(), fluidCapacityValue.getIntValue()));
+                    } else {
+                        tooltip.addLine(IKey.lang("gregtech.multiblock.invalid_structure"));
+                    }
+                }));
     }
 }
