@@ -4,6 +4,8 @@ recipemap.steam_ore_washer.name=蒸汽洗矿厂
 recipemap.steam_blast_furnace.name=大型蒸汽高炉
 recipemap.lava_furnace.name=熔岩炉
 recipemap.biomimetic_factory_recipes.name=物质拟生
+recipemap.primitive_steam_turbine.name=原始蒸汽轮机燃料
+recipemap.primitive_combustion_generator.name=原始燃气轮机燃料
 #材料
 gtsteam.material.bone_ceramic_clay=骨陶瓷粘土
 #方块
@@ -77,10 +79,6 @@ gtsteam.machine.industrial_primitive_blast_furnace.tooltip.2=调节风量节流�
 gtsteam.machine.industrial_primitive_blast_furnace.tooltip.3=当机器不工作时温度会缓缓降低,降温速度由当前温度决定（降温曲线）。
 gtsteam.machine.industrial_primitive_blast_furnace.tooltip.4=温度区间决定定总耗时减免，上升每500会增加对应指数倍的耗时减免。
 gtsteam.machine.industrial_primitive_blast_furnace.tooltip.5=全部升级完毕后最高十倍耗时减免。
-
-#大型原始水泵
-gtsteam.machine.primitive_water_pump.name=大型原始水泵
-gregtech.multiblock.water_pump.description=大型原始水泵是一台蒸汽时代的多方块机器。当它的控制器方块处于河流生物群系，且高度介于 Y = 64 与 Y = 80（含）之间时将每秒收集一次100mb的水。它可以使用 ULV、LV 输出仓或水泵输出仓。
 
 #太阳能锅炉
 gtsteam.machine.steam_solar_boiler.name=太阳能锅炉

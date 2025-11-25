@@ -9,17 +9,21 @@ import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.unification.material.Materials;
+import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.ConfigHolder;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
 import static gregtech.client.renderer.texture.Textures.SOLID_STEEL_CASING;
@@ -85,4 +89,10 @@ public class MetaTileEntitySteamOreWasher extends RecipeMapSteamMultiblockContro
         return Textures.PYROLYSE_OVEN_OVERLAY;
     }
 
+    @Override
+    public void addInformation(ItemStack stack, World player, List<String> tooltip,
+                               boolean advanced) {
+        super.addInformation(stack, player, tooltip, advanced);
+        TooltipBuilder.create().addSteamMachine(PARALLEL_LIMIT).build(this, tooltip);
+    }
 }

@@ -10,13 +10,17 @@ import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.unification.material.Materials;
+import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.BlockMachineCasing.MachineCasingType;
 import gregtech.common.blocks.MetaBlocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public class MetaTileEntitySteamFermentationVat extends RecipeMapSteamMultiblockController {
     private static final int PARALLEL_LIMIT = 8;
@@ -61,4 +65,10 @@ public class MetaTileEntitySteamFermentationVat extends RecipeMapSteamMultiblock
         return Textures.PYROLYSE_OVEN_OVERLAY;
     }
 
+    @Override
+    public void addInformation(ItemStack stack, World player, List<String> tooltip,
+                               boolean advanced) {
+        super.addInformation(stack, player, tooltip, advanced);
+        TooltipBuilder.create().addSteamMachine(PARALLEL_LIMIT).build(this, tooltip);
+    }
 }

@@ -28,6 +28,7 @@ public class GTSRecipeMaps {
                 )
                 .sound(GTSoundEvents.TURBINE)
                 .allowEmptyOutputs()
+                .disableJeiOverclockButton()
                 .generator()
                 .build();
 
@@ -40,6 +41,7 @@ public class GTSRecipeMaps {
                 )
                 .sound(GTSoundEvents.COMBUSTION)
                 .allowEmptyOutputs()
+                .disableJeiOverclockButton()
                 .generator()
                 .build();
 

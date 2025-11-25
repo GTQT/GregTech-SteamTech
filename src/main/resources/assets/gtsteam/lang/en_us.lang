@@ -79,10 +79,6 @@ gtsteam.machine.industrial_primitive_blast_furnace.tooltip.3=When the machine is
 gtsteam.machine.industrial_primitive_blast_furnace.tooltip.4=The temperature range determines the total time reduction, and every 500 increase will increase the corresponding exponential time reduction.
 gtsteam.machine.industrial_primitive_blast_furnace.tooltip.5=Up to 10 times reduction in time spent after all upgrades are completed.
 
-#Large Primitive Water Pump
-gtsteam.machine.primitive_water_pump.name=Large Primitive Water Pump
-gregtech.multiblock.water_pump.description=The Large Primitive Water Pump is a steam age multiblock machine. When its controller block is in a river biome and at a height between Y=64 and Y=80 (inclusive), it collects 100mb of water per second. It can use ULV, LV output hatches or water pump output hatches.
-
 #Solar Boiler
 gtsteam.machine.steam_solar_boiler.name=Solar Boiler
 gtsteam.multiblock.steam_solar_boiler.steam_output=Steam Output: %s

@@ -7,8 +7,8 @@ import codechicken.lib.vec.Matrix4;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
-import com.cleanroommc.modularui.widgets.ItemSlot;
 import com.cleanroommc.modularui.widgets.ProgressWidget;
+import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.MetaTileEntityUIFactory;
@@ -22,6 +22,8 @@ import gregtech.api.mui.widget.RecipeProgressWidget;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.recipes.RecipeMaps;
+import gregtech.api.util.tooltips.InformationHandler;
+import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.client.utils.TooltipHelper;
@@ -162,8 +164,9 @@ public class MetaTileEntityAdvancedCokeOven extends RecipeMapPrimitiveMultiblock
 
     @Override
     public void addInformation(ItemStack stack, World player, List<String> tooltip, boolean advanced) {
+        InformationHandler.topTooltips("高级焦炉？", tooltip);
         super.addInformation(stack, player, tooltip, advanced);
-        tooltip.add(TooltipHelper.RAINBOW_SLOW + I18n.format("高级焦炉？", new Object[0]));
+        TooltipBuilder.create().addSpecialLogic().build(this, tooltip);
         tooltip.add(I18n.format("比普通的焦炉快40%%"));
     }
 }

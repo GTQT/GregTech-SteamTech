@@ -34,6 +34,7 @@ import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -153,7 +154,7 @@ public class MetaTileEntitySteamWaterPump extends MultiblockControllerBase imple
     }
 
     @Override
-    protected BlockPattern createStructurePattern() {
+    protected @NotNull BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
                 .aisle("A   A", "A   A", "BBBBB", "A   A", "A   A", "BBBBB")
                 .aisle("     ", "     ", "BBBBB", " CCC ", " CCC ", "BBBBB")

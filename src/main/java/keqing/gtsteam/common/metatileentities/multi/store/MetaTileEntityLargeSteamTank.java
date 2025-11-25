@@ -40,6 +40,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -98,9 +99,9 @@ public class MetaTileEntityLargeSteamTank extends MultiblockWithDisplayBase {
     }
 
     @Override
-    protected BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start().
-                aisle(" AAA ", " ABA ", " ABA ", " A A ", " A A ", " A A ", " CCC ")
+    protected @NotNull BlockPattern createStructurePattern() {
+        return FactoryBlockPattern.start()
+                .aisle(" AAA ", " ABA ", " ABA ", " A A ", " A A ", " A A ", " CCC ")
                 .aisle("AAAAA", "ADEDA", "ADDDA", "ADFDA", "ADFDA", "ADFDA", "C D C")
                 .aisle("AAAAA", "BEEEB", "BDEDB", " F F ", " F F ", " F F ", "CDBDC")
                 .aisle("AAAAA", "ADEDA", "ADDDA", "ADFDA", "ADFDA", "ADFDA", "C D C")
@@ -162,7 +163,7 @@ public class MetaTileEntityLargeSteamTank extends MultiblockWithDisplayBase {
 
     @SideOnly(Side.CLIENT)
     @Override
-    protected ICubeRenderer getFrontOverlay() {
+    protected @NotNull ICubeRenderer getFrontOverlay() {
         return Textures.MULTIBLOCK_TANK_OVERLAY;
     }
 

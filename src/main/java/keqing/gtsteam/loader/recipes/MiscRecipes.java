@@ -152,13 +152,13 @@ public class MiscRecipes {
                 'F', new UnificationEntry(frameGt, Steel),
                 'B', COKE_OVEN.getStackForm());
 
-        //大型原始水泵
-        ModHandler.addShapedRecipe(true, "large_primitive_water_pump", WATER_PUMP.getStackForm(),
+        //大型储罐
+        ModHandler.addShapedRecipe(true, "large_fluid_tank", LARGE_FLUID_TANK.getStackForm(),
                 "PPP", "CFC", "BBB",
-                'C', new UnificationEntry(circuit, LV),
+                'C', new UnificationEntry(circuit, ULV),
                 'P', new UnificationEntry(plate, Steel),
                 'F', new UnificationEntry(frameGt, Steel),
-                'B', PRIMITIVE_WATER_PUMP.getStackForm());
+                'B', STEEL_TANK.getStackForm());
 
         if (ConfigHolder.machines.steelSteamMultiblocks) {
             ModHandler.addShapedRecipe(true, "steam_compressor", STEAM_COMPRESSOR.getStackForm(),

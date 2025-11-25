@@ -47,7 +47,6 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntitySteamTranscendentPlasmaForge STEAM_TRANSCENDENT_PLASMA_FORGE;
     public static MetaTileEntitySteamBiomimeticFactory STEAM_BIOMIMETIC_FACTORY;
 
-    public static MetaTileEntityPrimitiveWaterPump WATER_PUMP;
     public static MetaTileEntitySteamFermentationVat STEAM_FERMENTATION_VAT;
     public static MetaTileEntityAdvancedCokeOven ADVANCED_COKE_OVEN;
 
@@ -121,8 +120,7 @@ public class GTSteamMetaTileEntities {
 
         LARGE_FLUID_TANK = registerMetaTileEntity(45, new MetaTileEntityLargeFluidTank(gtsId("large_fluid_tank")));
 
-        WATER_PUMP = registerMetaTileEntity(50, new MetaTileEntityPrimitiveWaterPump(gtsId("primitive_water_pump")));
-        STEAM_WATER_PUMP = registerMetaTileEntity(51, new MetaTileEntitySteamWaterPump(gtsId("steam_water_pump")));
+        STEAM_WATER_PUMP = registerMetaTileEntity(50, new MetaTileEntitySteamWaterPump(gtsId("steam_water_pump")));
 
         STEAM_TRANSCENDENT_PLASMA_FORGE = registerMetaTileEntity(60, new MetaTileEntitySteamTranscendentPlasmaForge(gtsId("steam_transcendent_plasma_forge")));
         STEAM_BIOMIMETIC_FACTORY = registerMetaTileEntity(61, new MetaTileEntitySteamBiomimeticFactory(gtsId("steam_biomimetic_factory")));
@@ -148,7 +146,7 @@ public class GTSteamMetaTileEntities {
         WIREMILL = registerMetaTileEntity(117, new SimpleMachineMetaTileEntity(gtsId("wiremill.ulv"), RecipeMaps.WIREMILL_RECIPES, Textures.WIREMILL_OVERLAY, 0, true));
 
         //发电机ULV
-        STEAM_TURBINE = registerMetaTileEntity(120, new MetaTileEntitySingleTurbine(gtsId("steam_turbine.ulv"), PRIMITIVE_STEAM_TURBINE_FUELS, Textures.STEAM_TURBINE_OVERLAY, 0, tier -> 2000, 100));
-        COMBUSTION_GENERATOR = registerMetaTileEntity(121, new MetaTileEntitySingleCombustion(gtsId("combustion_generator.ulv"), PRIMITIVE_COMBUSTION_GENERATOR_FUELS, Textures.COMBUSTION_GENERATOR_OVERLAY, 0, tier -> 2000, 100));
+        STEAM_TURBINE = registerMetaTileEntity(120, new MetaTileEntitySingleTurbine(gtsId("steam_turbine.ulv"), PRIMITIVE_STEAM_TURBINE_FUELS, Textures.STEAM_TURBINE_OVERLAY, 0, tier -> 2000, 1.0));
+        COMBUSTION_GENERATOR = registerMetaTileEntity(121, new MetaTileEntitySingleCombustion(gtsId("combustion_generator.ulv"), PRIMITIVE_COMBUSTION_GENERATOR_FUELS, Textures.COMBUSTION_GENERATOR_OVERLAY, 0, tier -> 2000, 1.0));
     }
 }
