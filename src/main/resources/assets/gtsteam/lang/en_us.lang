@@ -184,3 +184,19 @@ gtsteam.machine.steam_turbine.ulv.tooltip=A Simple steam turbine for generating 
 
 gtsteam.machine.combustion_generator.ulv.name=Simple Combustion Generator
 gtsteam.machine.combustion_generator.ulv.tooltip=A Simple combustion generator for generating power.
+
+# Item Tooltips
+gtsteam.storage_upgrade_tier_1.tooltip=Upgrades storage to 32M items (10,000 uses :- ~27.8 hours)
+gtsteam.storage_upgrade_tier_2.tooltip=Upgrades storage to 64M items (100,000 uses :- ~277.8 hours)
+gtsteam.storage_upgrade_tier_3.tooltip=Upgrades storage to 256M items (Permanent :- Never expires)
+gtsteam.void_upgrade.tooltip=Destroys excess items when storage and output are full
+
+# Controller Block
+tile.scalable_storage_controller.tooltip=Author: iristhpianist
+gtsteam.machine.large_steam_tank.name=Large Steam Tank
+gtsteam.machine.large_steam_tank.fluid_amount_text=Steam Amount:
+gtsteam.machine.large_fluid_tank.fluid_amount_text=Fluid Type: %s
+gtsteam.machine.large_fluid_tank.empty= "Empty"
+gtsteam.machine.large_fluid_tank.information=可存储(体积x16000)L的流体
+gtsteam.machine.large_fluid_tank.fluid_capacity_text=流体容量: %d
+gtsteam.machine.large_fluid_tank.name=Large Fluid Tank
