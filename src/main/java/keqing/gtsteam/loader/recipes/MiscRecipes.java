@@ -387,12 +387,6 @@ public class MiscRecipes {
 
         }
 
-        ModHandler.addShapedRecipe(true, "saw_mill", GTSteamMetaTileEntities.SAW_MILL.getStackForm(),
-                "BPB", "PCP", "BPB",
-                'C', new UnificationEntry(circuit, ULV),
-                'P', new UnificationEntry(plate, Wood),
-                'B', new UnificationEntry(frameGt, Bronze));
-
         //  ULV
         ModHandler.addShapedRecipe(true, "electric_motor.ulv", ELECTRIC_MOTOR_ULV.getStackForm(),
                 "CWR", "WMW", "RWC",

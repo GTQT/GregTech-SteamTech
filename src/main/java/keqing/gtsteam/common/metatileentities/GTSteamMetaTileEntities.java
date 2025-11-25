@@ -46,7 +46,6 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntitySteamAlloyFurnace STEAM_ALLOY_FURNACE;
     public static MetaTileEntitySteamSifter STEAM_SIFTER;
     public static MetaTileEntitySteamLathe STEAM_LATHE;
-    public static MetaTileEntitySawMill SAW_MILL;
     public static MetaTileEntitySteamWaterPump STEAM_WATER_PUMP;
     public static MetaTileEntitySteamTranscendentPlasmaForge STEAM_TRANSCENDENT_PLASMA_FORGE;
     public static MetaTileEntitySteamBiomimeticFactory STEAM_BIOMIMETIC_FACTORY;
@@ -113,7 +112,6 @@ public class GTSteamMetaTileEntities {
         STEAM_ALLOY_FURNACE = registerMetaTileEntity(21, new MetaTileEntitySteamAlloyFurnace(gtsId("steam_alloy_furnace")));
         STEAM_LAVA_FURNACE = registerMetaTileEntity(22, new MetaTileEntitySteamLavaFurnace(gtsId("steam_lava_furnace")));
         STEAM_FERMENTATION_VAT = registerMetaTileEntity(23, new MetaTileEntitySteamFermentationVat(gtsId("steam_fermentation_vat")));
-        SAW_MILL = registerMetaTileEntity(24, new MetaTileEntitySawMill(gtsId("saw_mill")));
         SCALABLE_STORAGE = registerMetaTileEntity(25, new MetaTileEntityScalableStorage(gtsId("scalable_storage")));
 
         STEAM_SOLAR_BOILER = registerMetaTileEntity(26, new MetaTileEntitySteamSolarBoiler(gtsId("steam_solar_boiler")));

@@ -53,7 +53,6 @@ gtsteam.machine.steam_wire_mill.name=蒸汽线材轧机
 gtsteam.machine.steam_lathe.name=蒸汽车床
 gtsteam.machine.steam_alloy_furnace.name=蒸汽合金炉
 gtsteam.machine.steam_lava_furnace.name=蒸汽熔岩炉
-gtsteam.machine.saw_mill.name=锯木机
 #工业焦炉
 gtsteam.machine.alloy_klin.name=合金窑
 gtsteam.machine.alloy_klin_import_hatch.name=合金窑输入仓

@@ -52,7 +52,6 @@ gtsteam.machine.steam_wire_mill.name=Steam Wire Mill
 gtsteam.machine.steam_lathe.name=Steam Lathe
 gtsteam.machine.steam_alloy_furnace.name=Steam Alloy Furnace
 gtsteam.machine.steam_lava_furnace.name=Steam Lava Furnace
-gtsteam.machine.saw_mill.name=Saw Mill
 #工业焦炉
 gtsteam.machine.alloy_klin.name=Alloy Klin
 gtsteam.machine.alloy_klin_import_hatch.name=Alloy Klin Import Hatch

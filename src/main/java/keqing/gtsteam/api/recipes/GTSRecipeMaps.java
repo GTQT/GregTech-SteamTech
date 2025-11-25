@@ -73,15 +73,5 @@ public class GTSRecipeMaps {
                 .fluidOutputs(0)
                 .sound(GTSoundEvents.FIRE)
                 .build();
-
-        SAW_MILL = new RecipeMapBuilder<>("saw_mill",
-                new PrimitiveRecipeBuilder())
-                .itemInputs(2)
-                .itemOutputs(2)
-                .uiBuilder((b) -> b
-                        .progressBar(GTGuiTextures.PROGRESS_BAR_ARROW_MULTIPLE)
-                )
-                .sound(GTSoundEvents.CUT)
-                .build();
     }
 }

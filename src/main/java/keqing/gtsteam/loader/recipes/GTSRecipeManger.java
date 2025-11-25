@@ -10,7 +10,6 @@ public class GTSRecipeManger {
         AlloyKlinRecipes.init();
         MiscRecipes.init();
         BiomimeticFactoryRecipes.init();
-        SawmillChain.init();
         CeramicChain.init();
     }
 }
