@@ -417,7 +417,6 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
     private void initializeAbilities() {
         this.inputFluidsTank = this.getAbilities(MultiblockAbility.IMPORT_FLUIDS).get(0);
         this.outputFluidsTank = this.getAbilities(MultiblockAbility.EXPORT_FLUIDS).get(0);
-        this.capacity = Height * Width * Length * 16000;
         refreshCAP();
     }
 
@@ -437,8 +436,10 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
     }
 
     public void refreshCAP() {
-        int capacity = Height * Width * Length * 16000;
-        this.StoragefluidTank = new FluidTank(capacity);
+        int capacity = (Height - 2) * (Width - 2) * (Length - 2) * 16000;
+        if (this.StoragefluidTank == null || this.StoragefluidTank.getCapacity() == 0) {
+            this.StoragefluidTank = new FluidTank(capacity);
+        }
     }
 
     private void resetTileAbilities() {
@@ -467,6 +468,11 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
             int RemovedFluidAmount = outputFluidsTank.fill(StorageFluidTank.getFluid(), true);
             StorageFluidTank.drain(RemovedFluidAmount, true);
         }
+    }
+
+    @Override
+    public boolean shouldShowVoidingModeButton() {
+        return false;
     }
 
     @Override
