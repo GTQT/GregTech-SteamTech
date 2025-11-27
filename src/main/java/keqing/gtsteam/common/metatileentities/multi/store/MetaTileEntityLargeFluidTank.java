@@ -417,7 +417,7 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
         this.inputFluidsTank = this.getAbilities(MultiblockAbility.IMPORT_FLUIDS).get(0);
         this.outputFluidsTank = this.getAbilities(MultiblockAbility.EXPORT_FLUIDS).get(0);
         this.capacity = Height * Width * Length * 16000;
-        if (this.StoragefluidTank == null) {
+        if (this.StoragefluidTank == null || this.StoragefluidTank.getCapacity() == 0) {
             this.StoragefluidTank = new FluidTank(capacity);
         }
     }
