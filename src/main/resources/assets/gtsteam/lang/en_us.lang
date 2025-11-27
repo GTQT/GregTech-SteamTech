@@ -110,6 +110,7 @@ gtsteam.machine.large_steam_tank.fluid_amount_text=Steam Quantity:
 gtsteam.machine.steam_fermentation_vat.name=Steam Fermentation Vat
 
 gtsteam.machine.large_fluid_tank.name=Large Fluid Storage Tanks
+gtsteam.machine.large_fluid_tank.size=Size: %d×%d×%d
 gtsteam.machine.large_fluid_tank.fluid_name_text=Fluid Type: %s
 gtsteam.machine.large_fluid_tank.empty=Fluid Type: Empty
 gtsteam.machine.large_fluid_tank.fluid_capacity_text=Tank Capacity: %d L

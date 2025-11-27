@@ -3,11 +3,15 @@ package keqing.gtsteam.common.metatileentities.multi.store;
 import codechicken.lib.raytracer.CuboidRayTraceResult;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
+import codechicken.lib.texture.TextureUtils;
+import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Matrix4;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.StringSyncValue;
+import gregtech.api.mui.GTGuiTheme;
+import org.apache.commons.lang3.ArrayUtils;
 import gregtech.api.GTValues;
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.gui.ModularUI;
@@ -26,12 +30,18 @@ import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.pattern.MultiblockShapeInfo;
 import gregtech.api.pattern.PatternMatchContext;
 import gregtech.api.util.KeyUtil;
+import gregtech.client.renderer.CubeRendererState;
 import gregtech.client.renderer.ICubeRenderer;
+import gregtech.client.renderer.cclop.ColourOperation;
+import gregtech.client.renderer.cclop.LightMapOperation;
 import gregtech.client.renderer.texture.Textures;
+import gregtech.client.utils.BloomEffectUtil;
 import gregtech.common.metatileentities.MetaTileEntities;
 import keqing.gtsteam.client.textures.GTSteamTextures;
 import keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -45,10 +55,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -126,6 +133,12 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
             } else {
                 FluidString = syncer.syncString(I18n.format("gtsteam.machine.large_fluid_tank.empty"));
             }
+
+            int length = syncer.syncInt(this.Length);
+            int height = syncer.syncInt(this.Height);
+            int width = syncer.syncInt(this.Width);
+
+            keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.machine.large_fluid_tank.size", length, height, width));
             keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.machine.large_fluid_tank.fluid_name_text", FluidString));
             keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.machine.large_fluid_tank.fluid_amount_text", fluidAmountValue));
             keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.machine.large_fluid_tank.fluid_capacity_text", fluidCapacityValue));
@@ -431,15 +444,13 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
     }
 
     public IFluidTank getStorageFluidTank() {
-        if (StoragefluidTank == null) StoragefluidTank = new FluidTank(capacity);
+        if (StoragefluidTank == null) refreshCAP();
         return StoragefluidTank;
     }
 
     public void refreshCAP() {
-        int capacity = (Height - 2) * (Width - 2) * (Length - 2) * 16000;
-        if (this.StoragefluidTank == null || this.StoragefluidTank.getCapacity() == 0) {
-            this.StoragefluidTank = new FluidTank(capacity);
-        }
+        this.capacity = (Height - 2) * (Width - 2) * (Length - 2) * 16000;
+        this.StoragefluidTank = new FluidTank(capacity);
     }
 
     private void resetTileAbilities() {
@@ -508,6 +519,11 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
     public void renderMetaTileEntity(CCRenderState renderState, Matrix4 translation, IVertexOperation[] pipeline) {
         super.renderMetaTileEntity(renderState, translation, pipeline);
         getFrontOverlay().renderSided(getFrontFacing(), renderState, translation, pipeline);
+    }
+
+    @Override
+    public GTGuiTheme getUITheme() {
+        return GTGuiTheme.STEEL;
     }
 
     @SideOnly(Side.CLIENT)

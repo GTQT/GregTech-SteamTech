@@ -109,6 +109,7 @@ gtsteam.machine.large_steam_tank.name=大型蒸汽储罐
 gtsteam.machine.large_steam_tank.fluid_amount_text=蒸汽数量:
 
 gtsteam.machine.large_fluid_tank.name=大型流体储罐
+gtsteam.machine.large_fluid_tank.size=结构大小: %d×%d×%d
 gtsteam.machine.large_fluid_tank.fluid_name_text=流体类型: %s
 gtsteam.machine.large_fluid_tank.empty=流体类型: 空
 gtsteam.machine.large_fluid_tank.fluid_capacity_text=储罐容量: %d L
