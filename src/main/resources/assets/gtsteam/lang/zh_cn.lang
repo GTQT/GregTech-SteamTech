@@ -109,9 +109,11 @@ gtsteam.machine.large_steam_tank.name=大型蒸汽储罐
 gtsteam.machine.large_steam_tank.fluid_amount_text=蒸汽数量:
 
 gtsteam.machine.large_fluid_tank.name=大型流体储罐
-gtsteam.machine.large_fluid_tank.fluid_amount_text=流体类型: %s
+gtsteam.machine.large_fluid_tank.fluid_name_text=流体类型: %s
 gtsteam.machine.large_fluid_tank.empty=流体类型: 空
-gtsteam.machine.large_fluid_tank.fluid_capacity_text=流体容量: %d
+gtsteam.machine.large_fluid_tank.fluid_capacity_text=储罐容量: %d L
+gtsteam.machine.large_fluid_tank.fluid_amount_text=流体容量: %d L
+gtsteam.machine.large_fluid_tank.amount=流体容量: %d / %d L
 
 gtsteam.machine.large_fluid_tank.tooltip.1=可存储流体：容量为(长*宽*高) × 16000 L，其中各边长为奇数，各边长不必相等，范围从3到15。
 gtsteam.machine.large_fluid_tank.tooltip.2=结构为长方体，最小体积3×3×3，最大体积15×15×15。除边框（外壳）外，面的其他部分可用玻璃填充，长方体内部保持空心。

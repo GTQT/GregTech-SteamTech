@@ -7,6 +7,7 @@ import codechicken.lib.vec.Matrix4;
 import com.cleanroommc.modularui.api.drawable.IKey;
 import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import gregtech.api.GTValues;
 import gregtech.api.gui.GuiTextures;
 import gregtech.api.gui.ModularUI;
@@ -117,17 +118,17 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
 
     private void addFluidAmountCapacity(KeyManager keyManager, UISyncer syncer) {
         if (isStructureFormed()) {
-            var FluidAmountString = KeyUtil.number(TextFormatting.WHITE,
-                    syncer.syncInt(this.StoragefluidTank.getFluidAmount()), "L");
+            int fluidAmountValue = syncer.syncInt(isStructureFormed() ? StoragefluidTank.getFluidAmount() : 0);
+            int fluidCapacityValue = syncer.syncInt(isStructureFormed() ? capacity : 0);
             String FluidString;
             if (StoragefluidTank.getFluid() != null) {
                 FluidString = syncer.syncString(StoragefluidTank.getFluid().getLocalizedName());
-                keyManager.add(FluidAmountString);
             } else {
                 FluidString = syncer.syncString(I18n.format("gtsteam.machine.large_fluid_tank.empty"));
             }
-            keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.machine.large_fluid_tank.fluid_amount_text", FluidString));
-            keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.machine.large_fluid_tank.fluid_capacity_text", syncer.syncInt(this.capacity)));
+            keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.machine.large_fluid_tank.fluid_name_text", FluidString));
+            keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.machine.large_fluid_tank.fluid_amount_text", fluidAmountValue));
+            keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.machine.large_fluid_tank.fluid_capacity_text", fluidCapacityValue));
         }
     }
 
@@ -155,10 +156,10 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
         this.Length = compound.getInteger("Length");
         this.Height = compound.getInteger("Height");
         this.Width = compound.getInteger("Width");
-        String FluidType = compound.getString("FluidType");
-        reinitializeStructurePattern();
         this.StoragefluidTank = new FluidTank(this.capacity);
+
         int StorageFluidTankAmount = compound.getInteger("StorageFluidTankAmount");
+        String FluidType = compound.getString("FluidType");
         if (StorageFluidTankAmount > 0) {
             this.StoragefluidTank.fill(FluidRegistry.getFluidStack(FluidType, StorageFluidTankAmount), true);
         }
@@ -417,16 +418,34 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
         this.inputFluidsTank = this.getAbilities(MultiblockAbility.IMPORT_FLUIDS).get(0);
         this.outputFluidsTank = this.getAbilities(MultiblockAbility.EXPORT_FLUIDS).get(0);
         this.capacity = Height * Width * Length * 16000;
-        if (this.StoragefluidTank == null) {
-            this.StoragefluidTank = new FluidTank(capacity);
-        }
+        refreshCAP();
+    }
+
+    public IFluidTank getInputFluidsTank() {
+        if (inputFluidsTank == null) inputFluidsTank = this.getAbilities(MultiblockAbility.IMPORT_FLUIDS).get(0);
+        return inputFluidsTank;
+    }
+
+    public IFluidTank getOutputFluidsTank() {
+        if (outputFluidsTank == null) outputFluidsTank = this.getAbilities(MultiblockAbility.EXPORT_FLUIDS).get(0);
+        return outputFluidsTank;
+    }
+
+    public IFluidTank getStorageFluidTank() {
+        if (StoragefluidTank == null) StoragefluidTank = new FluidTank(capacity);
+        return StoragefluidTank;
+    }
+
+    public void refreshCAP() {
+        int capacity = Height * Width * Length * 16000;
+        this.StoragefluidTank = new FluidTank(capacity);
     }
 
     private void resetTileAbilities() {
         this.inputFluidsTank = new FluidTank(0);
         this.outputFluidsTank = new FluidTank(0);
         if (this.StoragefluidTank == null) {
-            this.StoragefluidTank = new FluidTank(capacity);
+            this.StoragefluidTank = new FluidTank(0);
         }
     }
 
@@ -434,14 +453,19 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
     public void update() {
         super.update();
         if (!this.getWorld().isRemote && this.getOffsetTimer() % 20L == 0L && this.isStructureFormed()) {
+            IFluidTank inputFluidsTank = getInputFluidsTank();
+            IFluidTank outputFluidsTank = getOutputFluidsTank();
+            IFluidTank StorageFluidTank = getStorageFluidTank();
+            if (StorageFluidTank.getCapacity() == 0) refreshCAP();
+
             int FluidAmounts = inputFluidsTank.getFluidAmount();
             FluidStack fluidStack = inputFluidsTank.getFluid();
             //inputFluidsTank.drain(FluidAmounts, true);
-            int AcceptedFluidAmount = StoragefluidTank.fill(fluidStack, true);
+            int AcceptedFluidAmount = StorageFluidTank.fill(fluidStack, true);
             inputFluidsTank.drain(AcceptedFluidAmount, true);
             //outputFluidsTank.fill(fluidStack, true);
-            int RemovedFluidAmount = outputFluidsTank.fill(StoragefluidTank.getFluid(), true);
-            StoragefluidTank.drain(RemovedFluidAmount, true);
+            int RemovedFluidAmount = outputFluidsTank.fill(StorageFluidTank.getFluid(), true);
+            StorageFluidTank.drain(RemovedFluidAmount, true);
         }
     }
 
@@ -518,9 +542,17 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
                 isStructureFormed() && StoragefluidTank != null ? StoragefluidTank.getFluidAmount() : 0);
         IntSyncValue fluidCapacityValue = new IntSyncValue(() ->
                 isStructureFormed() ? capacity : 0);
+        StringSyncValue fluidNameValue = new StringSyncValue(() ->
+                isStructureFormed() && StoragefluidTank != null ?
+                        StoragefluidTank.getFluid() != null ?
+                                I18n.format("gtsteam.machine.large_fluid_tank.fluid_name_text",
+                                        StoragefluidTank.getFluid().getLocalizedName()) :
+                                I18n.format("gtsteam.machine.large_fluid_tank.empty") :
+                        I18n.format("gtsteam.machine.large_fluid_tank.empty"));
 
         syncManager.syncValue("fluid_amount", fluidAmountValue);
         syncManager.syncValue("fluid_capacity", fluidCapacityValue);
+        syncManager.syncValue("fluid_name", fluidNameValue);
 
         bars.add(barBuilder -> barBuilder
                 .progress(() -> fluidCapacityValue.getIntValue() == 0 ? 0 :
@@ -528,12 +560,8 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
                 .texture(GTGuiTextures.PROGRESS_BAR_FLUID_RIG_DEPLETION) // 或者使用其他合适的进度条纹理
                 .tooltipBuilder(tooltip -> {
                     if (isStructureFormed()) {
-                        String fluidName = StoragefluidTank.getFluid() != null ?
-                                StoragefluidTank.getFluid().getLocalizedName() :
-                                I18n.format("gtsteam.machine.large_fluid_tank.empty");
-
-                        tooltip.addLine(IKey.lang("gtsteam.machine.large_fluid_tank.fluid_type",
-                                fluidName));
+                        tooltip.addLine(IKey.lang("%s",
+                                fluidNameValue.getStringValue()));
                         tooltip.addLine(IKey.lang("gtsteam.machine.large_fluid_tank.amount",
                                 fluidAmountValue.getIntValue(), fluidCapacityValue.getIntValue()));
                     } else {

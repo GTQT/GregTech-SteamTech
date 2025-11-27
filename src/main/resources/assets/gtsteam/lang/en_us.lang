@@ -110,9 +110,11 @@ gtsteam.machine.large_steam_tank.fluid_amount_text=Steam Quantity:
 gtsteam.machine.steam_fermentation_vat.name=Steam Fermentation Vat
 
 gtsteam.machine.large_fluid_tank.name=Large Fluid Storage Tanks
-gtsteam.machine.large_fluid_tank.fluid_amount_text=Fluid Type: %s
-gtsteam.machine.large_fluid_tank.empty=Fluid Type: "Empty"
-gtsteam.machine.large_fluid_tank.fluid_capacity_text=Fluid Capacity: %d
+gtsteam.machine.large_fluid_tank.fluid_name_text=Fluid Type: %s
+gtsteam.machine.large_fluid_tank.empty=Fluid Type: Empty
+gtsteam.machine.large_fluid_tank.fluid_capacity_text=Tank Capacity: %d L
+gtsteam.machine.large_fluid_tank.fluid_amount_text=Fluid Amount: %d L
+gtsteam.machine.large_fluid_tank.amount=Fluid Amount: %d / %d L
 
 gtsteam.machine.large_fluid_tank.tooltip.1=Stored fluid: Capacity (L*W*H) × 16000 L, where each side length is odd, and each side length does not have to be equal, ranging from 3 to 15.
 gtsteam.machine.large_fluid_tank.tooltip.2=The structure is cuboid, with a minimum volume of 3×3×3 and a maximum volume of 15×15×15. Except for the border (shell), the rest of the face can be filled with glass, and the inside of the cuboid remains hollow.
