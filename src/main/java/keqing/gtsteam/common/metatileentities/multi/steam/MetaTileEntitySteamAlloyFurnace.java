@@ -101,10 +101,6 @@ public class MetaTileEntitySteamAlloyFurnace extends RecipeMapSteamMultiblockCon
         return false;
     }
 
-    @Override
-    public int getItemOutputLimit() {
-        return 1;
-    }
 
     @Override
     public void addInformation(ItemStack stack, World player, List<String> tooltip,
@@ -113,14 +109,4 @@ public class MetaTileEntitySteamAlloyFurnace extends RecipeMapSteamMultiblockCon
         TooltipBuilder.create().addSteamMachine(PARALLEL_LIMIT).build(this, tooltip);
     }
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void randomDisplayTick() {
-        if (isActive()) {
-            VanillaParticleEffects.defaultFrontEffect(this, EnumParticleTypes.SMOKE_LARGE, EnumParticleTypes.FLAME);
-            if (GTValues.RNG.nextBoolean()) {
-                VanillaParticleEffects.defaultFrontEffect(this, 0.5F, EnumParticleTypes.SMOKE_NORMAL);
-            }
-        }
-    }
 }

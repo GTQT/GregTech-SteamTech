@@ -24,9 +24,11 @@ import gregtech.api.unification.material.Materials;
 import gregtech.api.util.KeyUtil;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
+import gregtech.common.ConfigHolder;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
+import keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,6 +47,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
+import static gregtech.client.renderer.texture.Textures.SOLID_STEEL_CASING;
+import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.BRONZE_PIPE;
 import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.STEEL_PIPE;
 
 public class MetaTileEntityLargeSteamTank extends MultiblockWithDisplayBase {
@@ -57,12 +62,22 @@ public class MetaTileEntityLargeSteamTank extends MultiblockWithDisplayBase {
         initializeInventory();
     }
 
-    private static IBlockState getCasingState() {
-        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
+    private static IBlockState getFrameState() {
+        return ConfigHolder.machines.steelSteamMultiblocks ?
+                MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel) :
+                MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
     }
 
-    private static IBlockState getCasingState2() {
-        return MetaBlocks.BOILER_CASING.getState(STEEL_PIPE);
+    public IBlockState getCasingState() {
+        return ConfigHolder.machines.steelSteamMultiblocks ?
+                MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID) :
+                MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
+    }
+
+    private IBlockState getBoilerState() {
+        return ConfigHolder.machines.steelSteamMultiblocks ?
+                MetaBlocks.BOILER_CASING.getState(STEEL_PIPE) :
+                MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
     }
 
     @Override
@@ -107,11 +122,11 @@ public class MetaTileEntityLargeSteamTank extends MultiblockWithDisplayBase {
                 .aisle("AAAAA", "BEEEB", "BDEDB", " F F ", " F F ", " F F ", "CDBDC")
                 .aisle("AAAAA", "ADEDA", "ADDDA", "ADFDA", "ADFDA", "ADFDA", "C D C")
                 .aisle(" AAA ", " AGA ", " ABA ", " A A ", " A A ", " A A ", " CCC ")
-                .where('A', frames(Materials.Steel))
+                .where('A', states(getFrameState()))
                 .where('B', states(getCasingState()).or(metaTileEntities(getValve()).setMaxGlobalLimited(2)))
-                .where('C', frames(Materials.Steel))
+                .where('C', states(getFrameState()))
                 .where('D', states(getCasingState()))
-                .where('E', states(getCasingState2()))
+                .where('E', states(getBoilerState()))
                 .where('F', states(Blocks.GLASS.getDefaultState()))
                 .where('G', selfPredicate())
                 .where(' ', any())
@@ -119,13 +134,13 @@ public class MetaTileEntityLargeSteamTank extends MultiblockWithDisplayBase {
     }
 
     private MetaTileEntity getValve() {
-        return MetaTileEntities.STEEL_TANK_VALVE;
+        return ConfigHolder.machines.steelSteamMultiblocks ? MetaTileEntities.STEEL_TANK_VALVE : GTSteamMetaTileEntities.BRONZE_TANK_VALVE;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
-        return Textures.SOLID_STEEL_CASING;
+        return ConfigHolder.machines.steelSteamMultiblocks ? SOLID_STEEL_CASING : BRONZE_PLATED_BRICKS;
     }
 
     @Override

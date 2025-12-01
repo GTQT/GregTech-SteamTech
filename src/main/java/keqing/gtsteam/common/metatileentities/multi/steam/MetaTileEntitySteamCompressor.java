@@ -75,10 +75,6 @@ public class MetaTileEntitySteamCompressor extends RecipeMapSteamMultiblockContr
         return false;
     }
 
-    @Override
-    public int getItemOutputLimit() {
-        return 1;
-    }
 
     @Override
     public void addInformation(ItemStack stack, World player, List<String> tooltip,

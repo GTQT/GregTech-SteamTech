@@ -113,10 +113,6 @@ public class MetaTileEntitySteamBlastFurnace extends RecipeMapSteamMultiblockCon
         return false;
     }
 
-    @Override
-    public int getItemOutputLimit() {
-        return 1;
-    }
 
     @Override
     public void renderMetaTileEntity(CCRenderState renderState, Matrix4 translation, IVertexOperation[] pipeline) {

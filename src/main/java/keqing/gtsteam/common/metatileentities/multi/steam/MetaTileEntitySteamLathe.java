@@ -92,10 +92,6 @@ public class MetaTileEntitySteamLathe extends RecipeMapSteamMultiblockController
         return false;
     }
 
-    @Override
-    public int getItemOutputLimit() {
-        return 1;
-    }
 
     @Override
     public void addInformation(ItemStack stack, World player, List<String> tooltip,
