@@ -19,6 +19,7 @@ import com.cleanroommc.modularui.widgets.SliderWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import gregtech.api.capability.IControllable;
+import gregtech.api.capability.ISteamMachine;
 import gregtech.api.capability.impl.BoilerRecipeLogic;
 import gregtech.api.capability.impl.CommonFluidFilters;
 import gregtech.api.capability.impl.FluidTankList;
@@ -75,14 +76,12 @@ import static gregtech.common.blocks.MetaBlocks.MACHINE_CASING;
 import static net.minecraft.util.EnumFacing.*;
 
 public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase implements ProgressBarMultiblock,
-        IControllable {
+        IControllable, ISteamMachine {
     public static final int STEAM_PER_BLOCK = 20;
 
     public static final int HEAT_INCREMENT_PER_BLOCK = 5;
     public static final int HEAT_REDUCTION_PER_BLOCK = 2;
     public static final int HEAT_MAXIMUM_PER_BLOCK = 10000;
-
-    private final int MAX_RADIUS = 8;
 
     protected SolarBoilerRecipeLogic recipeLogic;
     private FluidTankList fluidImportInventory;
@@ -444,12 +443,12 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
         int rDist = 0;
         int bDist = 0;
 
-        for (int i = 1; i <= MAX_RADIUS; i++) {
+        for (int i = 1; i <= 8; i++) {
             if (lDist == 0 && isBlockEdge(world, lPos, left)) lDist = i;
             if (rDist == 0 && isBlockEdge(world, rPos, right)) rDist = i;
             if (lDist != 0 && rDist != 0) break;
         }
-        for (int i = 1; i <= MAX_RADIUS * 2 - 1; i++) {
+        for (int i = 1; i <= 8 * 2 - 1; i++) {
             if ((isBlockEdge(world, bPos, back))) bDist = i;
             if (bDist != 0) break;
         }
