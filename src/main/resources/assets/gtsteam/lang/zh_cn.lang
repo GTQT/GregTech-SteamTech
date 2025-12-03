@@ -82,18 +82,10 @@ gtsteam.machine.industrial_primitive_blast_furnace.tooltip.5=全部升级完毕�
 
 #太阳能锅炉
 gtsteam.machine.steam_solar_boiler.name=太阳能锅炉
-gtsteam.multiblock.steam_solar_boiler.steam_output=蒸汽输出：%s
-gtsteam.multiblock.steam_solar_boiler.efficiency=效率：%s
-gtsteam.multiblock.steam_solar_boiler.throttle=节流：%s
-gtsteam.multiblock.steam_solar_boiler.throttle.tooltip=锅炉可以节流，以减少燃料消耗与蒸汽产出，并且不损失效率，不影响加热时间。
-gtsteam.multiblock.steam_solar_boiler.throttle_increment=节流阀§a+5%%§r/n§7减少燃料消耗与蒸汽产出，并且不损失效率，不影响加热时间。
-gtsteam.multiblock.steam_solar_boiler.throttle_decrement=节流阀§c-5%%§r/n§7减少燃料消耗与蒸汽产出，并且不损失效率，不影响加热时间。
-gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip=需要§f%d秒§7预热,白天时热量上升，夜晚热量下降
+gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip=需要§f%d秒§7预热,白天时热量上升，夜晚或下雨热量下降
 
-gtsteam.multiblock.steam_solar_boiler.no_water=锅炉缺水!
-gtsteam.multiblock.steam_solar_boiler.explosion_tooltip=无水时将爆炸!
-gtsteam.multiblock.steam_solar_boiler.structure_tooltip=结构边长 ∈ [3, 5, 7, 9, 11, 13, 15]
-gtsteam.multiblock.steam_solar_boiler.final_tooltip=蒸气输出量 = 效率 * 结构边长 * 结构边长 * 20
+gtsteam.multiblock.steam_solar_boiler.structure_tooltip=结构为边长 ∈ [3, 5, 7, 9, 11, 13, 15] 的长方形
+gtsteam.multiblock.steam_solar_boiler.final_tooltip=蒸气输出量 = 效率 * 结构边长 * 结构边长 * 20 mb
 gtsteam.multiblock.steam_solar_boiler.throttle_button.tooltip=配置锅炉节流
 gtsteam.multiblock.steam_solar_boiler.throttle.title=锅炉节流
 gtsteam.multiblock.steam_solar_boiler.description=一个多方块太阳能锅炉
@@ -193,3 +185,5 @@ gtsteam.machine.steam_turbine.ulv.tooltip=烧开水发电
 
 gtsteam.machine.combustion_generator.ulv.name=简易内燃发电机
 gtsteam.machine.combustion_generator.ulv.tooltip=吃燃料吐电火花
+
+# top

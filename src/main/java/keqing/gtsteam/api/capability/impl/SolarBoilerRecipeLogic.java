@@ -2,10 +2,7 @@ package keqing.gtsteam.api.capability.impl;
 
 import gregtech.api.capability.IEnergyContainer;
 import gregtech.api.capability.IMultiblockController;
-import gregtech.api.capability.IMultipleTankHandler;
 import gregtech.api.capability.impl.AbstractRecipeLogic;
-import gregtech.api.recipes.RecipeMap;
-import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.recipes.category.ICategoryOverride;
 import gregtech.api.unification.material.Materials;
 import gregtech.api.util.GTLog;
@@ -14,11 +11,11 @@ import gregtech.common.ConfigHolder;
 import keqing.gtsteam.common.metatileentities.multi.steam.MetaTileEntitySteamSolarBoiler;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,6 +44,32 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
         this.itemOutputs = Collections.emptyList();
     }
 
+    /**
+     * @param fluidHandler the handler to drain from
+     * @param amount       the amount to drain
+     * @return a valid boiler fluid from a container
+     */
+    @Nullable
+    private static FluidStack getBoilerFluidFromContainer(@NotNull IFluidHandler fluidHandler, int amount) {
+        if (amount == 0) return null;
+        FluidStack drainedWater = fluidHandler.drain(Materials.Water.getFluid(amount), true);
+        if (drainedWater == null || drainedWater.amount == 0) {
+            drainedWater = fluidHandler.drain(Materials.DistilledWater.getFluid(amount), true);
+        }
+        if (drainedWater == null || drainedWater.amount == 0) {
+            for (String fluidName : ConfigHolder.machines.boilerFluids) {
+                Fluid fluid = FluidRegistry.getFluid(fluidName);
+                if (fluid != null) {
+                    drainedWater = fluidHandler.drain(new FluidStack(fluid, amount), true);
+                    if (drainedWater != null && drainedWater.amount > 0) {
+                        break;
+                    }
+                }
+            }
+        }
+        return drainedWater;
+    }
+
     @Override
     public void update() {
         if ((!isActive() || !canProgressRecipe() || !isWorkingEnabled()) && currentHeat > 0) {
@@ -56,15 +79,11 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
         super.update();
     }
 
-    private int getHeatReduction() {
-        MetaTileEntitySteamSolarBoiler metaTileEntitySteamSolarBoiler = (MetaTileEntitySteamSolarBoiler) metaTileEntity;
-        int ldist = metaTileEntitySteamSolarBoiler.getlDist();
-        int tmp = ldist * 2 - 1;
-        return tmp * tmp * MetaTileEntitySteamSolarBoiler.HEAT_REDUCTION_PER_BLOCK;
-    }
+
     public boolean wasActiveAndNeedsUpdate() {
         return this.wasActiveAndNeedsUpdate;
     }
+
     @Override
     protected boolean canProgressRecipe() {
         return super.canProgressRecipe() && !(metaTileEntity instanceof IMultiblockController &&
@@ -74,22 +93,16 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
     @Override
     protected void trySearchNewRecipe() {
         MetaTileEntitySteamSolarBoiler boiler = (MetaTileEntitySteamSolarBoiler) metaTileEntity;
-        if (ConfigHolder.machines.enableMaintenance && boiler.hasMaintenanceMechanics() &&
-                boiler.getNumMaintenanceProblems() > 5) {
-            return;
-        }
-
-        // can optimize with an override of checkPreviousRecipe() and a check here
 
         //IMultipleTankHandler importFluids = boiler.getImportFluids();
         boolean didStartRecipe = false;
-        if(metaTileEntity.getWorld().isDaytime()){
+        if (metaTileEntity.getWorld().isDaytime()&&!metaTileEntity.getWorld().isRaining()) {
             FluidStack drainedWater = getBoilerFluidFromContainer(getInputTank(), 1);
-            if(!(drainedWater == null || drainedWater.amount < 1)) {
+            if (!(drainedWater == null || drainedWater.amount < 1)) {
                 didStartRecipe = true;
             }
         }
-        if(progressTime != 0) return;
+        if (progressTime != 0) return;
         if (didStartRecipe) {
             //GTLog.logger.warn("Recipe Start Meow !");
             this.progressTime = 1;
@@ -117,15 +130,15 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
                 excessWater %= STEAM_PER_WATER;
                 FluidStack drainedWater = getBoilerFluidFromContainer(getInputTank(), amount);
                 if (amount != 0 && (drainedWater == null || drainedWater.amount < amount)) {
-                    if(drainedWater == null){
+                    if (drainedWater == null) {
                         //GTLog.logger.warn("MeowBomb because is DW is Null " + amount);
-                    }else {
+                    } else {
                         //GTLog.logger.warn("MeowBomb because DW AMOUNT:" + drainedWater.amount + " < "+amount);
                     }
                     //GTLog.logger.warn("Warning Bomb!" + drainedWater.toString() + " " + drainedWater.amount + " " + amount);
-                    if(!bombFlag) {
+                    if (!bombFlag) {
                         getMetaTileEntity().explodeMultiblock((1.0f * currentHeat / getMaximumHeat()) * 8.0f);
-                    }else {
+                    } else {
                         bombFlag = false;
                     }
                 } else {
@@ -144,10 +157,15 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
     }
 
     private int getHeatIncrement() {
-        MetaTileEntitySteamSolarBoiler metaTileEntitySteamSolarBoiler = (MetaTileEntitySteamSolarBoiler) metaTileEntity;
-        int lDist = metaTileEntitySteamSolarBoiler.getlDist();
-        int tmp = lDist * 2 - 1;
-        return tmp * tmp * MetaTileEntitySteamSolarBoiler.HEAT_INCREMENT_PER_BLOCK;
+        return MetaTileEntitySteamSolarBoiler.HEAT_INCREMENT_PER_BLOCK;
+    }
+
+    private int getHeatReduction() {
+        return MetaTileEntitySteamSolarBoiler.HEAT_REDUCTION_PER_BLOCK;
+    }
+
+    private int getMaximumHeat() {
+        return MetaTileEntitySteamSolarBoiler.HEAT_MAXIMUM_PER_BLOCK;
     }
 
     private int getReductionWater(int generatedSteam) {
@@ -162,23 +180,9 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
 
     private int adjustEUtForThrottle(int rawEUt) {
         int throttle = ((MetaTileEntitySteamSolarBoiler) metaTileEntity).getThrottle();
-        return (int) Math.max(25, rawEUt * (throttle / 100.0));
+        return (int) (rawEUt * (throttle / 100.0));
     }
 
-    private int adjustBurnTimeForThrottle(int rawBurnTime) {
-        MetaTileEntitySteamSolarBoiler boiler = (MetaTileEntitySteamSolarBoiler) metaTileEntity;
-        int EUt = boiler.steamPerTick();
-        int adjustedEUt = adjustEUtForThrottle(EUt);
-        int adjustedBurnTime = rawBurnTime * EUt / adjustedEUt;
-        this.excessProjectedEU += (EUt * rawBurnTime) - (adjustedEUt * adjustedBurnTime);
-        adjustedBurnTime += this.excessProjectedEU / adjustedEUt;
-        this.excessProjectedEU %= adjustedEUt;
-        return adjustedBurnTime;
-    }
-
-    private int getMaximumHeat() {
-        return ((MetaTileEntitySteamSolarBoiler) metaTileEntity).getMaximumHeat();
-    }
 
     public int getHeatScaled() {
         return (int) Math.round(currentHeat / (1.0 * getMaximumHeat()) * 100);
@@ -265,6 +269,8 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
         this.lastTickSteamOutput = buf.readInt();
     }
 
+    // Required overrides to use RecipeLogic, but all of them are redirected by the above overrides.
+
     @Override
     public void receiveCustomData(int dataId, @NotNull PacketBuffer buf) {
         super.receiveCustomData(dataId, buf);
@@ -274,8 +280,6 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
             this.lastTickSteamOutput = buf.readInt();
         }
     }
-
-    // Required overrides to use RecipeLogic, but all of them are redirected by the above overrides.
 
     @Override
     protected long getEnergyInputPerSecond() {
@@ -312,33 +316,6 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
         GTLog.logger.error("Large Boiler called getEnergyContainer(), this should not be possible!");
         return super.getEnergyContainer();
     }
-
-    /**
-     * @param fluidHandler the handler to drain from
-     * @param amount       the amount to drain
-     * @return a valid boiler fluid from a container
-     */
-    @Nullable
-    private static FluidStack getBoilerFluidFromContainer(@NotNull IFluidHandler fluidHandler, int amount) {
-        if (amount == 0) return null;
-        FluidStack drainedWater = fluidHandler.drain(Materials.Water.getFluid(amount), true);
-        if (drainedWater == null || drainedWater.amount == 0) {
-            drainedWater = fluidHandler.drain(Materials.DistilledWater.getFluid(amount), true);
-        }
-        if (drainedWater == null || drainedWater.amount == 0) {
-            for (String fluidName : ConfigHolder.machines.boilerFluids) {
-                Fluid fluid = FluidRegistry.getFluid(fluidName);
-                if (fluid != null) {
-                    drainedWater = fluidHandler.drain(new FluidStack(fluid, amount), true);
-                    if (drainedWater != null && drainedWater.amount > 0) {
-                        break;
-                    }
-                }
-            }
-        }
-        return drainedWater;
-    }
-
 
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
         data.setBoolean("isActive", this.isActive);

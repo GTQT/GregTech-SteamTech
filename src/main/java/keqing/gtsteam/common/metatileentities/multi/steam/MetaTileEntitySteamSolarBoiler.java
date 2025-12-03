@@ -26,10 +26,7 @@ import gregtech.api.capability.impl.ItemHandlerList;
 import gregtech.api.metatileentity.MTETrait;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
-import gregtech.api.metatileentity.multiblock.IMultiblockPart;
-import gregtech.api.metatileentity.multiblock.MultiblockAbility;
-import gregtech.api.metatileentity.multiblock.MultiblockWithDisplayBase;
-import gregtech.api.metatileentity.multiblock.ProgressBarMultiblock;
+import gregtech.api.metatileentity.multiblock.*;
 import gregtech.api.metatileentity.multiblock.ui.*;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuiTheme;
@@ -51,10 +48,10 @@ import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing1;
 import keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -75,51 +72,32 @@ import java.util.function.UnaryOperator;
 
 import static gregtech.api.GTValues.ULV;
 import static gregtech.common.blocks.MetaBlocks.MACHINE_CASING;
-import static net.minecraft.util.EnumFacing.SOUTH;
+import static net.minecraft.util.EnumFacing.*;
 
 public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase implements ProgressBarMultiblock,
         IControllable {
     public static final int STEAM_PER_BLOCK = 20;
-    //private static final ICubeRenderer ULV_CASING_TEXTURES = new SimpleOverlayRenderer("casings/ulv_machine_hull");;
+
     public static final int HEAT_INCREMENT_PER_BLOCK = 5;
     public static final int HEAT_REDUCTION_PER_BLOCK = 2;
     public static final int HEAT_MAXIMUM_PER_BLOCK = 10000;
-    private final int MIN_RADIUS = 2;
+
     private final int MAX_RADIUS = 8;
-    private final int radius = 0;
-    private final @NotNull ICubeRenderer frontOverlay;
+
     protected SolarBoilerRecipeLogic recipeLogic;
     private FluidTankList fluidImportInventory;
     private ItemHandlerList itemImportInventory;
     private FluidTankList steamOutputTank;
-    private int lDist = 0;
-    private int rDist = 0;
-    private int bDist = 0;
-    private int fDist = 0;
-    private int hDist = 0;
+
+    private int Length = 0;
+    private int Width = 0;
+
     private int throttlePercentage = 100;
 
     public MetaTileEntitySteamSolarBoiler(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId);
-        this.frontOverlay = Textures.LARGE_STEEL_BOILER;
         this.recipeLogic = new SolarBoilerRecipeLogic(this);
         resetTileAbilities();
-    }
-
-    public static String repeat(String a, int count) {
-        String b = "";
-        for (int i = 0; i < count; i++) {
-            b += a;
-        }
-        return b;
-    }
-
-    public int getlDist() {
-        return this.lDist;
-    }
-
-    public int runtimeBoost(int tick) {
-        return tick;
     }
 
     @Override
@@ -178,9 +156,9 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
         builder.addCustom((manager, syncer) -> {
             if (isStructureFormed() && syncer.syncBoolean(getWaterFilled() == 0)) {
                 manager.add(KeyUtil.lang(TextFormatting.YELLOW,
-                        "gtsteam.multiblock.steam_solar_boiler.no_water"));
+                        "gregtech.multiblock.large_boiler.no_water"));
                 manager.add(KeyUtil.lang(TextFormatting.GRAY,
-                        "gtsteam.multiblock.steam_solar_boiler.explosion_tooltip"));
+                        "gregtech.multiblock.large_boiler.explosion_tooltip"));
             }
         });
     }
@@ -199,7 +177,7 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
                     return new ButtonWidget<>()
                             .size(18)
                             .overlay(GTGuiTextures.FILTER_SETTINGS_OVERLAY.asIcon().size(16))
-                            .addTooltipLine(IKey.lang("gtsteam.multiblock.steam_solar_boiler.throttle_button.tooltip"))
+                            .addTooltipLine(IKey.lang("gregtech.multiblock.large_boiler.throttle_button.tooltip"))
                             .onMousePressed(i -> {
                                 if (throttle.isPanelOpen()) {
                                     throttle.closePanel();
@@ -222,20 +200,25 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
                     steam, " L/t");
 
             keyManager.add(KeyUtil.lang(TextFormatting.GRAY,
-                    "gtsteam.multiblock.steam_solar_boiler.steam_output", steamOutput));
+                    "gregtech.multiblock.large_boiler.steam_output", steamOutput));
 
             // Efficiency line
             IKey efficiency = KeyUtil.number(
                     getNumberColor(heatScaled), heatScaled, "%");
             keyManager.add(KeyUtil.lang(TextFormatting.GRAY,
-                    "gtsteam.multiblock.steam_solar_boiler.efficiency", efficiency));
+                    "gregtech.multiblock.large_boiler.efficiency", efficiency));
 
             // Throttle line
             IKey throttle = KeyUtil.number(
                     getNumberColor(throttleAmt),
                     throttleAmt, "%");
             keyManager.add(KeyUtil.lang(TextFormatting.GRAY,
-                    "gtsteam.multiblock.steam_solar_boiler.throttle", throttle));
+                    "gregtech.multiblock.large_boiler.throttle", throttle));
+
+            int length = syncer.syncInt(this.Length);
+            int width = syncer.syncInt(this.Width);
+
+            keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.machine.large_fluid_tank.size", length, 1, width));
         }
     }
 
@@ -264,7 +247,7 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
                                 .asWidget()
                                 .size(16)
                                 .marginRight(4))
-                        .child(IKey.lang("gtsteam.multiblock.steam_solar_boiler.throttle.title")
+                        .child(IKey.lang("gregtech.multiblock.large_boiler.throttle.title")
                                 .asWidget()
                                 .heightRel(1.0f)))
                 .child(Flow.row()
@@ -324,7 +307,20 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
 
     public boolean isBlockEdge(@NotNull World world, @NotNull BlockPos.MutableBlockPos pos,
                                @NotNull EnumFacing direction) {
-        return world.getBlockState(pos.move(direction)).getBlock() == Blocks.AIR;
+        IBlockState block = world.getBlockState(pos.move(direction));
+        TileEntity entity = world.getTileEntity(pos);
+        if (entity instanceof IGregTechTileEntity iGregTechTileEntity) {
+            MetaTileEntity metaTileEntity = iGregTechTileEntity.getMetaTileEntity();
+            if (metaTileEntity instanceof IMultiblockAbilityPart<?>) {
+                return false;
+            } else {
+                return (block != getULVCasingState())
+                        && (block != getSolarCasingState());
+            }
+        } else {
+            return (block != getULVCasingState())
+                    && (block != getSolarCasingState());
+        }
     }
 
     @Override
@@ -336,26 +332,29 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
     }
 
     @Override
-    protected BlockPattern createStructurePattern() {
+    protected @NotNull BlockPattern createStructurePattern() {
         if (getWorld() != null) updateStructureDimensions();
         var pattern = FactoryBlockPattern.start();
 
-        // 确保边长为奇数且对称
-        int size = Math.max(MIN_RADIUS * 2 - 1, Math.min(MAX_RADIUS * 2 - 1, lDist));
-        if (size % 2 == 0) size++;
-        this.lDist = size;
-        this.rDist = size;
+        if (Width < 3 || Length < 3) {
+            Width = 3;
+            Length = 3;
+        }
+        if (Width > 15 || Length > 15) {
+            Width = 15;
+            Length = 15;
+        }
 
         // 创建单层太阳能结构
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < Width; i++) {
             StringBuilder str = new StringBuilder();
-            for (int j = 0; j < size; j++) {
+            for (int j = 0; j < Length; j++) {
                 // 最底行中间位置放控制器
-                if (i == size - 1 && j == size / 2) {
+                if (i == Width - 1 && j == Length / 2) {
                     str.append('S');
                 }
                 // 边界（第一行、最后一行、第一列、最后一列）使用X
-                else if (i == 0 || i == size - 1 || j == 0 || j == size - 1) {
+                else if (i == 0 || i == Width - 1 || j == 0 || j == Length - 1) {
                     str.append('X');
                 }
                 // 中间区域使用Y
@@ -364,7 +363,10 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
                 }
             }
             pattern = pattern.aisle(str.toString());
+
+            System.out.println(str);
         }
+        System.out.println("-----");
 
         return pattern
                 .where('S', selfPredicate())
@@ -426,41 +428,35 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
         return shapeInfo;
     }
 
-    private boolean updateStructureDimensions() {
+    private void updateStructureDimensions() {
         World world = getWorld();
         EnumFacing front = getFrontFacing();
+        if (front == UP || front == DOWN) return;
+        EnumFacing back = front.getOpposite();
         EnumFacing left = front.rotateYCCW();
         EnumFacing right = left.getOpposite();
 
         BlockPos.MutableBlockPos lPos = new BlockPos.MutableBlockPos(getPos());
         BlockPos.MutableBlockPos rPos = new BlockPos.MutableBlockPos(getPos());
-
+        BlockPos.MutableBlockPos bPos = new BlockPos.MutableBlockPos(getPos());
         // 重置距离
         int lDist = 0;
         int rDist = 0;
+        int bDist = 0;
 
-        // 只检测左右方向的边界
         for (int i = 1; i <= MAX_RADIUS; i++) {
             if (lDist == 0 && isBlockEdge(world, lPos, left)) lDist = i;
             if (rDist == 0 && isBlockEdge(world, rPos, right)) rDist = i;
             if (lDist != 0 && rDist != 0) break;
         }
-
-        // 计算总直径（左右距离之和 + 1，因为控制器在中间）
-        int totalDiameter = lDist + rDist - 1;
-
-        // 确保直径在有效范围内且为奇数
-        totalDiameter = Math.max(MIN_RADIUS * 2 - 1, Math.min(MAX_RADIUS * 2 - 1, totalDiameter));
-        if (totalDiameter % 2 == 0) {
-            totalDiameter++; // 强制转换为奇数
+        for (int i = 1; i <= MAX_RADIUS * 2 - 1; i++) {
+            if ((isBlockEdge(world, bPos, back))) bDist = i;
+            if (bDist != 0) break;
         }
-
-        // 设置左右距离（对称结构）
-        this.lDist = totalDiameter;
-        this.rDist = totalDiameter;
-
-        return true;
+        this.Length = lDist + rDist - 1;
+        this.Width = bDist;
     }
+
 
     public IBlockState getULVCasingState() {
         return MACHINE_CASING.getState(BlockMachineCasing.MachineCasingType.ULV);
@@ -482,8 +478,8 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
         tooltip.add(
                 I18n.format("gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip", this.getTicksToBoiling() / 20));
         tooltip.add(I18n.format("gtsteam.multiblock.steam_solar_boiler.structure_tooltip"));
-        tooltip.add(TooltipHelper.BLINKING_RED + I18n.format("gtsteam.multiblock.steam_solar_boiler.explosion_tooltip"));
         tooltip.add(I18n.format("gtsteam.multiblock.steam_solar_boiler.final_tooltip"));
+        tooltip.add(TooltipHelper.BLINKING_RED + I18n.format("gregtech.multiblock.large_boiler.explosion_tooltip"));
     }
 
     public int getTicksToBoiling() {
@@ -491,8 +487,7 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
     }
 
     public int steamPerTick() {
-        int tmp = lDist * 2 - 1;
-        return tmp * tmp * STEAM_PER_BLOCK;
+        return (Length - 2) * (Width - 2) * STEAM_PER_BLOCK;
     }
 
     @Override
@@ -506,11 +501,7 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
     @NotNull
     @Override
     protected ICubeRenderer getFrontOverlay() {
-        return this.frontOverlay;
-    }
-
-    private boolean isFireboxPart(IMultiblockPart sourcePart) {
-        return isStructureFormed() && (((MetaTileEntity) sourcePart).getPos().getY() < getPos().getY());
+        return Textures.LARGE_STEEL_BOILER;
     }
 
     @Override
@@ -527,11 +518,8 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
         super.writeToNBT(data);
         data.setInteger("ThrottlePercentage", throttlePercentage);
-        data.setInteger("lDist", lDist);
-        data.setInteger("rDist", rDist);
-        data.setInteger("bDist", bDist);
-        data.setInteger("fDist", fDist);
-        data.setInteger("hDist", hDist);
+        data.setInteger("Width", Width);
+        data.setInteger("Length", Length);
         return this.recipeLogic.writeToNBT(data);
     }
 
@@ -539,34 +527,25 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
     public void readFromNBT(NBTTagCompound data) {
         super.readFromNBT(data);
         throttlePercentage = data.getInteger("ThrottlePercentage");
-        this.lDist = data.hasKey("lDist") ? data.getInteger("lDist") : this.lDist;
-        this.rDist = data.hasKey("rDist") ? data.getInteger("rDist") : this.rDist;
-        this.hDist = data.hasKey("hDist") ? data.getInteger("hDist") : this.hDist;
-        this.bDist = data.hasKey("bDist") ? data.getInteger("bDist") : this.bDist;
-        this.fDist = data.hasKey("fDist") ? data.getInteger("fDist") : this.fDist;
+        this.Width = data.getInteger("Width");
+        this.Length = data.getInteger("Length");
         this.recipeLogic.readFromNBT(data);
-        reinitializeStructurePattern();
-
     }
 
     @Override
     public void writeInitialSyncData(PacketBuffer buf) {
         super.writeInitialSyncData(buf);
         buf.writeVarInt(throttlePercentage);
-        buf.writeVarInt(lDist);
-        buf.writeVarInt(rDist);
-        buf.writeVarInt(bDist);
-        buf.writeVarInt(fDist);
+        buf.writeVarInt(Width);
+        buf.writeVarInt(Length);
     }
 
     @Override
     public void receiveInitialSyncData(PacketBuffer buf) {
         super.receiveInitialSyncData(buf);
         throttlePercentage = buf.readVarInt();
-        lDist = buf.readVarInt();
-        rDist = buf.readVarInt();
-        bDist = buf.readVarInt();
-        fDist = buf.readVarInt();
+        Width = buf.readVarInt();
+        Length = buf.readVarInt();
     }
 
     public int getThrottle() {
@@ -617,9 +596,9 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
                 .tooltipBuilder(tooltip -> {
                     if (isStructureFormed()) {
                         if (waterFilledValue.getIntValue() == 0) {
-                            tooltip.addLine(IKey.lang("gtsteam.multiblock.steam_solar_boiler.no_water"));
+                            tooltip.addLine(IKey.lang("gregtech.multiblock.large_boiler.no_water"));
                         } else {
-                            tooltip.addLine(IKey.lang("gregtech.multiblock.large_solar_boiler.water_bar_hover",
+                            tooltip.addLine(IKey.lang("gregtech.multiblock.large_boiler.water_bar_hover",
                                     waterFilledValue.getIntValue(), waterCapacityValue.getIntValue()));
                         }
                     } else {
@@ -668,11 +647,6 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
     @Override
     public void setWorkingEnabled(boolean isWorkingAllowed) {
         recipeLogic.setWorkingEnabled(isWorkingAllowed);
-    }
-
-    public int getMaximumHeat() {
-        int tmp = lDist * 2 - 1;
-        return tmp * tmp * HEAT_MAXIMUM_PER_BLOCK;
     }
 
     public boolean hasMaintenanceMechanics() {

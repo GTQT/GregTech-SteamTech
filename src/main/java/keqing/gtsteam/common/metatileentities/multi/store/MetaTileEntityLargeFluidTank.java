@@ -46,7 +46,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.IFluidTank;
@@ -163,13 +162,11 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
         this.Length = compound.getInteger("Length");
         this.Height = compound.getInteger("Height");
         this.Width = compound.getInteger("Width");
-        this.StoragefluidTank = new FluidTank(this.capacity);
 
-        int StorageFluidTankAmount = compound.getInteger("StorageFluidTankAmount");
-        String FluidType = compound.getString("FluidType");
-        if (StorageFluidTankAmount > 0) {
-            this.StoragefluidTank.fill(FluidRegistry.getFluidStack(FluidType, StorageFluidTankAmount), true);
-        }
+        StoragefluidTank = new FluidTank(capacity);
+        if (StoragefluidTank.getFluid() == null)
+            StoragefluidTank.readFromNBT(compound.getCompoundTag("StorageFluidTank"));
+
     }
 
     @Override
@@ -179,13 +176,8 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
         data.setInteger("Length", this.Length);
         data.setInteger("Height", this.Height);
         data.setInteger("Width", this.Width);
-        data.setInteger("StorageFluidTankAmount", this.StoragefluidTank.getFluidAmount());
-        if (this.StoragefluidTank.getFluid() != null) {
-            data.setString("FluidType", FluidRegistry.getFluidName(this.StoragefluidTank.getFluid()));
-        } else {
-            data.setString("FluidType", "Empty");
-        }
-        //this.StoragefluidTank.writeToNBT(data);
+
+        data.setTag("StorageFluidTank", StoragefluidTank.writeToNBT(new NBTTagCompound()));
         return data;
     }
 
@@ -206,7 +198,6 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
         if (Width > 15 || Height > 15 || Length > 15) {
             Width = 3;
             Height = 3;
-
         }
         for (int i = 1; i <= Width; i++) {
             String[] PatternStringLayer = new String[Height];
@@ -387,13 +378,13 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
     private void updateStructureDimensions() {
         World world = getWorld();
         EnumFacing front = getFrontFacing();
+        if(front==UP||front==DOWN)return;
         EnumFacing back = front.getOpposite();
         EnumFacing left = front.rotateYCCW();
         EnumFacing right = left.getOpposite();
 
         BlockPos.MutableBlockPos lPos = new BlockPos.MutableBlockPos(getPos());
         BlockPos.MutableBlockPos rPos = new BlockPos.MutableBlockPos(getPos());
-        BlockPos.MutableBlockPos fPos = new BlockPos.MutableBlockPos(getPos());
         BlockPos.MutableBlockPos bPos = new BlockPos.MutableBlockPos(getPos());
         BlockPos.MutableBlockPos hPos = new BlockPos.MutableBlockPos(getPos());
         // 重置距离
@@ -407,7 +398,6 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
             if (rDist == 0 && isBlockEdge(world, rPos, right)) rDist = i;
             if (lDist != 0 && rDist != 0) break;
         }
-        this.Length = lDist + rDist - 1;
         for (int i = 1; i <= MAX_RADIUS * 2 - 1; i++) {
             if ((isBlockEdge(world, bPos, back))) bDist = i;
             if (bDist != 0) break;
@@ -444,7 +434,10 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
 
     public void refreshCAP() {
         this.capacity = (Height - 2) * (Width - 2) * (Length - 2) * 16000;
+        FluidStack fluidStack = StoragefluidTank.getFluid();
         this.StoragefluidTank = new FluidTank(capacity);
+        if (fluidStack != null) StoragefluidTank.setFluid(fluidStack);
+
     }
 
     private void resetTileAbilities() {
@@ -462,9 +455,7 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
             IFluidTank inputFluidsTank = getInputFluidsTank();
             IFluidTank outputFluidsTank = getOutputFluidsTank();
             IFluidTank StorageFluidTank = getStorageFluidTank();
-            if (StorageFluidTank.getCapacity() == 0) refreshCAP();
 
-            int FluidAmounts = inputFluidsTank.getFluidAmount();
             FluidStack fluidStack = inputFluidsTank.getFluid();
             //inputFluidsTank.drain(FluidAmounts, true);
             int AcceptedFluidAmount = StorageFluidTank.fill(fluidStack, true);
@@ -573,7 +564,7 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
         bars.add(barBuilder -> barBuilder
                 .progress(() -> fluidCapacityValue.getIntValue() == 0 ? 0 :
                         (double) fluidAmountValue.getIntValue() / fluidCapacityValue.getIntValue())
-                .texture(GTGuiTextures.PROGRESS_BAR_FLUID_RIG_DEPLETION) // 或者使用其他合适的进度条纹理
+                .texture(GTGuiTextures.PROGRESS_BAR_FLUID_RIG_DEPLETION)
                 .tooltipBuilder(tooltip -> {
                     if (isStructureFormed()) {
                         tooltip.addLine(IKey.lang("%s",

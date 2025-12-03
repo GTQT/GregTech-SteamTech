@@ -81,18 +81,11 @@ gtsteam.machine.industrial_primitive_blast_furnace.tooltip.5=Up to 10 times redu
 
 #Solar Boiler
 gtsteam.machine.steam_solar_boiler.name=Solar Boiler
-gtsteam.multiblock.steam_solar_boiler.steam_output=Steam Output: %s
-gtsteam.multiblock.steam_solar_boiler.efficiency=Efficiency: %s
-gtsteam.multiblock.steam_solar_boiler.throttle=Throttle: %s
-gtsteam.multiblock.steam_solar_boiler.throttle.tooltip=The boiler can be throttled to reduce fuel consumption and steam output without losing efficiency or affecting heating time.
-gtsteam.multiblock.steam_solar_boiler.throttle_increment=Throttle §a+5%%§r/n§7Reduces fuel consumption and steam output without losing efficiency or affecting heating time.
-gtsteam.multiblock.steam_solar_boiler.throttle_decrement=Throttle §c-5%%§r/n§7Reduces fuel consumption and steam output without losing efficiency or affecting heating time.
-gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip=Requires §f%d seconds§7 to preheat, heat increases during daytime and decreases at night
+gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip=Requires §f%d seconds§7 to preheat, heat increases during daytime and decreases at night or rain
 
-gtsteam.multiblock.steam_solar_boiler.no_water=Boiler water shortage!
 gtsteam.multiblock.steam_solar_boiler.explosion_tooltip=Will explode without water!
-gtsteam.multiblock.steam_solar_boiler.structure_tooltip=Structure side length ∈ [3, 5, 7, 9, 11, 13, 15]
-gtsteam.multiblock.steam_solar_boiler.final_tooltip=Steam output = Efficiency * Structure side length * Structure side length * 20
+gtsteam.multiblock.steam_solar_boiler.structure_tooltip=The structure is a rectangle with sides ∈ [3, 5, 7, 9, 11, 13, 15]
+gtsteam.multiblock.steam_solar_boiler.final_tooltip=Steam output = Efficiency * Structure side length * Structure side length * 20 mb
 gtsteam.multiblock.steam_solar_boiler.throttle_button.tooltip=Configure boiler throttle
 gtsteam.multiblock.steam_solar_boiler.throttle.title=Boiler Throttle
 gtsteam.multiblock.steam_solar_boiler.description=A multiblock solar boiler
@@ -194,3 +187,5 @@ gtsteam.machine.steam_turbine.ulv.tooltip=A Simple steam turbine for generating 
 
 gtsteam.machine.combustion_generator.ulv.name=Simple Combustion Generator
 gtsteam.machine.combustion_generator.ulv.tooltip=A Simple combustion generator for generating power.
+
+# top
