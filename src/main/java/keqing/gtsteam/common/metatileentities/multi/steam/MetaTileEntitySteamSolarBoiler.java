@@ -77,7 +77,7 @@ import static net.minecraft.util.EnumFacing.*;
 
 public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase implements ProgressBarMultiblock,
         IControllable, ISteamMachine {
-    public static final int STEAM_PER_BLOCK = 20;
+    public static final int STEAM_PER_BLOCK = 10;
 
     public static final int HEAT_INCREMENT_PER_BLOCK = 5;
     public static final int HEAT_REDUCTION_PER_BLOCK = 2;
@@ -477,7 +477,7 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
         tooltip.add(
                 I18n.format("gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip", this.getTicksToBoiling() / 20));
         tooltip.add(I18n.format("gtsteam.multiblock.steam_solar_boiler.structure_tooltip"));
-        tooltip.add(I18n.format("gtsteam.multiblock.steam_solar_boiler.final_tooltip"));
+        tooltip.add(I18n.format("gtsteam.multiblock.steam_solar_boiler.final_tooltip",STEAM_PER_BLOCK));
         tooltip.add(TooltipHelper.BLINKING_RED + I18n.format("gregtech.multiblock.large_boiler.explosion_tooltip"));
     }
 

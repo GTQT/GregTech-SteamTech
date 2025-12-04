@@ -85,7 +85,7 @@ gtsteam.machine.steam_solar_boiler.name=太阳能锅炉
 gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip=需要§f%d秒§7预热,白天时热量上升，夜晚或下雨热量下降
 
 gtsteam.multiblock.steam_solar_boiler.structure_tooltip=结构为边长 ∈ [3, 5, 7, 9, 11, 13, 15] 的长方形
-gtsteam.multiblock.steam_solar_boiler.final_tooltip=蒸气输出量 = 效率 * 结构边长 * 结构边长 * 20 mb
+gtsteam.multiblock.steam_solar_boiler.final_tooltip=蒸气输出量 = 效率 * 结构边长 * 结构边长 * %d mb
 gtsteam.multiblock.steam_solar_boiler.throttle_button.tooltip=配置锅炉节流
 gtsteam.multiblock.steam_solar_boiler.throttle.title=锅炉节流
 gtsteam.multiblock.steam_solar_boiler.description=一个多方块太阳能锅炉

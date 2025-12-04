@@ -85,7 +85,7 @@ gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip=Requires §f%d seconds§
 
 gtsteam.multiblock.steam_solar_boiler.explosion_tooltip=Will explode without water!
 gtsteam.multiblock.steam_solar_boiler.structure_tooltip=The structure is a rectangle with sides ∈ [3, 5, 7, 9, 11, 13, 15]
-gtsteam.multiblock.steam_solar_boiler.final_tooltip=Steam output = Efficiency * Structure side length * Structure side length * 20 mb
+gtsteam.multiblock.steam_solar_boiler.final_tooltip=Steam output = Efficiency * Structure side length * Structure side length * %d mb
 gtsteam.multiblock.steam_solar_boiler.throttle_button.tooltip=Configure boiler throttle
 gtsteam.multiblock.steam_solar_boiler.throttle.title=Boiler Throttle
 gtsteam.multiblock.steam_solar_boiler.description=A multiblock solar boiler
