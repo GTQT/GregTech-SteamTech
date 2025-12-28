@@ -43,9 +43,11 @@ public class GTSteam {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        GTSteamMetaTileEntities.initialization();
         GTSMetaitems.initialization();
         GTSteamMetaBlocks.init();
+
+        GTSteamMetaTileEntities.initialization();
+
         proxy.preLoad();
     }
     @Mod.EventHandler

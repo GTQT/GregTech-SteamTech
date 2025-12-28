@@ -1,20 +1,26 @@
-package keqing.gtsteam.api.capability.impl;
+package keqing.gtsteam.common.metatileentities.multi.generator;
 
+import gregtech.api.GTValues;
 import gregtech.api.capability.IEnergyContainer;
 import gregtech.api.capability.IMultiblockController;
+import gregtech.api.capability.IMultipleTankHandler;
 import gregtech.api.capability.impl.AbstractRecipeLogic;
+import gregtech.api.capability.impl.CommonFluidFilters;
+import gregtech.api.recipes.Recipe;
+import gregtech.api.recipes.RecipeMap;
+import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.recipes.category.ICategoryOverride;
 import gregtech.api.unification.material.Materials;
 import gregtech.api.util.GTLog;
 import gregtech.api.util.GTUtility;
 import gregtech.common.ConfigHolder;
-import keqing.gtsteam.common.metatileentities.multi.generator.MetaTileEntitySteamSolarBoiler;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,8 +28,9 @@ import java.util.Collections;
 
 import static gregtech.api.capability.GregtechDataCodes.BOILER_HEAT;
 import static gregtech.api.capability.GregtechDataCodes.BOILER_LAST_TICK_STEAM;
+import static keqing.gtsteam.common.metatileentities.multi.generator.PrimitiveBoilerType.*;
 
-public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICategoryOverride {
+public class PrimitiveBoilerRecipeLogic extends AbstractRecipeLogic implements ICategoryOverride {
 
     private static final int STEAM_PER_WATER = 160;
 
@@ -32,12 +39,11 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
 
     private int currentHeat;
     private int lastTickSteamOutput;
-    private int excessProjectedEU;
     private int excessWater;
-    private boolean isWorkingEnabled;
-    private boolean bombFlag = false;
+    private int excessFuel;
+    private int excessProjectedEU;
 
-    public SolarBoilerRecipeLogic(MetaTileEntitySteamSolarBoiler tileEntity) {
+    public PrimitiveBoilerRecipeLogic(MetaTileEntityPrimitiveBoiler tileEntity) {
         super(tileEntity, null);
         this.fluidOutputs = Collections.emptyList();
         this.itemOutputs = Collections.emptyList();
@@ -72,7 +78,7 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
     @Override
     public void update() {
         if ((!isActive() || !canProgressRecipe() || !isWorkingEnabled()) && currentHeat > 0) {
-            setHeat(currentHeat - getHeatReduction());
+            setHeat(currentHeat - 1);
             setLastTickSteam(0);
         }
         super.update();
@@ -86,22 +92,74 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
 
     @Override
     protected void trySearchNewRecipe() {
-        MetaTileEntitySteamSolarBoiler boiler = (MetaTileEntitySteamSolarBoiler) metaTileEntity;
+        MetaTileEntityPrimitiveBoiler boiler = (MetaTileEntityPrimitiveBoiler) metaTileEntity;
 
-        //IMultipleTankHandler importFluids = boiler.getImportFluids();
+        // can optimize with an override of checkPreviousRecipe() and a check here
+
+        IMultipleTankHandler importFluids = boiler.getImportFluids();
         boolean didStartRecipe = false;
-        if (metaTileEntity.getWorld().isDaytime()&&!metaTileEntity.getWorld().isRaining()) {
-            FluidStack drainedWater = getBoilerFluidFromContainer(getInputTank(), 1);
-            if (!(drainedWater == null || drainedWater.amount < 1)) {
-                didStartRecipe = true;
+
+        // 液体锅炉只处理液体配方
+        if (boiler.boilerType == LOW_PRESSURE_FLUID || boiler.boilerType == HIGH_PRESSURE_FLUID) {
+            for (IFluidTank fluidTank : importFluids.getFluidTanks()) {
+                FluidStack fuelStack = fluidTank.drain(Integer.MAX_VALUE, false);
+                if (fuelStack == null || CommonFluidFilters.BOILER_FLUID.test(fuelStack)) continue;
+
+                Recipe dieselRecipe = RecipeMaps.COMBUSTION_GENERATOR_FUELS.findRecipe(
+                        GTValues.V[GTValues.MAX], Collections.emptyList(), Collections.singletonList(fuelStack));
+                // run only if it can apply a certain amount of "parallel", this is to mitigate int division
+                if (dieselRecipe != null &&
+                        fuelStack.amount >= dieselRecipe.getFluidInputs().get(0).getAmount() * FLUID_DRAIN_MULTIPLIER) {
+                    fluidTank.drain(dieselRecipe.getFluidInputs().get(0).getAmount() * FLUID_DRAIN_MULTIPLIER, true);
+                    // divide by 2, as it is half burntime for combustion
+                    setMaxProgress(adjustBurnTimeForThrottle(Math.max(1, boiler.boilerType.runtimeBoost(
+                            GTUtility.safeCastLongToInt((Math.abs(dieselRecipe.getEUt()) * dieselRecipe.getDuration()) /
+                                    FLUID_BURNTIME_TO_EU / 2)))));
+                    didStartRecipe = true;
+                    break;
+                }
+
+                Recipe denseFuelRecipe = RecipeMaps.SEMI_FLUID_GENERATOR_FUELS.findRecipe(
+                        GTValues.V[GTValues.MAX], Collections.emptyList(), Collections.singletonList(fuelStack));
+                // run only if it can apply a certain amount of "parallel", this is to mitigate int division
+                if (denseFuelRecipe != null &&
+                        fuelStack.amount >= denseFuelRecipe.getFluidInputs().get(0).getAmount() * FLUID_DRAIN_MULTIPLIER) {
+                    fluidTank.drain(denseFuelRecipe.getFluidInputs().get(0).getAmount() * FLUID_DRAIN_MULTIPLIER, true);
+                    // multiply by 2, as it is 2x burntime for semi-fluid
+                    setMaxProgress(adjustBurnTimeForThrottle(
+                            Math.max(1,
+                                    boiler.boilerType
+                                            .runtimeBoost(GTUtility.safeCastLongToInt((Math.abs(denseFuelRecipe.getEUt()) *
+                                                    denseFuelRecipe.getDuration() / FLUID_BURNTIME_TO_EU * 2))))));
+                    didStartRecipe = true;
+                    break;
+                }
             }
         }
-        if (progressTime != 0) return;
+
+        // 固体锅炉只处理固体配方
+        else if (boiler.boilerType == LOW_PRESSURE_SOLID || boiler.boilerType == HIGH_PRESSURE_SOLID) {
+            IItemHandlerModifiable importItems = boiler.getImportItems();
+            for (int i = 0; i < importItems.getSlots(); i++) {
+                ItemStack stack = importItems.getStackInSlot(i);
+                int fuelBurnTime = (int) Math.ceil(TileEntityFurnace.getItemBurnTime(stack));
+                if (fuelBurnTime / 8 > 0) { // try to ensure this fuel can burn for at least 1 tick
+                    if (FluidUtil.getFluidHandler(stack) != null) continue;
+                    this.excessFuel += fuelBurnTime % 8;
+                    int excessProgress = this.excessFuel / 8;
+                    this.excessFuel %= 8;
+                    setMaxProgress(excessProgress +
+                            adjustBurnTimeForThrottle(boiler.boilerType.runtimeBoost(fuelBurnTime / 8)));
+                    stack.shrink(1);
+                    didStartRecipe = true;
+                    break;
+                }
+            }
+        }
+
         if (didStartRecipe) {
-            //GTLog.logger.warn("Recipe Start Meow !");
             this.progressTime = 1;
-            this.maxProgressTime = 100;
-            this.recipeEUt = adjustEUtForThrottle(boiler.steamPerTick());
+            this.recipeEUt = adjustEUtForThrottle(boiler.boilerType.steamPerTick());
             if (wasActiveAndNeedsUpdate) {
                 wasActiveAndNeedsUpdate = false;
             } else {
@@ -122,20 +180,17 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
                 excessWater += amount * STEAM_PER_WATER - generatedSteam;
                 amount -= excessWater / STEAM_PER_WATER;
                 excessWater %= STEAM_PER_WATER;
+
                 FluidStack drainedWater = getBoilerFluidFromContainer(getInputTank(), amount);
                 if (amount != 0 && (drainedWater == null || drainedWater.amount < amount)) {
-                    if (!bombFlag) {
-                        getMetaTileEntity().explodeMultiblock((1.0f * currentHeat / getMaximumHeat()) * 8.0f);
-                    } else {
-                        bombFlag = false;
-                    }
+                    getMetaTileEntity().explodeMultiblock((1.0f * currentHeat / getMaximumHeat()) * 8.0f);
                 } else {
                     setLastTickSteam(generatedSteam);
                     getOutputTank().fill(Materials.Steam.getFluid(generatedSteam), true);
                 }
             }
             if (currentHeat < getMaximumHeat()) {
-                setHeat(Math.min(currentHeat + getHeatIncrement(), getMaximumHeat()));
+                setHeat(currentHeat + 1);
             }
 
             if (++progressTime > maxProgressTime) {
@@ -144,33 +199,29 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
         }
     }
 
-    private int getHeatIncrement() {
-        return MetaTileEntitySteamSolarBoiler.HEAT_INCREMENT_PER_BLOCK;
-    }
-
-    private int getHeatReduction() {
-        return MetaTileEntitySteamSolarBoiler.HEAT_REDUCTION_PER_BLOCK;
-    }
-
-    private int getMaximumHeat() {
-        return MetaTileEntitySteamSolarBoiler.HEAT_MAXIMUM_PER_BLOCK;
-    }
-
-    private int getReductionWater(int generatedSteam) {
-        return (generatedSteam / STEAM_PER_WATER);
-        //每1L蒸汽用2L水
-        //recipeEUt此时为蒸汽输出量
-    }
-
     private int getMaximumHeatFromMaintenance() {
         return currentHeat;
     }
 
     private int adjustEUtForThrottle(int rawEUt) {
-        int throttle = ((MetaTileEntitySteamSolarBoiler) metaTileEntity).getThrottle();
-        return (int) (rawEUt * (throttle / 100.0));
+        int throttle = ((MetaTileEntityPrimitiveBoiler) metaTileEntity).getThrottle();
+        return (int) Math.max(25, rawEUt * (throttle / 100.0));
     }
 
+    private int adjustBurnTimeForThrottle(int rawBurnTime) {
+        MetaTileEntityPrimitiveBoiler boiler = (MetaTileEntityPrimitiveBoiler) metaTileEntity;
+        int EUt = boiler.boilerType.steamPerTick();
+        int adjustedEUt = adjustEUtForThrottle(EUt);
+        int adjustedBurnTime = rawBurnTime * EUt / adjustedEUt;
+        this.excessProjectedEU += (EUt * rawBurnTime) - (adjustedEUt * adjustedBurnTime);
+        adjustedBurnTime += this.excessProjectedEU / adjustedEUt;
+        this.excessProjectedEU %= adjustedEUt;
+        return adjustedBurnTime;
+    }
+
+    private int getMaximumHeat() {
+        return ((MetaTileEntityPrimitiveBoiler) metaTileEntity).boilerType.getTicksToBoiling();
+    }
 
     public int getHeatScaled() {
         return (int) Math.round(currentHeat / (1.0 * getMaximumHeat()) * 100);
@@ -220,8 +271,8 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
 
     @NotNull
     @Override
-    public MetaTileEntitySteamSolarBoiler getMetaTileEntity() {
-        return (MetaTileEntitySteamSolarBoiler) super.getMetaTileEntity();
+    public MetaTileEntityPrimitiveBoiler getMetaTileEntity() {
+        return (MetaTileEntityPrimitiveBoiler) super.getMetaTileEntity();
     }
 
     @NotNull
@@ -229,7 +280,8 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = super.serializeNBT();
         compound.setInteger("Heat", currentHeat);
-        compound.setInteger("ExcessWater", excessWater * 1000);
+        compound.setInteger("ExcessFuel", excessFuel);
+        compound.setInteger("ExcessWater", excessWater);
         compound.setInteger("ExcessProjectedEU", excessProjectedEU);
         return compound;
     }
@@ -238,9 +290,9 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
     public void deserializeNBT(@NotNull NBTTagCompound compound) {
         super.deserializeNBT(compound);
         this.currentHeat = compound.getInteger("Heat");
+        this.excessFuel = compound.getInteger("ExcessFuel");
         this.excessWater = compound.getInteger("ExcessWater");
         this.excessProjectedEU = compound.getInteger("ExcessProjectedEU");
-        bombFlag = true;
     }
 
     @Override
@@ -305,20 +357,13 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
         return super.getEnergyContainer();
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound data) {
-        data.setBoolean("isActive", this.isActive);
-        data.setBoolean("isWorkingEnabled", this.isWorkingEnabled());
-        data.setBoolean("wasActiveAndNeedsUpdate", this.wasActiveAndNeedsUpdate);
-        data.setInteger("progressTime", progressTime);
-        data.setInteger("maxProgress", this.maxProgressTime);
-        return data;
+    @Override
+    public @NotNull RecipeMap<?> @NotNull [] getJEIRecipeMapCategoryOverrides() {
+        return new RecipeMap<?>[]{RecipeMaps.COMBUSTION_GENERATOR_FUELS, RecipeMaps.SEMI_FLUID_GENERATOR_FUELS};
     }
 
-    public void readFromNBT(NBTTagCompound data) {
-        this.isActive = data.getBoolean("isActive");
-        this.isWorkingEnabled = data.getBoolean("isWorkingEnabled");
-        this.wasActiveAndNeedsUpdate = data.getBoolean("wasActiveAndNeedsUpdate");
-        this.progressTime = data.getInteger("progressTime");
-        this.maxProgressTime = data.getInteger("maxProgress");
+    @Override
+    public @NotNull String @NotNull [] getJEICategoryOverrides() {
+        return new String[]{"minecraft.fuel"};
     }
 }

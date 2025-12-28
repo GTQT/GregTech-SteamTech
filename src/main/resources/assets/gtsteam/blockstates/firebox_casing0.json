@@ -1,0 +1,33 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "active": {
+      "false": {
+        "model": "minecraft:cube_bottom_top"
+      },
+      "true": {
+        "model": "gregtech:active_firebox"
+      }
+    },
+    "variant": {
+      "item_firebox": {
+        "textures": {
+          "bottom": "gregtech:blocks/firebox/item_firebox/bottom",
+          "top": "gregtech:blocks/firebox/item_firebox/top",
+          "side": "gregtech:blocks/firebox/item_firebox/side",
+          "side_active": "gregtech:blocks/firebox/item_firebox/active/side",
+          "side_emissive": "gregtech:blocks/firebox/item_firebox/active/side_emissive"
+        }
+      },
+      "fluid_firebox": {
+        "textures": {
+          "bottom": "gregtech:blocks/firebox/fluid_firebox/bottom",
+          "top": "gregtech:blocks/firebox/fluid_firebox/top",
+          "side": "gregtech:blocks/firebox/fluid_firebox/side",
+          "side_active": "gregtech:blocks/firebox/fluid_firebox/active/side",
+          "side_emissive": "gregtech:blocks/firebox/fluid_firebox/active/side_emissive"
+        }
+      }
+    }
+  }
+}

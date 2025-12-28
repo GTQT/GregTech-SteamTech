@@ -1,4 +1,4 @@
-package keqing.gtsteam.common.metatileentities.multi.steam;
+package keqing.gtsteam.common.metatileentities.multi.generator;
 
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
@@ -34,29 +34,23 @@ import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.mui.GTGuis;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
-import gregtech.api.pattern.MultiblockShapeInfo;
 import gregtech.api.pattern.PatternMatchContext;
 import gregtech.api.util.KeyUtil;
+import gregtech.api.util.TextFormattingUtil;
+import gregtech.api.util.tooltips.AbstractTooltipComponent;
+import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.client.utils.TooltipHelper;
-import gregtech.common.blocks.BlockMachineCasing;
-import gregtech.common.metatileentities.MetaTileEntities;
+import gregtech.common.metatileentities.multi.BoilerType;
+import gregtech.common.metatileentities.multi.MetaTileEntityLargeBoiler;
 import gregtech.core.sound.GTSoundEvents;
-import keqing.gtsteam.api.capability.impl.SolarBoilerRecipeLogic;
-import keqing.gtsteam.common.block.GTSteamMetaBlocks;
-import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing1;
-import keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.IFluidTank;
@@ -66,42 +60,33 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
-import static gregtech.api.GTValues.ULV;
-import static gregtech.common.blocks.MetaBlocks.MACHINE_CASING;
-import static net.minecraft.util.EnumFacing.*;
+import static keqing.gtsteam.common.metatileentities.multi.generator.PrimitiveBoilerType.*;
 
-public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase implements ProgressBarMultiblock,
+public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase implements ProgressBarMultiblock,
         IControllable, ISteamMachine {
-    public static final int STEAM_PER_BLOCK = 10;
 
-    public static final int HEAT_INCREMENT_PER_BLOCK = 5;
-    public static final int HEAT_REDUCTION_PER_BLOCK = 2;
-    public static final int HEAT_MAXIMUM_PER_BLOCK = 10000;
-
-    protected SolarBoilerRecipeLogic recipeLogic;
+    public final PrimitiveBoilerType boilerType;
+    protected PrimitiveBoilerRecipeLogic recipeLogic;
     private FluidTankList fluidImportInventory;
     private ItemHandlerList itemImportInventory;
     private FluidTankList steamOutputTank;
 
-    private int Length = 0;
-    private int Width = 0;
-
     private int throttlePercentage = 100;
 
-    public MetaTileEntitySteamSolarBoiler(ResourceLocation metaTileEntityId) {
+    public MetaTileEntityPrimitiveBoiler(ResourceLocation metaTileEntityId, PrimitiveBoilerType boilerType) {
         super(metaTileEntityId);
-        this.recipeLogic = new SolarBoilerRecipeLogic(this);
+        this.boilerType = boilerType;
+        this.recipeLogic = new PrimitiveBoilerRecipeLogic(this);
         resetTileAbilities();
     }
 
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity tileEntity) {
-        return new MetaTileEntitySteamSolarBoiler(metaTileEntityId);
+        return new MetaTileEntityPrimitiveBoiler(metaTileEntityId, boilerType);
     }
 
     @Override
@@ -213,11 +198,6 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
                     throttleAmt, "%");
             keyManager.add(KeyUtil.lang(TextFormatting.GRAY,
                     "gregtech.multiblock.large_boiler.throttle", throttle));
-
-            int length = syncer.syncInt(this.Length);
-            int width = syncer.syncInt(this.Width);
-
-            keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.machine.large_fluid_tank.size", length, 1, width));
         }
     }
 
@@ -285,12 +265,12 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
                                 .background(GTGuiTextures.DISPLAY)));
     }
 
-    private int getThrottlePercentage() {
-        return this.throttlePercentage;
-    }
-
     private void setThrottlePercentage(int amount) {
         this.throttlePercentage = Math.max(20, Math.min(amount, 100));
+    }
+
+    private int getThrottlePercentage() {
+        return this.throttlePercentage;
     }
 
     @Override
@@ -298,195 +278,63 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
         return super.isActive() && recipeLogic.isActive() && recipeLogic.isWorkingEnabled();
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
-    public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
-        return Textures.VOLTAGE_CASINGS[0];
-    }
-
-    public boolean isBlockEdge(@NotNull World world, @NotNull BlockPos.MutableBlockPos pos,
-                               @NotNull EnumFacing direction) {
-        IBlockState block = world.getBlockState(pos.move(direction));
-        TileEntity entity = world.getTileEntity(pos);
-        if (entity instanceof IGregTechTileEntity iGregTechTileEntity) {
-            MetaTileEntity metaTileEntity = iGregTechTileEntity.getMetaTileEntity();
-            if (metaTileEntity instanceof IMultiblockAbilityPart<?>) {
-                return false;
-            } else {
-                return (block != getULVCasingState())
-                        && (block != getSolarCasingState());
-            }
-        } else {
-            return (block != getULVCasingState())
-                    && (block != getSolarCasingState());
-        }
-    }
-
-    @Override
-    public void checkStructurePattern() {
-        if (!this.isStructureFormed()) {
-            reinitializeStructurePattern();
-        }
-        super.checkStructurePattern();
-    }
-
-    @Override
-    protected @NotNull BlockPattern createStructurePattern() {
-        if (getWorld() != null) updateStructureDimensions();
-        var pattern = FactoryBlockPattern.start();
-
-        if (Width < 3 || Length < 3) {
-            Width = 3;
-            Length = 3;
-        }
-        if (Width > 15 || Length > 15) {
-            Width = 15;
-            Length = 15;
-        }
-
-        // 创建单层太阳能结构
-        for (int i = 0; i < Width; i++) {
-            StringBuilder str = new StringBuilder();
-            for (int j = 0; j < Length; j++) {
-                // 最底行中间位置放控制器
-                if (i == Width - 1 && j == Length / 2) {
-                    str.append('S');
-                }
-                // 边界（第一行、最后一行、第一列、最后一列）使用X
-                else if (i == 0 || i == Width - 1 || j == 0 || j == Length - 1) {
-                    str.append('X');
-                }
-                // 中间区域使用Y
-                else {
-                    str.append('Y');
-                }
-            }
-            pattern = pattern.aisle(str.toString());
-
-            System.out.println(str);
-        }
-        System.out.println("-----");
-
-        return pattern
+    protected BlockPattern createStructurePattern() {
+        return FactoryBlockPattern.start()
+                .aisle("XXX", "CCC", "CCC", "CCC")
+                .aisle("XXX", "C C", "C C", "CCC")
+                .aisle("XXX", "CSC", "CCC", "CCC")
                 .where('S', selfPredicate())
-                .where('X', states(getULVCasingState())
+                .where('X', states(boilerType.fireboxState).setMinGlobalLimited(4)
                         .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setMinGlobalLimited(1, 1))
-                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMinGlobalLimited(1, 1))
-                )
-                .where('Y', states(getSolarCasingState()))
+                        // setting this to max 2 makes the import fluids max 2 for some reason
+                        .or(abilities(MultiblockAbility.IMPORT_ITEMS).setMaxGlobalLimited(2, 1)))
+                .where('C', states(boilerType.casingState).setMinGlobalLimited(20)
+                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMinGlobalLimited(1)))
+                .where(' ', air())
                 .build();
     }
-
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
-        List<MultiblockShapeInfo> shapeInfo = new ArrayList<>();
-
-        // 生成从3到15的所有奇数尺寸预览结构
-        for (int size = 3; size <= 15; size += 2) {
-            MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder();
-
-            // 构建每一层
-            for (int i = 0; i < size; i++) {
-                StringBuilder aisle = new StringBuilder();
-                for (int j = 0; j < size; j++) {
-                    // 最底行中间位置放控制器，两侧放舱室
-                    if (i == size - 1) {
-                        if (j == size / 2) {
-                            aisle.append('S'); // 控制器
-                        } else if (j == size / 2 - 1) {
-                            aisle.append('M'); // 流体输入舱
-                        } else if (j == size / 2 + 1) {
-                            aisle.append('Q'); // 流体输出舱
-                        } else {
-                            // 最底行的其他位置按边界处理
-                            aisle.append('X');
-                        }
-                    } else {
-                        // 其他行：边界用X，内部用Y
-                        if (i == 0 || i == size - 1 || j == 0 || j == size - 1) {
-                            aisle.append('X'); // 边界
-                        } else {
-                            aisle.append('Y'); // 内部
-                        }
-                    }
-                }
-                builder.aisle(aisle.toString());
-            }
-
-            // 设置方块映射
-            builder
-                    .where('S', GTSteamMetaTileEntities.STEAM_SOLAR_BOILER, SOUTH)
-                    .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[ULV], SOUTH)
-                    .where('Q', MetaTileEntities.FLUID_EXPORT_HATCH[ULV], SOUTH)
-                    .where('X', getULVCasingState())
-                    .where('Y', getSolarCasingState());
-
-            shapeInfo.add(builder.build());
-        }
-
-        return shapeInfo;
+    public boolean hasMaintenanceMechanics() {
+        return false;
     }
-
-    private void updateStructureDimensions() {
-        World world = getWorld();
-        EnumFacing front = getFrontFacing();
-        if (front == UP || front == DOWN) return;
-        EnumFacing back = front.getOpposite();
-        EnumFacing left = front.rotateYCCW();
-        EnumFacing right = left.getOpposite();
-
-        BlockPos.MutableBlockPos lPos = new BlockPos.MutableBlockPos(getPos());
-        BlockPos.MutableBlockPos rPos = new BlockPos.MutableBlockPos(getPos());
-        BlockPos.MutableBlockPos bPos = new BlockPos.MutableBlockPos(getPos());
-        // 重置距离
-        int lDist = 0;
-        int rDist = 0;
-        int bDist = 0;
-
-        for (int i = 1; i <= 8; i++) {
-            if (lDist == 0 && isBlockEdge(world, lPos, left)) lDist = i;
-            if (rDist == 0 && isBlockEdge(world, rPos, right)) rDist = i;
-            if (lDist != 0 && rDist != 0) break;
-        }
-        for (int i = 1; i <= 8 * 2 - 1; i++) {
-            if ((isBlockEdge(world, bPos, back))) bDist = i;
-            if (bDist != 0) break;
-        }
-        this.Length = lDist + rDist - 1;
-        this.Width = bDist;
-    }
-
-
-    public IBlockState getULVCasingState() {
-        return MACHINE_CASING.getState(BlockMachineCasing.MachineCasingType.ULV);
-    }
-
-    public IBlockState getSolarCasingState() {
-        return GTSteamMetaBlocks.blockMultiblockCasing1.getState(BlockMultiblockCasing1.CasingType.SOLAR_COLLECTOR);
+    @Override
+    public boolean hasMufflerMechanics() {
+        return false;
     }
 
     @Override
     public String[] getDescription() {
-        return new String[]{I18n.format("gtsteam.multiblock.steam_solar_boiler.description")};
+        return new String[] { I18n.format("gregtech.multiblock.large_boiler.description") };
     }
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World player, @NotNull List<String> tooltip,
                                boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
-        tooltip.add(
-                I18n.format("gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip", this.getTicksToBoiling() / 20));
-        tooltip.add(I18n.format("gtsteam.multiblock.steam_solar_boiler.structure_tooltip"));
-        tooltip.add(I18n.format("gtsteam.multiblock.steam_solar_boiler.final_tooltip",STEAM_PER_BLOCK));
-        tooltip.add(TooltipHelper.BLINKING_RED + I18n.format("gregtech.multiblock.large_boiler.explosion_tooltip"));
+        if (boilerType == LOW_PRESSURE_FLUID || boilerType == HIGH_PRESSURE_FLUID) {
+            tooltip.add(TextFormatting.GREEN + I18n.format("-流体锅炉："));
+            tooltip.add(I18n.format("只运行流体配方，无法运行固体配方"));
+        }
+        if (boilerType == LOW_PRESSURE_SOLID || boilerType == HIGH_PRESSURE_SOLID) {
+            tooltip.add(TextFormatting.GREEN + I18n.format("-固体锅炉："));
+            tooltip.add(I18n.format("只运行固体配方，无法运行流体配方"));
+        }
+        TooltipBuilder.create().add(new BoilerInformation()).build(this, tooltip);
     }
 
-    public int getTicksToBoiling() {
-        return HEAT_MAXIMUM_PER_BLOCK / HEAT_INCREMENT_PER_BLOCK;
-    }
+    public class BoilerInformation extends AbstractTooltipComponent {
 
-    public int steamPerTick() {
-        return (Length - 2) * (Width - 2) * STEAM_PER_BLOCK;
+        @Override
+        public void addInformation(MultiblockControllerBase metaTileEntity, List<String> tooltip) {
+            tooltip.add(I18n.format("gregtech.multiblock.large_boiler.rate_tooltip",
+                    TextFormattingUtil
+                            .formatNumbers((int) (boilerType.steamPerTick() * 20 * boilerType.runtimeBoost(200) / 20.0))));
+            tooltip.add(
+                    I18n.format("gregtech.multiblock.large_boiler.heat_time_tooltip", boilerType.getTicksToBoiling() / 20));
+            tooltip.add(I18n.format("gregtech.universal.tooltip.base_production_fluid", boilerType.steamPerTick()));
+            tooltip.add(TooltipHelper.BLINKING_RED + I18n.format("gregtech.multiblock.large_boiler.explosion_tooltip"));
+        }
     }
 
     @Override
@@ -500,7 +348,20 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
     @NotNull
     @Override
     protected ICubeRenderer getFrontOverlay() {
-        return Textures.LARGE_STEEL_BOILER;
+        return Textures.PRIMITIVE_BLAST_FURNACE_OVERLAY;
+    }
+
+    private boolean isFireboxPart(IMultiblockPart sourcePart) {
+        return isStructureFormed() && (((MetaTileEntity) sourcePart).getPos().getY() < getPos().getY());
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
+        if (sourcePart != null && isFireboxPart(sourcePart)) {
+            return isActive() ? boilerType.fireboxActiveRenderer : boilerType.fireboxIdleRenderer;
+        }
+        return boilerType.casingRenderer;
     }
 
     @Override
@@ -515,36 +376,26 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
-        super.writeToNBT(data);
         data.setInteger("ThrottlePercentage", throttlePercentage);
-        data.setInteger("Width", Width);
-        data.setInteger("Length", Length);
-        return this.recipeLogic.writeToNBT(data);
+        return super.writeToNBT(data);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound data) {
-        super.readFromNBT(data);
         throttlePercentage = data.getInteger("ThrottlePercentage");
-        this.Width = data.getInteger("Width");
-        this.Length = data.getInteger("Length");
-        this.recipeLogic.readFromNBT(data);
+        super.readFromNBT(data);
     }
 
     @Override
     public void writeInitialSyncData(PacketBuffer buf) {
         super.writeInitialSyncData(buf);
         buf.writeVarInt(throttlePercentage);
-        buf.writeVarInt(Width);
-        buf.writeVarInt(Length);
     }
 
     @Override
     public void receiveInitialSyncData(PacketBuffer buf) {
         super.receiveInitialSyncData(buf);
         throttlePercentage = buf.readVarInt();
-        Width = buf.readVarInt();
-        Length = buf.readVarInt();
     }
 
     public int getThrottle() {
@@ -646,13 +497,5 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
     @Override
     public void setWorkingEnabled(boolean isWorkingAllowed) {
         recipeLogic.setWorkingEnabled(isWorkingAllowed);
-    }
-
-    public boolean hasMaintenanceMechanics() {
-        return false;
-    }
-
-    public boolean hasMufflerMechanics() {
-        return false;
     }
 }

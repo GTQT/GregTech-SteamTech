@@ -16,6 +16,20 @@
           "top": "gtsteam:blocks/casings/solar_collector",
           "side": "gregtech:blocks/casings/voltage/ulv/side"
         }
+      },
+      "low_pressure_tank": {
+        "textures": {
+          "bottom": "gregtech:blocks/casings/boiler_tank_pressure_low_side",
+          "top": "gtsteam:blocks/casings/boiler_tank_pressure_low_top",
+          "side": "gregtech:blocks/casings/boiler_tank_pressure_low_side"
+        }
+      },
+      "high_pressure_tank": {
+        "textures": {
+          "bottom": "gregtech:blocks/casings/boiler_tank_pressure_high_side",
+          "top": "gtsteam:blocks/casings/boiler_tank_pressure_high_top",
+          "side": "gregtech:blocks/casings/boiler_tank_pressure_high_side"
+        }
       }
     }
   }

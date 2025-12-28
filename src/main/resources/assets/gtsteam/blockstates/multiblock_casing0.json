@@ -11,13 +11,13 @@
       "galvanized_porcelain_tiles": {
         "model": "minecraft:cube_all",
         "textures": {
-          "all": "gtsteam:blocks/casings/galvanized_porcelain_tiles"
+          "all": "gregtech:blocks/casings/galvanized_porcelain_tiles"
         }
       },
       "tank_wall": {
         "model": "minecraft:cube_all",
         "textures": {
-          "all": "gtsteam:blocks/casings/tank_wall"
+          "all": "gregtech:blocks/casings/tank_wall"
         }
       }
     }

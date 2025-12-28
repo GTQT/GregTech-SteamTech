@@ -31,6 +31,7 @@ public class CommonProxy {
         IForgeRegistry<Block> registry = event.getRegistry();
         registry.register(GTSteamMetaBlocks.blockMultiblockCasing0);
         registry.register(GTSteamMetaBlocks.blockMultiblockCasing1);
+        registry.register(GTSteamMetaBlocks.blockFireboxCasing0);
     }
 
     @SubscribeEvent
@@ -38,6 +39,7 @@ public class CommonProxy {
         IForgeRegistry<Item> registry = event.getRegistry();
         registry.register(createItemBlock(GTSteamMetaBlocks.blockMultiblockCasing0, VariantItemBlock::new));
         registry.register(createItemBlock(GTSteamMetaBlocks.blockMultiblockCasing1, VariantItemBlock::new));
+        registry.register(createItemBlock(GTSteamMetaBlocks.blockFireboxCasing0, VariantItemBlock::new));
     }
 
     private static <T extends Block> ItemBlock createItemBlock(T block, Function<T, ItemBlock> producer) {

@@ -1,6 +1,7 @@
 package keqing.gtsteam.common.block;
 
 import gregtech.common.blocks.MetaBlocks;
+import keqing.gtsteam.common.block.blocks.BlockFireboxCasing0;
 import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing0;
 import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing1;
 import keqing.gtsteam.common.item.storageupdate.ModItems;
@@ -15,6 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GTSteamMetaBlocks {
     public static BlockMultiblockCasing0 blockMultiblockCasing0;
     public static BlockMultiblockCasing1 blockMultiblockCasing1;
+    public static BlockFireboxCasing0 blockFireboxCasing0;
 
     private GTSteamMetaBlocks() {
     }
@@ -26,6 +28,9 @@ public class GTSteamMetaBlocks {
         blockMultiblockCasing1 = new BlockMultiblockCasing1();
         blockMultiblockCasing1.setRegistryName("multiblock_casing1");
 
+        blockFireboxCasing0 = new BlockFireboxCasing0();
+        blockFireboxCasing0.setRegistryName("firebox_casing0");
+
 
     }
 
@@ -33,6 +38,9 @@ public class GTSteamMetaBlocks {
     public static void registerItemModels() {
         registerItemModel(blockMultiblockCasing0);
         registerItemModel(blockMultiblockCasing1);
+
+        blockFireboxCasing0.onModelRegister();
+
         registerModel(ModItems.STORAGE_UPGRADE_TIER_1);
         registerModel(ModItems.STORAGE_UPGRADE_TIER_2);
         registerModel(ModItems.STORAGE_UPGRADE_TIER_3);

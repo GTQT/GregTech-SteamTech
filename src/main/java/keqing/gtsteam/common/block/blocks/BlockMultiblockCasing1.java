@@ -29,7 +29,9 @@ public class BlockMultiblockCasing1 extends VariantBlock<BlockMultiblockCasing1.
 
     public enum CasingType implements IStringSerializable {
 
-        SOLAR_COLLECTOR("solar_collector");
+        SOLAR_COLLECTOR("solar_collector"),
+        LOW_PRESSURE_TANK("low_pressure_tank"),
+        HIGH_PRESSURE_TANK("high_pressure_tank");
 
         private final String name;
 

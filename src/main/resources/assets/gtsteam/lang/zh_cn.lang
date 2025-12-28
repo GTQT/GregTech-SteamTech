@@ -13,7 +13,11 @@ tile.multiblock_casing.galvanized_porcelain_tiles.name=镀锌瓷瓦砖
 tile.multiblock_casing.tank_wall.name=储罐外壁
 
 tile.multiblock_casing.solar_collector.name=太阳能集热管
+tile.multiblock_casing.low_pressure_tank.name=低压锅炉
+tile.multiblock_casing.high_pressure_tank.name=高压锅炉
 
+tile.boiler_casing.item_firebox.name=固体燃烧室
+tile.boiler_casing.fluid_firebox.name=液体燃烧室
 #物品
 metaitem.cover.electric_motor.ulv.name=电动马达（ULV）
 metaitem.cover.electric_piston.ulv.name=电力活塞（ULV）
@@ -89,6 +93,12 @@ gtsteam.multiblock.steam_solar_boiler.final_tooltip=蒸气输出量 = 效率 * �
 gtsteam.multiblock.steam_solar_boiler.throttle_button.tooltip=配置锅炉节流
 gtsteam.multiblock.steam_solar_boiler.throttle.title=锅炉节流
 gtsteam.multiblock.steam_solar_boiler.description=一个多方块太阳能锅炉
+
+#原始锅炉
+gtsteam.machine.solid_boiler.low_pressure.name=低压固体锅炉
+gtsteam.machine.solid_boiler.high_pressure.name=高压固体锅炉
+gtsteam.machine.fluid_boiler.low_pressure.name=低压流体锅炉
+gtsteam.machine.fluid_boiler.high_pressure.name=高压流体锅炉
 
 #蒸汽水泵
 gtsteam.machine.steam_water_pump.name=蒸汽水泵

@@ -13,6 +13,11 @@ tile.multiblock_casing.galvanized_porcelain_tiles.name=Galvanized Porcelain Tile
 tile.multiblock_casing.tank_wall.name=Tank outer wall
 
 tile.multiblock_casing.solar_collector.name=Solar collector tubes
+tile.multiblock_casing.low_pressure_tank.name=Low pressure boiler
+tile.multiblock_casing.high_pressure_tank.name=High pressure boiler
+
+tile.boiler_casing.item_firebox.name=Solid combustion chamber
+tile.boiler_casing.fluid_firebox.name=Liquid combustion chamber
 #物品
 metaitem.cover.electric_motor.ulv.name=Electric Motor (ULV)
 metaitem.cover.electric_piston.ulv.name=Electric Piston (ULV)
@@ -89,6 +94,12 @@ gtsteam.multiblock.steam_solar_boiler.final_tooltip=Steam output = Efficiency * 
 gtsteam.multiblock.steam_solar_boiler.throttle_button.tooltip=Configure boiler throttle
 gtsteam.multiblock.steam_solar_boiler.throttle.title=Boiler Throttle
 gtsteam.multiblock.steam_solar_boiler.description=A multiblock solar boiler
+
+# Boiler
+gtsteam.machine.solid_boiler.low_pressure.name=Low Pressure Solid Boiler
+gtsteam.machine.solid_boiler.high_pressure.name=High Pressure Solid Boiler
+gtsteam.machine.fluid_boiler.low_pressure.name=Low Pressure Fluid Boiler
+gtsteam.machine.fluid_boiler.high_pressure.name=High Pressure Fluid Boiler
 
 #Steam Water Pump
 gtsteam.machine.steam_water_pump.name=Steam Water Pump

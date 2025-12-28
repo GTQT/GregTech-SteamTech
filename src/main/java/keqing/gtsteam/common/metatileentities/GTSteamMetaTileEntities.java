@@ -1,6 +1,5 @@
 package keqing.gtsteam.common.metatileentities;
 
-import gregtech.api.metatileentity.SimpleGeneratorMetaTileEntity;
 import gregtech.api.metatileentity.SimpleMachineMetaTileEntity;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.util.GTUtility;
@@ -9,6 +8,9 @@ import gregtech.client.renderer.texture.Textures;
 import gregtech.common.metatileentities.electric.MetaTileEntitySingleCombustion;
 import gregtech.common.metatileentities.electric.MetaTileEntitySingleTurbine;
 import gregtech.common.metatileentities.electric.SimpleMachineMetaTileEntityResizable;
+import keqing.gtsteam.common.metatileentities.multi.generator.MetaTileEntityPrimitiveBoiler;
+import keqing.gtsteam.common.metatileentities.multi.generator.MetaTileEntitySteamSolarBoiler;
+import keqing.gtsteam.common.metatileentities.multi.generator.PrimitiveBoilerType;
 import keqing.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnExportHatch;
 import keqing.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnImportHatch;
 import keqing.gtsteam.common.metatileentities.multi.primitive.*;
@@ -78,6 +80,13 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntitySingleCombustion COMBUSTION_GENERATOR;
 
     public static MetaTileEntitySteamSolarBoiler STEAM_SOLAR_BOILER;
+    public static MetaTileEntityPrimitiveBoiler LOW_PRESSURE_SOLID_BOILER;
+    public static MetaTileEntityPrimitiveBoiler HIGH_PRESSURE_SOLID_BOILER;
+    public static MetaTileEntityPrimitiveBoiler LOW_PRESSURE_FLUID_BOILER;
+    public static MetaTileEntityPrimitiveBoiler HIGH_PRESSURE_FLUID_BOILER;
+
+
+
     public static MetaTileEntityLargeSteamTank LARGE_STEAM_TANK;
     public static MetaTileEntityScalableStorage SCALABLE_STORAGE; //MIT License //Author iristhepianist //https://github.com/iristhepianist/ScalableStorageCEu/
     public static MetaTileEntitySteamLavaFurnace STEAM_LAVA_FURNACE;
@@ -113,6 +122,11 @@ public class GTSteamMetaTileEntities {
         SCALABLE_STORAGE = registerMetaTileEntity(25, new MetaTileEntityScalableStorage(gtsId("scalable_storage")));
 
         STEAM_SOLAR_BOILER = registerMetaTileEntity(30, new MetaTileEntitySteamSolarBoiler(gtsId("steam_solar_boiler")));
+
+        LOW_PRESSURE_SOLID_BOILER = registerMetaTileEntity(31, new MetaTileEntityPrimitiveBoiler(gtsId("solid_boiler.low_pressure"), PrimitiveBoilerType.LOW_PRESSURE_SOLID));
+        HIGH_PRESSURE_SOLID_BOILER = registerMetaTileEntity(32, new MetaTileEntityPrimitiveBoiler(gtsId("solid_boiler.high_pressure"), PrimitiveBoilerType.HIGH_PRESSURE_SOLID));
+        LOW_PRESSURE_FLUID_BOILER = registerMetaTileEntity(33, new MetaTileEntityPrimitiveBoiler(gtsId("fluid_boiler.low_pressure"), PrimitiveBoilerType.LOW_PRESSURE_FLUID));
+        HIGH_PRESSURE_FLUID_BOILER = registerMetaTileEntity(34, new MetaTileEntityPrimitiveBoiler(gtsId("fluid_boiler.high_pressure"), PrimitiveBoilerType.HIGH_PRESSURE_FLUID));
 
         BRONZE_TANK_VALVE = registerMetaTileEntity(40, new MetaTileEntityTankValve(gtsId("tank_valve.bronze")));
         BRONZE_TANK = registerMetaTileEntity(41, new MetaTileEntityMultiblockTank(gtsId("tank.bronze"), 750 * 1000));
