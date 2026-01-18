@@ -9,12 +9,13 @@ import gregtech.api.recipes.builders.SimpleRecipeBuilder;
 import gregtech.core.sound.GTSoundEvents;
 
 public class GTSRecipeMaps {
-    public static final RecipeMap<SimpleRecipeBuilder> STEAM_BLAST_FURNACE_RECIPES;
     public static final RecipeMap<SimpleRecipeBuilder> BIOMIMETIC_FACTORY_RECIPES;
     public static final RecipeMap<SimpleRecipeBuilder> LAVA_FURNACE_RECIPES;
     public static final RecipeMap<PrimitiveRecipeBuilder> ALLOY_KILN;
+    public static final RecipeMap<PrimitiveRecipeBuilder> PRIMITIVE_CHEMICAL_RECIPES;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_STEAM_TURBINE_FUELS;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_COMBUSTION_GENERATOR_FUELS;
+    public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_SEMI_FLUID_GENERATOR_FUELS;
 
     private GTSRecipeMaps() {}
     static {
@@ -45,6 +46,19 @@ public class GTSRecipeMaps {
                 .generator()
                 .build();
 
+        PRIMITIVE_SEMI_FLUID_GENERATOR_FUELS = new RecipeMapBuilder<>(
+                "primitive_semi_fluid_generator", new FuelRecipeBuilder())
+                .fluidInputs(1)
+                .uiBuilder((b) -> b
+                        .fluidSlotOverlay(GTGuiTextures.FURNACE_OVERLAY_2, false, true)
+                        .progressBar(GTGuiTextures.PROGRESS_BAR_ARROW_MULTIPLE)
+                )
+                .sound(GTSoundEvents.COMBUSTION)
+                .allowEmptyOutputs()
+                .disableJeiOverclockButton()
+                .generator()
+                .build();
+
         BIOMIMETIC_FACTORY_RECIPES = new RecipeMapBuilder<>("biomimetic_factory_recipes",
                 new SimpleRecipeBuilder())
                 .itemInputs(1)
@@ -59,13 +73,6 @@ public class GTSRecipeMaps {
                 .sound(GTSoundEvents.FIRE)
                 .build();
 
-        STEAM_BLAST_FURNACE_RECIPES = new RecipeMapBuilder<>("steam_blast_furnace",
-                new SimpleRecipeBuilder())
-                .itemInputs(3)
-                .itemOutputs(1)
-                .sound(GTSoundEvents.FIRE)
-                .build();
-
         ALLOY_KILN = new RecipeMapBuilder<>("alloy_klin",
                 new PrimitiveRecipeBuilder())
                 .itemInputs(2)
@@ -73,6 +80,16 @@ public class GTSRecipeMaps {
                 .fluidInputs(1)
                 .fluidOutputs(0)
                 .sound(GTSoundEvents.FIRE)
+                .build();
+
+        PRIMITIVE_CHEMICAL_RECIPES = new RecipeMapBuilder<>("primitive_chemical_recipes",
+                new PrimitiveRecipeBuilder())
+                .itemInputs(3)
+                .itemOutputs(3)
+                .fluidInputs(3)
+                .fluidOutputs(3)
+                .sound(GTSoundEvents.FIRE)
+                .disableJeiOverclockButton()
                 .build();
     }
 }

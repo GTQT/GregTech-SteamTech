@@ -8,6 +8,7 @@ import gregtech.client.renderer.texture.custom.FireboxActiveRenderer;
 public class GTSteamTextures {
     public static final SimpleOverlayRenderer PORCELAIN_TILES = new SimpleOverlayRenderer("casings/galvanized_porcelain_tiles");
     public static final SimpleOverlayRenderer TANK_WALL = new SimpleOverlayRenderer("casings/tank_wall");
+    public static final SimpleOverlayRenderer REINFORCED_TREATED_WOOD_WALL = new SimpleOverlayRenderer("casings/reinforced_treated_wood_wall");
 
     public static final SimpleOverlayRenderer LOW_PRESSURE_SIDE = new SimpleOverlayRenderer("casings/boiler_tank_pressure_low_side");
     public static final SimpleOverlayRenderer HIGH_PRESSURE_SIDE = new SimpleOverlayRenderer("casings/boiler_tank_pressure_high_side");

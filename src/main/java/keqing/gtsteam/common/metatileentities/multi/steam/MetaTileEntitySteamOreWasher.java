@@ -86,7 +86,7 @@ public class MetaTileEntitySteamOreWasher extends RecipeMapSteamMultiblockContro
     @Nonnull
     @Override
     protected ICubeRenderer getFrontOverlay() {
-        return Textures.PYROLYSE_OVEN_OVERLAY;
+        return Textures.ORE_WASHER_OVERLAY;
     }
 
     @Override

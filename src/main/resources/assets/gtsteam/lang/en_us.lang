@@ -1,16 +1,22 @@
 #配方
 recipemap.alloy_klin.name=Alloy Kiln
-recipemap.steam_ore_washer.name=Steam Ore Washer
-recipemap.steam_blast_furnace.name=Large Steam Blast Furnace
+recipemap.primitive_chemical_recipes.name=Primitive Chemical Reactor
 recipemap.lava_furnace.name=Lava Furnace
 recipemap.biomimetic_factory_recipes.name=Matter Simulacrum
 recipemap.primitive_steam_turbine.name=Primitive Steam Turbine
 recipemap.primitive_combustion_generator.name=Primitive Combustion Generator
+recipemap.primitive_semi_fluid_generator.name=Primitive Semi Fluid Generator
 #材料
 gtsteam.material.bone_ceramic_clay=Bone Ceramic Clay
+gtsteam.material.galvanized_steel=Galvanized Steel
+gtsteam.material.rubber_pulp=Rubber Pulp
+gtsteam.material.raw_rubber_whey=Raw Rubber Whey
+gtsteam.material.raw_rubber_precipitate=Raw Rubber Precipitate
 #方块
 tile.multiblock_casing.galvanized_porcelain_tiles.name=Galvanized Porcelain Tiles
 tile.multiblock_casing.tank_wall.name=Tank outer wall
+tile.multiblock_casing.reinforced_treated_wood_wall.name=Reinforcement of anticorrosive wood walls
+tile.multiblock_casing.reinforced_treated_wood_bottom.name=Reinforcement of anticorrosive wood frames
 
 tile.multiblock_casing.solar_collector.name=Solar collector tubes
 tile.multiblock_casing.low_pressure_tank.name=Low pressure boiler
@@ -51,7 +57,6 @@ gtsteam.machine.steam_centrifuge.name=Steam Centrifuge
 gtsteam.machine.steam_mixer.name=Steam Mixer
 gtsteam.machine.steam_extractor.name=Large Steam Extractor
 gtsteam.machine.steam_compressor.name=Large Steam Compressor
-gtsteam.machine.steam_blast_furnace.name=Large Blast Furnace
 gtsteam.machine.steam_sifter.name=Steam Sifter
 gtsteam.machine.steam_bender.name=Steam Bender
 gtsteam.machine.steam_wire_mill.name=Steam Wire Mill
@@ -67,23 +72,16 @@ gtsteam.machine.alloy_klin_export_hatch.name=Alloy Klin Export Hatch
 gtsteam.machine.advance_primitive_blast_furnace.name=Advance Primitive Blast Furnace
 #工业土高炉
 gtsteam.machine.industrial_primitive_blast_furnace.name=Industrial Primitive Blast Furnace
-gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace=Attached blast furnace:%s
+gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace=Attached blast furnace: %s
+gtsteam.multiblock.ip.amount.1=Temperature: %sK (maximum temperature %sK)
 
+gtsteam.machine.industrial_primitive_blast_furnace.tooltip.1=Two auxiliary blast furnaces can be expanded, and the number of auxiliary blast furnaces determines the temperature increase per second.
+gtsteam.machine.industrial_primitive_blast_furnace.tooltip.2=When the machine is not working, the temperature gradually decreases, and the cooling speed is determined by the difference between the current temperature and the minimum temperature.
+gtsteam.machine.industrial_primitive_blast_furnace.tooltip.3=For every 200K temperature increase, recipe duration is multiplied by 90%% (multiplicative).
 #高级焦炉
 gtsteam.machine.advanced_coke_oven.name=Advanced Coke Oven
-
-gtsteam.multiblock.ip1.amount=Airflow: %sL (maximum airflow %sL)
-gtsteam.multiblock.ip2.amount=Temperature: %sK (maximum temperature %sK)
-gtsteam.multiblock.ip3.amount=Time-consuming reduction - working time is reduced by %s times.
-gtsteam.multiblock.ip.threshold_decrement=§cDecrease the air volume by one unit /n§7Heat up rate by two times.
-gtsteam.multiblock.ip.threshold_increment=§aIncrease the air volume by one unit /n§7The heating rate is doubled.
-
-gtsteam.machine.industrial_primitive_blast_furnace.tooltip.1=Two auxiliary blast furnaces can be expanded, and the number of auxiliary blast furnaces determines the upper limit of air intake.
-gtsteam.machine.industrial_primitive_blast_furnace.tooltip.2=Adjusting the air volume throttle valve can control the heating rate, and the temperature will increase when the machine is working,
-gtsteam.machine.industrial_primitive_blast_furnace.tooltip.3=When the machine is not working, the temperature decreases slowly, and the cooling rate is determined by the current temperature (cooling curve).
-gtsteam.machine.industrial_primitive_blast_furnace.tooltip.4=The temperature range determines the total time reduction, and every 500 increase will increase the corresponding exponential time reduction.
-gtsteam.machine.industrial_primitive_blast_furnace.tooltip.5=Up to 10 times reduction in time spent after all upgrades are completed.
-
+#原始化反
+gtsteam.machine.primitive_chemical_reactor.name=Primitive Chemical Reactor
 #Solar Boiler
 gtsteam.machine.steam_solar_boiler.name=Solar Boiler
 gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip=Requires §f%d seconds§7 to preheat, heat increases during daytime and decreases at night or rain
@@ -128,15 +126,15 @@ gtsteam.machine.large_fluid_tank.tooltip.3=In the glass-filled position, input a
 gtsteam.machine.steam_transcendent_plasma_forge.name=Extradimensional steam forge
 gtsteam.machine.steam_biomimetic_factory.name=The Eye of Martial Virtue
 
-gtsteam.machine.scalable_storage.name=Scalable Storage Silo
+gtsteam.machine.heat_furnace.name=Heat Furnace
 
+gtsteam.machine.scalable_storage.name=Scalable Storage Silo
 gtsteam.machine.scalable_storage.capacity=Max Capacity: %s items
 gtsteam.machine.scalable_storage.stored=Stored: %s (%s/%s items - %.1f%% full)
 gtsteam.machine.scalable_storage.empty=Empty - Insert any item to set type
-
 gtsteam.machine.scalable_storage.tooltip1=Stores massive amounts of a single item type
 gtsteam.machine.scalable_storage.tooltip2=Can be upgraded to increase storage capacity and add functionality
-tile.scalable_storage_controller.tooltip=源项目：ScalableStorageCEu Author: iristhpianist
+tile.scalable_storage_controller.tooltip=Source project：ScalableStorageCEu Author: iristhpianist
 # Machine Names and Tooltips
 gtsteam.machine.electric_furnace.ulv.name=Simple Electric Furnace
 gtsteam.machine.electric_furnace.ulv.tooltip=A Simple electric furnace for smelting items.
@@ -199,4 +197,6 @@ gtsteam.machine.steam_turbine.ulv.tooltip=A Simple steam turbine for generating 
 gtsteam.machine.combustion_generator.ulv.name=Simple Combustion Generator
 gtsteam.machine.combustion_generator.ulv.tooltip=A Simple combustion generator for generating power.
 
+gtsteam.machine.semi_fluid_generator.ulv.name=Simple Semi Fluid Generator
+gtsteam.machine.semi_fluid_generator.ulv.tooltip=Not a fermentation tank
 # top

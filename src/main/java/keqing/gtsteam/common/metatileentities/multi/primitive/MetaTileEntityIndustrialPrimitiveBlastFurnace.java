@@ -1,10 +1,6 @@
 package keqing.gtsteam.common.metatileentities.multi.primitive;
 
 import gregtech.api.GTValues;
-import gregtech.api.gui.GuiTextures;
-import gregtech.api.gui.Widget;
-import gregtech.api.gui.widgets.ClickButtonWidget;
-import gregtech.api.gui.widgets.WidgetGroup;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
@@ -17,6 +13,8 @@ import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.pattern.MultiblockShapeInfo;
 import gregtech.api.pattern.PatternMatchContext;
 import gregtech.api.recipes.RecipeMap;
+import gregtech.api.recipes.logic.OCResult;
+import gregtech.api.recipes.properties.RecipePropertyStorage;
 import gregtech.api.unification.material.Materials;
 import gregtech.api.util.GTUtility;
 import gregtech.api.util.KeyUtil;
@@ -24,7 +22,6 @@ import gregtech.api.util.tooltips.InformationHandler;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
-import gregtech.client.utils.TooltipHelper;
 import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.BlockMetalCasing;
@@ -43,13 +40,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,8 +56,10 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
     private static final gregtech.api.pattern.TraceabilityPredicate SNOW_PREDICATE = new gregtech.api.pattern.TraceabilityPredicate(
             bws -> GTUtility.isBlockSnow(bws.getBlockState()));
 
-    int thresholdPercentage = 1;
-    int Temp = 3000;
+    int TEMP = 300;
+    int MIN_TEMP = 300;
+    int MAX_TEMP = 1500;
+
     private byte auxiliaryBlastFurnaceNumber = 0;
 
     public MetaTileEntityIndustrialPrimitiveBlastFurnace(ResourceLocation metaTileEntityId) {
@@ -86,49 +84,18 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
-        data.setInteger("Temp", Temp);
-        data.setInteger("thresholdPercentage", thresholdPercentage);
+        data.setInteger("Temp", TEMP);
         return super.writeToNBT(data);
     }
 
     public void readFromNBT(NBTTagCompound data) {
         super.readFromNBT(data);
-        Temp = data.getInteger("Temp");
-        thresholdPercentage = data.getInteger("thresholdPercentage");
+        TEMP = data.getInteger("Temp");
     }
 
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity iGregTechTileEntity) {
         return new MetaTileEntityIndustrialPrimitiveBlastFurnace(metaTileEntityId);
-    }
-
-    @Override
-    @Nonnull
-    protected Widget getFlexButton(int x, int y, int width, int height) {
-        WidgetGroup group = new WidgetGroup(x, y, width, height);
-        group.addWidget(new ClickButtonWidget(0, 0, 9, 18, "", this::decrementThreshold)
-                .setButtonTexture(GuiTextures.BUTTON_THROTTLE_MINUS)
-                .setTooltipText("gtsteam.multiblock.ip.threshold_decrement"));
-        group.addWidget(new ClickButtonWidget(9, 0, 9, 18, "", this::incrementThreshold)
-                .setButtonTexture(GuiTextures.BUTTON_THROTTLE_PLUS)
-                .setTooltipText("gtsteam.multiblock.ip.threshold_increment"));
-        return group;
-    }
-
-    private void incrementThreshold(Widget.ClickData clickData) {
-        if (auxiliaryBlastFurnaceNumber == 0)
-            this.thresholdPercentage = MathHelper.clamp(thresholdPercentage, 1, 1);
-        if (auxiliaryBlastFurnaceNumber == 1)
-            this.thresholdPercentage = MathHelper.clamp(thresholdPercentage + 1, 1, 3);
-        else this.thresholdPercentage = MathHelper.clamp(thresholdPercentage + 1, 1, 4);
-    }
-
-    private void decrementThreshold(Widget.ClickData clickData) {
-        if (auxiliaryBlastFurnaceNumber == 0)
-            this.thresholdPercentage = MathHelper.clamp(thresholdPercentage, 1, 1);
-        if (auxiliaryBlastFurnaceNumber == 1)
-            this.thresholdPercentage = MathHelper.clamp(thresholdPercentage - 1, 1, 3);
-        else this.thresholdPercentage = MathHelper.clamp(thresholdPercentage - 1, 1, 4);
     }
 
     @Override
@@ -191,33 +158,20 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
         return Textures.PRIMITIVE_BLAST_FURNACE_OVERLAY;
     }
 
-    public int cost() {
-        if (Temp > 2500) return 10;
-        if (Temp > 2000) return 8;
-        if (Temp > 1500) return 6;
-        if (Temp > 1000) return 4;
-        if (Temp > 500) return 2;
-        return 1;
-    }
-
     @Override
     public void addCustomCapacity(KeyManager keyManager, UISyncer syncer) {
-        keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.multiblock.ip1.amount", syncer.syncInt(thresholdPercentage * 10), 40));
-        keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.multiblock.ip2.amount", syncer.syncInt(Temp / 10), 3000));
-        keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.multiblock.ip3.amount", syncer.syncInt(cost())));
+        keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.multiblock.ip.amount.1", syncer.syncInt(TEMP), MAX_TEMP));
         keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace", syncer.syncInt(auxiliaryBlastFurnaceNumber)));
     }
 
     @Override
     public void addInformation(ItemStack stack, World player, List<String> tooltip, boolean advanced) {
-        InformationHandler.topTooltips("跨纬度等泥土子锻炉", tooltip);
+        InformationHandler.topTooltips("前期批发钢材的最好选择", tooltip);
         super.addInformation(stack, player, tooltip, advanced);
         TooltipBuilder.create().addSpecialLogic().build(this, tooltip);
         tooltip.add(I18n.format("gtsteam.machine.industrial_primitive_blast_furnace.tooltip.1"));
         tooltip.add(I18n.format("gtsteam.machine.industrial_primitive_blast_furnace.tooltip.2"));
         tooltip.add(I18n.format("gtsteam.machine.industrial_primitive_blast_furnace.tooltip.3"));
-        tooltip.add(I18n.format("gtsteam.machine.industrial_primitive_blast_furnace.tooltip.4"));
-        tooltip.add(I18n.format("gtsteam.machine.industrial_primitive_blast_furnace.tooltip.5"));
     }
 
     @Override
@@ -262,12 +216,16 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
     @Override
     public void update() {
         super.update();
-        if (Temp > 3000 && Temp <= 12000) Temp--;
-        if (Temp > 12000 && Temp <= 21000) Temp = Temp - 2;
-        if (Temp > 21000 && Temp <= 30000) Temp = Temp - 3;
+        if (TEMP > MIN_TEMP) {
+            if (TEMP > 300) TEMP--;
+            if (TEMP > 600) TEMP -= 2;
+            if (TEMP > 900) TEMP = TEMP - 3;
+            TEMP = Math.max(MIN_TEMP, TEMP);
+        }
+
 
         if (this.isActive()) {
-            if (getWorld().isRemote) {
+            if (getOffsetTimer() % 20 == 0 && getWorld().isRemote) {
                 pollutionParticles();
             }
         }
@@ -293,6 +251,11 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
         this.getWorld().spawnParticle(EnumParticleTypes.SMOKE_LARGE, xPos, yPos, zPos, xSpd, ySpd, zSpd);
     }
 
+    @Override
+    public GTGuiTheme getUITheme() {
+        return GTGuiTheme.BRONZE;
+    }
+
     protected class IndustrialPrimitiveBlastFurnaceLogic extends NoEnergyMultiblockRecipeLogic {
 
         public IndustrialPrimitiveBlastFurnaceLogic(NoEnergyMultiblockController tileEntity, RecipeMap<?> recipeMap) {
@@ -300,24 +263,41 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
         }
 
         @Override
-        public void setMaxProgress(int maxProgress) {
-            super.setMaxProgress(maxProgress / cost());
+        protected void modifyOverclockPost(@NotNull OCResult ocResult, @NotNull RecipePropertyStorage storage) {
+            super.modifyOverclockPost(ocResult, storage);
+
+            // 计算基于温度的倍数
+            double baseMultiplier = 1.0;
+
+            // 每高出基础温度200度，耗时减少10%（相当于乘以0.9）
+            int currentTemp = TEMP; // 当前温度
+
+            if (currentTemp > MIN_TEMP) {
+                int tempDifference = currentTemp - MIN_TEMP;
+                int bonusCount = tempDifference / 200; // 每200度一次加速
+
+                // 每次加速使耗时变为原来的90%
+                baseMultiplier = Math.pow(0.9, bonusCount);
+            }
+
+            int newDuration = (int) (ocResult.duration() * baseMultiplier);
+            ocResult.setDuration(newDuration);
         }
 
+        @Override
         protected void updateRecipeProgress() {
             if (canRecipeProgress) {
-                if (Temp < 30000)
-                    Temp = Math.min(Temp + thresholdPercentage, (auxiliaryBlastFurnaceNumber + 1) * 10000);
+                //持续工作温度增加
+                if (getOffsetTimer() % 20 == 0) {
+                    if (TEMP < MAX_TEMP) {
+                        TEMP += (auxiliaryBlastFurnaceNumber * 2 + 1);
+                        TEMP = Math.min(MAX_TEMP, TEMP);
+                    }
+                }
                 if (++progressTime > maxProgressTime) {
                     completeRecipe();
                 }
             }
-
         }
-    }
-
-    @Override
-    public GTGuiTheme getUITheme() {
-        return GTGuiTheme.BRONZE;
     }
 }

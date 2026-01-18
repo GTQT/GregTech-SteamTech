@@ -91,7 +91,7 @@ public class MetaTileEntitySteamExtractor extends RecipeMapSteamMultiblockContro
     @SideOnly(Side.CLIENT)
     @Override
     protected ICubeRenderer getFrontOverlay() {
-        return Textures.EXTRACTOR_OVERLAY;
+        return Textures.ELECTRIC_FURNACE_OVERLAY;
     }
 
     @Override

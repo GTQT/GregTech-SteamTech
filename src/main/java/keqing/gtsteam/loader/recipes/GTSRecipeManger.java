@@ -11,5 +11,7 @@ public class GTSRecipeManger {
         MiscRecipes.init();
         BiomimeticFactoryRecipes.init();
         CeramicChain.init();
+        GalvanizedSteelLine.init();
+        RubberChain.init();
     }
 }

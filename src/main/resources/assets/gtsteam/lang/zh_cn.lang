@@ -1,16 +1,22 @@
 #配方
 recipemap.alloy_klin.name=合金窑
-recipemap.steam_ore_washer.name=蒸汽洗矿厂
-recipemap.steam_blast_furnace.name=大型蒸汽高炉
+recipemap.primitive_chemical_recipes.name=原始化学反应
 recipemap.lava_furnace.name=熔岩炉
 recipemap.biomimetic_factory_recipes.name=物质拟生
 recipemap.primitive_steam_turbine.name=原始蒸汽轮机燃料
 recipemap.primitive_combustion_generator.name=原始燃气轮机燃料
+recipemap.primitive_semi_fluid_generator.name=原始半流质轮机燃料
 #材料
 gtsteam.material.bone_ceramic_clay=骨陶瓷粘土
+gtsteam.material.galvanized_steel=镀锌钢
+gtsteam.material.rubber_pulp=橡胶浆料
+gtsteam.material.raw_rubber_whey=生橡胶乳清液
+gtsteam.material.raw_rubber_precipitate=生橡胶沉淀
 #方块
 tile.multiblock_casing.galvanized_porcelain_tiles.name=镀锌瓷瓦砖
 tile.multiblock_casing.tank_wall.name=储罐外壁
+tile.multiblock_casing.reinforced_treated_wood_wall.name=加固防腐木缸壁
+tile.multiblock_casing.reinforced_treated_wood_bottom.name=加固防腐木框架
 
 tile.multiblock_casing.solar_collector.name=太阳能集热管
 tile.multiblock_casing.low_pressure_tank.name=低压锅炉
@@ -51,7 +57,6 @@ gtsteam.machine.steam_centrifuge.name=蒸汽离心机
 gtsteam.machine.steam_mixer.name=蒸汽搅拌机
 gtsteam.machine.steam_extractor.name=大型蒸汽提取机
 gtsteam.machine.steam_compressor.name=大型蒸汽压缩机
-gtsteam.machine.steam_blast_furnace.name=大型蒸汽高炉
 gtsteam.machine.steam_sifter.name=蒸汽筛选机
 gtsteam.machine.steam_bender.name=蒸汽卷板机
 gtsteam.machine.steam_wire_mill.name=蒸汽线材轧机
@@ -68,22 +73,15 @@ gtsteam.machine.advance_primitive_blast_furnace.name=强化土高炉
 #工业土高炉
 gtsteam.machine.industrial_primitive_blast_furnace.name=工业级土高炉
 gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace=附属高炉： %s 座
+gtsteam.multiblock.ip.amount.1=温度：%sK(最高温度 %s K)
 
+gtsteam.machine.industrial_primitive_blast_furnace.tooltip.1=可拓展两个附属高炉，附属高炉数量决定每秒提升的温度。
+gtsteam.machine.industrial_primitive_blast_furnace.tooltip.2=当机器不工作时温度会缓缓降低,降温速度由当前温度与最低温度的差决定决定。
+gtsteam.machine.industrial_primitive_blast_furnace.tooltip.3=温度每提升200K，配方耗时*90%%（乘算）。
 #高级焦炉
 gtsteam.machine.advanced_coke_oven.name=高级焦炉
-
-gtsteam.multiblock.ip1.amount=风量：%sL(风量上限 %s L)
-gtsteam.multiblock.ip2.amount=温度：%sK(最高温度 %s K)
-gtsteam.multiblock.ip3.amount=耗时减免-工作时间缩短%s倍。
-gtsteam.multiblock.ip.threshold_decrement=§c降低一单位风量 /n§7升温速度降低一倍。
-gtsteam.multiblock.ip.threshold_increment=§a增加一单位风量 /n§7升温速度增加一倍。
-
-gtsteam.machine.industrial_primitive_blast_furnace.tooltip.1=可拓展两个附属高炉，附属高炉数量决定进风量上限。
-gtsteam.machine.industrial_primitive_blast_furnace.tooltip.2=调节风量节流阀可以控制升温速率,机器工作时会增加温度，
-gtsteam.machine.industrial_primitive_blast_furnace.tooltip.3=当机器不工作时温度会缓缓降低,降温速度由当前温度决定（降温曲线）。
-gtsteam.machine.industrial_primitive_blast_furnace.tooltip.4=温度区间决定定总耗时减免，上升每500会增加对应指数倍的耗时减免。
-gtsteam.machine.industrial_primitive_blast_furnace.tooltip.5=全部升级完毕后最高十倍耗时减免。
-
+#原始化反
+gtsteam.machine.primitive_chemical_reactor.name=原始化反
 #太阳能锅炉
 gtsteam.machine.steam_solar_boiler.name=太阳能锅炉
 gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip=需要§f%d秒§7预热,白天时热量上升，夜晚或下雨热量下降
@@ -126,6 +124,8 @@ gtsteam.machine.steam_fermentation_vat.name=蒸汽发酵池
 
 gtsteam.machine.steam_transcendent_plasma_forge.name=超维度蒸汽锻炉
 gtsteam.machine.steam_biomimetic_factory.name=武德之眼
+
+gtsteam.machine.heat_furnace.name=热力熔炉
 
 gtsteam.machine.scalable_storage.name=可扩展存储筒仓
 gtsteam.machine.scalable_storage.capacity=最大容量：%s 个物品
@@ -195,5 +195,8 @@ gtsteam.machine.steam_turbine.ulv.tooltip=烧开水发电
 
 gtsteam.machine.combustion_generator.ulv.name=简易内燃发电机
 gtsteam.machine.combustion_generator.ulv.tooltip=吃燃料吐电火花
+
+gtsteam.machine.semi_fluid_generator.ulv.name=简易半流质发电机
+gtsteam.machine.semi_fluid_generator.ulv.tooltip=并不是发酵池
 
 # top

@@ -1,9 +1,5 @@
 package keqing.gtsteam;
 
-import gregtech.api.GregTechAPI;
-import gregtech.api.metatileentity.registry.MTEManager;
-import gregtech.common.ConfigHolder;
-import gregtech.datafix.migration.lib.MTERegistriesMigrator;
 import keqing.gtsteam.client.ClientProxy;
 import keqing.gtsteam.common.CommonProxy;
 import keqing.gtsteam.common.block.GTSteamMetaBlocks;

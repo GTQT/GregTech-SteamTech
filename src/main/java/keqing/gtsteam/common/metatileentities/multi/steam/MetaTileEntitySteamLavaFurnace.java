@@ -44,9 +44,9 @@ public class MetaTileEntitySteamLavaFurnace extends RecipeMapSteamMultiblockCont
     @Override
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
-                .aisle("XXX", "CCC", "CCC")
-                .aisle("XXX", "C#C", "CCC")
-                .aisle("XXX", "CSC", "CCC")
+                .aisle("XXX", "CCC", "#C#")
+                .aisle("XCX", "C#C", "CCC")
+                .aisle("XXX", "CSC", "#C#")
                 .where('S', selfPredicate())
                 .where('X', states(getFireboxState())
                         .or(autoAbilities(true, false, false, false, false, false, false).setMinGlobalLimited(1)

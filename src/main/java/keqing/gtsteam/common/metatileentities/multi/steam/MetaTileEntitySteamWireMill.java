@@ -84,7 +84,7 @@ public class MetaTileEntitySteamWireMill extends RecipeMapSteamMultiblockControl
     @SideOnly(Side.CLIENT)
     @Override
     protected ICubeRenderer getFrontOverlay() {
-        return Textures.WIREMILL_OVERLAY;
+        return Textures.ELECTRIC_FURNACE_OVERLAY;
     }
 
     @Override

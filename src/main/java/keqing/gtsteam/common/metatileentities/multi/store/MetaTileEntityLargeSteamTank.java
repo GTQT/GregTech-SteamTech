@@ -118,9 +118,9 @@ public class MetaTileEntityLargeSteamTank extends MultiblockWithDisplayBase {
     protected @NotNull BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
                 .aisle(" AAA ", " ABA ", " ABA ", " A A ", " A A ", " A A ", " CCC ")
-                .aisle("AAAAA", "ADEDA", "ADDDA", "ADFDA", "ADFDA", "ADFDA", "C D C")
+                .aisle("A A A", "ADEDA", "ADDDA", "ADFDA", "ADFDA", "ADFDA", "C D C")
                 .aisle("AAAAA", "BEEEB", "BDEDB", " F F ", " F F ", " F F ", "CDBDC")
-                .aisle("AAAAA", "ADEDA", "ADDDA", "ADFDA", "ADFDA", "ADFDA", "C D C")
+                .aisle("A A A", "ADEDA", "ADDDA", "ADFDA", "ADFDA", "ADFDA", "C D C")
                 .aisle(" AAA ", " AGA ", " ABA ", " A A ", " A A ", " A A ", " CCC ")
                 .where('A', states(getFrameState()))
                 .where('B', states(getCasingState()).or(metaTileEntities(getValve()).setMaxGlobalLimited(2)))

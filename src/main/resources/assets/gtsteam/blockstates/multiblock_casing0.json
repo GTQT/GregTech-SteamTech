@@ -19,6 +19,20 @@
         "textures": {
           "all": "gregtech:blocks/casings/tank_wall"
         }
+      },
+      "reinforced_treated_wood_wall": {
+        "model": "minecraft:cube_all",
+        "textures": {
+          "all": "gregtech:blocks/casings/reinforced_treated_wood_wall"
+        }
+      },
+      "reinforced_treated_wood_bottom": {
+        "model": "minecraft:cube_bottom_top",
+        "textures": {
+          "top": "gregtech:blocks/casings/reinforced_treated_wood_wall",
+          "side": "gregtech:blocks/casings/reinforced_treated_wood_bottom",
+          "bottom": "#top"
+        }
       }
     }
   }

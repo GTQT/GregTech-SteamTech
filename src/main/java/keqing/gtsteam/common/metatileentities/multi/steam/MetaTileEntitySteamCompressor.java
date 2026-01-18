@@ -67,7 +67,7 @@ public class MetaTileEntitySteamCompressor extends RecipeMapSteamMultiblockContr
     @SideOnly(Side.CLIENT)
     @Override
     protected ICubeRenderer getFrontOverlay() {
-        return Textures.COMPRESSOR_OVERLAY;
+        return Textures.ELECTRIC_FURNACE_OVERLAY;
     }
 
     @Override

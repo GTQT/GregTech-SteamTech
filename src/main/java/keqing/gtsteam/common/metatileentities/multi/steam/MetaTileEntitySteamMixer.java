@@ -86,7 +86,7 @@ public class MetaTileEntitySteamMixer extends RecipeMapSteamMultiblockController
     @SideOnly(Side.CLIENT)
     @Override
     protected ICubeRenderer getFrontOverlay() {
-        return Textures.MIXER_OVERLAY;
+        return Textures.ELECTRIC_FURNACE_OVERLAY;
     }
 
     @Override

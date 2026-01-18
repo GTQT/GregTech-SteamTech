@@ -362,10 +362,7 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
                 }
             }
             pattern = pattern.aisle(str.toString());
-
-            System.out.println(str);
         }
-        System.out.println("-----");
 
         return pattern
                 .where('S', selfPredicate())

@@ -45,7 +45,7 @@ public class MetaTileEntitySteamAlloyFurnace extends RecipeMapSteamMultiblockCon
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
                 .aisle("XXX", "CCC", "CCC")
-                .aisle("XXX", "C#C", "CCC")
+                .aisle("XCX", "C#C", "CCC")
                 .aisle("XXX", "CSC", "CCC")
                 .where('S', selfPredicate())
                 .where('X', states(getFireboxState())

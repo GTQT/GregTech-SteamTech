@@ -77,7 +77,7 @@ public class MetaTileEntitySteamCentrifuge extends RecipeMapSteamMultiblockContr
     @SideOnly(Side.CLIENT)
     @Override
     protected ICubeRenderer getFrontOverlay() {
-        return Textures.CENTRIFUGE_OVERLAY;
+        return Textures.ELECTRIC_FURNACE_OVERLAY;
     }
 
     @Override

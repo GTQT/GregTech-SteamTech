@@ -86,7 +86,7 @@ public class MetaTileEntitySteamSifter extends RecipeMapSteamMultiblockControlle
     @SideOnly(Side.CLIENT)
     @Override
     protected ICubeRenderer getFrontOverlay() {
-        return Textures.SIFTER_OVERLAY;
+        return Textures.ELECTRIC_FURNACE_OVERLAY;
     }
 
     @Override

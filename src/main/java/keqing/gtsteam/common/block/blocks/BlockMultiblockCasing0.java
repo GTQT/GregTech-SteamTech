@@ -32,7 +32,11 @@ public class BlockMultiblockCasing0 extends VariantBlock<BlockMultiblockCasing0.
         //镀锌瓷瓦砖
         GALVANIZED_PORCELAIN_TILES("galvanized_porcelain_tiles"),
         //蓄水器壁板
-        TANK_WALL("tank_wall");
+        TANK_WALL("tank_wall"),
+        //防腐木 框架
+        REINFORCED_TREATED_WOOD_WALL("reinforced_treated_wood_wall"),
+        REINFORCED_TREATED_WOOD_BOTTOM("reinforced_treated_wood_bottom");
+
 
         private final String name;
 
