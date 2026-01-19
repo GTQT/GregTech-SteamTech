@@ -127,6 +127,7 @@ gtsteam.machine.steam_transcendent_plasma_forge.name=Extradimensional steam forg
 gtsteam.machine.steam_biomimetic_factory.name=The Eye of Martial Virtue
 
 gtsteam.machine.heat_furnace.name=Heat Furnace
+gtsteam.machine.heat_alloy_furnace.name=Heat Alloy Furnace
 
 gtsteam.machine.scalable_storage.name=Scalable Storage Silo
 gtsteam.machine.scalable_storage.capacity=Max Capacity: %s items

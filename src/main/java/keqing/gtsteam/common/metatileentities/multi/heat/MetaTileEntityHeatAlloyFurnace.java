@@ -10,43 +10,38 @@ import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
-
 import gregtech.client.renderer.texture.Textures;
-
 import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.core.sound.GTSoundEvents;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class MetaTileEntityHeatFurnace extends HeatMultiblockController {
+public class MetaTileEntityHeatAlloyFurnace extends HeatMultiblockController {
 
     private static final int PARALLEL_LIMIT = 16;
 
-    public MetaTileEntityHeatFurnace(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, RecipeMaps.FURNACE_RECIPES);
+    public MetaTileEntityHeatAlloyFurnace(ResourceLocation metaTileEntityId) {
+        super(metaTileEntityId, RecipeMaps.ALLOY_SMELTER_RECIPES);
         recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 
     @Override
     protected @NotNull BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
-                .aisle("FFF", "CCC", "#C#")
-                .aisle("FCF", "C#C", "#M#")
-                .aisle("FFF", "CSC", "#C#")
+                .aisle("FFF", "CCC", "CCC")
+                .aisle("FCF", "C#C", "CMC")
+                .aisle("FFF", "CSC", "CCC")
                 .where('S', selfPredicate())
                 .where('C', states(getCasingState())
                         .or(abilities(MultiblockAbility.EXPORT_ITEMS).setMinGlobalLimited(1).setMaxGlobalLimited(3))
@@ -69,7 +64,7 @@ public class MetaTileEntityHeatFurnace extends HeatMultiblockController {
 
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity tileEntity) {
-        return new MetaTileEntityHeatFurnace(metaTileEntityId);
+        return new MetaTileEntityHeatAlloyFurnace(metaTileEntityId);
     }
 
     @SideOnly(Side.CLIENT)

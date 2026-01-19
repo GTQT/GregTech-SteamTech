@@ -11,6 +11,7 @@ import gregtech.common.metatileentities.electric.SimpleMachineMetaTileEntityResi
 import keqing.gtsteam.common.metatileentities.multi.generator.MetaTileEntityPrimitiveBoiler;
 import keqing.gtsteam.common.metatileentities.multi.generator.MetaTileEntitySteamSolarBoiler;
 import keqing.gtsteam.common.metatileentities.multi.generator.PrimitiveBoilerType;
+import keqing.gtsteam.common.metatileentities.multi.heat.MetaTileEntityHeatAlloyFurnace;
 import keqing.gtsteam.common.metatileentities.multi.heat.MetaTileEntityHeatFurnace;
 import keqing.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnExportHatch;
 import keqing.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnImportHatch;
@@ -54,6 +55,7 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntitySteamFermentationVat STEAM_FERMENTATION_VAT;
 
     public static MetaTileEntityHeatFurnace HEAT_FURNACE;
+    public static MetaTileEntityHeatAlloyFurnace HEAT_ALLOY_FURNACE;
 
     public static MetaTileEntitySteamSolarBoiler STEAM_SOLAR_BOILER;
     public static MetaTileEntityPrimitiveBoiler LOW_PRESSURE_SOLID_BOILER;
@@ -143,6 +145,7 @@ public class GTSteamMetaTileEntities {
 
         // ID 70：
         HEAT_FURNACE = registerMetaTileEntity(70, new MetaTileEntityHeatFurnace(gtsId("heat_furnace")));
+        HEAT_ALLOY_FURNACE = registerMetaTileEntity(71, new MetaTileEntityHeatAlloyFurnace(gtsId("heat_alloy_furnace")));
 
         //单方块ULV
         ELECTRIC_FURNACE = registerMetaTileEntity(100, new SimpleMachineMetaTileEntity(gtsId("electric_furnace.ulv"), RecipeMaps.FURNACE_RECIPES, Textures.FURNACE_OVERLAY, 0, false));

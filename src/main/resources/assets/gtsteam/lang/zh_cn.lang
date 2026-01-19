@@ -126,6 +126,7 @@ gtsteam.machine.steam_transcendent_plasma_forge.name=超维度蒸汽锻炉
 gtsteam.machine.steam_biomimetic_factory.name=武德之眼
 
 gtsteam.machine.heat_furnace.name=热力熔炉
+gtsteam.machine.heat_alloy_furnace.name=热力合金炉
 
 gtsteam.machine.scalable_storage.name=可扩展存储筒仓
 gtsteam.machine.scalable_storage.capacity=最大容量：%s 个物品
