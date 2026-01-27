@@ -11,7 +11,7 @@ import com.cleanroommc.modularui.drawable.Rectangle;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.utils.Color;
 import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
-import com.cleanroommc.modularui.value.sync.IntSyncValue;
+import com.cleanroommc.modularui.value.sync.LongSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
@@ -19,15 +19,17 @@ import com.cleanroommc.modularui.widgets.SliderWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import gregtech.api.capability.IControllable;
-import gregtech.api.capability.ISteamMachine;
-import gregtech.api.capability.impl.BoilerRecipeLogic;
-import gregtech.api.capability.impl.CommonFluidFilters;
+import gregtech.api.capability.IHeatMachine;
+import gregtech.api.capability.IHeatable;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.capability.impl.ItemHandlerList;
 import gregtech.api.metatileentity.MTETrait;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
-import gregtech.api.metatileentity.multiblock.*;
+import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.MultiblockAbility;
+import gregtech.api.metatileentity.multiblock.MultiblockWithDisplayBase;
+import gregtech.api.metatileentity.multiblock.ProgressBarMultiblock;
 import gregtech.api.metatileentity.multiblock.ui.*;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuiTheme;
@@ -41,9 +43,6 @@ import gregtech.api.util.tooltips.AbstractTooltipComponent;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
-import gregtech.client.utils.TooltipHelper;
-import gregtech.common.metatileentities.multi.BoilerType;
-import gregtech.common.metatileentities.multi.MetaTileEntityLargeBoiler;
 import gregtech.core.sound.GTSoundEvents;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -53,7 +52,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -67,21 +65,24 @@ import java.util.function.UnaryOperator;
 import static keqing.gtsteam.common.metatileentities.multi.generator.PrimitiveBoilerType.*;
 
 public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase implements ProgressBarMultiblock,
-        IControllable, ISteamMachine {
+        IControllable, IHeatMachine {
 
     public final PrimitiveBoilerType boilerType;
     protected PrimitiveBoilerRecipeLogic recipeLogic;
+    List<IHeatable> heatHatch = null;
     private FluidTankList fluidImportInventory;
     private ItemHandlerList itemImportInventory;
-    private FluidTankList steamOutputTank;
-
     private int throttlePercentage = 100;
 
     public MetaTileEntityPrimitiveBoiler(ResourceLocation metaTileEntityId, PrimitiveBoilerType boilerType) {
         super(metaTileEntityId);
         this.boilerType = boilerType;
-        this.recipeLogic = new PrimitiveBoilerRecipeLogic(this);
+        this.recipeLogic = new PrimitiveBoilerRecipeLogic(this, boilerType.isHighPressure());
         resetTileAbilities();
+    }
+
+    public List<IHeatable> getHeatHatch() {
+        return heatHatch;
     }
 
     @Override
@@ -106,13 +107,16 @@ public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase imp
     private void initializeAbilities() {
         this.fluidImportInventory = new FluidTankList(true, getAbilities(MultiblockAbility.IMPORT_FLUIDS));
         this.itemImportInventory = new ItemHandlerList(getAbilities(MultiblockAbility.IMPORT_ITEMS));
-        this.steamOutputTank = new FluidTankList(true, getAbilities(MultiblockAbility.EXPORT_FLUIDS));
+
+        if (!getAbilities(MultiblockAbility.OUTPUT_HEAT).isEmpty())
+            this.heatHatch = getAbilities(MultiblockAbility.OUTPUT_HEAT);
+        else this.heatHatch = null;
     }
 
     private void resetTileAbilities() {
         this.fluidImportInventory = new FluidTankList(true);
         this.itemImportInventory = new ItemHandlerList(Collections.emptyList());
-        this.steamOutputTank = new FluidTankList(true);
+        this.heatHatch = null;
     }
 
     private TextFormatting getNumberColor(int number) {
@@ -138,11 +142,9 @@ public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase imp
     protected void configureWarningText(MultiblockUIBuilder builder) {
         super.configureWarningText(builder);
         builder.addCustom((manager, syncer) -> {
-            if (isStructureFormed() && syncer.syncBoolean(getWaterFilled() == 0)) {
+            if (isStructureFormed() && syncer.syncBoolean(getHeatStored() == 0)) {
                 manager.add(KeyUtil.lang(TextFormatting.YELLOW,
-                        "gregtech.multiblock.large_boiler.no_water"));
-                manager.add(KeyUtil.lang(TextFormatting.GRAY,
-                        "gregtech.multiblock.large_boiler.explosion_tooltip"));
+                        "gregtech.multiblock.heat_multiblock.no_heat"));
             }
         });
     }
@@ -175,16 +177,16 @@ public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase imp
 
     private void addCustomData(KeyManager keyManager, UISyncer syncer) {
         if (isStructureFormed()) {
-            int steam = syncer.syncInt(recipeLogic.getLastTickSteam());
+            int heat = syncer.syncInt(recipeLogic.getLastTickHeat());
             int heatScaled = syncer.syncInt(recipeLogic.getHeatScaled());
             int throttleAmt = syncer.syncInt(getThrottle());
 
             // Steam Output line
             IKey steamOutput = KeyUtil.number(TextFormatting.AQUA,
-                    steam, " L/t");
+                    heat, " HU/t");
 
             keyManager.add(KeyUtil.lang(TextFormatting.GRAY,
-                    "gregtech.multiblock.large_boiler.steam_output", steamOutput));
+                    "热产量：%s", steamOutput));
 
             // Efficiency line
             IKey efficiency = KeyUtil.number(
@@ -265,12 +267,12 @@ public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase imp
                                 .background(GTGuiTextures.DISPLAY)));
     }
 
-    private void setThrottlePercentage(int amount) {
-        this.throttlePercentage = Math.max(20, Math.min(amount, 100));
-    }
-
     private int getThrottlePercentage() {
         return this.throttlePercentage;
+    }
+
+    private void setThrottlePercentage(int amount) {
+        this.throttlePercentage = Math.max(20, Math.min(amount, 100));
     }
 
     @Override
@@ -280,24 +282,41 @@ public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase imp
 
     @Override
     protected BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start()
-                .aisle("XXX", "CCC", "CCC", "CCC")
-                .aisle("XXX", "C C", "C C", "CCC")
-                .aisle("XXX", "CSC", "CCC", "CCC")
-                .where('S', selfPredicate())
-                .where('X', states(boilerType.fireboxState).setMinGlobalLimited(4)
-                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setMinGlobalLimited(1, 1))
-                        // setting this to max 2 makes the import fluids max 2 for some reason
-                        .or(abilities(MultiblockAbility.IMPORT_ITEMS).setMaxGlobalLimited(2, 1)))
-                .where('C', states(boilerType.casingState).setMinGlobalLimited(20)
-                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMinGlobalLimited(1)))
-                .where(' ', air())
-                .build();
+        if (boilerType == LOW_PRESSURE_SOLID || boilerType == HIGH_PRESSURE_SOLID) {
+            return FactoryBlockPattern.start()
+                    .aisle("XXX", "CCC", "CCC", "CCC")
+                    .aisle("XXX", "C C", "C C", "CCC")
+                    .aisle("XXX", "CSC", "CCC", "CCC")
+                    .where('S', selfPredicate())
+                    .where('X', states(boilerType.fireboxState)
+                            .or(abilities(MultiblockAbility.IMPORT_ITEMS).setExactLimit(1))
+                    )
+                    .where('C', states(boilerType.casingState)
+                            .or(abilities(MultiblockAbility.OUTPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(6)))
+                    .where(' ', air())
+                    .build();
+        } else {
+            return FactoryBlockPattern.start()
+                    .aisle("XXX", "CCC", "CCC", "CCC")
+                    .aisle("XXX", "C C", "C C", "CCC")
+                    .aisle("XXX", "CSC", "CCC", "CCC")
+                    .where('S', selfPredicate())
+                    .where('X', states(boilerType.fireboxState)
+                            .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setExactLimit(1))
+                    )
+                    .where('C', states(boilerType.casingState)
+                            .or(abilities(MultiblockAbility.OUTPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(6)))
+                    .where(' ', air())
+                    .build();
+        }
+
     }
+
     @Override
     public boolean hasMaintenanceMechanics() {
         return false;
     }
+
     @Override
     public boolean hasMufflerMechanics() {
         return false;
@@ -305,7 +324,7 @@ public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase imp
 
     @Override
     public String[] getDescription() {
-        return new String[] { I18n.format("gregtech.multiblock.large_boiler.description") };
+        return new String[]{I18n.format("gregtech.multiblock.large_boiler.description")};
     }
 
     @Override
@@ -321,20 +340,6 @@ public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase imp
             tooltip.add(I18n.format("只运行固体配方，无法运行流体配方"));
         }
         TooltipBuilder.create().add(new BoilerInformation()).build(this, tooltip);
-    }
-
-    public class BoilerInformation extends AbstractTooltipComponent {
-
-        @Override
-        public void addInformation(MultiblockControllerBase metaTileEntity, List<String> tooltip) {
-            tooltip.add(I18n.format("gregtech.multiblock.large_boiler.rate_tooltip",
-                    TextFormattingUtil
-                            .formatNumbers((int) (boilerType.steamPerTick() * 20 * boilerType.runtimeBoost(200) / 20.0))));
-            tooltip.add(
-                    I18n.format("gregtech.multiblock.large_boiler.heat_time_tooltip", boilerType.getTicksToBoiling() / 20));
-            tooltip.add(I18n.format("gregtech.universal.tooltip.base_production_fluid", boilerType.steamPerTick()));
-            tooltip.add(TooltipHelper.BLINKING_RED + I18n.format("gregtech.multiblock.large_boiler.explosion_tooltip"));
-        }
     }
 
     @Override
@@ -413,13 +418,8 @@ public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase imp
     }
 
     @Override
-    public FluidTankList getExportFluids() {
-        return steamOutputTank;
-    }
-
-    @Override
     protected boolean shouldUpdate(MTETrait trait) {
-        return !(trait instanceof BoilerRecipeLogic);
+        return !(trait instanceof PrimitiveBoilerRecipeLogic);
     }
 
     @Override
@@ -434,22 +434,22 @@ public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase imp
 
     @Override
     public void registerBars(List<UnaryOperator<TemplateBarBuilder>> bars, PanelSyncManager syncManager) {
-        IntSyncValue waterFilledValue = new IntSyncValue(this::getWaterFilled);
-        IntSyncValue waterCapacityValue = new IntSyncValue(this::getWaterCapacity);
-        syncManager.syncValue("water_filled", waterFilledValue);
-        syncManager.syncValue("water_capacity", waterCapacityValue);
+        LongSyncValue heatFilledValue = new LongSyncValue(this::getTemperature);
+        LongSyncValue heatCapacityValue = new LongSyncValue(this::getMaxTemperature);
+        syncManager.syncValue("heat_filled", heatFilledValue);
+        syncManager.syncValue("heat_capacity", heatCapacityValue);
 
         bars.add(barTest -> barTest
-                .progress(() -> waterCapacityValue.getIntValue() == 0 ? 0 :
-                        waterFilledValue.getIntValue() * 1.0 / waterCapacityValue.getIntValue())
-                .texture(GTGuiTextures.PROGRESS_BAR_FLUID_RIG_DEPLETION)
+                .progress(() -> heatCapacityValue.getIntValue() == 0 ? 0 :
+                        heatFilledValue.getIntValue() * 1.0 / heatCapacityValue.getIntValue())
+                .texture(GTGuiTextures.PROGRESS_BAR_HEAT_TEMP)
                 .tooltipBuilder(tooltip -> {
                     if (isStructureFormed()) {
-                        if (waterFilledValue.getIntValue() == 0) {
-                            tooltip.addLine(IKey.lang("gregtech.multiblock.large_boiler.no_water"));
+                        if (heatFilledValue.getIntValue() == 0) {
+                            tooltip.addLine(IKey.lang("gregtech.multiblock.heat_multiblock.no_heat"));
                         } else {
-                            tooltip.addLine(IKey.lang("gregtech.multiblock.large_boiler.water_bar_hover",
-                                    waterFilledValue.getIntValue(), waterCapacityValue.getIntValue()));
+                            tooltip.addLine(IKey.lang("gregtech.multiblock.heat_multiblock.heat_bar_hover",
+                                    heatFilledValue.getIntValue(), heatCapacityValue.getIntValue()));
                         }
                     } else {
                         tooltip.addLine(IKey.lang("gregtech.multiblock.invalid_structure"));
@@ -457,36 +457,44 @@ public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase imp
                 }));
     }
 
-    /**
-     * @return the total amount of water filling the inputs
-     */
-    private int getWaterFilled() {
-        if (!isStructureFormed()) return 0;
-        List<IFluidTank> tanks = getAbilities(MultiblockAbility.IMPORT_FLUIDS);
-        int filled = 0;
-        for (IFluidTank tank : tanks) {
-            if (tank == null || tank.getFluid() == null) continue;
-            if (CommonFluidFilters.BOILER_FLUID.test(tank.getFluid())) {
-                filled += tank.getFluidAmount();
-            }
-        }
-        return filled;
+    public void changeHeat(long recipeEUt) {
+        if (this.getHeatHatch() == null) return;
+        long average = recipeEUt / heatHatch.size();
+        this.getHeatHatch().forEach(hatch -> hatch.changeHeat(average));
     }
 
-    /**
-     * @return the total capacity for water-containing inputs
-     */
-    private int getWaterCapacity() {
-        if (!isStructureFormed()) return 0;
-        List<IFluidTank> tanks = getAbilities(MultiblockAbility.IMPORT_FLUIDS);
-        int capacity = 0;
-        for (IFluidTank tank : tanks) {
-            if (tank == null || tank.getFluid() == null) continue;
-            if (CommonFluidFilters.BOILER_FLUID.test(tank.getFluid())) {
-                capacity += tank.getCapacity();
-            }
-        }
-        return capacity;
+    public long getHeatStored() {
+        if (this.getHeatHatch() == null) return 0;
+        return this.getHeatHatch()
+                .stream()
+                .mapToLong(IHeatable::getHeatStored)
+                .sum();
+    }
+
+    public long getHeatCapacity() {
+        if (this.getHeatHatch() == null) return 0;
+        return this.getHeatHatch()
+                .stream()
+                .mapToLong(IHeatable::getHeatCapacity)
+                .sum();
+    }
+
+    public int getTemperature() {
+        if (this.getHeatHatch() == null) return 293;
+        return this.getHeatHatch()
+                .stream()
+                .mapToInt(IHeatable::getTemperature)
+                .max()
+                .orElse(293);
+    }
+
+    public int getMaxTemperature() {
+        if (this.getHeatHatch() == null) return 293;
+        return this.getHeatHatch()
+                .stream()
+                .mapToInt(IHeatable::getMaxTemperature)
+                .max()
+                .orElse(293);
     }
 
     @Override
@@ -497,5 +505,18 @@ public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase imp
     @Override
     public void setWorkingEnabled(boolean isWorkingAllowed) {
         recipeLogic.setWorkingEnabled(isWorkingAllowed);
+    }
+
+    public class BoilerInformation extends AbstractTooltipComponent {
+
+        @Override
+        public void addInformation(MetaTileEntity metaTileEntity, List<String> tooltip) {
+            tooltip.add(I18n.format("每块煤炭可以生产 %s HU 的热量",
+                    TextFormattingUtil
+                            .formatNumbers((int) (boilerType.heatPerTick() * 20 * boilerType.runtimeBoost(200) / 20.0))));
+            tooltip.add(
+                    I18n.format("锅炉最大温度：%s K", boilerType.getMaxTemp()));
+            tooltip.add(I18n.format("gregtech.universal.tooltip.produces_heat", boilerType.heatPerTick()));
+        }
     }
 }

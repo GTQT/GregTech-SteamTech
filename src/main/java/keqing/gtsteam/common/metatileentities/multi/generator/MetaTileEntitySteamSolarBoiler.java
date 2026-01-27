@@ -516,7 +516,7 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
         data.setInteger("ThrottlePercentage", throttlePercentage);
         data.setInteger("Width", Width);
         data.setInteger("Length", Length);
-        return this.recipeLogic.writeToNBT(data);
+        return data;
     }
 
     @Override
@@ -525,7 +525,6 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
         throttlePercentage = data.getInteger("ThrottlePercentage");
         this.Width = data.getInteger("Width");
         this.Length = data.getInteger("Length");
-        this.recipeLogic.readFromNBT(data);
     }
 
     @Override
@@ -565,7 +564,7 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
 
     @Override
     protected boolean shouldUpdate(MTETrait trait) {
-        return !(trait instanceof BoilerRecipeLogic);
+        return !(trait instanceof SolarBoilerRecipeLogic);
     }
 
     @Override

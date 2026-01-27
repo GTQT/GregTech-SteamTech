@@ -14,7 +14,7 @@ import static keqing.gtsteam.common.block.blocks.BlockMultiblockCasing1.CasingTy
 public enum PrimitiveBoilerType {
 
     //低压固体
-    LOW_PRESSURE_SOLID(400, 600,
+    LOW_PRESSURE_SOLID(800, 473,false,
             blockMultiblockCasing1.getState(LOW_PRESSURE_TANK),
             blockFireboxCasing0.getState(ITEM_FIREBOX),
             GTSteamTextures.LOW_PRESSURE_SIDE,
@@ -22,7 +22,7 @@ public enum PrimitiveBoilerType {
             GTSteamTextures.ITEM_FIREBOX_FRONT_ACTIVE),
 
     //低压液体
-    LOW_PRESSURE_FLUID(400, 600,
+    LOW_PRESSURE_FLUID(800, 473,false,
             blockMultiblockCasing1.getState(LOW_PRESSURE_TANK),
             blockFireboxCasing0.getState(FLUID_FIREBOX),
             GTSteamTextures.LOW_PRESSURE_SIDE,
@@ -30,7 +30,7 @@ public enum PrimitiveBoilerType {
             GTSteamTextures.FLUID_FIREBOX_FRONT_ACTIVE),
 
     //高压固体
-    HIGH_PRESSURE_SOLID(600, 800,
+    HIGH_PRESSURE_SOLID(1200, 673,true,
             blockMultiblockCasing1.getState(HIGH_PRESSURE_TANK),
             blockFireboxCasing0.getState(ITEM_FIREBOX),
             GTSteamTextures.HIGH_PRESSURE_SIDE,
@@ -38,7 +38,7 @@ public enum PrimitiveBoilerType {
             GTSteamTextures.ITEM_FIREBOX_FRONT_ACTIVE),
 
     //高压液体
-    HIGH_PRESSURE_FLUID(600, 800,
+    HIGH_PRESSURE_FLUID(1200, 673,true,
             blockMultiblockCasing1.getState(HIGH_PRESSURE_TANK),
             blockFireboxCasing0.getState(FLUID_FIREBOX),
             GTSteamTextures.HIGH_PRESSURE_SIDE,
@@ -53,18 +53,21 @@ public enum PrimitiveBoilerType {
     public final ICubeRenderer fireboxIdleRenderer;
     public final ICubeRenderer fireboxActiveRenderer;
     // Workable Data
-    private final int steamPerTick;
-    private final int ticksToBoiling;
+    private final int heatPerTick;
+    private final int maxTemp;
+    private final boolean isHighPressure;
 
-    PrimitiveBoilerType(int steamPerTick, int ticksToBoiling,
+    PrimitiveBoilerType(int heatPerTick, int maxTemp, boolean isHighPressure,
                         IBlockState casingState,
                         IBlockState fireboxState,
                         ICubeRenderer casingRenderer,
                         ICubeRenderer fireboxIdleRenderer,
                         ICubeRenderer fireboxActiveRenderer) {
 
-        this.steamPerTick = steamPerTick;
-        this.ticksToBoiling = ticksToBoiling;
+        this.heatPerTick = heatPerTick;
+        this.maxTemp = maxTemp;
+
+        this.isHighPressure = isHighPressure;
 
         this.casingState = casingState;
         this.fireboxState = fireboxState;
@@ -74,12 +77,16 @@ public enum PrimitiveBoilerType {
         this.fireboxActiveRenderer = fireboxActiveRenderer;
     }
 
-    public int steamPerTick() {
-        return steamPerTick;
+    public int heatPerTick() {
+        return heatPerTick;
     }
 
-    public int getTicksToBoiling() {
-        return ticksToBoiling;
+    public int getMaxTemp() {
+        return maxTemp;
+    }
+
+    public boolean isHighPressure() {
+        return isHighPressure;
     }
 
     public int runtimeBoost(int ticks) {

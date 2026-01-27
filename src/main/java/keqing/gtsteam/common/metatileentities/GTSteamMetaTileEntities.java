@@ -2,17 +2,23 @@ package keqing.gtsteam.common.metatileentities;
 
 import gregtech.api.metatileentity.SimpleMachineMetaTileEntity;
 import gregtech.api.recipes.RecipeMaps;
+import gregtech.api.unification.material.Material;
+import gregtech.api.unification.material.Materials;
 import gregtech.api.util.GTUtility;
 import gregtech.client.particle.VanillaParticleEffects;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.metatileentities.electric.MetaTileEntitySingleCombustion;
 import gregtech.common.metatileentities.electric.MetaTileEntitySingleTurbine;
 import gregtech.common.metatileentities.electric.SimpleMachineMetaTileEntityResizable;
+import keqing.gtsteam.common.metatileentities.combustor.CoalCombustor;
+import keqing.gtsteam.common.metatileentities.combustor.LavaCombustor;
+import keqing.gtsteam.common.metatileentities.combustor.SolarCombustor;
 import keqing.gtsteam.common.metatileentities.multi.generator.MetaTileEntityPrimitiveBoiler;
 import keqing.gtsteam.common.metatileentities.multi.generator.MetaTileEntitySteamSolarBoiler;
 import keqing.gtsteam.common.metatileentities.multi.generator.PrimitiveBoilerType;
 import keqing.gtsteam.common.metatileentities.multi.heat.MetaTileEntityHeatAlloyFurnace;
 import keqing.gtsteam.common.metatileentities.multi.heat.MetaTileEntityHeatFurnace;
+import keqing.gtsteam.common.metatileentities.multi.heat.MetaTileEntityHeatSteamBoiler;
 import keqing.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnExportHatch;
 import keqing.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnImportHatch;
 import keqing.gtsteam.common.metatileentities.multi.primitive.*;
@@ -95,6 +101,18 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntitySingleCombustion COMBUSTION_GENERATOR;
     public static MetaTileEntitySingleCombustion SEMI_FLUID_GENERATOR;
 
+    //test
+    static Material[] materials = new Material[]{Materials.Lead, Materials.Bronze, Materials.Steel, Materials.Invar, Materials.Titanium,Materials.TungstenSteel};
+    public static CoalCombustor[] COAL_COMBUSTOR = new CoalCombustor[materials.length];
+    public static LavaCombustor[] LAVA_COMBUSTOR = new LavaCombustor[materials.length];
+    public static SolarCombustor[] SOLAR_COMBUSTOR = new SolarCombustor[materials.length];
+
+    public static CoalCombustor[] DENSE_COAL_COMBUSTOR = new CoalCombustor[materials.length];
+    public static LavaCombustor[] DENSE_LAVA_COMBUSTOR = new LavaCombustor[materials.length];
+    public static SolarCombustor[] DENSE_SOLAR_COMBUSTOR = new SolarCombustor[materials.length];
+
+    public static MetaTileEntityHeatSteamBoiler HEAT_STEAM_BOILER;
+
     public static ResourceLocation gtsId(String id) {
         return new ResourceLocation(MODID, id);
     }
@@ -171,5 +189,20 @@ public class GTSteamMetaTileEntities {
         STEAM_TURBINE = registerMetaTileEntity(120, new MetaTileEntitySingleTurbine(gtsId("steam_turbine.ulv"), PRIMITIVE_STEAM_TURBINE_FUELS, Textures.STEAM_TURBINE_OVERLAY, 0, tier -> 2000, 1.0));
         COMBUSTION_GENERATOR = registerMetaTileEntity(121, new MetaTileEntitySingleCombustion(gtsId("combustion_generator.ulv"), PRIMITIVE_COMBUSTION_GENERATOR_FUELS, Textures.COMBUSTION_GENERATOR_OVERLAY, 0, tier -> 2000, 1.0));
         SEMI_FLUID_GENERATOR = registerMetaTileEntity(122, new MetaTileEntitySingleCombustion(gtsId("semi_fluid_generator.ulv"), PRIMITIVE_SEMI_FLUID_GENERATOR_FUELS, Textures.SEMI_FLUID_OVERLAY, 0, tier -> 2000, 1.0));
+
+
+        for (int i = 0; i < materials.length; i++) {
+            String materialName = materials[i].toString().toLowerCase();
+            COAL_COMBUSTOR[i] = registerMetaTileEntity(200 + i, new CoalCombustor(gtsId("coal_combustor." +materialName), false, i + 1, materials[i]));
+            DENSE_COAL_COMBUSTOR[i] = registerMetaTileEntity(210 + i, new CoalCombustor(gtsId("dense_coal_combustor." +materialName), true, i + 1, materials[i]));
+
+            LAVA_COMBUSTOR[i] = registerMetaTileEntity(220 + i, new LavaCombustor(gtsId("lava_combustor." +materialName), false, i + 1, materials[i]));
+            DENSE_LAVA_COMBUSTOR[i] = registerMetaTileEntity(230 + i, new LavaCombustor(gtsId("dense_lava_combustor." +materialName), true, i + 1, materials[i]));
+
+            SOLAR_COMBUSTOR[i] = registerMetaTileEntity(240 + i, new SolarCombustor(gtsId("solar_combustor." +materialName), false, i + 1, materials[i]));
+            DENSE_SOLAR_COMBUSTOR[i] = registerMetaTileEntity(250 + i, new SolarCombustor(gtsId("dense_solar_combustor." +materialName), true, i + 1, materials[i]));
+        }
+
+        HEAT_STEAM_BOILER= registerMetaTileEntity(300, new MetaTileEntityHeatSteamBoiler(gtsId("heat_steam_boiler")));
     }
 }

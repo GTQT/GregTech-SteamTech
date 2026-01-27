@@ -136,6 +136,23 @@ gtsteam.machine.scalable_storage.empty=Empty - Insert any item to set type
 gtsteam.machine.scalable_storage.tooltip1=Stores massive amounts of a single item type
 gtsteam.machine.scalable_storage.tooltip2=Can be upgraded to increase storage capacity and add functionality
 tile.scalable_storage_controller.tooltip=Source project：ScalableStorageCEu Author: iristhpianist
+
+# Boiler UI Labels
+gtsteam.multiblock.boiler.ui.size=Size: %dx%dx%d
+gtsteam.multiblock.boiler.ui.shape_coeff=Shape: %.2fx
+gtsteam.multiblock.boiler.ui.eff_volume=Volume: %.1f
+gtsteam.multiblock.boiler.ui.water_temp=Water: %dK
+gtsteam.multiblock.boiler.ui.heater_temp=Heater: %dK
+gtsteam.multiblock.boiler.ui.status=Status: %s
+gtsteam.multiblock.boiler.ui.throttle=Load: %d%%
+gtsteam.multiblock.boiler.ui.water=Water: %d
+gtsteam.multiblock.boiler.ui.steam=Steam: %d/%d
+gtsteam.multiblock.boiler.preheating=PREHEATING
+gtsteam.multiblock.boiler.boiling=BOILING
+
+#Heat
+gregtech.universal.tooltip.produces_heat=§eProduces：§f%,d H/t
+
 # Machine Names and Tooltips
 gtsteam.machine.electric_furnace.ulv.name=Simple Electric Furnace
 gtsteam.machine.electric_furnace.ulv.tooltip=A Simple electric furnace for smelting items.

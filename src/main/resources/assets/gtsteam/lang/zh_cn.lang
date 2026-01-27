@@ -135,6 +135,23 @@ gtsteam.machine.scalable_storage.empty=空 - 插入任意物品以设置类型
 gtsteam.machine.scalable_storage.tooltip1=可存储大量单一类型的物品
 gtsteam.machine.scalable_storage.tooltip2=可升级以增加存储容量和功能
 tile.scalable_storage_controller.tooltip=源项目：ScalableStorageCEu 作者：iristhpianist
+
+# Boiler UI Labels
+gtsteam.multiblock.boiler.ui.size=尺寸: %dx%dx%d
+gtsteam.multiblock.boiler.ui.shape_coeff=形状: %.2fx
+gtsteam.multiblock.boiler.ui.eff_volume=容量: %.1f
+gtsteam.multiblock.boiler.ui.water_temp=水温: %dK
+gtsteam.multiblock.boiler.ui.heater_temp=加热器: %dK
+gtsteam.multiblock.boiler.ui.status=状态: %s
+gtsteam.multiblock.boiler.ui.throttle=负载: %d%%
+gtsteam.multiblock.boiler.ui.water=水: %d
+gtsteam.multiblock.boiler.ui.steam=蒸汽: %d/%d
+gtsteam.multiblock.boiler.preheating=预热中
+gtsteam.multiblock.boiler.boiling=沸腾中
+
+#热学
+gregtech.universal.tooltip.produces_heat=§e产热速率：§f%,d H/t
+
 # 机器名称和工具提示
 gtsteam.machine.electric_furnace.ulv.name=简易电炉
 gtsteam.machine.electric_furnace.ulv.tooltip=慢速版"电生热"基础课

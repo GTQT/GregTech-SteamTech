@@ -477,30 +477,6 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
     }
 
     @Override
-    public boolean onRightClick(EntityPlayer playerIn, EnumHand hand, EnumFacing facing,
-                                CuboidRayTraceResult hitResult) {
-        if (!isStructureFormed())
-            return false;
-        return super.onRightClick(playerIn, hand, facing, hitResult);
-    }
-
-    @Override
-    protected boolean openGUIOnRightClick() {
-        return isStructureFormed();
-    }
-
-    @Override
-    protected ModularUI.Builder createUITemplate(EntityPlayer entityPlayer) {
-        return ModularUI.defaultBuilder()
-                .widget(new LabelWidget(6, 6, getMetaFullName()))
-                .widget(new TankWidget(importFluids.getTankAt(0), 52, 18, 72, 61)
-                        .setBackgroundTexture(GuiTextures.SLOT)
-                        .setContainerClicking(true, true))
-                .bindPlayerInventory(entityPlayer.inventory, GuiTextures.SLOT, 0);
-    }
-
-
-    @Override
     public void renderMetaTileEntity(CCRenderState renderState, Matrix4 translation, IVertexOperation[] pipeline) {
         super.renderMetaTileEntity(renderState, translation, pipeline);
         getFrontOverlay().renderSided(getFrontFacing(), renderState, translation, pipeline);
