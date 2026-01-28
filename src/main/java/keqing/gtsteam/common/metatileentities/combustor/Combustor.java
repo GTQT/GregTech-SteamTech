@@ -14,7 +14,6 @@ import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.mui.GTGuis;
 import gregtech.api.unification.material.Material;
-import gregtech.api.unification.material.Materials;
 import gregtech.api.util.GTTransferUtils;
 import gregtech.api.util.GTUtility;
 import gregtech.api.util.TextFormattingUtil;
@@ -69,7 +68,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static gregtech.api.GTValues.V;
-import static gregtech.api.GTValues.VA;
 import static gregtech.api.capability.GregtechCapabilities.CAPABILITY_HEAT_CONTAINER;
 import static gregtech.api.capability.GregtechDataCodes.IS_WORKING;
 
@@ -257,7 +255,7 @@ public abstract class Combustor extends MetaTileEntity implements IDataInfoProvi
         if (!getWorld().isRemote) {
             updateCurrentTemperature(); // 更新温度
             if (getOffsetTimer() % 10 == 0) {
-                generateSteam(); // 每10tick生成 热量
+                generateHeat(); // 每10tick生成 热量
             }
 
             // 从流体容器填充内部储罐
@@ -323,7 +321,7 @@ public abstract class Combustor extends MetaTileEntity implements IDataInfoProvi
     /**
      * 返回当前每10tick的总 热量输出量
      */
-    public int getTotalSteamOutput() {
+    public int getTotalHeatOutput() {
         if (getCurrentTemperature() < 373) return 0; // 温度低于100度不产生 热量
         // 根据温度比例计算输出量
         return (int) (getBaseHeatOutput() * (getCurrentTemperature() / (getMaxTemperate() * 1.0)) / 2);
@@ -333,9 +331,9 @@ public abstract class Combustor extends MetaTileEntity implements IDataInfoProvi
     /**
      * 生成 热量
      */
-    private void generateSteam() {
+    private void generateHeat() {
         if (getCurrentTemperature() >= 373) {
-            int fillAmount = getTotalSteamOutput();
+            int fillAmount = getTotalHeatOutput();
              heatable.changeHeat(fillAmount);
         }
     }
@@ -476,7 +474,7 @@ public abstract class Combustor extends MetaTileEntity implements IDataInfoProvi
         tooltip.add(I18n.format("gregtech.universal.tooltip.heat_out_till", GTValues.V[tier] * 20));
         tooltip.add(I18n.format("gregtech.universal.tooltip.max_temperature", heatable.getMaxTemperature()));
         tooltip.add(I18n.format("gregtech.universal.tooltip.heat_storage_capacity", heatable.getHeatCapacity()));
-        tooltip.add(I18n.format("gregtech.universal.tooltip.produces_heat", getBaseHeatOutput() / 20));
+        tooltip.add(I18n.format("gregtech.universal.tooltip.produces_heat", getBaseHeatOutput()));
         tooltip.add(I18n.format("metaitem.tool.tooltip.primary_material",material.getLocalizedName()));
     }
 

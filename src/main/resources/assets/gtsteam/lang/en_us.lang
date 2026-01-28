@@ -138,15 +138,18 @@ gtsteam.machine.scalable_storage.tooltip2=Can be upgraded to increase storage ca
 tile.scalable_storage_controller.tooltip=Source project：ScalableStorageCEu Author: iristhpianist
 
 # Boiler UI Labels
+gtsteam.machine.heat_steam_boiler.name=Heat Steam Boiler
+gregtech.multiblock.heat_steam_boiler.title=Large Dynamic Boiler:
+gregtech.multiblock.heat_steam_boiler.structure_size=Structure size: 3×3×3 to 15×15×15, supports cuboid shape
+gregtech.multiblock.heat_steam_boiler.base_output=Base steam output: 600 L/t × (capacity/27)^0.65
+gregtech.multiblock.heat_steam_boiler.theoretical_output=Theoretical steam output: base output × throttle flow × boiler temperature / heat source temperature, adjustable via throttle
+gregtech.multiblock.heat_steam_boiler.heat_requirement=Requires heat from heat hatches, starts producing steam at ≥373K by consuming water and heat
+gregtech.multiblock.heat_steam_boiler.temperature_dynamics=Heating efficiency depends on temperature difference; larger volume heats slower. Cools naturally when idle, cooling rate depends on √(volume)
+gregtech.multiblock.heat_steam_boiler.production_ratio=Production ratio: worst case 640 heat + 1 water → 160 steam, best case 160 heat + 1 water → 160 steam
+gregtech.multiblock.heat_steam_boiler.heat_steam_ratio=Heat-to-steam conversion depends on boiler temperature (373K-973K range, ratio decreases linearly)
+gregtech.multiblock.heat_steam_boiler.input_warnings=Insufficient heat reduces steam output; insufficient water causes explosion
+
 gtsteam.multiblock.boiler.ui.size=Size: %dx%dx%d
-gtsteam.multiblock.boiler.ui.shape_coeff=Shape: %.2fx
-gtsteam.multiblock.boiler.ui.eff_volume=Volume: %.1f
-gtsteam.multiblock.boiler.ui.water_temp=Water: %dK
-gtsteam.multiblock.boiler.ui.heater_temp=Heater: %dK
-gtsteam.multiblock.boiler.ui.status=Status: %s
-gtsteam.multiblock.boiler.ui.throttle=Load: %d%%
-gtsteam.multiblock.boiler.ui.water=Water: %d
-gtsteam.multiblock.boiler.ui.steam=Steam: %d/%d
 gtsteam.multiblock.boiler.preheating=PREHEATING
 gtsteam.multiblock.boiler.boiling=BOILING
 

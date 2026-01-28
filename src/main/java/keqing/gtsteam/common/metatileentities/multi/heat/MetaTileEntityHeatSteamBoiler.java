@@ -10,10 +10,7 @@ import com.cleanroommc.modularui.drawable.ItemDrawable;
 import com.cleanroommc.modularui.drawable.Rectangle;
 import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.utils.Color;
-import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
-import com.cleanroommc.modularui.value.sync.LongSyncValue;
-import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-import com.cleanroommc.modularui.value.sync.StringSyncValue;
+import com.cleanroommc.modularui.value.sync.*;
 import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.SliderWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
@@ -43,6 +40,7 @@ import gtqt.common.metatileentities.GTQTMetaTileEntities;
 import keqing.gtsteam.client.textures.GTSteamTextures;
 import keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -191,8 +189,10 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
 
         int currentTemp = syncer.syncInt(recipeLogic.getMaximumHeatFromMaintenance());
         if (currentTemp < 373) {
-            keyManager.add(KeyUtil.lang(TextFormatting.YELLOW, "预热状态"));
+            keyManager.add(KeyUtil.lang(TextFormatting.YELLOW, "gtsteam.multiblock.boiler.preheating"));
         } else {
+            keyManager.add(KeyUtil.lang(TextFormatting.YELLOW, "gtsteam.multiblock.boiler.boiling"));
+
             // Steam Output line
             IKey steamOutput = KeyUtil.number(TextFormatting.AQUA,
                     steam, " L/t");
@@ -337,7 +337,7 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
                 .where('B', states(getULVCasingState())
                         .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setMinGlobalLimited(1).setMaxGlobalLimited(minSize))
                         .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMinGlobalLimited(1).setMaxGlobalLimited(minSize))
-                        .or(abilities(MultiblockAbility.INPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(minSize))
+                        .or(abilities(MultiblockAbility.INPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(minSize * 2))
                         .or(states(Blocks.GLASS.getDefaultState())))
                 .where('C', air())
                 .build();
@@ -575,9 +575,15 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
     @Override
     public void addInformation(ItemStack stack, World player, @NotNull List<String> tooltip, boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
-        tooltip.add(TextFormatting.GRAY + "Thermal boiler: Converts heat + water → steam");
-        tooltip.add(TextFormatting.GRAY + "Shape efficiency affects output capacity");
-        tooltip.add(TextFormatting.GRAY + "Cold water input reduces internal temperature");
+        tooltip.add(TextFormatting.GREEN + I18n.format("gregtech.multiblock.heat_steam_boiler.title"));
+        tooltip.add(I18n.format("gregtech.multiblock.heat_steam_boiler.structure_size"));
+        tooltip.add(I18n.format("gregtech.multiblock.heat_steam_boiler.base_output"));
+        tooltip.add(I18n.format("gregtech.multiblock.heat_steam_boiler.theoretical_output"));
+        tooltip.add(I18n.format("gregtech.multiblock.heat_steam_boiler.heat_requirement"));
+        tooltip.add(I18n.format("gregtech.multiblock.heat_steam_boiler.temperature_dynamics"));
+        tooltip.add(I18n.format("gregtech.multiblock.heat_steam_boiler.production_ratio"));
+        tooltip.add(I18n.format("gregtech.multiblock.heat_steam_boiler.heat_steam_ratio"));
+        tooltip.add(I18n.format("gregtech.multiblock.heat_steam_boiler.input_warnings"));
     }
 
     @Override
@@ -589,8 +595,10 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
     public void registerBars(List<UnaryOperator<TemplateBarBuilder>> bars, PanelSyncManager syncManager) {
         LongSyncValue heatFilledValue = new LongSyncValue(this::getTemperature);
         LongSyncValue heatCapacityValue = new LongSyncValue(this::getMaxTemperature);
+        IntSyncValue boilerHeatValue = new IntSyncValue(this::getBoilerTemp);
         syncManager.syncValue("heat_filled", heatFilledValue);
         syncManager.syncValue("heat_capacity", heatCapacityValue);
+        syncManager.syncValue("boiler_filled", boilerHeatValue);
 
         bars.add(barBuilder -> barBuilder
                 .progress(() -> heatCapacityValue.getIntValue() == 0 ? 0 :
@@ -600,6 +608,8 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
 
                     tooltip.addLine(IKey.lang("gregtech.multiblock.heat_multiblock.heat_bar_hover",
                             heatFilledValue.getIntValue(), heatCapacityValue.getIntValue()));
+                    tooltip.addLine(IKey.lang("gregtech.multiblock.heat_multiblock.heat_bar_hover",
+                            boilerHeatValue.getIntValue(), heatFilledValue.getIntValue()));
                 }));
     }
 
@@ -627,6 +637,10 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
     public int getMaxTemperature() {
         if (heatHatch == null || heatHatch.isEmpty()) return 293;
         return heatHatch.stream().mapToInt(IHeatable::getMaxTemperature).max().orElse(293);
+    }
+
+    public int getBoilerTemp() {
+        return recipeLogic.getMaximumHeatFromMaintenance();
     }
 
     private ModularPanel makeThrottlePanel(PanelSyncManager syncManager, IPanelHandler syncHandler) {

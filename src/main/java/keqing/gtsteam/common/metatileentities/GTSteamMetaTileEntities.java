@@ -64,10 +64,6 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntityHeatAlloyFurnace HEAT_ALLOY_FURNACE;
 
     public static MetaTileEntitySteamSolarBoiler STEAM_SOLAR_BOILER;
-    public static MetaTileEntityPrimitiveBoiler LOW_PRESSURE_SOLID_BOILER;
-    public static MetaTileEntityPrimitiveBoiler HIGH_PRESSURE_SOLID_BOILER;
-    public static MetaTileEntityPrimitiveBoiler LOW_PRESSURE_FLUID_BOILER;
-    public static MetaTileEntityPrimitiveBoiler HIGH_PRESSURE_FLUID_BOILER;
 
     public static MetaTileEntityLargeSteamTank LARGE_STEAM_TANK;
     public static MetaTileEntityTankValve BRONZE_TANK_VALVE;
@@ -101,8 +97,8 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntitySingleCombustion COMBUSTION_GENERATOR;
     public static MetaTileEntitySingleCombustion SEMI_FLUID_GENERATOR;
 
-    //test
-    static Material[] materials = new Material[]{Materials.Lead, Materials.Bronze, Materials.Steel, Materials.Invar, Materials.Titanium,Materials.TungstenSteel};
+    //热学
+    static Material[] materials = new Material[]{Materials.Lead, Materials.Bronze, Materials.Steel, Materials.Invar, Materials.Chrome,Materials.Titanium};
     public static CoalCombustor[] COAL_COMBUSTOR = new CoalCombustor[materials.length];
     public static LavaCombustor[] LAVA_COMBUSTOR = new LavaCombustor[materials.length];
     public static SolarCombustor[] SOLAR_COMBUSTOR = new SolarCombustor[materials.length];
@@ -110,6 +106,11 @@ public class GTSteamMetaTileEntities {
     public static CoalCombustor[] DENSE_COAL_COMBUSTOR = new CoalCombustor[materials.length];
     public static LavaCombustor[] DENSE_LAVA_COMBUSTOR = new LavaCombustor[materials.length];
     public static SolarCombustor[] DENSE_SOLAR_COMBUSTOR = new SolarCombustor[materials.length];
+
+    public static MetaTileEntityPrimitiveBoiler LOW_PRESSURE_SOLID_BOILER;
+    public static MetaTileEntityPrimitiveBoiler HIGH_PRESSURE_SOLID_BOILER;
+    public static MetaTileEntityPrimitiveBoiler LOW_PRESSURE_FLUID_BOILER;
+    public static MetaTileEntityPrimitiveBoiler HIGH_PRESSURE_FLUID_BOILER;
 
     public static MetaTileEntityHeatSteamBoiler HEAT_STEAM_BOILER;
 
@@ -145,10 +146,6 @@ public class GTSteamMetaTileEntities {
 
         STEAM_SOLAR_BOILER = registerMetaTileEntity(30, new MetaTileEntitySteamSolarBoiler(gtsId("steam_solar_boiler")));
 
-        LOW_PRESSURE_SOLID_BOILER = registerMetaTileEntity(31, new MetaTileEntityPrimitiveBoiler(gtsId("solid_boiler.low_pressure"), PrimitiveBoilerType.LOW_PRESSURE_SOLID));
-        HIGH_PRESSURE_SOLID_BOILER = registerMetaTileEntity(32, new MetaTileEntityPrimitiveBoiler(gtsId("solid_boiler.high_pressure"), PrimitiveBoilerType.HIGH_PRESSURE_SOLID));
-        LOW_PRESSURE_FLUID_BOILER = registerMetaTileEntity(33, new MetaTileEntityPrimitiveBoiler(gtsId("fluid_boiler.low_pressure"), PrimitiveBoilerType.LOW_PRESSURE_FLUID));
-        HIGH_PRESSURE_FLUID_BOILER = registerMetaTileEntity(34, new MetaTileEntityPrimitiveBoiler(gtsId("fluid_boiler.high_pressure"), PrimitiveBoilerType.HIGH_PRESSURE_FLUID));
 
         BRONZE_TANK_VALVE = registerMetaTileEntity(40, new MetaTileEntityTankValve(gtsId("tank_valve.bronze")));
         BRONZE_TANK = registerMetaTileEntity(41, new MetaTileEntityMultiblockTank(gtsId("tank.bronze"), 750 * 1000));
@@ -191,6 +188,7 @@ public class GTSteamMetaTileEntities {
         SEMI_FLUID_GENERATOR = registerMetaTileEntity(122, new MetaTileEntitySingleCombustion(gtsId("semi_fluid_generator.ulv"), PRIMITIVE_SEMI_FLUID_GENERATOR_FUELS, Textures.SEMI_FLUID_OVERLAY, 0, tier -> 2000, 1.0));
 
 
+        //热学系统
         for (int i = 0; i < materials.length; i++) {
             String materialName = materials[i].toString().toLowerCase();
             COAL_COMBUSTOR[i] = registerMetaTileEntity(200 + i, new CoalCombustor(gtsId("coal_combustor." +materialName), false, i + 1, materials[i]));
@@ -203,6 +201,13 @@ public class GTSteamMetaTileEntities {
             DENSE_SOLAR_COMBUSTOR[i] = registerMetaTileEntity(250 + i, new SolarCombustor(gtsId("dense_solar_combustor." +materialName), true, i + 1, materials[i]));
         }
 
-        HEAT_STEAM_BOILER= registerMetaTileEntity(300, new MetaTileEntityHeatSteamBoiler(gtsId("heat_steam_boiler")));
+        //燃烧室
+        LOW_PRESSURE_SOLID_BOILER = registerMetaTileEntity(300, new MetaTileEntityPrimitiveBoiler(gtsId("solid_boiler.low_pressure"), PrimitiveBoilerType.LOW_PRESSURE_SOLID));
+        HIGH_PRESSURE_SOLID_BOILER = registerMetaTileEntity(301, new MetaTileEntityPrimitiveBoiler(gtsId("solid_boiler.high_pressure"), PrimitiveBoilerType.HIGH_PRESSURE_SOLID));
+        LOW_PRESSURE_FLUID_BOILER = registerMetaTileEntity(302, new MetaTileEntityPrimitiveBoiler(gtsId("fluid_boiler.low_pressure"), PrimitiveBoilerType.LOW_PRESSURE_FLUID));
+        HIGH_PRESSURE_FLUID_BOILER = registerMetaTileEntity(303, new MetaTileEntityPrimitiveBoiler(gtsId("fluid_boiler.high_pressure"), PrimitiveBoilerType.HIGH_PRESSURE_FLUID));
+
+        //锅炉
+        HEAT_STEAM_BOILER= registerMetaTileEntity(310, new MetaTileEntityHeatSteamBoiler(gtsId("heat_steam_boiler")));
     }
 }

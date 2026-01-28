@@ -136,16 +136,63 @@ gtsteam.machine.scalable_storage.tooltip1=可存储大量单一类型的物品
 gtsteam.machine.scalable_storage.tooltip2=可升级以增加存储容量和功能
 tile.scalable_storage_controller.tooltip=源项目：ScalableStorageCEu 作者：iristhpianist
 
+#热学
+gtsteam.machine.coal_combustor.lead.name=锡固体燃烧室
+gtsteam.machine.coal_combustor.bronze.name=青铜固体燃烧室
+gtsteam.machine.coal_combustor.steel.name=钢固体燃烧室
+gtsteam.machine.coal_combustor.invar.name=殷钢固体燃烧室
+gtsteam.machine.coal_combustor.chrome.name=铬固体燃烧室
+gtsteam.machine.coal_combustor.titanium.name=钛固体燃烧室
+
+
+gtsteam.machine.dense_coal_combustor.lead.name=锡致密固体燃烧室
+gtsteam.machine.dense_coal_combustor.bronze.name=青铜致密固体燃烧室
+gtsteam.machine.dense_coal_combustor.steel.name=钢致密固体燃烧室
+gtsteam.machine.dense_coal_combustor.invar.name=殷钢致密固体燃烧室
+gtsteam.machine.dense_coal_combustor.chrome.name=铬致密固体燃烧室
+gtsteam.machine.dense_coal_combustor.titanium.name=钛致密固体燃烧室
+
+gtsteam.machine.lava_combustor.lead.name=锡流体燃烧室
+gtsteam.machine.lava_combustor.bronze.name=青铜流体燃烧室
+gtsteam.machine.lava_combustor.steel.name=钢流体燃烧室
+gtsteam.machine.lava_combustor.invar.name=殷钢流体燃烧室
+gtsteam.machine.lava_combustor.chrome.name=铬流体燃烧室
+gtsteam.machine.lava_combustor.titanium.name=钛流体燃烧室
+
+gtsteam.machine.dense_lava_combustor.lead.name=锡致密流体燃烧室
+gtsteam.machine.dense_lava_combustor.bronze.name=青铜致密流体燃烧室
+gtsteam.machine.dense_lava_combustor.steel.name=钢致密流体燃烧室
+gtsteam.machine.dense_lava_combustor.invar.name=殷钢致密流体燃烧室
+gtsteam.machine.dense_lava_combustor.chrome.name=铬致密流体燃烧室
+gtsteam.machine.dense_lava_combustor.titanium.name=钛致密流体燃烧室
+
+gtsteam.machine.solar_combustor.lead.name=锡太阳能加热器
+gtsteam.machine.solar_combustor.bronze.name=青铜太阳能加热器
+gtsteam.machine.solar_combustor.steel.name=钢太阳能加热器
+gtsteam.machine.solar_combustor.invar.name=殷钢太阳能加热器
+gtsteam.machine.solar_combustor.chrome.name=铬太阳能加热器
+gtsteam.machine.solar_combustor.titanium.name=钛太阳能加热器
+
+gtsteam.machine.dense_solar_combustor.lead.name=锡致密太阳能加热器
+gtsteam.machine.dense_solar_combustor.bronze.name=青铜致密太阳能加热器
+gtsteam.machine.dense_solar_combustor.steel.name=钢致密太阳能加热器
+gtsteam.machine.dense_solar_combustor.invar.name=殷钢致密太阳能加热器
+gtsteam.machine.dense_solar_combustor.chrome.name=铬致密太阳能加热器
+gtsteam.machine.dense_solar_combustor.titanium.name=钛致密太阳能加热器
+
 # Boiler UI Labels
+gtsteam.machine.heat_steam_boiler.name=热力蒸汽锅炉
+gregtech.multiblock.heat_steam_boiler.title=大型动态锅炉：
+gregtech.multiblock.heat_steam_boiler.structure_size=结构尺寸：3×3×3 到 15×15×15，支持长方体
+gregtech.multiblock.heat_steam_boiler.base_output=基本蒸汽产量：600 L/t × (容量/27)^0.65
+gregtech.multiblock.heat_steam_boiler.theoretical_output=理论蒸汽产量：基本蒸汽产量×节流阀通量×锅炉温度/热源仓温度，可通过调整节流阀限制蒸汽产出量
+gregtech.multiblock.heat_steam_boiler.heat_requirement=锅炉需要热阱仓提供热量，锅炉内温度≥373K开始消耗水与热量生产蒸汽
+gregtech.multiblock.heat_steam_boiler.temperature_dynamics=锅炉升温效率取决于热源温度与锅炉温度的差，容积越大升温越慢。锅炉待机时会自然冷却，降温效率取决于√(容积)
+gregtech.multiblock.heat_steam_boiler.production_ratio=产出比例：最差情况下640热量+1水→160蒸汽，最好情况下160热量+1水→160蒸汽
+gregtech.multiblock.heat_steam_boiler.heat_steam_ratio=热量与蒸汽的兑换比例取决于锅炉温度（下限373K，上限973k，区间内热量与蒸汽的兑换比例线性减小）
+gregtech.multiblock.heat_steam_boiler.input_warnings=输入热量不足时，产出蒸汽取决于提供的热量。输入水不足时，锅炉将会爆炸
+
 gtsteam.multiblock.boiler.ui.size=尺寸: %dx%dx%d
-gtsteam.multiblock.boiler.ui.shape_coeff=形状: %.2fx
-gtsteam.multiblock.boiler.ui.eff_volume=容量: %.1f
-gtsteam.multiblock.boiler.ui.water_temp=水温: %dK
-gtsteam.multiblock.boiler.ui.heater_temp=加热器: %dK
-gtsteam.multiblock.boiler.ui.status=状态: %s
-gtsteam.multiblock.boiler.ui.throttle=负载: %d%%
-gtsteam.multiblock.boiler.ui.water=水: %d
-gtsteam.multiblock.boiler.ui.steam=蒸汽: %d/%d
 gtsteam.multiblock.boiler.preheating=预热中
 gtsteam.multiblock.boiler.boiling=沸腾中
 

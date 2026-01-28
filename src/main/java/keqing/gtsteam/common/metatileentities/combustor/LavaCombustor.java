@@ -62,6 +62,7 @@ public class LavaCombustor extends Combustor {
 
     private static void init() {
         setBoilerFuelToConsumption(Materials.Lava.getFluid(), 100);
+        setBoilerFuelToConsumption(Materials.Biomass.getFluid(), 200);
         setBoilerFuelToConsumption(Materials.Creosote.getFluid(), 250);
     }
 
@@ -87,7 +88,7 @@ public class LavaCombustor extends Combustor {
 
     @Override
     protected int getBaseHeatOutput() {
-        return isHighPressure ? 4 : 2;
+        return isHighPressure ? 320 : 160;
     }
 
     @Override

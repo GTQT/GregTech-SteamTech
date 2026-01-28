@@ -128,16 +128,15 @@ public class HeatSteamBoilerRecipeLogic extends AbstractRecipeLogic implements I
             }
 
             if (generatedSteam > 0) {
-                // 计算温度因子（0到1之间）
-                // 0 表示最坏情况（currentHeat = 373）
-                // 1 表示最好情况（currentHeat = getMaxTemp()）
-                float temperatureFactor = (float)(currentHeat - 373) / (getMaxTemp() - 373);
 
-                // 限制温度因子在 0-1 范围内
-                temperatureFactor = Math.max(0, Math.min(1, temperatureFactor));
+                double temperatureFactor;
+                if(currentHeat >= 973)
+                    temperatureFactor = 1;
+                else
+                    temperatureFactor = (currentHeat - 373.0) / 600;
 
-                // 计算比例系数：从 2.0（最坏）到 1.0（最好）线性变化
-                float ratio = 2.0f - temperatureFactor;
+                double ratio = 4.0f - 3.0f * temperatureFactor;
+
                 // 计算消耗热量
                 double requiredHeat = generatedSteam * ratio;
 
