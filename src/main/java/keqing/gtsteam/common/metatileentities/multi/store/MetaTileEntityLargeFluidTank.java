@@ -1,6 +1,5 @@
 package keqing.gtsteam.common.metatileentities.multi.store;
 
-import codechicken.lib.raytracer.CuboidRayTraceResult;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
@@ -9,10 +8,6 @@ import com.cleanroommc.modularui.value.sync.IntSyncValue;
 import com.cleanroommc.modularui.value.sync.PanelSyncManager;
 import com.cleanroommc.modularui.value.sync.StringSyncValue;
 import gregtech.api.GTValues;
-import gregtech.api.gui.GuiTextures;
-import gregtech.api.gui.ModularUI;
-import gregtech.api.gui.widgets.LabelWidget;
-import gregtech.api.gui.widgets.TankWidget;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.*;
@@ -34,13 +29,11 @@ import keqing.gtsteam.client.textures.GTSteamTextures;
 import keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
@@ -138,7 +131,7 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
         }
     }
 
-    public IBlockState getULVCasingState() {
+    public IBlockState getTankCasingState() {
         return blockMultiblockCasing0.getState(TANK_WALL);
     }
 
@@ -226,9 +219,9 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
         }
         return pattern
                 .where('#', selfPredicate())
-                .where('A', states(getULVCasingState())
+                .where('A', states(getTankCasingState())
                 )
-                .where('B', states(getULVCasingState())
+                .where('B', states(getTankCasingState())
                         .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setExactLimit(1))
                         .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setExactLimit(1))
                         .or(states(Blocks.GLASS.getDefaultState())))
@@ -250,7 +243,7 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
                 .where('S', GTSteamMetaTileEntities.LARGE_FLUID_TANK, SOUTH)
                 .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], DOWN)
                 .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], NORTH)
-                .where('C', getULVCasingState())
+                .where('C', getTankCasingState())
                 .where('G', Blocks.GLASS.getDefaultState())
                 .where(' ', Blocks.AIR.getDefaultState());
 
@@ -268,7 +261,7 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
                 .where('S', GTSteamMetaTileEntities.LARGE_FLUID_TANK, SOUTH)
                 .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], SOUTH)
                 .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], SOUTH)
-                .where('C', getULVCasingState())
+                .where('C', getTankCasingState())
                 .where('G', Blocks.GLASS.getDefaultState())
                 .where(' ', Blocks.AIR.getDefaultState());
 
@@ -288,7 +281,7 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
                 .where('S', GTSteamMetaTileEntities.LARGE_FLUID_TANK, SOUTH)
                 .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], SOUTH)
                 .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], SOUTH)
-                .where('C', getULVCasingState())
+                .where('C', getTankCasingState())
                 .where('G', Blocks.GLASS.getDefaultState())
                 .where(' ', Blocks.AIR.getDefaultState());
 
@@ -307,7 +300,7 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
                 .where('S', GTSteamMetaTileEntities.LARGE_FLUID_TANK, SOUTH)
                 .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], SOUTH)
                 .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], SOUTH)
-                .where('C', getULVCasingState())
+                .where('C', getTankCasingState())
                 .where('G', Blocks.GLASS.getDefaultState())
                 .where(' ', Blocks.AIR.getDefaultState());
         shapeInfo.add(builder.build());
@@ -327,7 +320,7 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
                 .where('S', GTSteamMetaTileEntities.LARGE_FLUID_TANK, SOUTH)
                 .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], SOUTH)
                 .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], SOUTH)
-                .where('C', getULVCasingState())
+                .where('C', getTankCasingState())
                 .where('G', Blocks.GLASS.getDefaultState())
                 .where(' ', Blocks.AIR.getDefaultState());
         shapeInfo.add(builder.build());
@@ -349,7 +342,7 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
                 .where('S', GTSteamMetaTileEntities.LARGE_FLUID_TANK, SOUTH)
                 .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], SOUTH)
                 .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], SOUTH)
-                .where('C', getULVCasingState())
+                .where('C', getTankCasingState())
                 .where('G', Blocks.GLASS.getDefaultState())
                 .where(' ', Blocks.AIR.getDefaultState());
         shapeInfo.add(builder.build());
@@ -366,11 +359,11 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
             if (metaTileEntity instanceof IMultiblockAbilityPart<?> iMultiblockAbilityPart) {
                 return false;
             } else {
-                return (block != getULVCasingState())
+                return (block != getTankCasingState())
                         && (block != Blocks.GLASS.getDefaultState());
             }
         } else {
-            return (block != getULVCasingState())
+            return (block != getTankCasingState())
                     && (block != Blocks.GLASS.getDefaultState());
         }
     }

@@ -1,11 +1,10 @@
-package keqing.gtsteam.common.metatileentities.multi.steam;
+package keqing.gtsteam.common.metatileentities.multi.heat;
 
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
+import gregtech.api.metatileentity.multiblock.HeatMultiblockController;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
-import gregtech.api.metatileentity.multiblock.ParallelLogicType;
-import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.recipes.RecipeMaps;
@@ -18,21 +17,26 @@ import gregtech.common.blocks.MetaBlocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class MetaTileEntitySteamFermentationVat extends RecipeMapSteamMultiblockController {
-    private static final int PARALLEL_LIMIT = 8;
+public class MetaTileEntityHeatBrewingVat extends HeatMultiblockController {
 
-    public MetaTileEntitySteamFermentationVat(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, RecipeMaps.FERMENTING_RECIPES, CONVERSION_RATE, ParallelLogicType.APPEND_ITEMS);
-        this.recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
+    private static final int PARALLEL_LIMIT = 16;
+
+    public MetaTileEntityHeatBrewingVat(ResourceLocation metaTileEntityId) {
+        super(metaTileEntityId, RecipeMaps.BREWING_RECIPES);
+        recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity iGregTechTileEntity) {
-        return new MetaTileEntitySteamFermentationVat(metaTileEntityId);
+        return new MetaTileEntityHeatBrewingVat(metaTileEntityId);
     }
 
     @Override
@@ -46,8 +50,13 @@ public class MetaTileEntitySteamFermentationVat extends RecipeMapSteamMultiblock
                 .where('S', selfPredicate())
                 .where('X', states(MetaBlocks.MACHINE_CASING.getState(MachineCasingType.ULV))
                         .setMinGlobalLimited(40)
-                        .or(autoAbilities(true, false, true, true, true, true, false)))
-                .where('F', states(MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel)))
+                        .or(abilities(MultiblockAbility.EXPORT_ITEMS).setMaxGlobalLimited(2))
+                        .or(abilities(MultiblockAbility.IMPORT_ITEMS).setMaxGlobalLimited(1))
+                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMaxGlobalLimited(2))
+                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setMaxGlobalLimited(1))
+                        .or(abilities(MultiblockAbility.INPUT_HEAT).setExactLimit(1))
+                )
+                .where('F', frames(Materials.Steel))
                 .where('M', abilities(MultiblockAbility.MUFFLER_HATCH))
                 .where(' ', any())
                 .where('#', air())
@@ -65,10 +74,10 @@ public class MetaTileEntitySteamFermentationVat extends RecipeMapSteamMultiblock
         return Textures.PYROLYSE_OVEN_OVERLAY;
     }
 
-    @Override
-    public void addInformation(ItemStack stack, World player, List<String> tooltip,
+    @SideOnly(Side.CLIENT)
+    public void addInformation(ItemStack stack, @Nullable World world, @NotNull List<String> tooltip,
                                boolean advanced) {
-        super.addInformation(stack, player, tooltip, advanced);
-        TooltipBuilder.create().addSteamMachine(PARALLEL_LIMIT).build(this, tooltip);
+        super.addInformation(stack, world, tooltip, advanced);
+        TooltipBuilder.create().addHeatMachine(PARALLEL_LIMIT).build(this, tooltip);
     }
 }

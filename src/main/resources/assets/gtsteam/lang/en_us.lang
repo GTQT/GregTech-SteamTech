@@ -2,6 +2,7 @@
 recipemap.alloy_klin.name=Alloy Kiln
 recipemap.primitive_chemical_recipes.name=Primitive Chemical Reactor
 recipemap.lava_furnace.name=Lava Furnace
+recipemap.evaporation_pool.name=Evaporation Pool
 recipemap.biomimetic_factory_recipes.name=Matter Simulacrum
 recipemap.primitive_steam_turbine.name=Primitive Steam Turbine
 recipemap.primitive_combustion_generator.name=Primitive Combustion Generator
@@ -109,8 +110,6 @@ gtsteam.machine.tank.bronze.name=Bronze multi-block storage tank
 gtsteam.machine.large_steam_tank.name=Large Steam Tank
 gtsteam.machine.large_steam_tank.fluid_amount_text=Steam Quantity:
 
-gtsteam.machine.steam_fermentation_vat.name=Steam Fermentation Vat
-
 gtsteam.machine.large_fluid_tank.name=Large Fluid Storage Tanks
 gtsteam.machine.large_fluid_tank.size=Size: %d×%d×%d
 gtsteam.machine.large_fluid_tank.fluid_name_text=Fluid Type: %s
@@ -128,6 +127,11 @@ gtsteam.machine.steam_biomimetic_factory.name=The Eye of Martial Virtue
 
 gtsteam.machine.heat_furnace.name=Heat Furnace
 gtsteam.machine.heat_alloy_furnace.name=Heat Alloy Furnace
+gtsteam.machine.heat_coke_oven.name=Heat Coke Oven
+gtsteam.machine.heat_distillation_tower.name=Heat Distillation Tower
+gtsteam.machine.heat_cracking_unit.name=Heat Cracking Unit
+gtsteam.machine.heat_brewing_vat.name=Heat Brewing Vat
+gtsteam.machine.heat_evaporation_pond.name=Heat Evaporation Pond
 
 gtsteam.machine.scalable_storage.name=Scalable Storage Silo
 gtsteam.machine.scalable_storage.capacity=Max Capacity: %s items

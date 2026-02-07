@@ -100,7 +100,7 @@ public class PrimitiveBoilerRecipeLogic extends AbstractRecipeLogic implements I
             for (IFluidTank fluidTank : importFluids.getFluidTanks()) {
                 FluidStack fuelStack = fluidTank.drain(Integer.MAX_VALUE, false);
                 // 跳过水等不可作为燃料的流体
-                if (fuelStack == null || CommonFluidFilters.BOILER_FLUID.test(fuelStack)) continue;
+                if (fuelStack == null) continue;
 
                 // 尝试从内燃机燃料配方中查找匹配的配方
                 Recipe dieselRecipe = RecipeMaps.COMBUSTION_GENERATOR_FUELS.findRecipe(

@@ -73,6 +73,7 @@ public class MiscRecipes {
         GenerateRecipes();
         CasingRecipes();
         LavaFurnaceRecipes();
+        EvaporationRecipes();
         ItemRecipes();
     }
 
@@ -213,6 +214,26 @@ public class MiscRecipes {
                 .input("stoneSmooth")
                 .fluidOutputs(Lava.getFluid(1000))
                 .duration(1200)
+                .EUt(V[GTValues.ULV])
+                .buildAndRegister();
+    }
+
+    private static void EvaporationRecipes() {
+        EVAPORATION_RECIPES.recipeBuilder()
+                .fluidInputs(Materials.Water.getFluid(4000))
+                .fluidOutputs(SaltWater.getFluid(1000))
+                .chancedOutput(dust,Salt,6000,0)
+                .chancedOutput(dust,Salt,6000,0)
+                .chancedOutput(dust,Salt,6000,0)
+                .chancedOutput(dust,Salt,6000,0)
+                .duration(400)
+                .EUt(V[GTValues.ULV])
+                .buildAndRegister();
+
+        EVAPORATION_RECIPES.recipeBuilder()
+                .fluidInputs(SaltWater.getFluid(4000))
+                .output(dust,Salt,20)
+                .duration(800)
                 .EUt(V[GTValues.ULV])
                 .buildAndRegister();
     }
@@ -455,13 +476,6 @@ public class MiscRecipes {
                     'M', ELECTRIC_MOTOR_ULV,
                     'G', new UnificationEntry(circuit, LV));
 
-            ModHandler.addShapedRecipe(true, "steam_fermentation_vat", STEAM_FERMENTATION_VAT.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Steel),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID),
-                    'M', ELECTRIC_PUMP_ULV,
-                    'G', new UnificationEntry(circuit, LV));
-
             ModHandler.addShapedRecipe(true, "bronze_multiblock_tank", BRONZE_TANK.getStackForm(), " R ",
                     "hCw", " R ", 'R', new UnificationEntry(OrePrefix.ring, Steel), 'C',
                     MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID));
@@ -555,13 +569,6 @@ public class MiscRecipes {
                     'F', new UnificationEntry(frameGt, Steel),
                     'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS),
                     'M', ELECTRIC_MOTOR_ULV,
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_fermentation_vat", STEAM_FERMENTATION_VAT.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Steel),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS),
-                    'M', ELECTRIC_PUMP_ULV,
                     'G', new UnificationEntry(circuit, LV));
 
             ModHandler.addShapedRecipe(true, "bronze_multiblock_tank", BRONZE_TANK.getStackForm(), " R ",

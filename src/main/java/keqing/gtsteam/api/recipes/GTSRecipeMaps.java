@@ -11,11 +11,13 @@ import gregtech.core.sound.GTSoundEvents;
 public class GTSRecipeMaps {
     public static final RecipeMap<SimpleRecipeBuilder> BIOMIMETIC_FACTORY_RECIPES;
     public static final RecipeMap<SimpleRecipeBuilder> LAVA_FURNACE_RECIPES;
+    public static final RecipeMap<SimpleRecipeBuilder> EVAPORATION_RECIPES;
     public static final RecipeMap<PrimitiveRecipeBuilder> ALLOY_KILN;
     public static final RecipeMap<PrimitiveRecipeBuilder> PRIMITIVE_CHEMICAL_RECIPES;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_STEAM_TURBINE_FUELS;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_COMBUSTION_GENERATOR_FUELS;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_SEMI_FLUID_GENERATOR_FUELS;
+
 
     private GTSRecipeMaps() {}
     static {
@@ -71,6 +73,18 @@ public class GTSRecipeMaps {
                 .itemInputs(1)
                 .fluidOutputs(1)
                 .sound(GTSoundEvents.FIRE)
+                .build();
+
+        EVAPORATION_RECIPES = new RecipeMapBuilder<>("evaporation_pool",
+                new SimpleRecipeBuilder())
+                .itemInputs(2)
+                .itemOutputs(4)
+                .fluidInputs(1)
+                .fluidOutputs(1)
+                .uiBuilder(builder -> builder
+                        .progressBar(GTGuiTextures.PROGRESS_BAR_SIFT)
+                )
+                .sound(GTSoundEvents.CHEMICAL_REACTOR)
                 .build();
 
         ALLOY_KILN = new RecipeMapBuilder<>("alloy_klin",

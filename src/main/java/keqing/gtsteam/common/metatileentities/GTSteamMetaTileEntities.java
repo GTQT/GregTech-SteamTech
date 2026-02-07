@@ -16,9 +16,7 @@ import keqing.gtsteam.common.metatileentities.combustor.SolarCombustor;
 import keqing.gtsteam.common.metatileentities.multi.generator.MetaTileEntityPrimitiveBoiler;
 import keqing.gtsteam.common.metatileentities.multi.generator.MetaTileEntitySteamSolarBoiler;
 import keqing.gtsteam.common.metatileentities.multi.generator.PrimitiveBoilerType;
-import keqing.gtsteam.common.metatileentities.multi.heat.MetaTileEntityHeatAlloyFurnace;
-import keqing.gtsteam.common.metatileentities.multi.heat.MetaTileEntityHeatFurnace;
-import keqing.gtsteam.common.metatileentities.multi.heat.MetaTileEntityHeatSteamBoiler;
+import keqing.gtsteam.common.metatileentities.multi.heat.*;
 import keqing.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnExportHatch;
 import keqing.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnImportHatch;
 import keqing.gtsteam.common.metatileentities.multi.primitive.*;
@@ -58,10 +56,15 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntitySteamLavaFurnace STEAM_LAVA_FURNACE;
     public static MetaTileEntitySteamTranscendentPlasmaForge STEAM_TRANSCENDENT_PLASMA_FORGE;
     public static MetaTileEntitySteamBiomimeticFactory STEAM_BIOMIMETIC_FACTORY;
-    public static MetaTileEntitySteamFermentationVat STEAM_FERMENTATION_VAT;
+
 
     public static MetaTileEntityHeatFurnace HEAT_FURNACE;
     public static MetaTileEntityHeatAlloyFurnace HEAT_ALLOY_FURNACE;
+    public static MetaTileEntityHeatCokeOven HEAT_COKE_OVEN;
+    public static MetaTileEntityHeatDistillationTower HEAT_DISTILLATION_TOWER;
+    public static MetaTileEntityHeatCrackingUnit HEAT_CRACKING_UNIT;
+    public static MetaTileEntityHeatBrewingVat HEAT_BREWING_VAT;
+    public static MetaTileEntityHeatEvaporationPond HEAT_EVAPORATION_POND;
 
     public static MetaTileEntitySteamSolarBoiler STEAM_SOLAR_BOILER;
 
@@ -140,7 +143,6 @@ public class GTSteamMetaTileEntities {
         STEAM_SIFTER = registerMetaTileEntity(19, new MetaTileEntitySteamSifter(gtsId("steam_sifter")));
         STEAM_LATHE = registerMetaTileEntity(20, new MetaTileEntitySteamLathe(gtsId("steam_lathe")));
         STEAM_ALLOY_FURNACE = registerMetaTileEntity(21, new MetaTileEntitySteamAlloyFurnace(gtsId("steam_alloy_furnace")));
-        STEAM_FERMENTATION_VAT = registerMetaTileEntity(22, new MetaTileEntitySteamFermentationVat(gtsId("steam_fermentation_vat")));
 
         SCALABLE_STORAGE = registerMetaTileEntity(25, new MetaTileEntityScalableStorage(gtsId("scalable_storage")));
 
@@ -161,6 +163,11 @@ public class GTSteamMetaTileEntities {
         // ID 70：
         HEAT_FURNACE = registerMetaTileEntity(70, new MetaTileEntityHeatFurnace(gtsId("heat_furnace")));
         HEAT_ALLOY_FURNACE = registerMetaTileEntity(71, new MetaTileEntityHeatAlloyFurnace(gtsId("heat_alloy_furnace")));
+        HEAT_COKE_OVEN = registerMetaTileEntity(72, new MetaTileEntityHeatCokeOven(gtsId("heat_coke_oven")));
+        HEAT_DISTILLATION_TOWER = registerMetaTileEntity(73, new MetaTileEntityHeatDistillationTower(gtsId("heat_distillation_tower")));
+        HEAT_CRACKING_UNIT = registerMetaTileEntity(74, new MetaTileEntityHeatCrackingUnit(gtsId("heat_cracking_unit")));
+        HEAT_BREWING_VAT = registerMetaTileEntity(75, new MetaTileEntityHeatBrewingVat(gtsId("heat_brewing_vat")));
+        HEAT_EVAPORATION_POND = registerMetaTileEntity(76, new MetaTileEntityHeatEvaporationPond(gtsId("heat_evaporation_pond")));
 
         //单方块ULV
         ELECTRIC_FURNACE = registerMetaTileEntity(100, new SimpleMachineMetaTileEntity(gtsId("electric_furnace.ulv"), RecipeMaps.FURNACE_RECIPES, Textures.FURNACE_OVERLAY, 0, false));
