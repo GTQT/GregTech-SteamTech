@@ -39,7 +39,7 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntityIndustrialPrimitiveBlastFurnace INDUSTRIAL_PRIMITIVE_BLAST_FURNACE;
     public static MetaTileEntityAdvancePrimitiveBlastFurnace ADVANCE_PRIMITIVE_BLAST_FURNACE;
     public static MetaTileEntityAdvancedCokeOven ADVANCED_COKE_OVEN;
-    public static MetaTileEntityPrimitiveChemicalReactor PRIMITIVE_CHEMICAL_REACTOR;
+    public static MetaTileEntityCoagulationTank COAGULATION_TANK;
 
     public static MetaTileEntitySteamCompressor STEAM_COMPRESSOR;
     public static MetaTileEntitySteamExtractor STEAM_EXTRACTOR;
@@ -65,6 +65,7 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntityHeatCrackingUnit HEAT_CRACKING_UNIT;
     public static MetaTileEntityHeatBrewingVat HEAT_BREWING_VAT;
     public static MetaTileEntityHeatEvaporationPond HEAT_EVAPORATION_POND;
+    public static MetaTileEntityHeatChemicalReactor HEAT_CHEMICAL_REACTOR;
 
     public static MetaTileEntitySteamSolarBoiler STEAM_SOLAR_BOILER;
 
@@ -129,7 +130,7 @@ public class GTSteamMetaTileEntities {
         ADVANCE_PRIMITIVE_BLAST_FURNACE = registerMetaTileEntity(5, new MetaTileEntityAdvancePrimitiveBlastFurnace(gtsId("advance_primitive_blast_furnace")));
         INDUSTRIAL_PRIMITIVE_BLAST_FURNACE = registerMetaTileEntity(6, new MetaTileEntityIndustrialPrimitiveBlastFurnace(gtsId("industrial_primitive_blast_furnace")));
         ADVANCED_COKE_OVEN = registerMetaTileEntity(7, new MetaTileEntityAdvancedCokeOven(gtsId("advanced_coke_oven")));
-        PRIMITIVE_CHEMICAL_REACTOR = registerMetaTileEntity(8, new MetaTileEntityPrimitiveChemicalReactor(gtsId("primitive_chemical_reactor")));
+        COAGULATION_TANK = registerMetaTileEntity(8, new MetaTileEntityCoagulationTank(gtsId("coagulation_tank")));
 
         STEAM_COMPRESSOR = registerMetaTileEntity(10, new MetaTileEntitySteamCompressor(gtsId("steam_compressor")));
         STEAM_EXTRACTOR = registerMetaTileEntity(11, new MetaTileEntitySteamExtractor(gtsId("steam_extractor")));
@@ -168,6 +169,7 @@ public class GTSteamMetaTileEntities {
         HEAT_CRACKING_UNIT = registerMetaTileEntity(74, new MetaTileEntityHeatCrackingUnit(gtsId("heat_cracking_unit")));
         HEAT_BREWING_VAT = registerMetaTileEntity(75, new MetaTileEntityHeatBrewingVat(gtsId("heat_brewing_vat")));
         HEAT_EVAPORATION_POND = registerMetaTileEntity(76, new MetaTileEntityHeatEvaporationPond(gtsId("heat_evaporation_pond")));
+        HEAT_CHEMICAL_REACTOR = registerMetaTileEntity(77, new MetaTileEntityHeatChemicalReactor(gtsId("heat_chemical_reactor")));
 
         //单方块ULV
         ELECTRIC_FURNACE = registerMetaTileEntity(100, new SimpleMachineMetaTileEntity(gtsId("electric_furnace.ulv"), RecipeMaps.FURNACE_RECIPES, Textures.FURNACE_OVERLAY, 0, false));

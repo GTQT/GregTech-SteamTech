@@ -1,8 +1,11 @@
 #配方
 recipemap.alloy_klin.name=合金窑
-recipemap.primitive_chemical_recipes.name=原始化学反应
+recipemap.coagulation.name=凝固缸
 recipemap.lava_furnace.name=熔岩炉
 recipemap.evaporation_pool.name=蒸发池
+recipemap.heat_cracker.name=热力裂化
+recipemap.heat_distillation_tower.name=热力蒸馏
+recipemap.heat_chemical_reactor.name=热力化学反应
 recipemap.biomimetic_factory_recipes.name=物质拟生
 recipemap.primitive_steam_turbine.name=原始蒸汽轮机燃料
 recipemap.primitive_combustion_generator.name=原始燃气轮机燃料
@@ -81,8 +84,8 @@ gtsteam.machine.industrial_primitive_blast_furnace.tooltip.2=当机器不工作�
 gtsteam.machine.industrial_primitive_blast_furnace.tooltip.3=温度每提升200K，配方耗时*90%%（乘算）。
 #高级焦炉
 gtsteam.machine.advanced_coke_oven.name=高级焦炉
-#原始化反
-gtsteam.machine.primitive_chemical_reactor.name=原始化反
+#凝固缸
+gtsteam.machine.coagulation_tank.name=凝固缸
 #太阳能锅炉
 gtsteam.machine.steam_solar_boiler.name=太阳能锅炉
 gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip=需要§f%d秒§7预热,白天时热量上升，夜晚或下雨热量下降
@@ -131,6 +134,7 @@ gtsteam.machine.heat_distillation_tower.name=热力蒸馏塔
 gtsteam.machine.heat_cracking_unit.name=热力裂化炉
 gtsteam.machine.heat_brewing_vat.name=热力酿造池
 gtsteam.machine.heat_evaporation_pond.name=热力蒸发池
+gtsteam.machine.heat_chemical_reactor.name=热力化学反应釜
 
 gtsteam.machine.scalable_storage.name=可扩展存储筒仓
 gtsteam.machine.scalable_storage.capacity=最大容量：%s 个物品

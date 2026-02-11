@@ -44,7 +44,7 @@ public class MetaTileEntityHeatBrewingVat extends HeatMultiblockController {
         return FactoryBlockPattern.start()
                 .aisle("     ", "     ", " XXX ", " XXX ", " XXX ", "     ")
                 .aisle(" F F ", " XXX ", "X###X", "X###X", "X###X", " XXX ")
-                .aisle("     ", " XXX ", "X###X", "X###X", "X###X", " XMX ")
+                .aisle("     ", " XXX ", "X###X", "X###X", "X###X", " XXX ")
                 .aisle(" F F ", " XXX ", "X###X", "X###X", "X###X", " XXX ")
                 .aisle("     ", "     ", " XXX ", " XSX ", " XXX ", "     ")
                 .where('S', selfPredicate())
@@ -57,7 +57,6 @@ public class MetaTileEntityHeatBrewingVat extends HeatMultiblockController {
                         .or(abilities(MultiblockAbility.INPUT_HEAT).setExactLimit(1))
                 )
                 .where('F', frames(Materials.Steel))
-                .where('M', abilities(MultiblockAbility.MUFFLER_HATCH))
                 .where(' ', any())
                 .where('#', air())
                 .build();

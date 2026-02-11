@@ -1,8 +1,11 @@
 #配方
 recipemap.alloy_klin.name=Alloy Kiln
-recipemap.primitive_chemical_recipes.name=Primitive Chemical Reactor
+recipemap.coagulation.name=coagulation
 recipemap.lava_furnace.name=Lava Furnace
 recipemap.evaporation_pool.name=Evaporation Pool
+recipemap.heat_cracker.name=Heat Cracker
+recipemap.heat_distillation_tower.name=Heat Distillation Tower
+recipemap.heat_chemical_reactor.name=Heat Chemical Reactor
 recipemap.biomimetic_factory_recipes.name=Matter Simulacrum
 recipemap.primitive_steam_turbine.name=Primitive Steam Turbine
 recipemap.primitive_combustion_generator.name=Primitive Combustion Generator
@@ -81,8 +84,8 @@ gtsteam.machine.industrial_primitive_blast_furnace.tooltip.2=When the machine is
 gtsteam.machine.industrial_primitive_blast_furnace.tooltip.3=For every 200K temperature increase, recipe duration is multiplied by 90%% (multiplicative).
 #高级焦炉
 gtsteam.machine.advanced_coke_oven.name=Advanced Coke Oven
-#原始化反
-gtsteam.machine.primitive_chemical_reactor.name=Primitive Chemical Reactor
+#Coagulation Tank
+gtsteam.machine.coagulation_tank.name=Coagulation Tank
 #Solar Boiler
 gtsteam.machine.steam_solar_boiler.name=Solar Boiler
 gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip=Requires §f%d seconds§7 to preheat, heat increases during daytime and decreases at night or rain
@@ -132,6 +135,7 @@ gtsteam.machine.heat_distillation_tower.name=Heat Distillation Tower
 gtsteam.machine.heat_cracking_unit.name=Heat Cracking Unit
 gtsteam.machine.heat_brewing_vat.name=Heat Brewing Vat
 gtsteam.machine.heat_evaporation_pond.name=Heat Evaporation Pond
+gtsteam.machine.heat_chemical_reactor.name=Heat Chemical Reactor
 
 gtsteam.machine.scalable_storage.name=Scalable Storage Silo
 gtsteam.machine.scalable_storage.capacity=Max Capacity: %s items

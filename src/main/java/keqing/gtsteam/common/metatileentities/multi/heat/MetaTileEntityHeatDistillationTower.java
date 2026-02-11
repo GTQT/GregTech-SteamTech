@@ -7,14 +7,14 @@ import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
-import gregtech.api.recipes.RecipeMaps;
-import gregtech.api.unification.material.Materials;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
+import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.core.sound.GTSoundEvents;
+import keqing.gtsteam.api.recipes.GTSRecipeMaps;
 import keqing.gtsteam.client.textures.GTSteamTextures;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
@@ -28,43 +28,41 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static gregtech.api.util.RelativeDirection.*;
 import static keqing.gtsteam.common.block.GTSteamMetaBlocks.blockMultiblockCasing0;
 import static keqing.gtsteam.common.block.blocks.BlockMultiblockCasing0.CasingType.TANK_WALL;
 
 public class MetaTileEntityHeatDistillationTower extends HeatMultiblockController {
 
-    private static final int PARALLEL_LIMIT = 16;
-
     public MetaTileEntityHeatDistillationTower(ResourceLocation metaTileEntityId) {
-        //配方待定
-        super(metaTileEntityId, RecipeMaps.DISTILLATION_RECIPES);
-        recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
+        super(metaTileEntityId, GTSRecipeMaps.HEAT_DISTILLATION_RECIPES);
     }
 
     @Override
     protected @NotNull BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start()
-                .aisle("CCCC", "    ", "    ", "    ", "FFFF", "    ", "    ", "    ", "FFFF", "    ", "    ", "    ", "FFFF", "    ", "    ")
-                .aisle("CCCC", " PO ", " PO ", " PO ", "FPPF", " PO ", " PO ", " PO ", "FPPF", " PO ", " PO ", " PO ", "FPPF", " PP ", " PM ")
-                .aisle("CCCC", " PP ", " PP ", " PP ", "FPPF", " PP ", " PP ", " PP ", "FPPF", " PP ", " PP ", " PP ", "FPPF", " PP ", " PP ")
-                .aisle("CSCC", "    ", "    ", "    ", "FFFF", "    ", "    ", "    ", "FFFF", "    ", "    ", "    ", "FFFF", "    ", "    ")
+        return FactoryBlockPattern.start(RIGHT, FRONT, UP)
+                .aisle("FFF", "FCF", "FFF")
+                .aisle("CSC", "C#C", "CCC")
+                .aisle("XXX", "X#X", "XXX").setRepeatable(1, 8)
+                .aisle("XXX", "XXX", "XXX")
                 .where('S', selfPredicate())
+                .where('F', states(getFireBoxState()))
                 .where('C', states(getCasingState())
                         .or(abilities(MultiblockAbility.EXPORT_ITEMS).setMaxGlobalLimited(1))
-                        .or(abilities(MultiblockAbility.IMPORT_ITEMS).setMaxGlobalLimited(1))
-                        .or(abilities(MultiblockAbility.INPUT_HEAT).setExactLimit(1))
-                )
-                .where('P', states(getTankCasingState()))
-                .where('O', states(getTankCasingState())
-                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMinGlobalLimited(3))
-                )
-                .where('M', abilities(MultiblockAbility.MUFFLER_HATCH))
-                .where('F', frames(Materials.Steel))
-                .where(' ', any())
+                        .or(abilities(MultiblockAbility.INPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(3))
+                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setExactLimit(1)))
+                .where('X', states(getTankCasingState())
+                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMaxLayerLimited(1, 1))
+                        .or(autoAbilities(true, false)))
+                .where('#', air())
                 .build();
     }
     public IBlockState getTankCasingState() {
         return blockMultiblockCasing0.getState(TANK_WALL);
+    }
+
+    private IBlockState getFireBoxState() {
+        return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX);
     }
 
     private static IBlockState getCasingState() {
@@ -98,6 +96,6 @@ public class MetaTileEntityHeatDistillationTower extends HeatMultiblockControlle
     public void addInformation(ItemStack stack, @Nullable World world, @NotNull List<String> tooltip,
                                boolean advanced) {
         super.addInformation(stack, world, tooltip, advanced);
-        TooltipBuilder.create().addHeatMachine(PARALLEL_LIMIT).build(this, tooltip);
+        TooltipBuilder.create().addHeatMachine(1).build(this, tooltip);
     }
 }

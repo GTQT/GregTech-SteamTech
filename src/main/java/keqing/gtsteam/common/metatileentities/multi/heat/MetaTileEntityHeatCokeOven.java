@@ -40,7 +40,7 @@ public class MetaTileEntityHeatCokeOven extends HeatMultiblockController {
     @Override
     protected @NotNull BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
-                .aisle("CCC", "CMC", "CCC")
+                .aisle("CCC", "CCC", "CCC")
                 .aisle("FCF", "FPF", "FCF")
                 .aisle("FCF", "FPF", "FCF")
                 .aisle("CCC", "CSC", "CCC")
@@ -50,7 +50,6 @@ public class MetaTileEntityHeatCokeOven extends HeatMultiblockController {
                         .or(abilities(MultiblockAbility.IMPORT_ITEMS).setMinGlobalLimited(1).setMaxGlobalLimited(3))
                         .or(abilities(MultiblockAbility.INPUT_HEAT).setExactLimit(1))
                 )
-                .where('M', abilities(MultiblockAbility.MUFFLER_HATCH))
                 .where('F', states(getFireBoxState()))
                 .where('P', states(getPipeState()))
                 .build();

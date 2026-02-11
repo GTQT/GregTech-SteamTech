@@ -7,7 +7,6 @@ import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
-import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
@@ -16,6 +15,7 @@ import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.core.sound.GTSoundEvents;
+import keqing.gtsteam.api.recipes.GTSRecipeMaps;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -30,27 +30,22 @@ import java.util.List;
 
 public class MetaTileEntityHeatCrackingUnit extends HeatMultiblockController {
 
-    private static final int PARALLEL_LIMIT = 16;
-
     public MetaTileEntityHeatCrackingUnit(ResourceLocation metaTileEntityId) {
-        //配方待定
-        super(metaTileEntityId, RecipeMaps.CRACKING_RECIPES);
-        recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
+        super(metaTileEntityId, GTSRecipeMaps.HEAT_CRACKING_RECIPES);
     }
 
     @Override
     protected @NotNull BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
-                .aisle("CFCFC", "CFMFC", "CFCFC")
-                .aisle("CCCCC", "IPPPO", "CCICC")
+                .aisle("CFCFC", "CFCFC", "CFCFC")
+                .aisle("CCCCC", "I###O", "CCICC")
                 .aisle("CFCFC", "CFSFC", "CFCFC")
                 .where('S', selfPredicate())
                 .where('C', states(getCasingState()).or(abilities(MultiblockAbility.INPUT_HEAT).setExactLimit(1)))
                 .where('I', states(getCasingState()).or(abilities(MultiblockAbility.IMPORT_FLUIDS).setExactLimit(2)))
                 .where('O', states(getCasingState()).or(abilities(MultiblockAbility.EXPORT_FLUIDS).setExactLimit(1)))
-                .where('M', abilities(MultiblockAbility.MUFFLER_HATCH))
                 .where('F', states(getFireBoxState()))
-                .where('P', states(getPipeState()))
+                .where('#', air())
                 .build();
     }
 
@@ -84,6 +79,6 @@ public class MetaTileEntityHeatCrackingUnit extends HeatMultiblockController {
     public void addInformation(ItemStack stack, @Nullable World world, @NotNull List<String> tooltip,
                                boolean advanced) {
         super.addInformation(stack, world, tooltip, advanced);
-        TooltipBuilder.create().addHeatMachine(PARALLEL_LIMIT).build(this, tooltip);
+        TooltipBuilder.create().addHeatMachine(1).build(this, tooltip);
     }
 }

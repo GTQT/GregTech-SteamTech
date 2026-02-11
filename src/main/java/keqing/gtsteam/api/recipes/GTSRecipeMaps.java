@@ -3,17 +3,20 @@ package keqing.gtsteam.api.recipes;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.recipes.RecipeMapBuilder;
-import gregtech.api.recipes.builders.FuelRecipeBuilder;
-import gregtech.api.recipes.builders.PrimitiveRecipeBuilder;
-import gregtech.api.recipes.builders.SimpleRecipeBuilder;
+import gregtech.api.recipes.builders.*;
+import gregtech.api.recipes.ui.impl.CrackerUnitUI;
+import gregtech.api.recipes.ui.impl.DistillationTowerUI;
 import gregtech.core.sound.GTSoundEvents;
 
 public class GTSRecipeMaps {
     public static final RecipeMap<SimpleRecipeBuilder> BIOMIMETIC_FACTORY_RECIPES;
     public static final RecipeMap<SimpleRecipeBuilder> LAVA_FURNACE_RECIPES;
-    public static final RecipeMap<SimpleRecipeBuilder> EVAPORATION_RECIPES;
+    public static final RecipeMap<HeatRecipeBuilder> EVAPORATION_RECIPES;
+    public static final RecipeMap<HeatRecipeBuilder> HEAT_CRACKING_RECIPES;
+    public static final RecipeMap<HeatRecipeBuilder> HEAT_DISTILLATION_RECIPES;
+    public static final RecipeMap<HeatRecipeBuilder> HEAT_CHEMICAL_RECIPES;
     public static final RecipeMap<PrimitiveRecipeBuilder> ALLOY_KILN;
-    public static final RecipeMap<PrimitiveRecipeBuilder> PRIMITIVE_CHEMICAL_RECIPES;
+    public static final RecipeMap<PrimitiveRecipeBuilder> COAGULATION_RECIPES;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_STEAM_TURBINE_FUELS;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_COMBUSTION_GENERATOR_FUELS;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_SEMI_FLUID_GENERATOR_FUELS;
@@ -76,7 +79,7 @@ public class GTSRecipeMaps {
                 .build();
 
         EVAPORATION_RECIPES = new RecipeMapBuilder<>("evaporation_pool",
-                new SimpleRecipeBuilder())
+                new HeatRecipeBuilder())
                 .itemInputs(2)
                 .itemOutputs(4)
                 .fluidInputs(1)
@@ -84,6 +87,41 @@ public class GTSRecipeMaps {
                 .uiBuilder(builder -> builder
                         .progressBar(GTGuiTextures.PROGRESS_BAR_SIFT)
                 )
+                .sound(GTSoundEvents.CHEMICAL_REACTOR)
+                .build();
+
+        HEAT_CRACKING_RECIPES = new RecipeMapBuilder<>("heat_cracker",
+                new HeatRecipeBuilder())
+                .itemInputs(1)
+                .fluidInputs(2)
+                .fluidOutputs(2)
+                .ui(CrackerUnitUI::new)
+                .sound(GTSoundEvents.FIRE)
+                .build();
+
+        HEAT_DISTILLATION_RECIPES = new RecipeMapBuilder<>(
+                "heat_distillation_tower", new HeatRecipeBuilder())
+                .itemOutputs(1)
+                .fluidInputs(1)
+                .fluidOutputs(12)
+                .ui(DistillationTowerUI::new)
+                .sound(GTSoundEvents.CHEMICAL_REACTOR)
+                .build();
+
+        HEAT_CHEMICAL_RECIPES = new RecipeMapBuilder<>("heat_chemical_reactor",
+                new HeatRecipeBuilder())
+                .itemInputs(2)
+                .itemOutputs(2)
+                .fluidInputs(3)
+                .fluidOutputs(2)
+                .uiBuilder(b -> b
+                        .itemSlotOverlay(GTGuiTextures.MOLECULAR_OVERLAY_1, false, false)
+                        .itemSlotOverlay(GTGuiTextures.MOLECULAR_OVERLAY_2, false, true)
+                        .itemSlotOverlay(GTGuiTextures.VIAL_OVERLAY_1, true)
+                        .fluidSlotOverlay(GTGuiTextures.MOLECULAR_OVERLAY_3, false)
+                        .fluidSlotOverlay(GTGuiTextures.MOLECULAR_OVERLAY_4, false)
+                        .fluidSlotOverlay(GTGuiTextures.VIAL_OVERLAY_2, true)
+                        .progressBar(GTGuiTextures.PROGRESS_BAR_ARROW_MULTIPLE))
                 .sound(GTSoundEvents.CHEMICAL_REACTOR)
                 .build();
 
@@ -96,7 +134,7 @@ public class GTSRecipeMaps {
                 .sound(GTSoundEvents.FIRE)
                 .build();
 
-        PRIMITIVE_CHEMICAL_RECIPES = new RecipeMapBuilder<>("primitive_chemical_recipes",
+        COAGULATION_RECIPES = new RecipeMapBuilder<>("coagulation",
                 new PrimitiveRecipeBuilder())
                 .itemInputs(3)
                 .itemOutputs(3)

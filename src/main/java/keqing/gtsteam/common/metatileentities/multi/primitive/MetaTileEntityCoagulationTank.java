@@ -30,7 +30,6 @@ import keqing.gtsteam.common.block.GTSteamMetaBlocks;
 import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing0;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -43,20 +42,20 @@ import java.util.List;
 
 import static gregtech.api.util.RelativeDirection.*;
 
-public class MetaTileEntityPrimitiveChemicalReactor extends NoEnergyMultiblockController {
+public class MetaTileEntityCoagulationTank extends NoEnergyMultiblockController {
 
     private static final TraceabilityPredicate SNOW_PREDICATE = new TraceabilityPredicate(
             bws -> GTUtility.isBlockSnow(bws.getBlockState()));
 
     int size;
 
-    public MetaTileEntityPrimitiveChemicalReactor(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, GTSRecipeMaps.PRIMITIVE_CHEMICAL_RECIPES);
+    public MetaTileEntityCoagulationTank(ResourceLocation metaTileEntityId) {
+        super(metaTileEntityId, GTSRecipeMaps.COAGULATION_RECIPES);
     }
 
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity tileEntity) {
-        return new MetaTileEntityPrimitiveChemicalReactor(metaTileEntityId);
+        return new MetaTileEntityCoagulationTank(metaTileEntityId);
     }
 
     @Override

@@ -5,17 +5,14 @@ import gregtech.api.items.OreDictNames;
 import gregtech.api.recipes.ModHandler;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.unification.material.MarkerMaterials;
-import gregtech.api.unification.material.Material;
 import gregtech.api.unification.material.Materials;
 import gregtech.api.unification.ore.OrePrefix;
 import gregtech.api.unification.stack.UnificationEntry;
 import gregtech.api.util.GTUtility;
 import gregtech.common.ConfigHolder;
-import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.items.MetaItems;
 import gregtech.common.metatileentities.MetaTileEntities;
-import gtqt.api.util.recipeUtility;
 import keqing.gtsteam.common.block.GTSteamMetaBlocks;
 import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing0;
 import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing1;
@@ -220,21 +217,14 @@ public class MiscRecipes {
 
     private static void EvaporationRecipes() {
         EVAPORATION_RECIPES.recipeBuilder()
-                .fluidInputs(Materials.Water.getFluid(4000))
-                .fluidOutputs(SaltWater.getFluid(1000))
-                .chancedOutput(dust,Salt,6000,0)
-                .chancedOutput(dust,Salt,6000,0)
-                .chancedOutput(dust,Salt,6000,0)
-                .chancedOutput(dust,Salt,6000,0)
-                .duration(400)
-                .EUt(V[GTValues.ULV])
-                .buildAndRegister();
-
-        EVAPORATION_RECIPES.recipeBuilder()
-                .fluidInputs(SaltWater.getFluid(4000))
-                .output(dust,Salt,20)
-                .duration(800)
-                .EUt(V[GTValues.ULV])
+                .fluidInputs(SaltWater.getFluid(2000))
+                .chancedOutput(dust,Salt,5000,500)
+                .chancedOutput(dust,Salt,5000,500)
+                .chancedOutput(dust,Salt,5000,500)
+                .chancedOutput(dust,Salt,5000,500)
+                .duration(200)
+                .Heat(30)
+                .Temperature(573)
                 .buildAndRegister();
     }
 
@@ -375,7 +365,7 @@ public class MiscRecipes {
                 'B', PRIMITIVE_BLAST_FURNACE.getStackForm());
 
         //原始化学反应釜
-        ModHandler.addShapedRecipe(true, "primitive_chemical_reactor", PRIMITIVE_CHEMICAL_REACTOR.getStackForm(),
+        ModHandler.addShapedRecipe(true, "primitive_chemical_reactor", COAGULATION_TANK.getStackForm(),
                 "PRP", "sQh", "PSP",
                 'P', new UnificationEntry(plate, TreatedWood),
                 'Q', new UnificationEntry(pipeLargeFluid, TreatedWood),
