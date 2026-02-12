@@ -24,12 +24,14 @@ import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.BlockFireboxCasing;
-import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
 import keqing.gtsteam.api.capability.impl.NoEnergyMultiblockRecipeLogic;
 import keqing.gtsteam.api.metatileentity.multiblock.NoEnergyMultiblockController;
 import keqing.gtsteam.api.pattern.TraceabilityPredicate;
+import keqing.gtsteam.client.textures.GTSteamTextures;
+import keqing.gtsteam.common.block.GTSteamMetaBlocks;
+import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing0;
 import keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -67,10 +69,6 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
         this.recipeMapWorkable = new IndustrialPrimitiveBlastFurnaceLogic(this, PRIMITIVE_BLAST_FURNACE_RECIPES);
     }
 
-    private static IBlockState getCasingState() {
-        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.PRIMITIVE_BRICKS);
-    }
-
     private static IBlockState getFrameState() {
         return MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel);
     }
@@ -81,6 +79,10 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
 
     private static IBlockState getFireBoxState() {
         return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX);
+    }
+
+    protected IBlockState getCasingState() {
+        return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES);
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
@@ -148,8 +150,8 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
 
     @SideOnly(Side.CLIENT)
     @Override
-    public ICubeRenderer getBaseTexture(IMultiblockPart iMultiblockPart) {
-        return Textures.PRIMITIVE_BRICKS;
+    public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
+        return GTSteamTextures.PORCELAIN_TILES;
     }
 
     @SideOnly(Side.CLIENT)
@@ -266,22 +268,14 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
         protected void modifyOverclockPost(@NotNull OCResult ocResult, @NotNull RecipePropertyStorage storage) {
             super.modifyOverclockPost(ocResult, storage);
 
-            // 计算基于温度的倍数
-            double baseMultiplier = 1.0;
-
-            // 每高出基础温度200度，耗时减少10%（相当于乘以0.9）
-            int currentTemp = TEMP; // 当前温度
-
-            if (currentTemp > MIN_TEMP) {
-                int tempDifference = currentTemp - MIN_TEMP;
-                int bonusCount = tempDifference / 200; // 每200度一次加速
-
-                // 每次加速使耗时变为原来的90%
-                baseMultiplier = Math.pow(0.9, bonusCount);
+            // 温度加速机制：每200K温差减少20%时间（乘算）
+            if (TEMP > MIN_TEMP) {
+                int tempDiff = TEMP - MIN_TEMP;
+                int bonusSteps = tempDiff / 200;
+                double multiplier = Math.pow(0.8, bonusSteps);
+                int newDuration = (int) (ocResult.duration() * multiplier);
+                ocResult.setDuration(Math.max(1, newDuration));
             }
-
-            int newDuration = (int) (ocResult.duration() * baseMultiplier);
-            ocResult.setDuration(newDuration);
         }
 
         @Override

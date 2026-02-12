@@ -1,13 +1,11 @@
 package keqing.gtsteam.api.unification.matreials;
 
-import gregtech.api.fluids.FluidBuilder;
 import gregtech.api.unification.material.Material;
 import keqing.gtsteam.api.unification.GTSteamMaterials;
 
 import static gregtech.api.unification.material.Materials.*;
-import static gregtech.api.unification.material.Materials.Steel;
 import static gregtech.api.unification.material.info.MaterialFlags.*;
-import static gregtech.api.unification.material.info.MaterialFlags.GENERATE_RING;
+import static gregtech.api.unification.material.info.MaterialIconSet.LIGNITE;
 import static gregtech.api.unification.material.info.MaterialIconSet.SHINY;
 import static keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities.gtsId;
 
@@ -17,14 +15,14 @@ public class FirstDegreeMaterials {
 
     private static final int END_ID = startId + 100;
 
+    public FirstDegreeMaterials() {
+    }
+
     private static int getMaterialsId() {
         if (startId < END_ID) {
             return startId++;
         }
         throw new ArrayIndexOutOfBoundsException();
-    }
-
-    public FirstDegreeMaterials() {
     }
 
     public static void register() {
@@ -46,28 +44,22 @@ public class FirstDegreeMaterials {
                 .flags(DISABLE_DECOMPOSITION, NO_WORKING, NO_SMASHING, NO_SMELTING, GENERATE_ROUND, GENERATE_FRAME, GENERATE_ROTOR, GENERATE_GEAR, GENERATE_SMALL_GEAR, GENERATE_BOLT_SCREW, GENERATE_PLATE, GENERATE_SPRING_SMALL, GENERATE_SPRING, GENERATE_RING)
                 .build();
 
-        //橡胶浆料
-        GTSteamMaterials.RubberPulp = new Material.Builder(getMaterialsId(), gtsId("rubber_pulp"))
-                .fluid()
-                .color(0xF5F5DC)
-                .flags(DISABLE_DECOMPOSITION)
+        //褐煤
+        GTSteamMaterials.Lignite = new Material.Builder(getMaterialsId(), gtsId("lignite"))
+                .gem(1, 1200).ore(2, 1) // default coal burn time in vanilla
+                .color(0x8B5A00).iconSet(LIGNITE)
+                .flags(FLAMMABLE, NO_SMELTING, NO_SMASHING, MORTAR_GRINDABLE, EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES,
+                        DISABLE_DECOMPOSITION)
+                .components(Carbon, 1)
                 .build()
-                .setTooltips("最原始的橡胶浆料");
+                .setTooltips("煤化程度最低的矿产煤");
 
-        // 生橡胶乳清液
-        GTSteamMaterials.RawRubberWhey = new Material.Builder(getMaterialsId(), gtsId("raw_rubber_whey"))
+        //石灰浆
+        GTSteamMaterials.Calcimine = new Material.Builder(getMaterialsId(), gtsId("calcimine"))
                 .fluid()
-                .color(0xF0E68C)
+                .color(0xE5E5E5)
                 .flags(DISABLE_DECOMPOSITION)
                 .build()
-                .setTooltips("含橡胶颗粒的乳状液体，需要进一步分离");
-
-        // 生橡胶沉淀
-        GTSteamMaterials.RawRubberPrecipitate = new Material.Builder(getMaterialsId(), gtsId("raw_rubber_precipitate"))
-                .ingot()
-                .color(0xD2B48C)
-                .flags(DISABLE_DECOMPOSITION)
-                .build()
-                .setTooltips("未纯化的橡胶沉淀，含有杂质");
+                .setTooltips("石灰的纯度较低的纯化物");
     }
 }

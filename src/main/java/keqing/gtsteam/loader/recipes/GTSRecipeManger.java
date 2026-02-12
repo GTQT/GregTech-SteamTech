@@ -1,5 +1,7 @@
 package keqing.gtsteam.loader.recipes;
 
+import keqing.gtsteam.loader.recipes.chain.*;
+
 public class GTSRecipeManger {
     private GTSRecipeManger() {
 
@@ -9,9 +11,13 @@ public class GTSRecipeManger {
     public static void init() {
         AlloyKlinRecipes.init();
         MiscRecipes.init();
+        LigniteChain.init();
+        GenerateRecipes.init();
+        CokeOvenChain.init();
+        CoalChain.init();
         BiomimeticFactoryRecipes.init();
         CeramicChain.init();
-        GalvanizedSteelLine.init();
+        GalvanizedSteelChain.init();
         RubberChain.init();
     }
 }

@@ -11,6 +11,7 @@ import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
+import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
@@ -27,21 +28,23 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class MetaTileEntityHeatAlloyFurnace extends HeatMultiblockController {
+public class MetaTileEntityHeatThermalCentrifuge extends HeatMultiblockController {
 
     private static final int PARALLEL_LIMIT = 8;
 
-    public MetaTileEntityHeatAlloyFurnace(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, RecipeMaps.ALLOY_SMELTER_RECIPES);
+    public MetaTileEntityHeatThermalCentrifuge(ResourceLocation metaTileEntityId) {
+        super(metaTileEntityId, RecipeMaps.THERMAL_CENTRIFUGE_RECIPES);
         recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 
     @Override
     protected @NotNull BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
-                .aisle("FFF", "CCC", "CCC")
-                .aisle("FCF", "C#C", "CCC")
-                .aisle("FFF", "CSC", "CCC")
+                .aisle("#CCC#", "#FFF#", "#CCC#")
+                .aisle("CCCCC", "F###F", "CCCCC")
+                .aisle("CCCCC", "F###F", "CCCCC")
+                .aisle("CCCCC", "F###F", "CCCCC")
+                .aisle("#CSC#", "#FFF#", "#CCC#")
                 .where('S', selfPredicate())
                 .where('C', states(getCasingState())
                         .or(abilities(MultiblockAbility.EXPORT_ITEMS).setMinGlobalLimited(1).setMaxGlobalLimited(3))
@@ -49,6 +52,7 @@ public class MetaTileEntityHeatAlloyFurnace extends HeatMultiblockController {
                         .or(abilities(MultiblockAbility.INPUT_HEAT).setExactLimit(1))
                 )
                 .where('F', states(getFireBoxState()))
+                .where('P', states(getPipeState()))
                 .where('#', any())
                 .build();
     }
@@ -61,9 +65,13 @@ public class MetaTileEntityHeatAlloyFurnace extends HeatMultiblockController {
         return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
     }
 
+    private static IBlockState getPipeState() {
+        return MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE);
+    }
+
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity tileEntity) {
-        return new MetaTileEntityHeatAlloyFurnace(metaTileEntityId);
+        return new MetaTileEntityHeatThermalCentrifuge(metaTileEntityId);
     }
 
     @SideOnly(Side.CLIENT)

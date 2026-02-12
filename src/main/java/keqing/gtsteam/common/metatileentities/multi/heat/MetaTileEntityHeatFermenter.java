@@ -11,44 +11,62 @@ import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
+import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
-import gregtech.core.sound.GTSoundEvents;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
-public class MetaTileEntityHeatAlloyFurnace extends HeatMultiblockController {
+public class MetaTileEntityHeatFermenter extends HeatMultiblockController {
 
-    private static final int PARALLEL_LIMIT = 8;
+    private static final int PARALLEL_LIMIT = 4;
 
-    public MetaTileEntityHeatAlloyFurnace(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, RecipeMaps.ALLOY_SMELTER_RECIPES);
+    public MetaTileEntityHeatFermenter(ResourceLocation metaTileEntityId) {
+        super(metaTileEntityId, RecipeMaps.FERMENTING_RECIPES);
         recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
+    }
+
+    private static IBlockState getCasingState() {
+        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
+    }
+
+    private static IBlockState getPipeState() {
+        return MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE);
+    }
+
+    @Override
+    public MetaTileEntity createMetaTileEntity(IGregTechTileEntity iGregTechTileEntity) {
+        return new MetaTileEntityHeatFermenter(metaTileEntityId);
     }
 
     @Override
     protected @NotNull BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
-                .aisle("FFF", "CCC", "CCC")
-                .aisle("FCF", "C#C", "CCC")
-                .aisle("FFF", "CSC", "CCC")
+                .aisle("CCCCC", "CFFFC", "CFFFC", "CCCCC")
+                .aisle("CCCCC", "F###F", "F###F", "CCCCC")
+                .aisle("CCCCC", "F###F", "F###F", "CCCCC")
+                .aisle("CCCCC", "F###F", "F###F", "CCCCC")
+                .aisle("CCSCC", "CFFFC", "CFFFC", "CCCCC")
                 .where('S', selfPredicate())
                 .where('C', states(getCasingState())
                         .or(abilities(MultiblockAbility.EXPORT_ITEMS).setMinGlobalLimited(1).setMaxGlobalLimited(3))
                         .or(abilities(MultiblockAbility.IMPORT_ITEMS).setMinGlobalLimited(1).setMaxGlobalLimited(3))
+                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMinGlobalLimited(1).setMaxGlobalLimited(3))
+                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setMinGlobalLimited(1).setMaxGlobalLimited(3))
                         .or(abilities(MultiblockAbility.INPUT_HEAT).setExactLimit(1))
                 )
                 .where('F', states(getFireBoxState()))
+                .where('P', states(getPipeState()))
                 .where('#', any())
                 .build();
     }
@@ -57,23 +75,16 @@ public class MetaTileEntityHeatAlloyFurnace extends HeatMultiblockController {
         return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX);
     }
 
-    private static IBlockState getCasingState() {
-        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
-    }
-
-    @Override
-    public MetaTileEntity createMetaTileEntity(IGregTechTileEntity tileEntity) {
-        return new MetaTileEntityHeatAlloyFurnace(metaTileEntityId);
-    }
-
     @SideOnly(Side.CLIENT)
     public ICubeRenderer getBaseTexture(IMultiblockPart iMultiblockPart) {
         return Textures.SOLID_STEEL_CASING;
     }
 
+
+    @Nonnull
     @Override
-    public SoundEvent getBreakdownSound() {
-        return GTSoundEvents.BREAKDOWN_ELECTRICAL;
+    protected ICubeRenderer getFrontOverlay() {
+        return Textures.PYROLYSE_OVEN_OVERLAY;
     }
 
     @SideOnly(Side.CLIENT)

@@ -17,15 +17,20 @@ public class GTSMetaitems {
     public static MetaItem<?>.MetaValueItem BURNED_CERAMIC_TILES;
     public static MetaItem<?>.MetaValueItem GALVANIZED_CERAMIC_TILE;
 
-    public static GTSMetaitem GTS_META_ITEM;
+    public static MetaItem<?>.MetaValueItem CACTUS_CHARCOAL;
+    public static MetaItem<?>.MetaValueItem CACTUS_COAL;
+    public static MetaItem<?>.MetaValueItem SUGAR_CHARCOAL;
+    public static MetaItem<?>.MetaValueItem SUGAR_COAL;
+
+    public static GTSMetaItem GTS_META_ITEM;
 
     public static void initialization() {
-        GTS_META_ITEM = new GTSMetaitem();
+        GTS_META_ITEM = new GTSMetaItem();
 
     }
 
     public static void initSubItems() {
-        GTSMetaitem.registerItems();
+        GTSMetaItem.registerItems();
     }
 
 }

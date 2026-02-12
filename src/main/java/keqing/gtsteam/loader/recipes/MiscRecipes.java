@@ -67,7 +67,6 @@ import static keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities.WIR
 public class MiscRecipes {
     public static void init() {
         MachineRecipes();
-        GenerateRecipes();
         CasingRecipes();
         LavaFurnaceRecipes();
         EvaporationRecipes();
@@ -197,21 +196,24 @@ public class MiscRecipes {
                 .input(dust, Stone)
                 .fluidOutputs(Lava.getFluid(1000))
                 .duration(1000)
-                .EUt(V[GTValues.ULV])
+                .Heat(10)
+                .Temperature(473)
                 .buildAndRegister();
 
         LAVA_FURNACE_RECIPES.recipeBuilder()
                 .input("stoneCobble")
                 .fluidOutputs(Lava.getFluid(1000))
                 .duration(1200)
-                .EUt(V[GTValues.ULV])
+                .Heat(10)
+                .Temperature(473)
                 .buildAndRegister();
 
         LAVA_FURNACE_RECIPES.recipeBuilder()
                 .input("stoneSmooth")
                 .fluidOutputs(Lava.getFluid(1000))
                 .duration(1200)
-                .EUt(V[GTValues.ULV])
+                .Heat(10)
+                .Temperature(473)
                 .buildAndRegister();
     }
 
@@ -283,46 +285,6 @@ public class MiscRecipes {
                 'S', new UnificationEntry(OrePrefix.stick, Steel));
     }
 
-    private static void GenerateRecipes() {
-        // steam generator fuels
-        PRIMITIVE_STEAM_TURBINE_FUELS.recipeBuilder()
-                .fluidInputs(Steam.getFluid(160))
-                .fluidOutputs(DistilledWater.getFluid(1))
-                .duration(10)
-                .EUt(V[GTValues.ULV])
-                .buildAndRegister();
-
-        PRIMITIVE_COMBUSTION_GENERATOR_FUELS.recipeBuilder()
-                .fluidInputs(RawOil.getFluid(16))
-                .duration(15)
-                .EUt(V[GTValues.ULV])
-                .buildAndRegister();
-
-        PRIMITIVE_COMBUSTION_GENERATOR_FUELS.recipeBuilder()
-                .fluidInputs(NaturalGas.getFluid(8))
-                .duration(20)
-                .EUt(V[GTValues.ULV])
-                .buildAndRegister();
-
-        PRIMITIVE_SEMI_FLUID_GENERATOR_FUELS.recipeBuilder()
-                .fluidInputs(Biomass.getFluid(4))
-                .duration(4)
-                .EUt(V[GTValues.ULV])
-                .buildAndRegister();
-
-        PRIMITIVE_SEMI_FLUID_GENERATOR_FUELS.recipeBuilder()
-                .fluidInputs(Creosote.getFluid(16))
-                .duration(4)
-                .EUt(V[GTValues.ULV])
-                .buildAndRegister();
-
-        PRIMITIVE_SEMI_FLUID_GENERATOR_FUELS.recipeBuilder()
-                .fluidInputs(Lava.getFluid(5))
-                .duration(4)
-                .EUt(V[GTValues.ULV])
-                .buildAndRegister();
-    }
-
     private static void MachineRecipes() {
         //合金窑
         ModHandler.addShapedRecipe(true, "alloy_kiln", GTSteamMetaTileEntities.ALLOY_KILN.getStackForm(),
@@ -339,22 +301,6 @@ public class MiscRecipes {
                 "hw", "CB",
                 'C', Blocks.CHEST,
                 'B', GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(GALVANIZED_PORCELAIN_TILES));
-
-        //基高级土高炉
-        ModHandler.addShapedRecipe(true, "advance_primitive_blast_furnace",
-                ADVANCE_PRIMITIVE_BLAST_FURNACE.getStackForm(), "hRS", "PBR", "dRS", 'R',
-                new UnificationEntry(OrePrefix.stick, Lead), 'S',
-                new UnificationEntry(OrePrefix.screw, Materials.Lead), 'P',
-                new UnificationEntry(OrePrefix.plate, Materials.Lead), 'B',
-                PRIMITIVE_BLAST_FURNACE.getStackForm());
-
-        //高级焦炉
-        ModHandler.addShapedRecipe(true, "advanced_coke_oven",
-                ADVANCED_COKE_OVEN.getStackForm(), "hRS", "PBR", "dRS", 'R',
-                new UnificationEntry(OrePrefix.stick, Lead), 'S',
-                new UnificationEntry(OrePrefix.screw, Materials.Lead), 'P',
-                new UnificationEntry(OrePrefix.plate, Materials.Lead), 'B',
-                COKE_OVEN.getStackForm());
 
         //工业土高炉
         ModHandler.addShapedRecipe(true, "industrial_primitive_blast_furnace",
@@ -445,13 +391,6 @@ public class MiscRecipes {
                     'M', MetaTileEntities.STEAM_ALLOY_SMELTER_STEEL.getStackForm(),
                     'G', new UnificationEntry(circuit, LV));
 
-            ModHandler.addShapedRecipe(true, "steam_lava_furnace", STEAM_LAVA_FURNACE.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', MetaBlocks.BOILER_FIREBOX_CASING.getItemVariant(STEEL_FIREBOX),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID),
-                    'M', STEAM_BOILER_LAVA_STEEL.getStackForm(),
-                    'G', new UnificationEntry(circuit, LV));
-
             ModHandler.addShapedRecipe(true, "steam_bender", STEAM_BENDER.getStackForm(),
                     "CGC", "FMF", "CGC",
                     'F', new UnificationEntry(frameGt, Steel),
@@ -538,13 +477,6 @@ public class MiscRecipes {
                     'F', MetaBlocks.BOILER_FIREBOX_CASING.getItemVariant(BRONZE_FIREBOX),
                     'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS),
                     'M', MetaTileEntities.STEAM_ALLOY_SMELTER_BRONZE.getStackForm(),
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_lava_furnace", STEAM_LAVA_FURNACE.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', MetaBlocks.BOILER_FIREBOX_CASING.getItemVariant(BRONZE_FIREBOX),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS),
-                    'M', STEAM_BOILER_LAVA_BRONZE.getStackForm(),
                     'G', new UnificationEntry(circuit, LV));
 
             ModHandler.addShapedRecipe(true, "steam_bender", STEAM_BENDER.getStackForm(),

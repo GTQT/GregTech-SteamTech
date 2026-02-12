@@ -30,7 +30,7 @@ import java.util.List;
 
 public class MetaTileEntityHeatCokeOven extends HeatMultiblockController {
 
-    private static final int PARALLEL_LIMIT = 16;
+    private static final int PARALLEL_LIMIT = 4;
 
     public MetaTileEntityHeatCokeOven(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.COKE_OVEN_RECIPES);

@@ -1,4 +1,4 @@
-package keqing.gtsteam.loader.recipes;
+package keqing.gtsteam.loader.recipes.chain;
 
 import gregtech.api.unification.ore.OrePrefix;
 
@@ -10,7 +10,7 @@ import static gregtech.api.unification.material.Materials.Zinc;
 import static gregtech.api.unification.ore.OrePrefix.*;
 import static keqing.gtsteam.api.unification.GTSteamMaterials.GalvanizedSteel;
 
-public class GalvanizedSteelLine {
+public class GalvanizedSteelChain {
     public static void init() {
         registerGalvanizedSteel();
     }

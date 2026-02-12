@@ -2,12 +2,11 @@ package keqing.gtsteam.common.item;
 
 import gregtech.api.items.metaitem.StandardMetaItem;
 
-public class GTSMetaitem extends StandardMetaItem {
+public class GTSMetaItem extends StandardMetaItem {
 
-    public GTSMetaitem() {
+    public GTSMetaItem() {
         this.setRegistryName("gts_meta_item_1");
     }
-
 
     public void registerSubItems() {
         //  Covers
@@ -29,5 +28,14 @@ public class GTSMetaitem extends StandardMetaItem {
         GTSMetaitems.GALVANIZED_CERAMIC_TILE = this.addItem(12, "galvanized_ceramic_tile");
 
 
+        //焦煤 20-
+        // 21 仙人掌炭
+        GTSMetaitems.CACTUS_CHARCOAL = this.addItem(21, "cactus_charcoal").setBurnValue(1800);
+        // 22 仙人掌焦炭
+        GTSMetaitems.CACTUS_COAL = this.addItem(22, "cactus_coal").setBurnValue(2400);
+        // 23 糖炭
+        GTSMetaitems.SUGAR_CHARCOAL = this.addItem(23, "sugar_charcoal").setBurnValue(1600);
+        // 24 糖焦炭
+        GTSMetaitems.SUGAR_COAL = this.addItem(24, "sugar_coal").setBurnValue(2000);
     }
 }

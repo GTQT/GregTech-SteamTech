@@ -8,11 +8,21 @@ recipemap.heat_distillation_tower.name=热力蒸馏
 recipemap.heat_chemical_reactor.name=热力化学反应
 recipemap.biomimetic_factory_recipes.name=物质拟生
 recipemap.primitive_steam_turbine.name=原始蒸汽轮机燃料
+recipemap.primitive_gas_turbine.name=原始燃气轮机燃料
 recipemap.primitive_combustion_generator.name=原始燃气轮机燃料
 recipemap.primitive_semi_fluid_generator.name=原始半流质轮机燃料
 #材料
 gtsteam.material.bone_ceramic_clay=骨陶瓷粘土
 gtsteam.material.galvanized_steel=镀锌钢
+gtsteam.material.lignite=焦煤
+gtsteam.material.calcimine=石灰浆
+gtsteam.material.raw_coal_gas=粗煤气
+gtsteam.material.raw_coal_tar=粗煤焦油
+gtsteam.material.sulfuric_waste_fluid=含硫废液
+gtsteam.material.asphalt=沥青
+gtsteam.material.ethylene_rich_gas=富乙烯气
+gtsteam.material.methane_rich_gas=富甲烷气
+gtsteam.material.synthesis_gas=合成气
 gtsteam.material.rubber_pulp=橡胶浆料
 gtsteam.material.raw_rubber_whey=生橡胶乳清液
 gtsteam.material.raw_rubber_precipitate=生橡胶沉淀
@@ -45,6 +55,15 @@ metaitem.unburned_ceramic_tiles.name=未烧制的陶瓷瓦
 metaitem.burned_ceramic_tiles.name=已烧制的陶瓷瓦
 metaitem.galvanized_ceramic_tile.name=镀锌的陶瓷瓦
 
+item.cactus_charcoal.name=仙人掌炭
+item.cactus_charcoal.tooltip=来自仙人掌的炭
+item.cactus_coal.name=仙人掌焦炭
+item.cactus_coal.tooltip=来自仙人掌的焦炭
+item.sugar_charcoal.name=糖炭
+item.sugar_charcoal.tooltip=来自糖的炭
+item.sugar_coal.name=糖焦炭
+item.sugar_coal.tooltip=来自糖的焦炭
+
 item.storage_upgrade_tier_1.name=基础存储升级
 item.storage_upgrade_tier_2.name=高级存储升级
 item.storage_upgrade_tier_3.name=精英存储升级
@@ -68,12 +87,10 @@ gtsteam.machine.steam_lathe.name=蒸汽车床
 gtsteam.machine.steam_alloy_furnace.name=蒸汽合金炉
 gtsteam.machine.steam_lava_furnace.name=蒸汽熔岩炉
 gtsteam.machine.saw_mill.name=锯木机
-#工业焦炉
+#合金窑
 gtsteam.machine.alloy_klin.name=合金窑
 gtsteam.machine.alloy_klin_import_hatch.name=合金窑输入仓
 gtsteam.machine.alloy_klin_export_hatch.name=合金窑输出仓
-#土高炉
-gtsteam.machine.advance_primitive_blast_furnace.name=强化土高炉
 #工业土高炉
 gtsteam.machine.industrial_primitive_blast_furnace.name=工业级土高炉
 gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace=附属高炉： %s 座
@@ -81,9 +98,14 @@ gtsteam.multiblock.ip.amount.1=温度：%sK(最高温度 %s K)
 
 gtsteam.machine.industrial_primitive_blast_furnace.tooltip.1=可拓展两个附属高炉，附属高炉数量决定每秒提升的温度。
 gtsteam.machine.industrial_primitive_blast_furnace.tooltip.2=当机器不工作时温度会缓缓降低,降温速度由当前温度与最低温度的差决定决定。
-gtsteam.machine.industrial_primitive_blast_furnace.tooltip.3=温度每提升200K，配方耗时*90%%（乘算）。
-#高级焦炉
-gtsteam.machine.advanced_coke_oven.name=高级焦炉
+gtsteam.machine.industrial_primitive_blast_furnace.tooltip.3=温度每提升200K，配方耗时*80%%（乘算）。
+# 工业焦炉
+gtsteam.machine.industrial_coke_oven.name=工业级焦炉
+gtsteam.machine.industrial_coke_oven.auxiliary_count=附属焦炉： %s 座
+
+gtsteam.machine.industrial_coke_oven.tooltip.1=可拓展八个附属焦炉，附属焦炉数量决定每秒提升的温度。
+gtsteam.machine.industrial_coke_oven.tooltip.2=工作时温度持续上升（基础+1K/s，每座附属+1K/s），闲置时缓慢降温
+gtsteam.machine.industrial_coke_oven.tooltip.3=窑温每提升200K，配方耗时*80%%（乘算）。
 #凝固缸
 gtsteam.machine.coagulation_tank.name=凝固缸
 #太阳能锅炉
@@ -133,8 +155,11 @@ gtsteam.machine.heat_coke_oven.name=热力焦炉
 gtsteam.machine.heat_distillation_tower.name=热力蒸馏塔
 gtsteam.machine.heat_cracking_unit.name=热力裂化炉
 gtsteam.machine.heat_brewing_vat.name=热力酿造池
+gtsteam.machine.heat_fermenter.name=热力发酵池
 gtsteam.machine.heat_evaporation_pond.name=热力蒸发池
 gtsteam.machine.heat_chemical_reactor.name=热力化学反应釜
+gtsteam.machine.heat_thermal_centrifuge.name=热力离心机
+gtsteam.machine.heat_lava_furnace.name=热力熔岩炉
 
 gtsteam.machine.scalable_storage.name=可扩展存储筒仓
 gtsteam.machine.scalable_storage.capacity=最大容量：%s 个物品
@@ -265,6 +290,9 @@ gtsteam.machine.wiremill.ulv.tooltip=金属变形记
 # 发电机名称和工具提示
 gtsteam.machine.steam_turbine.ulv.name=简易蒸汽涡轮
 gtsteam.machine.steam_turbine.ulv.tooltip=烧开水发电
+
+gtsteam.machine.gas_turbine.ulv.name=简易燃气涡轮
+gtsteam.machine.gas_turbine.ulv.tooltip=家用喷气引擎
 
 gtsteam.machine.combustion_generator.ulv.name=简易内燃发电机
 gtsteam.machine.combustion_generator.ulv.tooltip=吃燃料吐电火花

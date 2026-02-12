@@ -10,7 +10,7 @@ import gregtech.core.sound.GTSoundEvents;
 
 public class GTSRecipeMaps {
     public static final RecipeMap<SimpleRecipeBuilder> BIOMIMETIC_FACTORY_RECIPES;
-    public static final RecipeMap<SimpleRecipeBuilder> LAVA_FURNACE_RECIPES;
+    public static final RecipeMap<HeatRecipeBuilder> LAVA_FURNACE_RECIPES;
     public static final RecipeMap<HeatRecipeBuilder> EVAPORATION_RECIPES;
     public static final RecipeMap<HeatRecipeBuilder> HEAT_CRACKING_RECIPES;
     public static final RecipeMap<HeatRecipeBuilder> HEAT_DISTILLATION_RECIPES;
@@ -18,6 +18,7 @@ public class GTSRecipeMaps {
     public static final RecipeMap<PrimitiveRecipeBuilder> ALLOY_KILN;
     public static final RecipeMap<PrimitiveRecipeBuilder> COAGULATION_RECIPES;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_STEAM_TURBINE_FUELS;
+    public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_GAS_TURBINE_FUELS;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_COMBUSTION_GENERATOR_FUELS;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_SEMI_FLUID_GENERATOR_FUELS;
 
@@ -36,6 +37,18 @@ public class GTSRecipeMaps {
                 .allowEmptyOutputs()
                 .disableJeiOverclockButton()
                 .generator()
+                .build();
+
+        PRIMITIVE_GAS_TURBINE_FUELS = new RecipeMapBuilder<>("primitive_gas_turbine",
+                new FuelRecipeBuilder())
+                .fluidInputs(1)
+                .uiBuilder(b -> b
+                        .fluidSlotOverlay(GTGuiTextures.DARK_CANISTER_OVERLAY, false)
+                        .progressBar(GTGuiTextures.PROGRESS_BAR_GAS_COLLECTOR))
+                .sound(GTSoundEvents.TURBINE)
+                .allowEmptyOutputs()
+                .generator()
+                .disableJeiOverclockButton()
                 .build();
 
         PRIMITIVE_COMBUSTION_GENERATOR_FUELS = new RecipeMapBuilder<>(
@@ -72,7 +85,7 @@ public class GTSRecipeMaps {
                 .build();
 
         LAVA_FURNACE_RECIPES= new RecipeMapBuilder<>("lava_furnace",
-                new SimpleRecipeBuilder())
+                new HeatRecipeBuilder())
                 .itemInputs(1)
                 .fluidOutputs(1)
                 .sound(GTSoundEvents.FIRE)
@@ -101,10 +114,10 @@ public class GTSRecipeMaps {
 
         HEAT_DISTILLATION_RECIPES = new RecipeMapBuilder<>(
                 "heat_distillation_tower", new HeatRecipeBuilder())
+                .itemInputs(1)
                 .itemOutputs(1)
                 .fluidInputs(1)
                 .fluidOutputs(12)
-                .ui(DistillationTowerUI::new)
                 .sound(GTSoundEvents.CHEMICAL_REACTOR)
                 .build();
 

@@ -8,11 +8,21 @@ recipemap.heat_distillation_tower.name=Heat Distillation Tower
 recipemap.heat_chemical_reactor.name=Heat Chemical Reactor
 recipemap.biomimetic_factory_recipes.name=Matter Simulacrum
 recipemap.primitive_steam_turbine.name=Primitive Steam Turbine
+recipemap.primitive_gas_turbine.name=Primitive Gas Turbine
 recipemap.primitive_combustion_generator.name=Primitive Combustion Generator
 recipemap.primitive_semi_fluid_generator.name=Primitive Semi Fluid Generator
 #材料
 gtsteam.material.bone_ceramic_clay=Bone Ceramic Clay
 gtsteam.material.galvanized_steel=Galvanized Steel
+gtsteam.material.lignite=Lignite
+gtsteam.material.calcimine=Calcimine
+gtsteam.material.raw_coal_gas=Raw Coal Gas
+gtsteam.material.raw_coal_tar=Raw Coal Tar
+gtsteam.material.sulfuric_waste_fluid=Sulfuric Waste Fluid
+gtsteam.material.asphalt=Asphalt
+gtsteam.material.ethylene_rich_gas=Ethylene Rich Gas
+gtsteam.material.methane_rich_gas=Methane Rich Gas
+gtsteam.material.synthesis_gas=Synthesis Gas
 gtsteam.material.rubber_pulp=Rubber Pulp
 gtsteam.material.raw_rubber_whey=Raw Rubber Whey
 gtsteam.material.raw_rubber_precipitate=Raw Rubber Precipitate
@@ -45,6 +55,15 @@ metaitem.unburned_ceramic_tiles.name=Unfired Ceramic Tiles
 metaitem.burned_ceramic_tiles.name=Burned Ceramic Tiles
 metaitem.galvanized_ceramic_tile.name=Galvanized Ceramic Tiles
 
+item.cactus_charcoal.name=Cactus Charcoal
+item.cactus_charcoal.tooltip=Charcoal made from cactus
+item.cactus_coal.name=Cactus Coal
+item.cactus_coal.tooltip=Coal made from cactus
+item.sugar_charcoal.name=Sugar Charcoal
+item.sugar_charcoal.tooltip=Charcoal made from sugar
+item.sugar_coal.name=Sugar Coal
+item.sugar_coal.tooltip=Coal made from sugar
+
 item.storage_upgrade_tier_1.name=Basic Storage Upgrade
 item.storage_upgrade_tier_2.name=Advanced Storage Upgrade
 item.storage_upgrade_tier_3.name=Elite Storage Upgrade
@@ -68,22 +87,25 @@ gtsteam.machine.steam_lathe.name=Steam Lathe
 gtsteam.machine.steam_alloy_furnace.name=Steam Alloy Furnace
 gtsteam.machine.steam_lava_furnace.name=Steam Lava Furnace
 gtsteam.machine.saw_mill.name=Saw Mill
-#工业焦炉
+#Alloy Klin
 gtsteam.machine.alloy_klin.name=Alloy Klin
 gtsteam.machine.alloy_klin_import_hatch.name=Alloy Klin Import Hatch
 gtsteam.machine.alloy_klin_export_hatch.name=Alloy Klin Export Hatch
-#土高炉
-gtsteam.machine.advance_primitive_blast_furnace.name=Advance Primitive Blast Furnace
-#工业土高炉
+# 工业土高炉
 gtsteam.machine.industrial_primitive_blast_furnace.name=Industrial Primitive Blast Furnace
 gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace=Attached blast furnace: %s
 gtsteam.multiblock.ip.amount.1=Temperature: %sK (maximum temperature %sK)
 
 gtsteam.machine.industrial_primitive_blast_furnace.tooltip.1=Two auxiliary blast furnaces can be expanded, and the number of auxiliary blast furnaces determines the temperature increase per second.
 gtsteam.machine.industrial_primitive_blast_furnace.tooltip.2=When the machine is not working, the temperature gradually decreases, and the cooling speed is determined by the difference between the current temperature and the minimum temperature.
-gtsteam.machine.industrial_primitive_blast_furnace.tooltip.3=For every 200K temperature increase, recipe duration is multiplied by 90%% (multiplicative).
-#高级焦炉
-gtsteam.machine.advanced_coke_oven.name=Advanced Coke Oven
+gtsteam.machine.industrial_primitive_blast_furnace.tooltip.3=For every 200K temperature increase, recipe duration is multiplied by 80%% (multiplicative).
+# 工业焦炉
+gtsteam.machine.industrial_coke_oven.name=Industrial Coke Oven
+gtsteam.machine.industrial_coke_oven.auxiliary_count=Attached coke oven: %s
+
+gtsteam.machine.industrial_coke_oven.tooltip.1=可拓展八个附属焦炉，附属焦炉数量决定每秒提升的温度。
+gtsteam.machine.industrial_coke_oven.tooltip.2=工作时温度持续上升（基础+1K/s，每座附属+1K/s），闲置时缓慢降温
+gtsteam.machine.industrial_coke_oven.tooltip.3=For every 200K temperature increase, recipe duration is multiplied by 80%% (multiplicative).
 #Coagulation Tank
 gtsteam.machine.coagulation_tank.name=Coagulation Tank
 #Solar Boiler
@@ -134,8 +156,11 @@ gtsteam.machine.heat_coke_oven.name=Heat Coke Oven
 gtsteam.machine.heat_distillation_tower.name=Heat Distillation Tower
 gtsteam.machine.heat_cracking_unit.name=Heat Cracking Unit
 gtsteam.machine.heat_brewing_vat.name=Heat Brewing Vat
+gtsteam.machine.heat_fermenter.name=Heat Fermenter
 gtsteam.machine.heat_evaporation_pond.name=Heat Evaporation Pond
 gtsteam.machine.heat_chemical_reactor.name=Heat Chemical Reactor
+gtsteam.machine.heat_thermal_centrifuge.name=Heat Thermal Centrifuge
+gtsteam.machine.heat_lava_furnace.name=Heat Lava Furnace
 
 gtsteam.machine.scalable_storage.name=Scalable Storage Silo
 gtsteam.machine.scalable_storage.capacity=Max Capacity: %s items
@@ -223,9 +248,11 @@ gtsteam.machine.wiremill.ulv.tooltip=A Simple wiremill for producing wires.
 gtsteam.machine.steam_turbine.ulv.name=Simple Steam Turbine
 gtsteam.machine.steam_turbine.ulv.tooltip=A Simple steam turbine for generating power.
 
+gtsteam.machine.gas_turbine.ulv.name=Simple Gas Turbine
+gtsteam.machine.gas_turbine.ulv.tooltip=A Simple gas turbine for generating power.
+
 gtsteam.machine.combustion_generator.ulv.name=Simple Combustion Generator
 gtsteam.machine.combustion_generator.ulv.tooltip=A Simple combustion generator for generating power.
 
 gtsteam.machine.semi_fluid_generator.ulv.name=Simple Semi Fluid Generator
 gtsteam.machine.semi_fluid_generator.ulv.tooltip=Not a fermentation tank
-# top

@@ -37,8 +37,7 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntityAlloyKilnExportHatch ALLOY_KILN_EXPORT_HATCH;
 
     public static MetaTileEntityIndustrialPrimitiveBlastFurnace INDUSTRIAL_PRIMITIVE_BLAST_FURNACE;
-    public static MetaTileEntityAdvancePrimitiveBlastFurnace ADVANCE_PRIMITIVE_BLAST_FURNACE;
-    public static MetaTileEntityAdvancedCokeOven ADVANCED_COKE_OVEN;
+    public static MetaTileEntityIndustrialCokeOven INDUSTRIAL_COKE_OVEN;
     public static MetaTileEntityCoagulationTank COAGULATION_TANK;
 
     public static MetaTileEntitySteamCompressor STEAM_COMPRESSOR;
@@ -53,7 +52,7 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntitySteamSifter STEAM_SIFTER;
     public static MetaTileEntitySteamLathe STEAM_LATHE;
     public static MetaTileEntitySteamWaterPump STEAM_WATER_PUMP;
-    public static MetaTileEntitySteamLavaFurnace STEAM_LAVA_FURNACE;
+
     public static MetaTileEntitySteamTranscendentPlasmaForge STEAM_TRANSCENDENT_PLASMA_FORGE;
     public static MetaTileEntitySteamBiomimeticFactory STEAM_BIOMIMETIC_FACTORY;
 
@@ -64,8 +63,11 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntityHeatDistillationTower HEAT_DISTILLATION_TOWER;
     public static MetaTileEntityHeatCrackingUnit HEAT_CRACKING_UNIT;
     public static MetaTileEntityHeatBrewingVat HEAT_BREWING_VAT;
+    public static MetaTileEntityHeatFermenter HEAT_FERMENTER;
     public static MetaTileEntityHeatEvaporationPond HEAT_EVAPORATION_POND;
     public static MetaTileEntityHeatChemicalReactor HEAT_CHEMICAL_REACTOR;
+    public static MetaTileEntityHeatThermalCentrifuge HEAT_THERMAL_CENTRIFUGE;
+    public static MetaTileEntityHeatLavaFurnace HEAT_LAVA_FURNACE;
 
     public static MetaTileEntitySteamSolarBoiler STEAM_SOLAR_BOILER;
 
@@ -98,6 +100,7 @@ public class GTSteamMetaTileEntities {
     public static SimpleMachineMetaTileEntity WIREMILL;
 
     public static MetaTileEntitySingleTurbine STEAM_TURBINE;
+    public static MetaTileEntitySingleTurbine GAS_TURBINE;
     public static MetaTileEntitySingleCombustion COMBUSTION_GENERATOR;
     public static MetaTileEntitySingleCombustion SEMI_FLUID_GENERATOR;
 
@@ -127,14 +130,13 @@ public class GTSteamMetaTileEntities {
         ALLOY_KILN_IMPORT_HATCH = registerMetaTileEntity(2, new MetaTileEntityAlloyKilnImportHatch(gtsId("alloy_klin_import_hatch")));
         ALLOY_KILN_EXPORT_HATCH = registerMetaTileEntity(3, new MetaTileEntityAlloyKilnExportHatch(gtsId("alloy_klin_export_hatch")));
 
-        ADVANCE_PRIMITIVE_BLAST_FURNACE = registerMetaTileEntity(5, new MetaTileEntityAdvancePrimitiveBlastFurnace(gtsId("advance_primitive_blast_furnace")));
         INDUSTRIAL_PRIMITIVE_BLAST_FURNACE = registerMetaTileEntity(6, new MetaTileEntityIndustrialPrimitiveBlastFurnace(gtsId("industrial_primitive_blast_furnace")));
-        ADVANCED_COKE_OVEN = registerMetaTileEntity(7, new MetaTileEntityAdvancedCokeOven(gtsId("advanced_coke_oven")));
+        INDUSTRIAL_COKE_OVEN = registerMetaTileEntity(7, new MetaTileEntityIndustrialCokeOven(gtsId("industrial_coke_oven")));
         COAGULATION_TANK = registerMetaTileEntity(8, new MetaTileEntityCoagulationTank(gtsId("coagulation_tank")));
 
         STEAM_COMPRESSOR = registerMetaTileEntity(10, new MetaTileEntitySteamCompressor(gtsId("steam_compressor")));
         STEAM_EXTRACTOR = registerMetaTileEntity(11, new MetaTileEntitySteamExtractor(gtsId("steam_extractor")));
-        STEAM_LAVA_FURNACE = registerMetaTileEntity(12, new MetaTileEntitySteamLavaFurnace(gtsId("steam_lava_furnace")));
+
         STEAM_ORE_WASHER = registerMetaTileEntity(13, new MetaTileEntitySteamOreWasher(gtsId("steam_ore_washer")));
         STEAM_HAMMER = registerMetaTileEntity(14, new MetaTileEntitySteamHammer(gtsId("steam_hammer")));
         STEAM_CENTRIFUGE = registerMetaTileEntity(15, new MetaTileEntitySteamCentrifuge(gtsId("steam_centrifuge")));
@@ -168,8 +170,11 @@ public class GTSteamMetaTileEntities {
         HEAT_DISTILLATION_TOWER = registerMetaTileEntity(73, new MetaTileEntityHeatDistillationTower(gtsId("heat_distillation_tower")));
         HEAT_CRACKING_UNIT = registerMetaTileEntity(74, new MetaTileEntityHeatCrackingUnit(gtsId("heat_cracking_unit")));
         HEAT_BREWING_VAT = registerMetaTileEntity(75, new MetaTileEntityHeatBrewingVat(gtsId("heat_brewing_vat")));
-        HEAT_EVAPORATION_POND = registerMetaTileEntity(76, new MetaTileEntityHeatEvaporationPond(gtsId("heat_evaporation_pond")));
-        HEAT_CHEMICAL_REACTOR = registerMetaTileEntity(77, new MetaTileEntityHeatChemicalReactor(gtsId("heat_chemical_reactor")));
+        HEAT_FERMENTER = registerMetaTileEntity(76, new MetaTileEntityHeatFermenter(gtsId("heat_fermenter")));
+        HEAT_EVAPORATION_POND = registerMetaTileEntity(77, new MetaTileEntityHeatEvaporationPond(gtsId("heat_evaporation_pond")));
+        HEAT_CHEMICAL_REACTOR = registerMetaTileEntity(78, new MetaTileEntityHeatChemicalReactor(gtsId("heat_chemical_reactor")));
+        HEAT_THERMAL_CENTRIFUGE = registerMetaTileEntity(79, new MetaTileEntityHeatThermalCentrifuge(gtsId("heat_thermal_centrifuge")));
+        HEAT_LAVA_FURNACE = registerMetaTileEntity(80, new MetaTileEntityHeatLavaFurnace(gtsId("heat_lava_furnace")));
 
         //单方块ULV
         ELECTRIC_FURNACE = registerMetaTileEntity(100, new SimpleMachineMetaTileEntity(gtsId("electric_furnace.ulv"), RecipeMaps.FURNACE_RECIPES, Textures.FURNACE_OVERLAY, 0, false));
@@ -193,8 +198,9 @@ public class GTSteamMetaTileEntities {
 
         //发电机ULV
         STEAM_TURBINE = registerMetaTileEntity(120, new MetaTileEntitySingleTurbine(gtsId("steam_turbine.ulv"), PRIMITIVE_STEAM_TURBINE_FUELS, Textures.STEAM_TURBINE_OVERLAY, 0, tier -> 2000, 1.0));
-        COMBUSTION_GENERATOR = registerMetaTileEntity(121, new MetaTileEntitySingleCombustion(gtsId("combustion_generator.ulv"), PRIMITIVE_COMBUSTION_GENERATOR_FUELS, Textures.COMBUSTION_GENERATOR_OVERLAY, 0, tier -> 2000, 1.0));
-        SEMI_FLUID_GENERATOR = registerMetaTileEntity(122, new MetaTileEntitySingleCombustion(gtsId("semi_fluid_generator.ulv"), PRIMITIVE_SEMI_FLUID_GENERATOR_FUELS, Textures.SEMI_FLUID_OVERLAY, 0, tier -> 2000, 1.0));
+        GAS_TURBINE = registerMetaTileEntity(121, new MetaTileEntitySingleTurbine(gtsId("gas_turbine.ulv"), PRIMITIVE_GAS_TURBINE_FUELS, Textures.GAS_TURBINE_OVERLAY, 0, tier -> 1000, 1.0));
+        COMBUSTION_GENERATOR = registerMetaTileEntity(122, new MetaTileEntitySingleCombustion(gtsId("combustion_generator.ulv"), PRIMITIVE_COMBUSTION_GENERATOR_FUELS, Textures.COMBUSTION_GENERATOR_OVERLAY, 0, tier -> 1000, 1.0));
+        SEMI_FLUID_GENERATOR = registerMetaTileEntity(123, new MetaTileEntitySingleCombustion(gtsId("semi_fluid_generator.ulv"), PRIMITIVE_SEMI_FLUID_GENERATOR_FUELS, Textures.SEMI_FLUID_OVERLAY, 0, tier -> 1000, 1.0));
 
 
         //热学系统

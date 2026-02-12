@@ -1,4 +1,4 @@
-package keqing.gtsteam.loader.recipes;
+package keqing.gtsteam.loader.recipes.chain;
 
 import gregtech.api.recipes.RecipeMaps;
 
