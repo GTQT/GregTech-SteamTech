@@ -14,7 +14,7 @@ recipemap.primitive_semi_fluid_generator.name=原始半流质轮机燃料
 #材料
 gtsteam.material.bone_ceramic_clay=骨陶瓷粘土
 gtsteam.material.galvanized_steel=镀锌钢
-gtsteam.material.lignite=焦煤
+gtsteam.material.lignite=褐煤
 gtsteam.material.calcimine=石灰浆
 gtsteam.material.raw_coal_gas=粗煤气
 gtsteam.material.raw_coal_tar=粗煤焦油

@@ -54,6 +54,7 @@ import static keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities.ELE
 import static keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities.EXTRACTOR;
 import static keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities.FERMENTER;
 import static keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities.FORGE_HAMMER;
+import static keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities.GAS_TURBINE;
 import static keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities.LATHE;
 import static keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities.MACERATOR;
 import static keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities.MIXER;
@@ -700,6 +701,14 @@ public class MiscRecipes {
                 'C', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.ULV),
                 'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy),
                 'P', new UnificationEntry(OrePrefix.pipeNormalFluid, Copper));
+
+        ModHandler.addShapedRecipe(true, "gas_turbine_lv",GAS_TURBINE.getStackForm(),
+                "CRC", "RMR", "EWE",
+                'M', MetaTileEntities.HULL[GTValues.ULV].getStackForm(),
+                'E', ELECTRIC_MOTOR_ULV,
+                'R', new UnificationEntry(OrePrefix.rotor, Materials.Tin),
+                'C', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.ULV),
+                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy));
 
         ModHandler.addShapedRecipe(true, "diesel_generator_ulv", COMBUSTION_GENERATOR.getStackForm(),
                 "PCP", "EME", "GWG",
