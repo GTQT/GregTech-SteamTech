@@ -96,7 +96,7 @@ public class CoalChain {
         RecipeMaps.MIXER_RECIPES.recipeBuilder()
                 .fluidInputs(Water.getFluid(1000))
                 .input(dust, Quicklime, 2)
-                .fluidInputs(Calcimine.getFluid(1000))
+                .fluidOutputs(Calcimine.getFluid(1000))
                 .EUt(7)
                 .duration(100)
                 .buildAndRegister();
@@ -110,7 +110,7 @@ public class CoalChain {
                 .input(dust, Calcite, 5)
                 .output(dust, Quicklime, 2)
                 .fluidOutputs(CarbonDioxide.getFluid(1000))
-                .duration(500)
+                .duration(200)
                 .buildAndRegister();
 
         //原始化反
@@ -131,7 +131,7 @@ public class CoalChain {
                 .fluidInputs(Calcimine.getFluid(250))
                 .fluidOutputs(CoalTar.getFluid(800))
                 .fluidOutputs(SulfuricWasteFluid.getFluid(50))
-                .output(dust, Asphalt)
+                .output(dust, Asphalt,4)
                 .duration(500)
                 .Temperature(573)
                 .Heat(10)

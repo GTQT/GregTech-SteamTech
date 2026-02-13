@@ -12,6 +12,7 @@ public class GTSRecipeManger {
         AlloyKlinRecipes.init();
         MiscRecipes.init();
         LigniteChain.init();
+        WoodChain.init();
         GenerateRecipes.init();
         CokeOvenChain.init();
         CoalChain.init();

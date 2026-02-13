@@ -18,11 +18,15 @@ public class GTSteamMaterials {
 
     public static Material RawCoalGas;
     public static Material RawCoalTar;
+    public static Material RawWoodGas;
+    public static Material RawWoodVinegar;
     public static Material SulfuricWasteFluid;
+    public static Material CalciumAcetateSlurry;
     public static Material Asphalt;
     public static Material EthyleneRichGas;
     public static Material MethaneRichGas;
     public static Material SynthesisGas;
+    public static Material Stillage;
 
     public GTSteamMaterials() {
     }
