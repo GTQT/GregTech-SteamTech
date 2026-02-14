@@ -37,6 +37,14 @@ public class MetaTileEntityHeatThermalCentrifuge extends HeatMultiblockControlle
         recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 
+    private static IBlockState getCasingState() {
+        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
+    }
+
+    private static IBlockState getPipeState() {
+        return MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE);
+    }
+
     @Override
     protected @NotNull BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
@@ -59,14 +67,6 @@ public class MetaTileEntityHeatThermalCentrifuge extends HeatMultiblockControlle
 
     private IBlockState getFireBoxState() {
         return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX);
-    }
-
-    private static IBlockState getCasingState() {
-        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
-    }
-
-    private static IBlockState getPipeState() {
-        return MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE);
     }
 
     @Override

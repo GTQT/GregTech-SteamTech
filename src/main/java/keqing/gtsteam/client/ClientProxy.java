@@ -1,6 +1,5 @@
 package keqing.gtsteam.client;
 
-import keqing.gtsteam.GTSteam;
 import keqing.gtsteam.client.textures.GTSteamTextures;
 import keqing.gtsteam.common.CommonProxy;
 import keqing.gtsteam.common.block.GTSteamMetaBlocks;
@@ -17,12 +16,11 @@ public class ClientProxy extends CommonProxy {
     }
 
     @SubscribeEvent
-    public static void registerModels(ModelRegistryEvent event)
-    {
+    public static void registerModels(ModelRegistryEvent event) {
         GTSteamMetaBlocks.registerItemModels();
     }
-    public void preLoad()
-    {
+
+    public void preLoad() {
         super.preLoad();
         GTSteamTextures.init();
     }

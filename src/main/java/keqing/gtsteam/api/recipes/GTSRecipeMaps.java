@@ -1,16 +1,14 @@
 package keqing.gtsteam.api.recipes;
 
-import gregtech.api.GTValues;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.recipes.RecipeMapBuilder;
-import gregtech.api.recipes.builders.*;
+import gregtech.api.recipes.builders.FuelRecipeBuilder;
+import gregtech.api.recipes.builders.HeatRecipeBuilder;
+import gregtech.api.recipes.builders.PrimitiveRecipeBuilder;
+import gregtech.api.recipes.builders.SimpleRecipeBuilder;
 import gregtech.api.recipes.ui.impl.CrackerUnitUI;
-import gregtech.api.recipes.ui.impl.DistillationTowerUI;
-import gregtech.api.unification.material.Materials;
 import gregtech.core.sound.GTSoundEvents;
-
-import static gregtech.api.util.GTUtility.gregtechId;
 
 public class GTSRecipeMaps {
 
@@ -28,8 +26,6 @@ public class GTSRecipeMaps {
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_COMBUSTION_GENERATOR_FUELS;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_SEMI_FLUID_GENERATOR_FUELS;
 
-
-    private GTSRecipeMaps() {}
     static {
         PRIMITIVE_STEAM_TURBINE_FUELS = new RecipeMapBuilder<>("primitive_steam_turbine",
                 new FuelRecipeBuilder())
@@ -90,7 +86,7 @@ public class GTSRecipeMaps {
                 .sound(GTSoundEvents.ARC)
                 .build();
 
-        LAVA_FURNACE_RECIPES= new RecipeMapBuilder<>("lava_furnace",
+        LAVA_FURNACE_RECIPES = new RecipeMapBuilder<>("lava_furnace",
                 new HeatRecipeBuilder())
                 .itemInputs(1)
                 .fluidOutputs(1)
@@ -180,5 +176,8 @@ public class GTSRecipeMaps {
                 .disableJeiOverclockButton()
                 .disableJeiOverclockButton()
                 .build();
+    }
+
+    private GTSRecipeMaps() {
     }
 }

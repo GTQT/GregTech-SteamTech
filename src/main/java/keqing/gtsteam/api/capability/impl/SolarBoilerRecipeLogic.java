@@ -26,13 +26,12 @@ import static gregtech.api.capability.GregtechDataCodes.BOILER_LAST_TICK_STEAM;
 public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICategoryOverride {
 
     private static final int STEAM_PER_WATER = 160;
-
+    MetaTileEntitySteamSolarBoiler metaTileEntity;
     private int currentHeat;
     private int lastTickSteamOutput;
     private int excessProjectedEU;
     private int excessWater;
     private boolean bombFlag = false;
-    MetaTileEntitySteamSolarBoiler metaTileEntity;
 
     public SolarBoilerRecipeLogic(MetaTileEntitySteamSolarBoiler tileEntity) {
         super(tileEntity, null);
@@ -79,16 +78,16 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
     @Override
     protected boolean canProgressRecipe() {
         return super.canProgressRecipe() && !(metaTileEntity instanceof IMultiblockController &&
-                ((IMultiblockController) metaTileEntity).isStructureObstructed());
+                metaTileEntity.isStructureObstructed());
     }
 
     @Override
     protected void trySearchNewRecipe() {
-        MetaTileEntitySteamSolarBoiler boiler = (MetaTileEntitySteamSolarBoiler) metaTileEntity;
+        MetaTileEntitySteamSolarBoiler boiler = metaTileEntity;
 
         //IMultipleTankHandler importFluids = boiler.getImportFluids();
         boolean didStartRecipe = false;
-        if (metaTileEntity.getWorld().isDaytime()&&!metaTileEntity.getWorld().isRaining()) {
+        if (metaTileEntity.getWorld().isDaytime() && !metaTileEntity.getWorld().isRaining()) {
             FluidStack drainedWater = getBoilerFluidFromContainer(getInputTank(), 1);
             if (!(drainedWater == null || drainedWater.amount < 1)) {
                 didStartRecipe = true;
@@ -159,7 +158,7 @@ public class SolarBoilerRecipeLogic extends AbstractRecipeLogic implements ICate
     }
 
     private int adjustEUtForThrottle(int rawEUt) {
-        int throttle = ((MetaTileEntitySteamSolarBoiler) metaTileEntity).getThrottle();
+        int throttle = metaTileEntity.getThrottle();
         return (int) (rawEUt * (throttle / 100.0));
     }
 

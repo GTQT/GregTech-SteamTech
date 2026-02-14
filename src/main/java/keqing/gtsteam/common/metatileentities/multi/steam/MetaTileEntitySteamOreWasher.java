@@ -32,6 +32,7 @@ import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.BRONZE_P
 import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.STEEL_PIPE;
 
 public class MetaTileEntitySteamOreWasher extends RecipeMapSteamMultiblockController {
+
     private static final int PARALLEL_LIMIT = 8;
 
     public MetaTileEntitySteamOreWasher(ResourceLocation metaTileEntityId) {

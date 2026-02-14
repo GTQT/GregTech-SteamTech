@@ -2,7 +2,6 @@ package keqing.gtsteam.loader.recipes;
 
 import gregtech.api.GTValues;
 import gregtech.api.recipes.RecipeMaps;
-import keqing.gtsteam.api.unification.GTSteamMaterials;
 
 import static gregtech.api.GTValues.LV;
 import static gregtech.api.GTValues.V;

@@ -36,6 +36,10 @@ public class MetaTileEntityHeatAlloyFurnace extends HeatMultiblockController {
         recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 
+    private static IBlockState getCasingState() {
+        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
+    }
+
     @Override
     protected @NotNull BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
@@ -55,10 +59,6 @@ public class MetaTileEntityHeatAlloyFurnace extends HeatMultiblockController {
 
     private IBlockState getFireBoxState() {
         return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX);
-    }
-
-    private static IBlockState getCasingState() {
-        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
     }
 
     @Override

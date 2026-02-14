@@ -13,7 +13,6 @@ import gregtech.api.pattern.MultiblockShapeInfo;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
-import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
@@ -55,16 +54,16 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
         this.recipeMapWorkable = new HeatEvaporationPondMultiblockRecipeLogic(this);
     }
 
-    public int getTier() {
-        return tier;
-    }
-
     private static IBlockState getCasingState() {
         return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
     }
 
     private static IBlockState getPipeState() {
         return GTSteamMetaBlocks.blockEvaporationBed.getState(BlockEvaporationBed.EvaporationBedType.DIRT);
+    }
+
+    public int getTier() {
+        return tier;
     }
 
     @Override
@@ -344,7 +343,7 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
         tooltip.add(I18n.format("多方块结构长宽每拓展一次，配方并行翻倍"));
     }
 
-    public class HeatEvaporationPondMultiblockRecipeLogic extends HeatMultiblockRecipeLogic{
+    public class HeatEvaporationPondMultiblockRecipeLogic extends HeatMultiblockRecipeLogic {
 
         public HeatEvaporationPondMultiblockRecipeLogic(HeatMultiblockController tileEntity) {
             super(tileEntity);
@@ -353,7 +352,7 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
         //每一等级 并行翻倍
         @Override
         public int getParallelLimit() {
-            return (int) Math.pow(2, getTier()-1);
+            return (int) Math.pow(2, getTier() - 1);
         }
     }
 }

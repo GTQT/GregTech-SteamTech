@@ -3,7 +3,8 @@ package keqing.gtsteam.loader.recipes.chain;
 import net.minecraft.init.Blocks;
 
 import static gregtech.api.recipes.RecipeMaps.COKE_OVEN_RECIPES;
-import static gregtech.api.unification.material.Materials.*;
+import static gregtech.api.unification.material.Materials.Ash;
+import static gregtech.api.unification.material.Materials.Creosote;
 import static gregtech.loaders.recipe.MachineRecipeLoader.PrimitiveBlastFurnaceBuilder;
 import static keqing.gtsteam.common.item.GTSMetaitems.*;
 

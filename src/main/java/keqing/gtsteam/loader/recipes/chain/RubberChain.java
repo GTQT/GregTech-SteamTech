@@ -80,7 +80,7 @@ public class RubberChain {
                 .fluidInputs(Water.getFluid(1000))
                 .fluidInputs(AceticAcid.getFluid(200))
                 .fluidOutputs(RawRubberWhey.getFluid(1000))
-                .output(ingot, RawRubberPrecipitate,2)
+                .output(ingot, RawRubberPrecipitate, 2)
                 .buildAndRegister();
     }
 }

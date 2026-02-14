@@ -3,7 +3,6 @@ package keqing.gtsteam.common.metatileentities.multi.heat;
 import gregtech.api.capability.IEnergyContainer;
 import gregtech.api.capability.IHeatable;
 import gregtech.api.capability.IMultiblockController;
-import gregtech.api.capability.ISteamMachine;
 import gregtech.api.capability.impl.AbstractRecipeLogic;
 import gregtech.api.recipes.category.ICategoryOverride;
 import gregtech.api.unification.material.Materials;
@@ -113,8 +112,7 @@ public class HeatSteamBoilerRecipeLogic extends AbstractRecipeLogic implements I
             double availableHeat = getHeat();
 
             //没热量 或者热源温度不够，不预热
-            if(availableHeat == 0 || getCurrentTemp()<373)
-            {
+            if (availableHeat == 0 || getCurrentTemp() < 373) {
                 return;
             }
 
@@ -123,14 +121,14 @@ public class HeatSteamBoilerRecipeLogic extends AbstractRecipeLogic implements I
             int generatedSteam = 0;
 
             // 锅炉温度到达373k，开始蒸汽产出
-            if(currentHeat > 373) {
+            if (currentHeat > 373) {
                 generatedSteam = GTUtility.safeCastLongToInt(this.recipeEUt * currentHeat / getCurrentTemp());
             }
 
             if (generatedSteam > 0) {
 
                 double temperatureFactor;
-                if(currentHeat >= 973)
+                if (currentHeat >= 973)
                     temperatureFactor = 1;
                 else
                     temperatureFactor = (currentHeat - 373.0) / 600;

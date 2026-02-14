@@ -45,6 +45,6 @@ public class CeramicChain {
                 "SXS", "XYX", "SXS",
                 'Y', MetaBlocks.METAL_CASING.getItemVariant(PRIMITIVE_BRICKS, 1),
                 'S', new UnificationEntry(screw, Iron),
-                'X',GALVANIZED_CERAMIC_TILE);
+                'X', GALVANIZED_CERAMIC_TILE);
     }
 }

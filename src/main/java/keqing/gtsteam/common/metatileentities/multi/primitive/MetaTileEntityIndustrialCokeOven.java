@@ -24,17 +24,13 @@ import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.MetaBlocks;
-import gregtech.common.metatileentities.MetaTileEntities;
 import keqing.gtsteam.api.capability.impl.NoEnergyMultiblockRecipeLogic;
 import keqing.gtsteam.api.metatileentity.multiblock.NoEnergyMultiblockController;
-import keqing.gtsteam.api.pattern.TraceabilityPredicate;
 import keqing.gtsteam.client.textures.GTSteamTextures;
 import keqing.gtsteam.common.block.GTSteamMetaBlocks;
 import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing0;
-import keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -47,7 +43,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static gregtech.api.recipes.RecipeMaps.COKE_OVEN_RECIPES;
@@ -60,8 +55,8 @@ public class MetaTileEntityIndustrialCokeOven extends NoEnergyMultiblockControll
 
     private static final int MIN_TEMP = 300;
     private static final int MAX_TEMP = 1500;
-    private int TEMP = MIN_TEMP;
     int size;
+    private int TEMP = MIN_TEMP;
 
     public MetaTileEntityIndustrialCokeOven(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, COKE_OVEN_RECIPES);
@@ -119,8 +114,8 @@ public class MetaTileEntityIndustrialCokeOven extends NoEnergyMultiblockControll
                 .aisle("BXXXB", "X#P#X", "X###X", "FX&XF", "#X#X#", "#X#X#").setRepeatable(1, 8)
                 .aisle("BXXXB", "X#P#X", "X###X", "FXXXF", "##X##", "##X##")
                 .aisle("XXXXX", "FXXXF", "FXXXF", "FFFFF", "#####", "#####")
-                .where('B',  states(getFireBoxState()))
-                .where('P',  states(getBoilerState()))
+                .where('B', states(getFireBoxState()))
+                .where('P', states(getBoilerState()))
                 .where('F', states(getFrameState()))
                 .where('X', states(getCasingState())
                         .or(abilities(MultiblockAbility.IMPORT_ITEMS).setPreviewCount(1).setMaxGlobalLimited(4))
@@ -160,7 +155,6 @@ public class MetaTileEntityIndustrialCokeOven extends NoEnergyMultiblockControll
         tooltip.add(I18n.format("gtsteam.machine.industrial_coke_oven.tooltip.2"));
         tooltip.add(I18n.format("gtsteam.machine.industrial_coke_oven.tooltip.3"));
     }
-
 
 
     @Override

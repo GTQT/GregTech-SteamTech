@@ -23,6 +23,7 @@ public class CoalChain {
         //精制气体
         gas();
     }
+
     private static void gas() {
         // 富乙烯气 -> 乙烯 甲烷 氢气 一氧化碳
         GTSRecipeMaps.HEAT_DISTILLATION_RECIPES.recipeBuilder()
@@ -68,6 +69,7 @@ public class CoalChain {
                 .Heat(20)
                 .buildAndRegister();
     }
+
     private static void cracking() {
         //煤焦油蒸汽裂化 合成气
         GTSRecipeMaps.HEAT_CRACKING_RECIPES.recipeBuilder()
@@ -92,7 +94,7 @@ public class CoalChain {
         GTSRecipeMaps.HEAT_DISTILLATION_RECIPES.recipeBuilder()
                 .fluidInputs(CoalTar.getFluid(1000))
                 .fluidOutputs(Creosote.getFluid(200))
-                .output(dust, Asphalt,8)
+                .output(dust, Asphalt, 8)
                 .duration(100)
                 .Temperature(598)
                 .Heat(20)
@@ -140,7 +142,7 @@ public class CoalChain {
                 .fluidInputs(Calcimine.getFluid(250))
                 .fluidOutputs(CoalTar.getFluid(800))
                 .fluidOutputs(SulfuricWasteFluid.getFluid(50))
-                .output(dust, Asphalt,4)
+                .output(dust, Asphalt, 4)
                 .duration(500)
                 .Temperature(573)
                 .Heat(10)

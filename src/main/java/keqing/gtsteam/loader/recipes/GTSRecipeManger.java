@@ -6,8 +6,10 @@ public class GTSRecipeManger {
     private GTSRecipeManger() {
 
     }
+
     public static void load() {
     }
+
     public static void init() {
         AlloyKlinRecipes.init();
         MiscRecipes.init();

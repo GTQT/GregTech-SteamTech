@@ -11,7 +11,6 @@ import gregtech.api.unification.material.Materials;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
-import gregtech.common.ConfigHolder;
 import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.BlockMetalCasing;
@@ -36,6 +35,18 @@ public class MetaTileEntityHeatElectronicProcessor extends HeatMultiblockControl
         super(metaTileEntityId, GTSRecipeMaps.ELECTRONIC_PROCESSOR_RECIPES);
     }
 
+    private static IBlockState getFrameState() {
+        return MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel);
+    }
+
+    private static IBlockState getCasingState() {
+        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
+    }
+
+    private static IBlockState getPipeState() {
+        return MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE);
+    }
+
     @Override
     protected @NotNull BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
@@ -55,20 +66,8 @@ public class MetaTileEntityHeatElectronicProcessor extends HeatMultiblockControl
                 .build();
     }
 
-    private static IBlockState getFrameState() {
-        return MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel);
-    }
-
     private IBlockState getFireBoxState() {
         return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX);
-    }
-
-    private static IBlockState getCasingState() {
-        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
-    }
-
-    private static IBlockState getPipeState() {
-        return MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE);
     }
 
     @Override

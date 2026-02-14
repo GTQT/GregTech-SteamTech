@@ -26,9 +26,8 @@ import org.jetbrains.annotations.NotNull;
 public class CoalCombustor extends Combustor implements ICategoryOverride {
 
 
-
     public CoalCombustor(ResourceLocation metaTileEntityId, boolean isHighPressure, int tier, Material material) {
-        super(metaTileEntityId, isHighPressure, GTSteamTextures.HU_BASE_BURRING_BOX, tier ,material);
+        super(metaTileEntityId, isHighPressure, GTSteamTextures.HU_BASE_BURRING_BOX, tier, material);
     }
 
     @Override

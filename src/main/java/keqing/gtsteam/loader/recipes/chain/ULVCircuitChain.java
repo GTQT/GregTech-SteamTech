@@ -2,10 +2,10 @@ package keqing.gtsteam.loader.recipes.chain;
 
 import gregtech.api.recipes.ModHandler;
 import gregtech.api.unification.stack.UnificationEntry;
-import gregtech.common.ConfigHolder;
 import keqing.gtsteam.common.item.GTSMetaitems;
 
-import static gregtech.api.GTValues.*;
+import static gregtech.api.GTValues.LV;
+import static gregtech.api.GTValues.VA;
 import static gregtech.api.recipes.RecipeMaps.ASSEMBLER_RECIPES;
 import static gregtech.api.unification.material.Materials.*;
 import static gregtech.api.unification.ore.OrePrefix.*;

@@ -29,7 +29,7 @@ import static gregtech.client.renderer.texture.Textures.SOLID_STEEL_CASING;
 
 public class MetaTileEntitySteamCentrifuge extends RecipeMapSteamMultiblockController {
 
-    private static final int PARALLEL_LIMIT = 8;
+    private static final int PARALLEL_LIMIT = 4;
 
     public MetaTileEntitySteamCentrifuge(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.CENTRIFUGE_RECIPES, CONVERSION_RATE, ParallelLogicType.MULTIPLY);

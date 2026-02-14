@@ -1,8 +1,22 @@
 package keqing.gtsteam.common.metatileentities.combustor;
 
 
+import codechicken.lib.render.CCRenderState;
+import codechicken.lib.render.pipeline.ColourMultiplier;
+import codechicken.lib.render.pipeline.IVertexOperation;
+import codechicken.lib.vec.Matrix4;
+import com.cleanroommc.modularui.api.drawable.IDrawable;
+import com.cleanroommc.modularui.api.drawable.IKey;
+import com.cleanroommc.modularui.drawable.UITexture;
+import com.cleanroommc.modularui.factory.PosGuiData;
+import com.cleanroommc.modularui.screen.ModularPanel;
 import com.cleanroommc.modularui.screen.UISettings;
-
+import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
+import com.cleanroommc.modularui.value.sync.PanelSyncManager;
+import com.cleanroommc.modularui.widget.Widget;
+import com.cleanroommc.modularui.widgets.ProgressWidget;
+import com.cleanroommc.modularui.widgets.slot.ItemSlot;
+import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import gregtech.api.GTValues;
 import gregtech.api.capability.IHeatable;
 import gregtech.api.capability.impl.HeatContainerHandler;
@@ -24,7 +38,6 @@ import gregtech.client.renderer.texture.cube.SimpleOverlayRenderer;
 import gregtech.client.renderer.texture.cube.SimpleSidedCubeRenderer;
 import gregtech.common.ConfigHolder;
 import gregtech.core.sound.GTSoundEvents;
-
 import keqing.gtsteam.client.textures.GTSteamTextures;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
@@ -41,22 +54,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
-
-import codechicken.lib.render.CCRenderState;
-import codechicken.lib.render.pipeline.ColourMultiplier;
-import codechicken.lib.render.pipeline.IVertexOperation;
-import codechicken.lib.vec.Matrix4;
-import com.cleanroommc.modularui.api.drawable.IDrawable;
-import com.cleanroommc.modularui.api.drawable.IKey;
-import com.cleanroommc.modularui.drawable.UITexture;
-import com.cleanroommc.modularui.factory.PosGuiData;
-import com.cleanroommc.modularui.screen.ModularPanel;
-import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
-import com.cleanroommc.modularui.value.sync.PanelSyncManager;
-import com.cleanroommc.modularui.widget.Widget;
-import com.cleanroommc.modularui.widgets.slot.ItemSlot;
-import com.cleanroommc.modularui.widgets.ProgressWidget;
-import com.cleanroommc.modularui.widgets.slot.ModularSlot;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -72,7 +69,7 @@ import static gregtech.api.capability.GregtechCapabilities.CAPABILITY_HEAT_CONTA
 import static gregtech.api.capability.GregtechDataCodes.IS_WORKING;
 
 /**
- *  热量锅炉的抽象基类
+ * 热量锅炉的抽象基类
  * 处理燃料燃烧、水加热、 热量生成等核心逻辑
  */
 public abstract class Combustor extends MetaTileEntity implements IDataInfoProvider {
@@ -86,38 +83,32 @@ public abstract class Combustor extends MetaTileEntity implements IDataInfoProvi
 
     // 锅炉类型：高压还是低压
     protected final boolean isHighPressure;
-    // 渲染器，用于显示锅炉状态
-    private final ICubeRenderer renderer;
-
     protected final SimpleOverlayRenderer render_side = GTSteamTextures.HU_BURRING_BOX_SIDE_OVERLAY;
     protected final SimpleOverlayRenderer renderer_full = GTSteamTextures.HU_BURRING_BOX_SIDE_FULL_OVERLAY;
-
+    protected final IHeatable heatable;
+    // 渲染器，用于显示锅炉状态
+    private final ICubeRenderer renderer;
+    // 容器物品栏，用于流体容器交互
+    private final ItemStackHandler containerInventory;
+    protected int tier;
+    protected Material material;
+    protected int color;
     // 燃料燃烧相关变量
     private int fuelBurnTimeLeft;       // 剩余燃烧时间
     private int fuelMaxBurnTime;        // 最大燃烧时间
-
     private int timeBeforeCoolingDown;  // 冷却倒计时
-
     // 锅炉状态
     private boolean isBurning;           // 是否正在燃烧
     private boolean wasBurningAndNeedsUpdate; // 燃烧状态需要更新标志
 
-    // 容器物品栏，用于流体容器交互
-    private final ItemStackHandler containerInventory;
-
-    protected final IHeatable heatable;
-
-    protected int tier;
-    protected Material material;
-    protected int color;
-
     /**
      * 构造函数
+     *
      * @param metaTileEntityId 实体ID
-     * @param isHighPressure 是否为高压锅炉
-     * @param renderer 渲染器
+     * @param isHighPressure   是否为高压锅炉
+     * @param renderer         渲染器
      */
-    public Combustor(ResourceLocation metaTileEntityId, boolean isHighPressure, ICubeRenderer renderer,int tier, Material material) {
+    public Combustor(ResourceLocation metaTileEntityId, boolean isHighPressure, ICubeRenderer renderer, int tier, Material material) {
         super(metaTileEntityId);
         this.renderer = renderer;
         this.isHighPressure = isHighPressure;
@@ -131,7 +122,7 @@ public abstract class Combustor extends MetaTileEntity implements IDataInfoProvi
         this.material = material;
         this.color = material.getMaterialRGB();
 
-        heatable  = HeatContainerHandler.emitterContainer(this, V[tier] * 64L, (tier + 1) * 200 + 273,
+        heatable = HeatContainerHandler.emitterContainer(this, V[tier] * 64L, (tier + 1) * 200 + 273,
                 V[tier] * 20);
         ((HeatContainerHandler) this.heatable).setSideOutputCondition(s -> s == EnumFacing.UP);
     }
@@ -289,7 +280,7 @@ public abstract class Combustor extends MetaTileEntity implements IDataInfoProvi
                 // 每两次燃料消耗增加一次温度，直到达到最大值
                 if (fuelBurnTimeLeft % 2 == 0 && getCurrentTemperature() < getMaxTemperate()) {
                     //每次增加的应该是12tick的量
-                    heatable.changeHeat(V[tier - 1] * (isHighPressure ? 2 :1) * 12);
+                    heatable.changeHeat(V[tier - 1] * (isHighPressure ? 2 : 1) * 12);
                     heatable.setTemperature(getCurrentTemperature() + tier * (isHighPressure ? 10 : 5));
                 }
                 // 消耗燃料：高压锅炉消耗更快
@@ -334,7 +325,7 @@ public abstract class Combustor extends MetaTileEntity implements IDataInfoProvi
     private void generateHeat() {
         if (getCurrentTemperature() >= 373) {
             int fillAmount = getTotalHeatOutput();
-             heatable.changeHeat(fillAmount);
+            heatable.changeHeat(fillAmount);
         }
     }
 
@@ -359,7 +350,9 @@ public abstract class Combustor extends MetaTileEntity implements IDataInfoProvi
 
     // 抽象方法，由子类实现
     protected abstract void tryConsumeNewFuel(); // 尝试消耗新燃料
+
     protected abstract int getCooldownInterval(); // 获取冷却间隔
+
     protected abstract int getCoolDownRate();     // 获取冷却速率
 
     /**
@@ -454,6 +447,7 @@ public abstract class Combustor extends MetaTileEntity implements IDataInfoProvi
 
     /**
      * 获取槽位背景
+     *
      * @param output 是否为输出槽
      */
     protected IDrawable getSlotBackground(boolean output) {
@@ -475,7 +469,7 @@ public abstract class Combustor extends MetaTileEntity implements IDataInfoProvi
         tooltip.add(I18n.format("gregtech.universal.tooltip.max_temperature", heatable.getMaxTemperature()));
         tooltip.add(I18n.format("gregtech.universal.tooltip.heat_storage_capacity", heatable.getHeatCapacity()));
         tooltip.add(I18n.format("gregtech.universal.tooltip.produces_heat", getBaseHeatOutput()));
-        tooltip.add(I18n.format("metaitem.tool.tooltip.primary_material",material.getLocalizedName()));
+        tooltip.add(I18n.format("metaitem.tool.tooltip.primary_material", material.getLocalizedName()));
     }
 
     /**

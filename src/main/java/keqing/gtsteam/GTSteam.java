@@ -10,13 +10,12 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod(
         modid = "gtsteam",
-        name="GTSteam",
+        name = "GTSteam",
         acceptedMinecraftVersions = "[1.12.2,1.13)",
-        version = "0.0.1-beta" ,
+        version = "0.0.1-beta",
         dependencies = "required-after:gregtech@[2.9.0-beta,);"
 )
 public class GTSteam {
@@ -37,8 +36,7 @@ public class GTSteam {
 
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event)
-    {
+    public void preInit(FMLPreInitializationEvent event) {
         GTSMetaitems.initialization();
         GTSteamMetaBlocks.init();
 
@@ -46,9 +44,9 @@ public class GTSteam {
 
         proxy.preLoad();
     }
+
     @Mod.EventHandler
-    public void init(FMLInitializationEvent event)
-    {
+    public void init(FMLInitializationEvent event) {
         proxy.init();
         GTSteamIntegration.init();
     }

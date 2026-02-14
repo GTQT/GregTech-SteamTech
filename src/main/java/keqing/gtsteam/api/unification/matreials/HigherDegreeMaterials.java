@@ -12,6 +12,9 @@ public class HigherDegreeMaterials {
 
     private static final int END_ID = startId + 100;
 
+    public HigherDegreeMaterials() {
+    }
+
     private static int getMaterialsId() {
         if (startId < END_ID) {
             return startId++;
@@ -19,8 +22,6 @@ public class HigherDegreeMaterials {
         throw new ArrayIndexOutOfBoundsException();
     }
 
-    public HigherDegreeMaterials() {
-    }
     public static void register() {
         //橡胶浆料
         GTSteamMaterials.RubberPulp = new Material.Builder(getMaterialsId(), gtsId("rubber_pulp"))

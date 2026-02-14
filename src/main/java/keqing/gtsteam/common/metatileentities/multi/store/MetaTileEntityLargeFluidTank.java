@@ -371,7 +371,7 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
     private void updateStructureDimensions() {
         World world = getWorld();
         EnumFacing front = getFrontFacing();
-        if(front==UP||front==DOWN)return;
+        if (front == UP || front == DOWN) return;
         EnumFacing back = front.getOpposite();
         EnumFacing left = front.rotateYCCW();
         EnumFacing right = left.getOpposite();

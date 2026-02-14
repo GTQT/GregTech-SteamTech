@@ -32,8 +32,8 @@ public class BlockEvaporationBed extends VariantActiveBlock<BlockEvaporationBed.
     }
 
     @Override
-    public boolean canCreatureSpawn( IBlockState state,  IBlockAccess world,  BlockPos pos,
-                                     EntityLiving.SpawnPlacementType type) {
+    public boolean canCreatureSpawn(IBlockState state, IBlockAccess world, BlockPos pos,
+                                    EntityLiving.SpawnPlacementType type) {
         return false;
     }
 

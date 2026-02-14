@@ -23,7 +23,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
-import static gregtech.api.GTValues.V;
 import static gregtech.api.GTValues.VA;
 import static gregtech.api.recipes.RecipeMaps.MIXER_RECIPES;
 import static gregtech.api.unification.material.MarkerMaterials.Tier.LV;
@@ -35,7 +34,8 @@ import static gregtech.common.blocks.BlockFireboxCasing.FireboxCasingType.STEEL_
 import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.BRONZE_BRICKS;
 import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.STEEL_SOLID;
 import static gregtech.common.metatileentities.MetaTileEntities.*;
-import static keqing.gtsteam.api.recipes.GTSRecipeMaps.*;
+import static keqing.gtsteam.api.recipes.GTSRecipeMaps.EVAPORATION_RECIPES;
+import static keqing.gtsteam.api.recipes.GTSRecipeMaps.LAVA_FURNACE_RECIPES;
 import static keqing.gtsteam.api.unification.GTSteamMaterials.GalvanizedSteel;
 import static keqing.gtsteam.common.block.GTSteamMetaBlocks.blockFireboxCasing0;
 import static keqing.gtsteam.common.block.GTSteamMetaBlocks.blockMultiblockCasing1;
@@ -225,10 +225,10 @@ public class MiscRecipes {
     private static void EvaporationRecipes() {
         EVAPORATION_RECIPES.recipeBuilder()
                 .fluidInputs(SaltWater.getFluid(2000))
-                .chancedOutput(dust,Salt,5000,500)
-                .chancedOutput(dust,Salt,5000,500)
-                .chancedOutput(dust,Salt,5000,500)
-                .chancedOutput(dust,Salt,5000,500)
+                .chancedOutput(dust, Salt, 5000, 500)
+                .chancedOutput(dust, Salt, 5000, 500)
+                .chancedOutput(dust, Salt, 5000, 500)
+                .chancedOutput(dust, Salt, 5000, 500)
                 .duration(200)
                 .Heat(30)
                 .Temperature(573)
@@ -332,9 +332,9 @@ public class MiscRecipes {
                 'B', STEEL_TANK.getStackForm());
 
         MIXER_RECIPES.recipeBuilder()
-                .input(DIRT,1)
-                .input(dust,Stone,2)
-                .input(dust,SiliconDioxide,2)
+                .input(DIRT, 1)
+                .input(dust, Stone, 2)
+                .input(dust, SiliconDioxide, 2)
                 .fluidInputs(Concrete.getFluid(200))
                 .circuitMeta(5)
                 .output(GTSteamMetaBlocks.blockEvaporationBed.getState(BlockEvaporationBed.EvaporationBedType.DIRT).getBlock())
@@ -535,7 +535,7 @@ public class MiscRecipes {
 
         ModHandler.addShapedRecipe(true, "low_pressure_solid_boiler", LOW_PRESSURE_SOLID_BOILER.getStackForm(),
                 "PSP", "SAS", "PSP",
-                'P',new UnificationEntry(plate, Steel),
+                'P', new UnificationEntry(plate, Steel),
                 'S', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.ULV),
                 'A', blockFireboxCasing0.getItemVariant(ITEM_FIREBOX));
 
@@ -717,7 +717,7 @@ public class MiscRecipes {
                 'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy),
                 'P', new UnificationEntry(OrePrefix.pipeNormalFluid, Copper));
 
-        ModHandler.addShapedRecipe(true, "gas_turbine_lv",GAS_TURBINE.getStackForm(),
+        ModHandler.addShapedRecipe(true, "gas_turbine_lv", GAS_TURBINE.getStackForm(),
                 "CRC", "RMR", "EWE",
                 'M', MetaTileEntities.HULL[GTValues.ULV].getStackForm(),
                 'E', ELECTRIC_MOTOR_ULV,

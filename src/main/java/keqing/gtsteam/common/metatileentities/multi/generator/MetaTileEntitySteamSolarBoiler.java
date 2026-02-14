@@ -20,7 +20,6 @@ import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
 import gregtech.api.capability.IControllable;
 import gregtech.api.capability.ISteamMachine;
-import gregtech.api.capability.impl.BoilerRecipeLogic;
 import gregtech.api.capability.impl.CommonFluidFilters;
 import gregtech.api.capability.impl.FluidTankList;
 import gregtech.api.capability.impl.ItemHandlerList;
@@ -474,7 +473,7 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
         tooltip.add(
                 I18n.format("gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip", this.getTicksToBoiling() / 20));
         tooltip.add(I18n.format("gtsteam.multiblock.steam_solar_boiler.structure_tooltip"));
-        tooltip.add(I18n.format("gtsteam.multiblock.steam_solar_boiler.final_tooltip",STEAM_PER_BLOCK));
+        tooltip.add(I18n.format("gtsteam.multiblock.steam_solar_boiler.final_tooltip", STEAM_PER_BLOCK));
         tooltip.add(TooltipHelper.BLINKING_RED + I18n.format("gregtech.multiblock.large_boiler.explosion_tooltip"));
     }
 

@@ -38,6 +38,10 @@ public class MetaTileEntityHeatDistillationTower extends HeatMultiblockControlle
         super(metaTileEntityId, GTSRecipeMaps.HEAT_DISTILLATION_RECIPES);
     }
 
+    private static IBlockState getCasingState() {
+        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
+    }
+
     @Override
     protected @NotNull BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start(RIGHT, FRONT, UP)
@@ -57,16 +61,13 @@ public class MetaTileEntityHeatDistillationTower extends HeatMultiblockControlle
                 .where('#', air())
                 .build();
     }
+
     public IBlockState getTankCasingState() {
         return blockMultiblockCasing0.getState(TANK_WALL);
     }
 
     private IBlockState getFireBoxState() {
         return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX);
-    }
-
-    private static IBlockState getCasingState() {
-        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
     }
 
     @Override

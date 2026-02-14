@@ -31,7 +31,7 @@ import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.STEEL_PI
 
 public class MetaTileEntitySteamMixer extends RecipeMapSteamMultiblockController {
 
-    private static final int PARALLEL_LIMIT = 8;
+    private static final int PARALLEL_LIMIT = 4;
 
     public MetaTileEntitySteamMixer(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.MIXER_RECIPES, CONVERSION_RATE, ParallelLogicType.MULTIPLY);

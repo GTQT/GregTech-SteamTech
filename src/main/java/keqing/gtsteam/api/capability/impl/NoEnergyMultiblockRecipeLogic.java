@@ -60,7 +60,7 @@ public class NoEnergyMultiblockRecipeLogic extends AbstractRecipeLogic {
         return GTValues.LV;
     }
 
-    protected void runOverclockingLogic( OCParams ocParams,  OCResult ocResult,  RecipePropertyStorage propertyStorage, long maxVoltage) {
+    protected void runOverclockingLogic(OCParams ocParams, OCResult ocResult, RecipePropertyStorage propertyStorage, long maxVoltage) {
         ocParams.setEut(1L);
         super.runOverclockingLogic(ocParams, ocResult, propertyStorage, maxVoltage);
     }
@@ -123,7 +123,7 @@ public class NoEnergyMultiblockRecipeLogic extends AbstractRecipeLogic {
     }
 
     @Override
-    protected  IMultipleTankHandler getInputTank() {
+    protected IMultipleTankHandler getInputTank() {
         NoEnergyMultiblockController controller = (NoEnergyMultiblockController) metaTileEntity;
         return controller.getInputFluidInventory();
     }
@@ -305,7 +305,7 @@ public class NoEnergyMultiblockRecipeLogic extends AbstractRecipeLogic {
     }
 
     @Override
-    public boolean checkRecipe( Recipe recipe) {
+    public boolean checkRecipe(Recipe recipe) {
         NoEnergyMultiblockController controller = (NoEnergyMultiblockController) metaTileEntity;
         if (controller.checkRecipe(recipe, false)) {
             controller.checkRecipe(recipe, true);

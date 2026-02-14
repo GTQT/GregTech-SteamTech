@@ -32,7 +32,7 @@ import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.STEEL_PI
 
 public class MetaTileEntitySteamLathe extends RecipeMapSteamMultiblockController {
 
-    private static final int PARALLEL_LIMIT = 8;
+    private static final int PARALLEL_LIMIT = 4;
 
     public MetaTileEntitySteamLathe(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.LATHE_RECIPES, CONVERSION_RATE, ParallelLogicType.MULTIPLY);

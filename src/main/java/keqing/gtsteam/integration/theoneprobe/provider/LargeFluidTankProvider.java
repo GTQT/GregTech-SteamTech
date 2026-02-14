@@ -1,6 +1,5 @@
 package keqing.gtsteam.integration.theoneprobe.provider;
 
-import gregtech.api.GTValues;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import keqing.gtsteam.GTSteam;
@@ -9,7 +8,6 @@ import mcjty.theoneprobe.api.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.IFluidTank;
 
@@ -33,9 +31,9 @@ public class LargeFluidTankProvider implements IProbeInfoProvider {
                     int amount = tank.getFluidAmount();
                     String fluidType = tank.getFluid() == null ? "" : tank.getFluid().getLocalizedName();
 
-                    int color = amount>capacity*0.75 ? 0xFF4CBB17 : 0xFFBB1C28;
+                    int color = amount > capacity * 0.75 ? 0xFF4CBB17 : 0xFFBB1C28;
                     probeInfo.progress(amount, capacity, probeInfo.defaultProgressStyle()
-                            .suffix(" /"+ capacity+ " mb "+ fluidType)
+                            .suffix(" /" + capacity + " mb " + fluidType)
                             .filledColor(color)
                             .alternateFilledColor(color)
                             .borderColor(0xFF555555).numberFormat(NumberFormat.COMMAS));

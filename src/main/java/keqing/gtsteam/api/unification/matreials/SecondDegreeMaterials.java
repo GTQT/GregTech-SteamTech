@@ -5,7 +5,6 @@ import keqing.gtsteam.api.unification.GTSteamMaterials;
 
 import static gregtech.api.unification.material.Materials.*;
 import static gregtech.api.unification.material.info.MaterialFlags.*;
-import static gregtech.api.util.GTUtility.gregtechId;
 import static keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities.gtsId;
 
 public class SecondDegreeMaterials {

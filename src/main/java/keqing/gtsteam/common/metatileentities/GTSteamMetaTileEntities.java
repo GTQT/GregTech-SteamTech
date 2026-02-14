@@ -19,7 +19,10 @@ import keqing.gtsteam.common.metatileentities.multi.generator.PrimitiveBoilerTyp
 import keqing.gtsteam.common.metatileentities.multi.heat.*;
 import keqing.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnExportHatch;
 import keqing.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnImportHatch;
-import keqing.gtsteam.common.metatileentities.multi.primitive.*;
+import keqing.gtsteam.common.metatileentities.multi.primitive.MetaTileEntityAlloyKiln;
+import keqing.gtsteam.common.metatileentities.multi.primitive.MetaTileEntityCoagulationTank;
+import keqing.gtsteam.common.metatileentities.multi.primitive.MetaTileEntityIndustrialCokeOven;
+import keqing.gtsteam.common.metatileentities.multi.primitive.MetaTileEntityIndustrialPrimitiveBlastFurnace;
 import keqing.gtsteam.common.metatileentities.multi.steam.*;
 import keqing.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamBiomimeticFactory;
 import keqing.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamTranscendentPlasmaForge;
@@ -104,23 +107,19 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntitySingleTurbine GAS_TURBINE;
     public static MetaTileEntitySingleCombustion COMBUSTION_GENERATOR;
     public static MetaTileEntitySingleCombustion SEMI_FLUID_GENERATOR;
-
-    //热学
-    static Material[] materials = new Material[]{Materials.Lead, Materials.Bronze, Materials.Steel, Materials.Invar, Materials.Chrome,Materials.Titanium};
-    public static CoalCombustor[] COAL_COMBUSTOR = new CoalCombustor[materials.length];
-    public static LavaCombustor[] LAVA_COMBUSTOR = new LavaCombustor[materials.length];
-    public static SolarCombustor[] SOLAR_COMBUSTOR = new SolarCombustor[materials.length];
-
-    public static CoalCombustor[] DENSE_COAL_COMBUSTOR = new CoalCombustor[materials.length];
-    public static LavaCombustor[] DENSE_LAVA_COMBUSTOR = new LavaCombustor[materials.length];
-    public static SolarCombustor[] DENSE_SOLAR_COMBUSTOR = new SolarCombustor[materials.length];
-
     public static MetaTileEntityPrimitiveBoiler LOW_PRESSURE_SOLID_BOILER;
     public static MetaTileEntityPrimitiveBoiler HIGH_PRESSURE_SOLID_BOILER;
     public static MetaTileEntityPrimitiveBoiler LOW_PRESSURE_FLUID_BOILER;
     public static MetaTileEntityPrimitiveBoiler HIGH_PRESSURE_FLUID_BOILER;
-
     public static MetaTileEntityHeatSteamBoiler HEAT_STEAM_BOILER;
+    //热学
+    static Material[] materials = new Material[]{Materials.Lead, Materials.Bronze, Materials.Steel, Materials.Invar, Materials.Chrome, Materials.Titanium};
+    public static CoalCombustor[] COAL_COMBUSTOR = new CoalCombustor[materials.length];
+    public static LavaCombustor[] LAVA_COMBUSTOR = new LavaCombustor[materials.length];
+    public static SolarCombustor[] SOLAR_COMBUSTOR = new SolarCombustor[materials.length];
+    public static CoalCombustor[] DENSE_COAL_COMBUSTOR = new CoalCombustor[materials.length];
+    public static LavaCombustor[] DENSE_LAVA_COMBUSTOR = new LavaCombustor[materials.length];
+    public static SolarCombustor[] DENSE_SOLAR_COMBUSTOR = new SolarCombustor[materials.length];
 
     public static ResourceLocation gtsId(String id) {
         return new ResourceLocation(MODID, id);
@@ -207,14 +206,14 @@ public class GTSteamMetaTileEntities {
         //热学系统
         for (int i = 0; i < materials.length; i++) {
             String materialName = materials[i].toString().toLowerCase();
-            COAL_COMBUSTOR[i] = registerMetaTileEntity(200 + i, new CoalCombustor(gtsId("coal_combustor." +materialName), false, i + 1, materials[i]));
-            DENSE_COAL_COMBUSTOR[i] = registerMetaTileEntity(210 + i, new CoalCombustor(gtsId("dense_coal_combustor." +materialName), true, i + 1, materials[i]));
+            COAL_COMBUSTOR[i] = registerMetaTileEntity(200 + i, new CoalCombustor(gtsId("coal_combustor." + materialName), false, i + 1, materials[i]));
+            DENSE_COAL_COMBUSTOR[i] = registerMetaTileEntity(210 + i, new CoalCombustor(gtsId("dense_coal_combustor." + materialName), true, i + 1, materials[i]));
 
-            LAVA_COMBUSTOR[i] = registerMetaTileEntity(220 + i, new LavaCombustor(gtsId("lava_combustor." +materialName), false, i + 1, materials[i]));
-            DENSE_LAVA_COMBUSTOR[i] = registerMetaTileEntity(230 + i, new LavaCombustor(gtsId("dense_lava_combustor." +materialName), true, i + 1, materials[i]));
+            LAVA_COMBUSTOR[i] = registerMetaTileEntity(220 + i, new LavaCombustor(gtsId("lava_combustor." + materialName), false, i + 1, materials[i]));
+            DENSE_LAVA_COMBUSTOR[i] = registerMetaTileEntity(230 + i, new LavaCombustor(gtsId("dense_lava_combustor." + materialName), true, i + 1, materials[i]));
 
-            SOLAR_COMBUSTOR[i] = registerMetaTileEntity(240 + i, new SolarCombustor(gtsId("solar_combustor." +materialName), false, i + 1, materials[i]));
-            DENSE_SOLAR_COMBUSTOR[i] = registerMetaTileEntity(250 + i, new SolarCombustor(gtsId("dense_solar_combustor." +materialName), true, i + 1, materials[i]));
+            SOLAR_COMBUSTOR[i] = registerMetaTileEntity(240 + i, new SolarCombustor(gtsId("solar_combustor." + materialName), false, i + 1, materials[i]));
+            DENSE_SOLAR_COMBUSTOR[i] = registerMetaTileEntity(250 + i, new SolarCombustor(gtsId("dense_solar_combustor." + materialName), true, i + 1, materials[i]));
         }
 
         //燃烧室
@@ -224,6 +223,6 @@ public class GTSteamMetaTileEntities {
         HIGH_PRESSURE_FLUID_BOILER = registerMetaTileEntity(303, new MetaTileEntityPrimitiveBoiler(gtsId("fluid_boiler.high_pressure"), PrimitiveBoilerType.HIGH_PRESSURE_FLUID));
 
         //锅炉
-        HEAT_STEAM_BOILER= registerMetaTileEntity(310, new MetaTileEntityHeatSteamBoiler(gtsId("heat_steam_boiler")));
+        HEAT_STEAM_BOILER = registerMetaTileEntity(310, new MetaTileEntityHeatSteamBoiler(gtsId("heat_steam_boiler")));
     }
 }

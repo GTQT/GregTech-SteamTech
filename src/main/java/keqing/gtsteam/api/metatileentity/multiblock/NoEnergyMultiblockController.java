@@ -19,7 +19,6 @@ import gregtech.api.pattern.TraceabilityPredicate;
 import gregtech.api.recipes.Recipe;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.util.GTUtility;
-import gregtech.api.util.KeyUtil;
 import gregtech.api.util.TextFormattingUtil;
 import gregtech.common.ConfigHolder;
 import keqing.gtsteam.api.capability.impl.NoEnergyMultiblockRecipeLogic;
@@ -138,9 +137,11 @@ public abstract class NoEnergyMultiblockController extends MultiblockWithDisplay
                 .addProgressLine(recipeMapWorkable.getProgress(), recipeMapWorkable.getMaxProgress())
                 .addRecipeOutputLine(recipeMapWorkable);
     }
+
     public void addCustomCapacity(KeyManager keyManager, UISyncer syncer) {
 
     }
+
     @Override
     public TraceabilityPredicate autoAbilities() {
         return autoAbilities(true, true, true, true, true, true);
