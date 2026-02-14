@@ -20,5 +20,7 @@ public class GTSRecipeManger {
         CeramicChain.init();
         GalvanizedSteelChain.init();
         RubberChain.init();
+        ULVCircuitChain.init();
+        PrimitiveChemicalReactorRecipes.init();
     }
 }

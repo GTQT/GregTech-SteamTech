@@ -88,6 +88,15 @@ public class CoalChain {
                 .Temperature(598)
                 .Heat(30)
                 .buildAndRegister();
+
+        GTSRecipeMaps.HEAT_DISTILLATION_RECIPES.recipeBuilder()
+                .fluidInputs(CoalTar.getFluid(1000))
+                .fluidOutputs(Creosote.getFluid(200))
+                .output(dust, Asphalt,8)
+                .duration(100)
+                .Temperature(598)
+                .Heat(20)
+                .buildAndRegister();
     }
 
     private static void purification() {

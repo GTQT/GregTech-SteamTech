@@ -13,6 +13,7 @@ import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.ConfigHolder;
+import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import net.minecraft.block.state.IBlockState;
@@ -52,13 +53,14 @@ public class MetaTileEntitySteamBender extends RecipeMapSteamMultiblockControlle
     @Override
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
-                .aisle("XXXXXXX", "XXFFFFX", "XXXXXXX")
-                .aisle("XXXXXXX", "XTTTTTX", "XXXXXXX")
-                .aisle("XXXXXXX", "XSFFFFX", "XXXXXXX")
+                .aisle("TTTFFFF", "XXXXXXX", "XXXXXXX")
+                .aisle("TXT    ", "XPPPPPX", "XXXXXXX")
+                .aisle("TTTFFFF", "XSXXXXX", "XXXXXXX")
                 .where('S', selfPredicate())
                 .where('X', states(getCasingState()).setMinGlobalLimited(20).or(autoAbilities()))
-                .where('T', states(getBoilerState()))
+                .where('P', states(getBoilerState()))
                 .where('F', states(getFrameState()))
+                .where('T', states(getFireboxState()))
                 .where(' ', any())
                 .build();
     }
@@ -73,6 +75,12 @@ public class MetaTileEntitySteamBender extends RecipeMapSteamMultiblockControlle
         return ConfigHolder.machines.steelSteamMultiblocks ?
                 MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID) :
                 MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
+    }
+
+    public IBlockState getFireboxState() {
+        return ConfigHolder.machines.steelSteamMultiblocks ?
+                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX) :
+                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
     }
 
     @SideOnly(Side.CLIENT)

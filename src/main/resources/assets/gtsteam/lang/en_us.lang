@@ -6,6 +6,7 @@ recipemap.evaporation_pool.name=Evaporation Pool
 recipemap.heat_cracker.name=Heat Cracker
 recipemap.heat_distillation_tower.name=Heat Distillation Tower
 recipemap.heat_chemical_reactor.name=Heat Chemical Reactor
+recipemap.electronic_processor.name=Heat Electric Processor
 recipemap.biomimetic_factory_recipes.name=Matter Simulacrum
 recipemap.primitive_steam_turbine.name=Primitive Steam Turbine
 recipemap.primitive_gas_turbine.name=Primitive Gas Turbine
@@ -42,6 +43,8 @@ tile.multiblock_casing.high_pressure_tank.name=High pressure boiler
 
 tile.boiler_casing.item_firebox.name=Solid combustion chamber
 tile.boiler_casing.fluid_firebox.name=Liquid combustion chamber
+
+tile.evaporation_bed.dirt.name=Sandy Loam
 #物品
 metaitem.cover.electric_motor.ulv.name=Electric Motor (ULV)
 metaitem.cover.electric_piston.ulv.name=Electric Piston (ULV)
@@ -58,6 +61,8 @@ metaitem.cover.field_generator.ulv.name=Field Generator (ULV)
 metaitem.unburned_ceramic_tiles.name=Unfired Ceramic Tiles
 metaitem.burned_ceramic_tiles.name=Burned Ceramic Tiles
 metaitem.galvanized_ceramic_tile.name=Galvanized Ceramic Tiles
+
+item.component.vacuum_tube.name=Vacuum Tube Component
 
 item.cactus_charcoal.name=Cactus Charcoal
 item.cactus_charcoal.tooltip=Charcoal made from cactus
@@ -165,6 +170,7 @@ gtsteam.machine.heat_evaporation_pond.name=Heat Evaporation Pond
 gtsteam.machine.heat_chemical_reactor.name=Heat Chemical Reactor
 gtsteam.machine.heat_thermal_centrifuge.name=Heat Thermal Centrifuge
 gtsteam.machine.heat_lava_furnace.name=Heat Lava Furnace
+gtsteam.machine.heat_electronic_processor.name=Heat Electronic Processor
 
 gtsteam.machine.scalable_storage.name=Scalable Storage Silo
 gtsteam.machine.scalable_storage.capacity=Max Capacity: %s items

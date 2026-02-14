@@ -68,6 +68,7 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntityHeatChemicalReactor HEAT_CHEMICAL_REACTOR;
     public static MetaTileEntityHeatThermalCentrifuge HEAT_THERMAL_CENTRIFUGE;
     public static MetaTileEntityHeatLavaFurnace HEAT_LAVA_FURNACE;
+    public static MetaTileEntityHeatElectronicProcessor HEAT_ELECTRONIC_PROCESSOR;
 
     public static MetaTileEntitySteamSolarBoiler STEAM_SOLAR_BOILER;
 
@@ -136,7 +137,7 @@ public class GTSteamMetaTileEntities {
 
         STEAM_COMPRESSOR = registerMetaTileEntity(10, new MetaTileEntitySteamCompressor(gtsId("steam_compressor")));
         STEAM_EXTRACTOR = registerMetaTileEntity(11, new MetaTileEntitySteamExtractor(gtsId("steam_extractor")));
-
+        STEAM_ALLOY_FURNACE = registerMetaTileEntity(12, new MetaTileEntitySteamAlloyFurnace(gtsId("steam_alloy_furnace")));
         STEAM_ORE_WASHER = registerMetaTileEntity(13, new MetaTileEntitySteamOreWasher(gtsId("steam_ore_washer")));
         STEAM_HAMMER = registerMetaTileEntity(14, new MetaTileEntitySteamHammer(gtsId("steam_hammer")));
         STEAM_CENTRIFUGE = registerMetaTileEntity(15, new MetaTileEntitySteamCentrifuge(gtsId("steam_centrifuge")));
@@ -145,7 +146,6 @@ public class GTSteamMetaTileEntities {
         STEAM_BENDER = registerMetaTileEntity(18, new MetaTileEntitySteamBender(gtsId("steam_bender")));
         STEAM_SIFTER = registerMetaTileEntity(19, new MetaTileEntitySteamSifter(gtsId("steam_sifter")));
         STEAM_LATHE = registerMetaTileEntity(20, new MetaTileEntitySteamLathe(gtsId("steam_lathe")));
-        STEAM_ALLOY_FURNACE = registerMetaTileEntity(21, new MetaTileEntitySteamAlloyFurnace(gtsId("steam_alloy_furnace")));
 
         SCALABLE_STORAGE = registerMetaTileEntity(25, new MetaTileEntityScalableStorage(gtsId("scalable_storage")));
 
@@ -175,6 +175,7 @@ public class GTSteamMetaTileEntities {
         HEAT_CHEMICAL_REACTOR = registerMetaTileEntity(78, new MetaTileEntityHeatChemicalReactor(gtsId("heat_chemical_reactor")));
         HEAT_THERMAL_CENTRIFUGE = registerMetaTileEntity(79, new MetaTileEntityHeatThermalCentrifuge(gtsId("heat_thermal_centrifuge")));
         HEAT_LAVA_FURNACE = registerMetaTileEntity(80, new MetaTileEntityHeatLavaFurnace(gtsId("heat_lava_furnace")));
+        HEAT_ELECTRONIC_PROCESSOR = registerMetaTileEntity(81, new MetaTileEntityHeatElectronicProcessor(gtsId("heat_electronic_processor")));
 
         //单方块ULV
         ELECTRIC_FURNACE = registerMetaTileEntity(100, new SimpleMachineMetaTileEntity(gtsId("electric_furnace.ulv"), RecipeMaps.FURNACE_RECIPES, Textures.FURNACE_OVERLAY, 0, false));

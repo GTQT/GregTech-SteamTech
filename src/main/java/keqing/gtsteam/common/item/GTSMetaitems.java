@@ -17,6 +17,8 @@ public class GTSMetaitems {
     public static MetaItem<?>.MetaValueItem BURNED_CERAMIC_TILES;
     public static MetaItem<?>.MetaValueItem GALVANIZED_CERAMIC_TILE;
 
+    public static MetaItem<?>.MetaValueItem VACUUM_TUBE_COMPONENTS;
+
     public static MetaItem<?>.MetaValueItem CACTUS_CHARCOAL;
     public static MetaItem<?>.MetaValueItem CACTUS_COAL;
     public static MetaItem<?>.MetaValueItem SUGAR_CHARCOAL;

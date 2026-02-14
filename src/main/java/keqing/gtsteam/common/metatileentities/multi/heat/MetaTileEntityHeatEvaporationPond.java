@@ -20,6 +20,8 @@ import gregtech.common.blocks.MetaBlocks;
 import gregtech.core.sound.GTSoundEvents;
 import gtqt.common.metatileentities.GTQTMetaTileEntities;
 import keqing.gtsteam.api.recipes.GTSRecipeMaps;
+import keqing.gtsteam.common.block.GTSteamMetaBlocks;
+import keqing.gtsteam.common.block.blocks.BlockEvaporationBed;
 import keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -62,7 +64,7 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
     }
 
     private static IBlockState getPipeState() {
-        return MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE);
+        return GTSteamMetaBlocks.blockEvaporationBed.getState(BlockEvaporationBed.EvaporationBedType.DIRT);
     }
 
     @Override

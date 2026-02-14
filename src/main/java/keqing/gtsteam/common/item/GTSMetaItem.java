@@ -27,6 +27,9 @@ public class GTSMetaItem extends StandardMetaItem {
         //镀锌陶瓷瓦
         GTSMetaitems.GALVANIZED_CERAMIC_TILE = this.addItem(12, "galvanized_ceramic_tile");
 
+        // ULV电路线
+        // 15 真空管组件
+        GTSMetaitems.VACUUM_TUBE_COMPONENTS = this.addItem(423, "component.vacuum_tube");
 
         //焦煤 20-
         // 21 仙人掌炭

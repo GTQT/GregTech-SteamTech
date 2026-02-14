@@ -1,20 +1,26 @@
 package keqing.gtsteam.api.recipes;
 
+import gregtech.api.GTValues;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.recipes.RecipeMap;
 import gregtech.api.recipes.RecipeMapBuilder;
 import gregtech.api.recipes.builders.*;
 import gregtech.api.recipes.ui.impl.CrackerUnitUI;
 import gregtech.api.recipes.ui.impl.DistillationTowerUI;
+import gregtech.api.unification.material.Materials;
 import gregtech.core.sound.GTSoundEvents;
 
+import static gregtech.api.util.GTUtility.gregtechId;
+
 public class GTSRecipeMaps {
+
     public static final RecipeMap<SimpleRecipeBuilder> BIOMIMETIC_FACTORY_RECIPES;
     public static final RecipeMap<HeatRecipeBuilder> LAVA_FURNACE_RECIPES;
     public static final RecipeMap<HeatRecipeBuilder> EVAPORATION_RECIPES;
     public static final RecipeMap<HeatRecipeBuilder> HEAT_CRACKING_RECIPES;
     public static final RecipeMap<HeatRecipeBuilder> HEAT_DISTILLATION_RECIPES;
     public static final RecipeMap<HeatRecipeBuilder> HEAT_CHEMICAL_RECIPES;
+    public static final RecipeMap<HeatRecipeBuilder> ELECTRONIC_PROCESSOR_RECIPES;
     public static final RecipeMap<PrimitiveRecipeBuilder> ALLOY_KILN;
     public static final RecipeMap<PrimitiveRecipeBuilder> COAGULATION_RECIPES;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_STEAM_TURBINE_FUELS;
@@ -89,6 +95,7 @@ public class GTSRecipeMaps {
                 .itemInputs(1)
                 .fluidOutputs(1)
                 .sound(GTSoundEvents.FIRE)
+                .disableJeiOverclockButton()
                 .build();
 
         EVAPORATION_RECIPES = new RecipeMapBuilder<>("evaporation_pool",
@@ -101,6 +108,7 @@ public class GTSRecipeMaps {
                         .progressBar(GTGuiTextures.PROGRESS_BAR_SIFT)
                 )
                 .sound(GTSoundEvents.CHEMICAL_REACTOR)
+                .disableJeiOverclockButton()
                 .build();
 
         HEAT_CRACKING_RECIPES = new RecipeMapBuilder<>("heat_cracker",
@@ -110,6 +118,7 @@ public class GTSRecipeMaps {
                 .fluidOutputs(2)
                 .ui(CrackerUnitUI::new)
                 .sound(GTSoundEvents.FIRE)
+                .disableJeiOverclockButton()
                 .build();
 
         HEAT_DISTILLATION_RECIPES = new RecipeMapBuilder<>(
@@ -119,6 +128,7 @@ public class GTSRecipeMaps {
                 .fluidInputs(1)
                 .fluidOutputs(12)
                 .sound(GTSoundEvents.CHEMICAL_REACTOR)
+                .disableJeiOverclockButton()
                 .build();
 
         HEAT_CHEMICAL_RECIPES = new RecipeMapBuilder<>("heat_chemical_reactor",
@@ -136,6 +146,18 @@ public class GTSRecipeMaps {
                         .fluidSlotOverlay(GTGuiTextures.VIAL_OVERLAY_2, true)
                         .progressBar(GTGuiTextures.PROGRESS_BAR_ARROW_MULTIPLE))
                 .sound(GTSoundEvents.CHEMICAL_REACTOR)
+                .disableJeiOverclockButton()
+                .build();
+
+        ELECTRONIC_PROCESSOR_RECIPES = new RecipeMapBuilder<>("electronic_processor",
+                new HeatRecipeBuilder())
+                .itemInputs(6)
+                .itemOutputs(1)
+                .uiBuilder(b -> b
+                        .itemSlotOverlay(GTGuiTextures.CIRCUIT_OVERLAY, false)
+                        .progressBar(GTGuiTextures.PROGRESS_BAR_CIRCUIT_ASSEMBLER))
+                .sound(GTSoundEvents.ASSEMBLER)
+                .disableJeiOverclockButton()
                 .build();
 
         ALLOY_KILN = new RecipeMapBuilder<>("alloy_klin",
@@ -145,6 +167,7 @@ public class GTSRecipeMaps {
                 .fluidInputs(1)
                 .fluidOutputs(0)
                 .sound(GTSoundEvents.FIRE)
+                .disableJeiOverclockButton()
                 .build();
 
         COAGULATION_RECIPES = new RecipeMapBuilder<>("coagulation",
@@ -154,6 +177,7 @@ public class GTSRecipeMaps {
                 .fluidInputs(3)
                 .fluidOutputs(3)
                 .sound(GTSoundEvents.FIRE)
+                .disableJeiOverclockButton()
                 .disableJeiOverclockButton()
                 .build();
     }

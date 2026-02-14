@@ -14,6 +14,7 @@ import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.ConfigHolder;
+import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import net.minecraft.block.state.IBlockState;
@@ -44,10 +45,10 @@ public class MetaTileEntitySteamExtractor extends RecipeMapSteamMultiblockContro
         this.recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 
-    private static IBlockState getFrameState() {
+    public IBlockState getFireboxState() {
         return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel) :
-                MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
+                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX) :
+                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
     }
 
     @Override
@@ -65,7 +66,7 @@ public class MetaTileEntitySteamExtractor extends RecipeMapSteamMultiblockContro
                 .where('S', selfPredicate())
                 .where('X', states(getCasingState()).setMinGlobalLimited(16).or(autoAbilities()))
                 .where('T', states(getPipeState()))
-                .where('F', states(getFrameState()))
+                .where('F', states(getFireboxState()))
                 .where('#', any())
                 .build();
     }

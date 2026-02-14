@@ -13,6 +13,7 @@ import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.ConfigHolder;
+import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import net.minecraft.block.state.IBlockState;
@@ -52,15 +53,22 @@ public class MetaTileEntitySteamWireMill extends RecipeMapSteamMultiblockControl
     @Override
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
-                .aisle("XXFXXXX", "XXFXXXX", "XXFXXXX")
-                .aisle("XXFXXXX", "XTTTTTX", "XXFXXXX")
-                .aisle("XXFXXXX", "XSFXXXX", "XXFXXXX")
+                .aisle("TTTFXXXX", "XXXFXXXX", "TTTFXXXX")
+                .aisle("TXXFXXXX", "XGGGGGGX", "TXXFXXXX")
+                .aisle("TTTFXXXX", "XSXFXXXX", "TTTFXXXX")
                 .where('S', selfPredicate())
                 .where('X', states(getCasingState()).setMinGlobalLimited(35).or(autoAbilities()))
-                .where('T', states(getBoilerState()))
+                .where('G', states(getBoilerState()))
                 .where('F', states(getFrameState()))
+                .where('T', states(getFireboxState()))
                 .where(' ', any())
                 .build();
+    }
+
+    public IBlockState getFireboxState() {
+        return ConfigHolder.machines.steelSteamMultiblocks ?
+                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX) :
+                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
     }
 
     private IBlockState getBoilerState() {

@@ -14,6 +14,7 @@ import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.items.MetaItems;
 import gregtech.common.metatileentities.MetaTileEntities;
 import keqing.gtsteam.common.block.GTSteamMetaBlocks;
+import keqing.gtsteam.common.block.blocks.BlockEvaporationBed;
 import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing0;
 import keqing.gtsteam.common.block.blocks.BlockMultiblockCasing1;
 import keqing.gtsteam.common.item.storageupdate.ModItems;
@@ -23,6 +24,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import static gregtech.api.GTValues.V;
+import static gregtech.api.GTValues.VA;
+import static gregtech.api.recipes.RecipeMaps.MIXER_RECIPES;
 import static gregtech.api.unification.material.MarkerMaterials.Tier.LV;
 import static gregtech.api.unification.material.MarkerMaterials.Tier.ULV;
 import static gregtech.api.unification.material.Materials.*;
@@ -64,6 +67,7 @@ import static keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities.SEM
 import static keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities.SIFTER;
 import static keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities.STEAM_TURBINE;
 import static keqing.gtsteam.common.metatileentities.GTSteamMetaTileEntities.WIREMILL;
+import static net.minecraft.init.Blocks.DIRT;
 
 public class MiscRecipes {
     public static void init() {
@@ -326,6 +330,17 @@ public class MiscRecipes {
                 'P', new UnificationEntry(plate, Steel),
                 'F', new UnificationEntry(frameGt, Steel),
                 'B', STEEL_TANK.getStackForm());
+
+        MIXER_RECIPES.recipeBuilder()
+                .input(DIRT,1)
+                .input(dust,Stone,2)
+                .input(dust,SiliconDioxide,2)
+                .fluidInputs(Concrete.getFluid(200))
+                .circuitMeta(5)
+                .output(GTSteamMetaBlocks.blockEvaporationBed.getState(BlockEvaporationBed.EvaporationBedType.DIRT).getBlock())
+                .EUt(VA[GTValues.ULV])
+                .duration(200)
+                .buildAndRegister();
 
         if (ConfigHolder.machines.steelSteamMultiblocks) {
             ModHandler.addShapedRecipe(true, "steam_compressor", STEAM_COMPRESSOR.getStackForm(),

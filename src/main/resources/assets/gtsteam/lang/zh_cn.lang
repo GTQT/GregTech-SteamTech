@@ -6,6 +6,7 @@ recipemap.evaporation_pool.name=蒸发池
 recipemap.heat_cracker.name=热力裂化
 recipemap.heat_distillation_tower.name=热力蒸馏
 recipemap.heat_chemical_reactor.name=热力化学反应
+recipemap.electronic_processor.name=热电子加工
 recipemap.biomimetic_factory_recipes.name=物质拟生
 recipemap.primitive_steam_turbine.name=原始蒸汽轮机燃料
 recipemap.primitive_gas_turbine.name=原始燃气轮机燃料
@@ -42,6 +43,8 @@ tile.multiblock_casing.high_pressure_tank.name=高压锅炉
 
 tile.boiler_casing.item_firebox.name=固体燃烧室
 tile.boiler_casing.fluid_firebox.name=液体燃烧室
+
+tile.evaporation_bed.dirt.name=砂壤土
 #物品
 metaitem.cover.electric_motor.ulv.name=电动马达（ULV）
 metaitem.cover.electric_piston.ulv.name=电力活塞（ULV）
@@ -58,6 +61,8 @@ metaitem.cover.field_generator.ulv.name=力场发生器（ULV）
 metaitem.unburned_ceramic_tiles.name=未烧制的陶瓷瓦
 metaitem.burned_ceramic_tiles.name=已烧制的陶瓷瓦
 metaitem.galvanized_ceramic_tile.name=镀锌的陶瓷瓦
+
+item.component.vacuum_tube.name=真空管组件
 
 item.cactus_charcoal.name=仙人掌炭
 item.cactus_charcoal.tooltip=来自仙人掌的炭
@@ -164,6 +169,7 @@ gtsteam.machine.heat_evaporation_pond.name=热力蒸发池
 gtsteam.machine.heat_chemical_reactor.name=热力化学反应釜
 gtsteam.machine.heat_thermal_centrifuge.name=热力离心机
 gtsteam.machine.heat_lava_furnace.name=热力熔岩炉
+gtsteam.machine.heat_electronic_processor.name=热力电子加工台
 
 gtsteam.machine.scalable_storage.name=可扩展存储筒仓
 gtsteam.machine.scalable_storage.capacity=最大容量：%s 个物品

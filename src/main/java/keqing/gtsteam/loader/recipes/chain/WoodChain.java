@@ -66,17 +66,27 @@ public class WoodChain {
         //木焦油加蒸汽裂化 产合成气 杂酚油
         GTSRecipeMaps.HEAT_CRACKING_RECIPES.recipeBuilder()
                 .fluidInputs(WoodTar.getFluid(1000))
-                .fluidInputs(Steam.getFluid(500))
+                .fluidInputs(Steam.getFluid(1000))
                 .fluidOutputs(SynthesisGas.getFluid(1000))
+                .duration(80)
+                .Temperature(598)
+                .Heat(30)
+                .buildAndRegister();
+
+        //煤焦油加氢裂化 富甲烷气
+        GTSRecipeMaps.HEAT_CRACKING_RECIPES.recipeBuilder()
+                .fluidInputs(WoodTar.getFluid(1000))
+                .fluidInputs(Hydrogen.getFluid(100))
+                .fluidOutputs(MethaneRichGas.getFluid(1000))
                 .duration(60)
                 .Temperature(598)
-                .Heat(15)
+                .Heat(30)
                 .buildAndRegister();
 
         GTSRecipeMaps.HEAT_DISTILLATION_RECIPES.recipeBuilder()
                 .fluidInputs(WoodTar.getFluid(1000))
-                .fluidInputs(Creosote.getFluid(600))
-                .output(dust, Asphalt,2)
+                .fluidOutputs(Creosote.getFluid(200))
+                .output(dust, Asphalt,8)
                 .duration(100)
                 .Temperature(598)
                 .Heat(20)
