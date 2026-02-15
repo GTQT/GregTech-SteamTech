@@ -1,0 +1,297 @@
+package meowmel.gtsteam.common.metatileentities.multi.primitive;
+
+import gregtech.api.GTValues;
+import gregtech.api.metatileentity.MetaTileEntity;
+import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
+import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.MultiblockAbility;
+import gregtech.api.metatileentity.multiblock.ui.KeyManager;
+import gregtech.api.metatileentity.multiblock.ui.UISyncer;
+import gregtech.api.mui.GTGuiTheme;
+import gregtech.api.pattern.BlockPattern;
+import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.MultiblockShapeInfo;
+import gregtech.api.pattern.PatternMatchContext;
+import gregtech.api.recipes.RecipeMap;
+import gregtech.api.recipes.logic.OCResult;
+import gregtech.api.recipes.properties.RecipePropertyStorage;
+import gregtech.api.unification.material.Materials;
+import gregtech.api.util.GTUtility;
+import gregtech.api.util.KeyUtil;
+import gregtech.api.util.tooltips.InformationHandler;
+import gregtech.api.util.tooltips.TooltipBuilder;
+import gregtech.client.renderer.ICubeRenderer;
+import gregtech.client.renderer.texture.Textures;
+import gregtech.common.blocks.BlockBoilerCasing;
+import gregtech.common.blocks.BlockFireboxCasing;
+import gregtech.common.blocks.MetaBlocks;
+import gregtech.common.metatileentities.MetaTileEntities;
+import meowmel.gtsteam.api.capability.impl.NoEnergyMultiblockRecipeLogic;
+import meowmel.gtsteam.api.metatileentity.multiblock.NoEnergyMultiblockController;
+import meowmel.gtsteam.api.pattern.TraceabilityPredicate;
+import meowmel.gtsteam.client.textures.GTSteamTextures;
+import meowmel.gtsteam.common.block.GTSteamMetaBlocks;
+import meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing0;
+import meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static gregtech.api.recipes.RecipeMaps.PRIMITIVE_BLAST_FURNACE_RECIPES;
+
+public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMultiblockController {
+
+    private static final gregtech.api.pattern.TraceabilityPredicate SNOW_PREDICATE = new gregtech.api.pattern.TraceabilityPredicate(
+            bws -> GTUtility.isBlockSnow(bws.getBlockState()));
+
+    int TEMP = 300;
+    int MIN_TEMP = 300;
+    int MAX_TEMP = 1500;
+
+    private byte auxiliaryBlastFurnaceNumber = 0;
+
+    public MetaTileEntityIndustrialPrimitiveBlastFurnace(ResourceLocation metaTileEntityId) {
+        super(metaTileEntityId, PRIMITIVE_BLAST_FURNACE_RECIPES);
+        this.recipeMapWorkable = new IndustrialPrimitiveBlastFurnaceLogic(this, PRIMITIVE_BLAST_FURNACE_RECIPES);
+    }
+
+    private static IBlockState getFrameState() {
+        return MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel);
+    }
+
+    private static IBlockState getBoilerState() {
+        return MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE);
+    }
+
+    private static IBlockState getFireBoxState() {
+        return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX);
+    }
+
+    protected IBlockState getCasingState() {
+        return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES);
+    }
+
+    public NBTTagCompound writeToNBT(NBTTagCompound data) {
+        data.setInteger("Temp", TEMP);
+        return super.writeToNBT(data);
+    }
+
+    public void readFromNBT(NBTTagCompound data) {
+        super.readFromNBT(data);
+        TEMP = data.getInteger("Temp");
+    }
+
+    @Override
+    public MetaTileEntity createMetaTileEntity(IGregTechTileEntity iGregTechTileEntity) {
+        return new MetaTileEntityIndustrialPrimitiveBlastFurnace(metaTileEntityId);
+    }
+
+    @Override
+    protected void formStructure(PatternMatchContext context) {
+        super.formStructure(context);
+        if (context.get("AuxiliaryBlastFurnace1") != null) {
+            auxiliaryBlastFurnaceNumber += 1;
+        }
+        if (context.get("AuxiliaryBlastFurnace2") != null) {
+            auxiliaryBlastFurnaceNumber += 1;
+        }
+    }
+
+    @Override
+    public void invalidateStructure() {
+        super.invalidateStructure();
+        auxiliaryBlastFurnaceNumber = 0;
+    }
+
+    @Override
+    protected BlockPattern createStructurePattern() {
+        return FactoryBlockPattern.start()
+                .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
+                .aisle("    CDDDC    ", "    CDDDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
+                .aisle("AAAGDDDDDJFFF", "GGG D###D JJJ", " G  D###D  J ", " G  D###D  J ", " G   DDD   J ", " G    D    J ", "      D      ", "      D      ", "      D      ")
+                .aisle("AAAGDDDDDJFFF", "G@GHD#&#DIJ$J", "G G D###D J J", "G*G D###D J!J", "G*G D###D J!J", "G*G  D#D  J!J", "     D#D     ", "     D#D     ", "     D#D     ")
+                .aisle("AAAGDDDDDJFFF", "GGG D###D JJJ", " G  D###D  J ", " G  D###D  J ", " G   DDD   J ", " G    D    J ", "      D      ", "      D      ", "      D      ")
+                .aisle("    CDDDC    ", "    CDSDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
+                .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
+                .where('S', selfPredicate())
+                .where('A', TraceabilityPredicate.optionalStates("AuxiliaryBlastFurnace1", getFireBoxState()))
+                .where('C', states(getFrameState()))
+                .where('D', states(getCasingState())
+                        .or(abilities(MultiblockAbility.IMPORT_ITEMS).setMaxGlobalLimited(2))
+                        .or(abilities(MultiblockAbility.EXPORT_ITEMS).setMaxGlobalLimited(2)))
+                .where('F', TraceabilityPredicate.optionalStates("AuxiliaryBlastFurnace2", getFireBoxState()))
+                .where('G', TraceabilityPredicate.optionalStates("AuxiliaryBlastFurnace1", getCasingState()))
+                .where('H', TraceabilityPredicate.optionalStates("AuxiliaryBlastFurnace1", getBoilerState()))
+                .where('I', TraceabilityPredicate.optionalStates("AuxiliaryBlastFurnace2", getBoilerState()))
+                .where('J', TraceabilityPredicate.optionalStates("AuxiliaryBlastFurnace2", getCasingState()))
+                .where('&', air().or(SNOW_PREDICATE))
+                .where('#', air())
+                .where('@', any())
+                .where('*', any())
+                .where('$', any())
+                .where('!', any())
+                .where(' ', any())
+                .build();
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
+        return GTSteamTextures.PORCELAIN_TILES;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    protected ICubeRenderer getFrontOverlay() {
+        return Textures.PRIMITIVE_BLAST_FURNACE_OVERLAY;
+    }
+
+    @Override
+    public void addCustomCapacity(KeyManager keyManager, UISyncer syncer) {
+        keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.multiblock.ip.amount.1", syncer.syncInt(TEMP), MAX_TEMP));
+        keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace", syncer.syncInt(auxiliaryBlastFurnaceNumber)));
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, World player, List<String> tooltip, boolean advanced) {
+        InformationHandler.topTooltips("前期批发钢材的最好选择", tooltip);
+        super.addInformation(stack, player, tooltip, advanced);
+        TooltipBuilder.create().addSpecialLogic().build(this, tooltip);
+        tooltip.add(I18n.format("gtsteam.machine.industrial_primitive_blast_furnace.tooltip.1"));
+        tooltip.add(I18n.format("gtsteam.machine.industrial_primitive_blast_furnace.tooltip.2"));
+        tooltip.add(I18n.format("gtsteam.machine.industrial_primitive_blast_furnace.tooltip.3"));
+    }
+
+    @Override
+    public List<MultiblockShapeInfo> getMatchingShapes() {
+        ArrayList<MultiblockShapeInfo> shapeInfo = new ArrayList<>();
+        MultiblockShapeInfo.Builder builder;
+        if (Blocks.AIR != null) {
+            builder = MultiblockShapeInfo.builder()
+                    .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
+                    .aisle("    CDDDC    ", "    CDDDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
+                    .aisle("AAAGDDDDDJFFF", "GGG D   D JJJ", " G  D   D  J ", " G  D   D  J ", " G   DDD   J ", " G    D    J ", "      D      ", "      D      ", "      D      ")
+                    .aisle("AAAGDDDDDJFFF", "G GHD   DIJ J", "G G D   D J J", "G*G D   D J!J", "G G D   D J J", "G G  D D  J J", "     D D     ", "     D D     ", "     D D     ")
+                    .aisle("AAAGDDDDDJFFF", "GGG D   D JJJ", " G  D   D  J ", " G  D   D  J ", " G   DDD   J ", " G    D    J ", "      D      ", "      D      ", "      D      ")
+                    .aisle("    CDDDC    ", "    CXSYC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
+                    .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
+                    .where('S', GTSteamMetaTileEntities.INDUSTRIAL_PRIMITIVE_BLAST_FURNACE, EnumFacing.SOUTH)
+                    .where('C', getFrameState())
+                    .where('D', getCasingState())
+                    .where('X', MetaTileEntities.ITEM_IMPORT_BUS[GTValues.ULV], EnumFacing.SOUTH)
+                    .where('Y', MetaTileEntities.ITEM_EXPORT_BUS[GTValues.ULV], EnumFacing.SOUTH)
+                    .where(' ', Blocks.AIR.getDefaultState());
+            shapeInfo.add(builder.build());
+            shapeInfo.add(builder
+                    .where('A', getFireBoxState())
+                    .where('G', getCasingState())
+                    .where('H', getBoilerState())
+                    .build());
+            shapeInfo.add(builder
+                    .where('F', getFireBoxState())
+                    .where('I', getBoilerState())
+                    .where('J', getCasingState())
+                    .build());
+        }
+        return shapeInfo;
+    }
+
+    @Override
+    public boolean hasMaintenanceMechanics() {
+        return false;
+    }
+
+    @Override
+    public void update() {
+        super.update();
+        if (TEMP > MIN_TEMP) {
+            if (TEMP > 300) TEMP--;
+            if (TEMP > 600) TEMP -= 2;
+            if (TEMP > 900) TEMP = TEMP - 3;
+            TEMP = Math.max(MIN_TEMP, TEMP);
+        }
+
+
+        if (this.isActive()) {
+            if (getOffsetTimer() % 20 == 0 && getWorld().isRemote) {
+                pollutionParticles();
+            }
+        }
+    }
+
+    private void pollutionParticles() {
+        BlockPos pos = this.getPos();
+        EnumFacing facing = this.getFrontFacing().getOpposite();
+        float xPos = facing.getXOffset() * 2 + pos.getX() + 0.5F;
+        float yPos = facing.getYOffset() * 2 + pos.getY() + 0.25F;
+        float zPos = facing.getZOffset() * 2 + pos.getZ() + 0.5F;
+
+        float ySpd = facing.getYOffset() * 0.7F + 0.7F + 0.8F * GTValues.RNG.nextFloat();
+
+        arunMufflerEffect(xPos, yPos, zPos, 0, ySpd, 0);
+        arunMufflerEffect(xPos, yPos, zPos, 0.1F, ySpd, 0.1F);
+        arunMufflerEffect(xPos, yPos, zPos, -0.1F, ySpd, -0.1F);
+        arunMufflerEffect(xPos, yPos, zPos, +0.1F, ySpd, -0.1F);
+        arunMufflerEffect(xPos, yPos, zPos, -0.1F, ySpd, +0.1F);
+    }
+
+    public void arunMufflerEffect(float xPos, float yPos, float zPos, float xSpd, float ySpd, float zSpd) {
+        this.getWorld().spawnParticle(EnumParticleTypes.SMOKE_LARGE, xPos, yPos, zPos, xSpd, ySpd, zSpd);
+    }
+
+    @Override
+    public GTGuiTheme getUITheme() {
+        return GTGuiTheme.BRONZE;
+    }
+
+    protected class IndustrialPrimitiveBlastFurnaceLogic extends NoEnergyMultiblockRecipeLogic {
+
+        public IndustrialPrimitiveBlastFurnaceLogic(NoEnergyMultiblockController tileEntity, RecipeMap<?> recipeMap) {
+            super(tileEntity, recipeMap);
+        }
+
+        @Override
+        protected void modifyOverclockPost(@NotNull OCResult ocResult, @NotNull RecipePropertyStorage storage) {
+            super.modifyOverclockPost(ocResult, storage);
+
+            // 温度加速机制：每200K温差减少20%时间（乘算）
+            if (TEMP > MIN_TEMP) {
+                int tempDiff = TEMP - MIN_TEMP;
+                int bonusSteps = tempDiff / 200;
+                double multiplier = Math.pow(0.8, bonusSteps);
+                int newDuration = (int) (ocResult.duration() * multiplier);
+                ocResult.setDuration(Math.max(1, newDuration));
+            }
+        }
+
+        @Override
+        protected void updateRecipeProgress() {
+            if (canRecipeProgress) {
+                //持续工作温度增加
+                if (getOffsetTimer() % 20 == 0) {
+                    if (TEMP < MAX_TEMP) {
+                        TEMP += (auxiliaryBlastFurnaceNumber * 2 + 1);
+                        TEMP = Math.min(MAX_TEMP, TEMP);
+                    }
+                }
+                if (++progressTime > maxProgressTime) {
+                    completeRecipe();
+                }
+            }
+        }
+    }
+}

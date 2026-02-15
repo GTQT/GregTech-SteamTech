@@ -59,4 +59,19 @@ dependencies {
     // implementation ('com.google.code.gson:gson:2.8.6') {
     //     transitive = false
     // }
+    //Lombook
+    compileOnly("org.projectlombok:lombok:1.18.34")
+    annotationProcessor("org.projectlombok:lombok:1.18.34")
+    // Published dependencies
+    api("com.cleanroommc:modularui:3.0.7") { transitive = false }
+
+    implementation rfg.deobf(files("libs/ae2fc-2.7.10-unofficial.jar"))
+    implementation rfg.deobf(files("libs/appliedenergistics2-v1.0.5-gtqt.jar"))
+    implementation rfg.deobf(files("libs/gregtech-gtqt-1.12.2-2.9.0-190.jar"))
+
+    api rfg.deobf("curse.maven:ctm-267602:2915363") // CTM 1.0.2.31
+    implementation rfg.deobf("curse.maven:codechicken-lib-1-8-242818:2779848") // CCL 3.2.3.358
+    implementation rfg.deobf('curse.maven:top-245211:2667280') // TOP 1.4.28
+
+    implementation rfg.deobf("curse.maven:mixin-booter-419286:7049694")
 }
