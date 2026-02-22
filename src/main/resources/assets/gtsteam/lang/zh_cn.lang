@@ -17,6 +17,7 @@ gtsteam.material.bone_ceramic_clay=骨陶瓷粘土
 gtsteam.material.galvanized_steel=镀锌钢
 gtsteam.material.lignite=褐煤
 gtsteam.material.calcimine=石灰浆
+gtsteam.material.sealed_wood=蜡封木板
 gtsteam.material.raw_coal_gas=粗煤气
 gtsteam.material.raw_coal_tar=粗煤焦油
 gtsteam.material.raw_wood_gas=粗木煤气
@@ -36,6 +37,8 @@ tile.multiblock_casing.galvanized_porcelain_tiles.name=镀锌瓷瓦砖
 tile.multiblock_casing.tank_wall.name=储罐外壁
 tile.multiblock_casing.reinforced_treated_wood_wall.name=加固防腐木缸壁
 tile.multiblock_casing.reinforced_treated_wood_bottom.name=加固防腐木框架
+tile.multiblock_casing.sealed_wood_wall.name=封蜡木缸壁
+tile.multiblock_casing.sealed_wood_bottom.name=封蜡木框架
 
 tile.multiblock_casing.solar_collector.name=太阳能集热管
 tile.multiblock_casing.low_pressure_tank.name=低压锅炉
@@ -46,23 +49,35 @@ tile.boiler_casing.fluid_firebox.name=液体燃烧室
 
 tile.evaporation_bed.dirt.name=砂壤土
 #物品
-metaitem.cover.electric_motor.ulv.name=电动马达（ULV）
-metaitem.cover.electric_piston.ulv.name=电力活塞（ULV）
-metaitem.cover.electric_pump.ulv.name=电动泵（ULV）
-metaitem.cover.electric_pump.ulv.tooltip=作§f覆盖板§7时以特定速率传输§f流体§7。/n§b传输速率:§f32 L/t§7
-metaitem.cover.conveyor_module.ulv.name=传送带（ULV）
-metaitem.cover.conveyor_module.ulv.tooltip=作§f覆盖板§7时以特定速率传输§f物品§7。/n§b传输速率:§f4 件物品/s§7
-metaitem.cover.robot_arm.ulv.name=机械臂（ULV）
-metaitem.cover.robot_arm.ulv.tooltip=作§f覆盖板§7时对§f物品§7的量加以限制。/n§b传输速率:§f4 件物品/s§7
-metaitem.cover.emitter.ulv.name=发射器（ULV）
-metaitem.cover.sensor.ulv.name=传感器（ULV）
-metaitem.cover.field_generator.ulv.name=力场发生器（ULV）
+metaitem.cover.electric_motor.steam.name=蒸汽马达 (Steam)
+metaitem.cover.electric_piston.steam.name=蒸汽活塞 (Steam)
+metaitem.cover.electric_pump.steam.name=蒸汽泵 (Steam)
+metaitem.cover.electric_pump.steam.tooltip=作§f覆盖板§7时以特定速率传输§f流体§7。/n§b传输速率:§f32 L/t§7
+metaitem.cover.conveyor_module.steam.name=传送带 (Steam)
+metaitem.cover.conveyor_module.steam.tooltip=作§f覆盖板§7时以特定速率传输§f物品§7。/n§b传输速率:§f4 件物品/s§7
+metaitem.cover.robot_arm.steam.name=蒸汽机械臂 (Steam)
+metaitem.cover.robot_arm.steam.tooltip=作§f覆盖板§7时对§f物品§7的量加以限制。/n§b传输速率:§f4 件物品/s§7
+metaitem.cover.emitter.steam.name=发射器 (Steam)
+metaitem.cover.sensor.steam.name=传感器 (Steam)
+metaitem.cover.field_generator.steam.name=力场发生器 (Steam)
+
+metaitem.cover.electric_motor.ulv.name=机械马达 (ULV)
+metaitem.cover.electric_piston.ulv.name=机械活塞 (ULV)
+metaitem.cover.electric_pump.ulv.name=机械泵 (ULV)
+metaitem.cover.electric_pump.ulv.tooltip=作§f覆盖板§7时以特定速率传输§f流体§7。/n§b传输速率:§f64 L/t§7
+metaitem.cover.conveyor_module.ulv.name=传送带 (ULV)
+metaitem.cover.conveyor_module.ulv.tooltip=作§f覆盖板§7时以特定速率传输§f物品§7。/n§b传输速率:§f8 件物品/s§7
+metaitem.cover.robot_arm.ulv.name=机械臂 (ULV)
+metaitem.cover.robot_arm.ulv.tooltip=作§f覆盖板§7时对§f物品§7的量加以限制。/n§b传输速率:§f8 件物品/s§7
+metaitem.cover.emitter.ulv.name=发射器 (ULV)
+metaitem.cover.sensor.ulv.name=传感器 (ULV)
+metaitem.cover.field_generator.ulv.name=力场发生器 (ULV)
 
 metaitem.unburned_ceramic_tiles.name=未烧制的陶瓷瓦
 metaitem.burned_ceramic_tiles.name=已烧制的陶瓷瓦
 metaitem.galvanized_ceramic_tile.name=镀锌的陶瓷瓦
 
-item.component.vacuum_tube.name=真空管组件
+metaitem.component.vacuum_tube.name=真空管组件
 
 item.cactus_charcoal.name=仙人掌炭
 item.cactus_charcoal.tooltip=来自仙人掌的炭
@@ -93,6 +108,7 @@ gtsteam.machine.steam_sifter.name=蒸汽筛选机
 gtsteam.machine.steam_bender.name=蒸汽卷板机
 gtsteam.machine.steam_wire_mill.name=蒸汽线材轧机
 gtsteam.machine.steam_lathe.name=蒸汽车床
+gtsteam.machine.steam_brewing.name=蒸汽酿造器
 gtsteam.machine.steam_alloy_furnace.name=蒸汽合金炉
 gtsteam.machine.steam_lava_furnace.name=蒸汽熔岩炉
 gtsteam.machine.saw_mill.name=锯木机

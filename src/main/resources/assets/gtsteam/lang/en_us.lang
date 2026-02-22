@@ -17,6 +17,7 @@ gtsteam.material.bone_ceramic_clay=Bone Ceramic Clay
 gtsteam.material.galvanized_steel=Galvanized Steel
 gtsteam.material.lignite=Lignite
 gtsteam.material.calcimine=Calcimine
+gtsteam.material.sealed_wood=Sealed Wood
 gtsteam.material.raw_coal_gas=Raw Coal Gas
 gtsteam.material.raw_coal_tar=Raw Coal Tar
 gtsteam.material.raw_wood_gas=Raw Wood Gas
@@ -36,6 +37,8 @@ tile.multiblock_casing.galvanized_porcelain_tiles.name=Galvanized Porcelain Tile
 tile.multiblock_casing.tank_wall.name=Tank outer wall
 tile.multiblock_casing.reinforced_treated_wood_wall.name=Reinforcement of anticorrosive wood walls
 tile.multiblock_casing.reinforced_treated_wood_bottom.name=Reinforcement of anticorrosive wood frames
+tile.multiblock_casing.sealed_wood_wall.name=Sealed Wood Wall
+tile.multiblock_casing.sealed_wood_bottom.name=Sealed Wood Bottom
 
 tile.multiblock_casing.solar_collector.name=Solar collector tubes
 tile.multiblock_casing.low_pressure_tank.name=Low pressure boiler
@@ -46,23 +49,35 @@ tile.boiler_casing.fluid_firebox.name=Liquid combustion chamber
 
 tile.evaporation_bed.dirt.name=Sandy Loam
 #物品
-metaitem.cover.electric_motor.ulv.name=Electric Motor (ULV)
-metaitem.cover.electric_piston.ulv.name=Electric Piston (ULV)
-metaitem.cover.electric_pump.ulv.name=Electric Pump (ULV)
-metaitem.cover.electric_pump.ulv.tooltip=Functions as a §fCover Plate§7 to transfer §ffluids§7 at a specific rate. /n§bTransfer Rate: §f32 L/t§7
-metaitem.cover.conveyor_module.ulv.name=Conveyor Module (ULV)
-metaitem.cover.conveyor_module.ulv.tooltip=Functions as a §fCover Plate§7 to transfer §fitems§7 at a specific rate. /n§bTransfer Rate: §f4 items/s§7
-metaitem.cover.robot_arm.ulv.name=Robot Arm (ULV)
-metaitem.cover.robot_arm.ulv.tooltip=Functions as a §fCover Plate§7 to limit the quantity of §fitems§7. /n§bTransfer Rate: §f4 items/s§7
-metaitem.cover.emitter.ulv.name=Emitter (ULV)
-metaitem.cover.sensor.ulv.name=Sensor (ULV)
-metaitem.cover.field_generator.ulv.name=Field Generator (ULV)
+metaitem.cover.electric_motor.steam.name=蒸汽马达 (Steam)
+metaitem.cover.electric_piston.steam.name=蒸汽活塞 (Steam)
+metaitem.cover.electric_pump.steam.name=蒸汽泵 (Steam)
+metaitem.cover.electric_pump.steam.tooltip=作§f覆盖板§7时以特定速率传输§f流体§7。/n§b传输速率:§f32 L/t§7
+metaitem.cover.conveyor_module.steam.name=传送带 (Steam)
+metaitem.cover.conveyor_module.steam.tooltip=作§f覆盖板§7时以特定速率传输§f物品§7。/n§b传输速率:§f4 件物品/s§7
+metaitem.cover.robot_arm.steam.name=蒸汽机械臂 (Steam)
+metaitem.cover.robot_arm.steam.tooltip=作§f覆盖板§7时对§f物品§7的量加以限制。/n§b传输速率:§f4 件物品/s§7
+metaitem.cover.emitter.steam.name=发射器 (Steam)
+metaitem.cover.sensor.steam.name=传感器 (Steam)
+metaitem.cover.field_generator.steam.name=力场发生器 (Steam)
+
+metaitem.cover.electric_motor.ulv.name=机械马达 (ULV)
+metaitem.cover.electric_piston.ulv.name=机械活塞 (ULV)
+metaitem.cover.electric_pump.ulv.name=机械泵 (ULV)
+metaitem.cover.electric_pump.ulv.tooltip=作§f覆盖板§7时以特定速率传输§f流体§7。/n§b传输速率:§f64 L/t§7
+metaitem.cover.conveyor_module.ulv.name=传送带 (ULV)
+metaitem.cover.conveyor_module.ulv.tooltip=作§f覆盖板§7时以特定速率传输§f物品§7。/n§b传输速率:§f8 件物品/s§7
+metaitem.cover.robot_arm.ulv.name=机械臂 (ULV)
+metaitem.cover.robot_arm.ulv.tooltip=作§f覆盖板§7时对§f物品§7的量加以限制。/n§b传输速率:§f8 件物品/s§7
+metaitem.cover.emitter.ulv.name=发射器 (ULV)
+metaitem.cover.sensor.ulv.name=传感器 (ULV)
+metaitem.cover.field_generator.ulv.name=力场发生器 (ULV)
 
 metaitem.unburned_ceramic_tiles.name=Unfired Ceramic Tiles
 metaitem.burned_ceramic_tiles.name=Burned Ceramic Tiles
 metaitem.galvanized_ceramic_tile.name=Galvanized Ceramic Tiles
 
-item.component.vacuum_tube.name=Vacuum Tube Component
+metaitem.component.vacuum_tube.name=Vacuum Tube Component
 
 item.cactus_charcoal.name=Cactus Charcoal
 item.cactus_charcoal.tooltip=Charcoal made from cactus
@@ -93,6 +108,7 @@ gtsteam.machine.steam_sifter.name=Steam Sifter
 gtsteam.machine.steam_bender.name=Steam Bender
 gtsteam.machine.steam_wire_mill.name=Steam Wire Mill
 gtsteam.machine.steam_lathe.name=Steam Lathe
+gtsteam.machine.steam_brewing.name=Steam Brewing
 gtsteam.machine.steam_alloy_furnace.name=Steam Alloy Furnace
 gtsteam.machine.steam_lava_furnace.name=Steam Lava Furnace
 gtsteam.machine.saw_mill.name=Saw Mill

@@ -35,7 +35,10 @@ public class BlockMultiblockCasing0 extends VariantBlock<BlockMultiblockCasing0.
         TANK_WALL("tank_wall"),
         //防腐木 框架
         REINFORCED_TREATED_WOOD_WALL("reinforced_treated_wood_wall"),
-        REINFORCED_TREATED_WOOD_BOTTOM("reinforced_treated_wood_bottom");
+        REINFORCED_TREATED_WOOD_BOTTOM("reinforced_treated_wood_bottom"),
+        //蜡封木质外壳
+        SEALED_WOOD_WALL("sealed_wood_wall"),
+        SEALED_WOOD_BOTTOM("sealed_wood_bottom");
 
 
         private final String name;

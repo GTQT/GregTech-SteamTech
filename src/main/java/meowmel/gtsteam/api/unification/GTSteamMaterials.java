@@ -15,6 +15,7 @@ public class GTSteamMaterials {
     public static Material RawRubberPrecipitate;
 
     public static Material Calcimine;
+    public static Material SealedWood;
 
     public static Material RawCoalGas;
     public static Material RawCoalTar;

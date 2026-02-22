@@ -12,6 +12,7 @@ import static gregtech.api.unification.ore.OrePrefix.*;
 import static gregtech.common.items.MetaItems.*;
 import static meowmel.gtsteam.api.recipes.GTSRecipeMaps.ELECTRONIC_PROCESSOR_RECIPES;
 import static meowmel.gtsteam.api.recipes.GTSRecipeMaps.HEAT_CHEMICAL_RECIPES;
+import static meowmel.gtsteam.api.unification.GTSteamMaterials.SealedWood;
 import static meowmel.gtsteam.common.item.GTSMetaitems.VACUUM_TUBE_COMPONENTS;
 import static net.minecraft.init.Items.PAPER;
 import static net.minecraftforge.fml.common.Loader.isModLoaded;
@@ -32,10 +33,10 @@ public class ULVCircuitChain {
         ModHandler.addShapedRecipe("coated_board", COATED_BOARD.getStackForm(3),
                 "RRR", "PPP", "RRR",
                 'R', STICKY_RESIN.getStackForm(),
-                'P', new UnificationEntry(plate, TreatedWood));
+                'P', new UnificationEntry(plate, SealedWood));
 
         ModHandler.addShapelessRecipe("coated_board_1x", COATED_BOARD.getStackForm(),
-                new UnificationEntry(plate, TreatedWood),
+                new UnificationEntry(plate, SealedWood),
                 STICKY_RESIN.getStackForm(),
                 STICKY_RESIN.getStackForm());
 

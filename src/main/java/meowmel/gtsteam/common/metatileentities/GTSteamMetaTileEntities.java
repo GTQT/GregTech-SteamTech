@@ -17,7 +17,6 @@ import meowmel.gtsteam.common.metatileentities.multi.generator.MetaTileEntityPri
 import meowmel.gtsteam.common.metatileentities.multi.generator.MetaTileEntitySteamSolarBoiler;
 import meowmel.gtsteam.common.metatileentities.multi.generator.PrimitiveBoilerType;
 import meowmel.gtsteam.common.metatileentities.multi.heat.*;
-import meowmel.gtsteam.common.metatileentities.multi.heat.*;
 import meowmel.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnExportHatch;
 import meowmel.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnImportHatch;
 import meowmel.gtsteam.common.metatileentities.multi.primitive.MetaTileEntityAlloyKiln;
@@ -25,10 +24,8 @@ import meowmel.gtsteam.common.metatileentities.multi.primitive.MetaTileEntityCoa
 import meowmel.gtsteam.common.metatileentities.multi.primitive.MetaTileEntityIndustrialCokeOven;
 import meowmel.gtsteam.common.metatileentities.multi.primitive.MetaTileEntityIndustrialPrimitiveBlastFurnace;
 import meowmel.gtsteam.common.metatileentities.multi.steam.*;
-import meowmel.gtsteam.common.metatileentities.multi.steam.*;
 import meowmel.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamBiomimeticFactory;
 import meowmel.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamTranscendentPlasmaForge;
-import meowmel.gtsteam.common.metatileentities.multi.store.*;
 import meowmel.gtsteam.common.metatileentities.multi.store.*;
 import net.minecraft.util.ResourceLocation;
 
@@ -57,11 +54,11 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntitySteamAlloyFurnace STEAM_ALLOY_FURNACE;
     public static MetaTileEntitySteamSifter STEAM_SIFTER;
     public static MetaTileEntitySteamLathe STEAM_LATHE;
+    public static MetaTileEntitySteamBrewing STEAM_BREWING;
     public static MetaTileEntitySteamWaterPump STEAM_WATER_PUMP;
 
     public static MetaTileEntitySteamTranscendentPlasmaForge STEAM_TRANSCENDENT_PLASMA_FORGE;
     public static MetaTileEntitySteamBiomimeticFactory STEAM_BIOMIMETIC_FACTORY;
-
 
     public static MetaTileEntityHeatFurnace HEAT_FURNACE;
     public static MetaTileEntityHeatAlloyFurnace HEAT_ALLOY_FURNACE;
@@ -148,6 +145,7 @@ public class GTSteamMetaTileEntities {
         STEAM_BENDER = registerMetaTileEntity(18, new MetaTileEntitySteamBender(gtsId("steam_bender")));
         STEAM_SIFTER = registerMetaTileEntity(19, new MetaTileEntitySteamSifter(gtsId("steam_sifter")));
         STEAM_LATHE = registerMetaTileEntity(20, new MetaTileEntitySteamLathe(gtsId("steam_lathe")));
+        STEAM_BREWING = registerMetaTileEntity(21, new MetaTileEntitySteamBrewing(gtsId("steam_brewing")));
 
         SCALABLE_STORAGE = registerMetaTileEntity(25, new MetaTileEntityScalableStorage(gtsId("scalable_storage")));
 

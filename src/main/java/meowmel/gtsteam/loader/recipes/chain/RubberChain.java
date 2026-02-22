@@ -31,7 +31,7 @@ public class RubberChain {
                 .input(dust, Salt, 2)
                 .notConsumable(stick, Iron)
                 .fluidOutputs(RawRubberWhey.getFluid(1000))
-                .output(ingot, RawRubberPrecipitate)
+                .output(dust, RawRubberPrecipitate)
                 .buildAndRegister();
 
         // 3. 生橡胶乳清液 离心 = 胶水 + 盐水
@@ -45,7 +45,7 @@ public class RubberChain {
         // 4. 生橡胶沉淀 粉碎 = 橡胶粉末
         RecipeMaps.MACERATOR_RECIPES.recipeBuilder().duration(10)
                 .EUt(5)
-                .input(ingot, RawRubberPrecipitate)
+                .input(dust, RawRubberPrecipitate)
                 .output(dust, RawRubber, 3)
                 .buildAndRegister();
 
@@ -68,7 +68,7 @@ public class RubberChain {
                 .input(dust, Salt, 2)
                 .notConsumable(stick, Iron)
                 .fluidOutputs(RawRubberWhey.getFluid(1000))
-                .output(ingot, RawRubberPrecipitate, 2)
+                .output(dust, RawRubberPrecipitate, 2)
                 .buildAndRegister();
 
         //2.酸法
@@ -80,7 +80,7 @@ public class RubberChain {
                 .fluidInputs(Water.getFluid(1000))
                 .fluidInputs(AceticAcid.getFluid(200))
                 .fluidOutputs(RawRubberWhey.getFluid(1000))
-                .output(ingot, RawRubberPrecipitate, 2)
+                .output(dust, RawRubberPrecipitate, 2)
                 .buildAndRegister();
     }
 }

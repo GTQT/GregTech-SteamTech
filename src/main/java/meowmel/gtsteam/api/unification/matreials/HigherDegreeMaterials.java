@@ -41,7 +41,7 @@ public class HigherDegreeMaterials {
 
         // 生橡胶沉淀
         GTSteamMaterials.RawRubberPrecipitate = new Material.Builder(getMaterialsId(), gtsId("raw_rubber_precipitate"))
-                .ingot()
+                .dust()
                 .color(0xD2B48C)
                 .flags(DISABLE_DECOMPOSITION)
                 .build()

@@ -5,8 +5,8 @@ import meowmel.gtsteam.api.unification.GTSteamMaterials;
 
 import static gregtech.api.unification.material.Materials.*;
 import static gregtech.api.unification.material.info.MaterialFlags.*;
-import static gregtech.api.unification.material.info.MaterialIconSet.LIGNITE;
-import static gregtech.api.unification.material.info.MaterialIconSet.SHINY;
+import static gregtech.api.unification.material.info.MaterialIconSet.*;
+import static gregtech.api.util.GTUtility.gregtechId;
 import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.gtsId;
 
 public class FirstDegreeMaterials {
@@ -61,5 +61,14 @@ public class FirstDegreeMaterials {
                 .flags(DISABLE_DECOMPOSITION)
                 .build()
                 .setTooltips("石灰的纯度较低的纯化物");
+
+        //蜡封木板
+        GTSteamMaterials.SealedWood = Material.builder(getMaterialsId(), gtsId("sealed_wood"))
+                .wood()
+                .color(0x452300).iconSet(WOOD)
+                .flags(GENERATE_PLATE, GENERATE_ROD, GENERATE_FRAME)
+                .fluidPipeProperties(480, 20, false)
+                .build();
+
     }
 }

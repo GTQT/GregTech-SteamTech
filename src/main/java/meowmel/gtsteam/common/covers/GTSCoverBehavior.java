@@ -16,13 +16,19 @@ import static gregtech.common.covers.CoverBehaviors.registerCover;
 public class GTSCoverBehavior {
 
     public static void init() {
+        registerBehavior(new ResourceLocation(GTSteam.MODID, "pump.steam"), GTSMetaitems.ELECTRIC_PUMP_STEAM,
+                (def, tile, side) -> new CoverPump(def, tile, side, GTValues.ULV, 320));
+        registerBehavior(new ResourceLocation(GTSteam.MODID, "conveyor.steam"), GTSMetaitems.CONVEYOR_MODULE_STEAM,
+                (def, tile, side) -> new CoverConveyor(def, tile, side, GTValues.ULV, 4));
+        registerBehavior(new ResourceLocation(GTSteam.MODID, "robot_arm.steam"), GTSMetaitems.ROBOT_ARM_STEAM,
+                (def, tile, side) -> new CoverRoboticArm(def, tile, side, GTValues.ULV, 4));
 
         registerBehavior(new ResourceLocation(GTSteam.MODID, "pump.ulv"), GTSMetaitems.ELECTRIC_PUMP_ULV,
-                (def, tile, side) -> new CoverPump(def, tile, side, GTValues.ULV, 320));
+                (def, tile, side) -> new CoverPump(def, tile, side, GTValues.ULV, 640));
         registerBehavior(new ResourceLocation(GTSteam.MODID, "conveyor.ulv"), GTSMetaitems.CONVEYOR_MODULE_ULV,
-                (def, tile, side) -> new CoverConveyor(def, tile, side, GTValues.ULV, 4));
+                (def, tile, side) -> new CoverConveyor(def, tile, side, GTValues.ULV, 8));
         registerBehavior(new ResourceLocation(GTSteam.MODID, "robot_arm.ulv"), GTSMetaitems.ROBOT_ARM_ULV,
-                (def, tile, side) -> new CoverRoboticArm(def, tile, side, GTValues.ULV, 4));
+                (def, tile, side) -> new CoverRoboticArm(def, tile, side, GTValues.ULV, 8));
 
     }
 

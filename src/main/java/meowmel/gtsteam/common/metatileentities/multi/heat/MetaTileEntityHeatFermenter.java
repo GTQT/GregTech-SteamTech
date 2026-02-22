@@ -29,7 +29,7 @@ import java.util.List;
 
 public class MetaTileEntityHeatFermenter extends HeatMultiblockController {
 
-    private static final int PARALLEL_LIMIT = 4;
+    private static final int PARALLEL_LIMIT = 16;
 
     public MetaTileEntityHeatFermenter(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.FERMENTING_RECIPES);

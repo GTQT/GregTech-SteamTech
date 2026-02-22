@@ -33,6 +33,20 @@
           "side": "gregtech:blocks/casings/reinforced_treated_wood_bottom",
           "bottom": "#top"
         }
+      },
+      "sealed_wood_wall": {
+        "model": "minecraft:cube_all",
+        "textures": {
+          "all": "gregtech:blocks/casings/sealed_wood_wall"
+        }
+      },
+      "sealed_wood_bottom": {
+        "model": "minecraft:cube_bottom_top",
+        "textures": {
+          "top": "gregtech:blocks/casings/sealed_wood_wall",
+          "side": "gregtech:blocks/casings/sealed_wood_bottom",
+          "bottom": "#top"
+        }
       }
     }
   }

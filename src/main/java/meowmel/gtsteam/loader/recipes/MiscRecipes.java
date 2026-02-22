@@ -1,72 +1,33 @@
 package meowmel.gtsteam.loader.recipes;
 
 import gregtech.api.GTValues;
-import gregtech.api.items.OreDictNames;
 import gregtech.api.recipes.ModHandler;
 import gregtech.api.recipes.RecipeMaps;
-import gregtech.api.unification.material.MarkerMaterials;
 import gregtech.api.unification.material.Materials;
 import gregtech.api.unification.ore.OrePrefix;
 import gregtech.api.unification.stack.UnificationEntry;
 import gregtech.api.util.GTUtility;
 import gregtech.common.ConfigHolder;
-import gregtech.common.blocks.MetaBlocks;
-import gregtech.common.items.MetaItems;
-import gregtech.common.metatileentities.MetaTileEntities;
 import meowmel.gtsteam.common.block.GTSteamMetaBlocks;
 import meowmel.gtsteam.common.block.blocks.BlockEvaporationBed;
 import meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing0;
 import meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing1;
 import meowmel.gtsteam.common.item.storageupdate.ModItems;
-import meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import static gregtech.api.GTValues.VA;
 import static gregtech.api.recipes.RecipeMaps.MIXER_RECIPES;
-import static gregtech.api.unification.material.MarkerMaterials.Tier.LV;
-import static gregtech.api.unification.material.MarkerMaterials.Tier.ULV;
 import static gregtech.api.unification.material.Materials.*;
 import static gregtech.api.unification.ore.OrePrefix.*;
-import static gregtech.common.blocks.BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX;
-import static gregtech.common.blocks.BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX;
-import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.BRONZE_BRICKS;
-import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.STEEL_SOLID;
-import static gregtech.common.metatileentities.MetaTileEntities.*;
 import static meowmel.gtsteam.api.recipes.GTSRecipeMaps.EVAPORATION_RECIPES;
 import static meowmel.gtsteam.api.recipes.GTSRecipeMaps.LAVA_FURNACE_RECIPES;
 import static meowmel.gtsteam.api.unification.GTSteamMaterials.GalvanizedSteel;
+import static meowmel.gtsteam.api.unification.GTSteamMaterials.SealedWood;
+import static meowmel.gtsteam.common.block.GTSteamMetaBlocks.blockEvaporationBed;
 import static meowmel.gtsteam.common.block.GTSteamMetaBlocks.blockFireboxCasing0;
-import static meowmel.gtsteam.common.block.GTSteamMetaBlocks.blockMultiblockCasing1;
 import static meowmel.gtsteam.common.block.blocks.BlockFireboxCasing0.FireboxCasingType.FLUID_FIREBOX;
 import static meowmel.gtsteam.common.block.blocks.BlockFireboxCasing0.FireboxCasingType.ITEM_FIREBOX;
-import static meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES;
-import static meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing1.CasingType.SOLAR_COLLECTOR;
-import static meowmel.gtsteam.common.item.GTSMetaitems.*;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.*;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.ALLOY_SMELTER;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.BENDER;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.BREWERY;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.CENTRIFUGE;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.CHEMICAL_BATH;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.COMBUSTION_GENERATOR;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.COMPRESSOR;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.CUTTER;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.ELECTRIC_FURNACE;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.EXTRACTOR;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.FERMENTER;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.FORGE_HAMMER;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.GAS_TURBINE;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.LATHE;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.MACERATOR;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.MIXER;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.ORE_WASHER;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.PACKER;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.SEMI_FLUID_GENERATOR;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.SIFTER;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.STEAM_TURBINE;
-import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.WIREMILL;
 import static net.minecraft.init.Blocks.DIRT;
 
 public class MiscRecipes {
@@ -78,77 +39,8 @@ public class MiscRecipes {
         ItemRecipes();
     }
 
+
     private static void ItemRecipes() {
-        //  ULV
-        ModHandler.addShapedRecipe(true, "electric_motor.ulv", ELECTRIC_MOTOR_ULV.getStackForm(),
-                "CWR", "WMW", "RWC",
-                'C', new UnificationEntry(pipeTinyFluid, Bronze),
-                'W', new UnificationEntry(wireGtSingle, Lead),
-                'M', new UnificationEntry(stick, IronMagnetic),
-                'R', new UnificationEntry(stick, Potin));
-
-        //  ULV
-        ModHandler.addShapedRecipe(true, "conveyor_module.ulv", CONVEYOR_MODULE_ULV.getStackForm(),
-                "RRR", "MCM", "RRR",
-                'R', "wool",
-                'M', ELECTRIC_MOTOR_ULV.getStackForm(),
-                'C', new UnificationEntry(pipeTinyFluid, Bronze));
-
-        //  ULV
-        ModHandler.addShapedRecipe(true, "electric_piston.ulv", ELECTRIC_PISTON_ULV.getStackForm(),
-                "PPP", "CRR", "CMG",
-                'P', new UnificationEntry(plate, Potin),
-                'C', new UnificationEntry(pipeTinyFluid, Bronze),
-                'R', new UnificationEntry(stick, WroughtIron),
-                'M', ELECTRIC_MOTOR_ULV.getStackForm(),
-                'G', new UnificationEntry(gearSmall, Iron));
-
-        //  ULV
-        ModHandler.addShapedRecipe(true, "robot_arm.ulv", ROBOT_ARM_ULV.getStackForm(),
-                "CCC", "MRM", "PXR",
-                'C', new UnificationEntry(pipeTinyFluid, Bronze),
-                'M', ELECTRIC_MOTOR_ULV.getStackForm(),
-                'R', new UnificationEntry(stick, Potin),
-                'P', ELECTRIC_PISTON_ULV.getStackForm(),
-                'X', new UnificationEntry(circuit, ULV));
-
-        //  ULV
-        ModHandler.addShapedRecipe(true, "electric_pump.ulv", ELECTRIC_PUMP_ULV.getStackForm(),
-                "SXR", "dPw", "RMC",
-                'S', new UnificationEntry(screw, Potin),
-                'X', new UnificationEntry(rotor, Iron),
-                'P', new UnificationEntry(pipeNormalFluid, Copper),
-                'R', "wool",
-                'C', new UnificationEntry(pipeTinyFluid, Bronze),
-                'M', ELECTRIC_MOTOR_ULV.getStackForm());
-
-
-        //  ULV
-        ModHandler.addShapedRecipe(true, "emitter.ulv", EMITTER_ULV.getStackForm(),
-                "CRX", "RGR", "XRC",
-                'R', new UnificationEntry(stick, TinAlloy),
-                'C', new UnificationEntry(pipeTinyFluid, Bronze),
-                'G', new UnificationEntry(gem, Sapphire),
-                'X', new UnificationEntry(circuit, ULV));
-
-
-        //  ULV
-        ModHandler.addShapedRecipe(true, "sensor.ulv", SENSOR_ULV.getStackForm(),
-                "P G", "PR ", "XPP",
-                'P', new UnificationEntry(plate, Potin),
-                'R', new UnificationEntry(stick, TinAlloy),
-                'G', new UnificationEntry(gem, Sapphire),
-                'X', new UnificationEntry(circuit, ULV));
-
-
-        //  ULV
-        ModHandler.addShapedRecipe(true, "field_generator.ulv", FIELD_GENERATOR_ULV.getStackForm(),
-                "WPW", "XGX", "WPW",
-                'W', new UnificationEntry(pipeLargeFluid, Lead),
-                'P', new UnificationEntry(plate, Potin),
-                'G', new UnificationEntry(gem, Ruby),
-                'X', new UnificationEntry(circuit, ULV));
-
         RecipeMaps.ASSEMBLER_RECIPES.recipeBuilder()
                 .input(OrePrefix.plate, Materials.Steel, 4)
                 .input(OrePrefix.wireFine, Materials.RedAlloy, 16)
@@ -248,6 +140,18 @@ public class MiscRecipes {
                 'Q', new UnificationEntry(stick, Iron),
                 'F', new UnificationEntry(frameGt, Steel));
 
+        ModHandler.addShapedRecipe(true, "sealed_wood_wall", GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(BlockMultiblockCasing0.CasingType.SEALED_WOOD_WALL),
+                "PhP", "QFQ", "PwP",
+                'P', new UnificationEntry(plate, SealedWood),
+                'Q', new UnificationEntry(plate, Steel),
+                'F', new UnificationEntry(frameGt, TreatedWood));
+
+        ModHandler.addShapedRecipe(true, "sealed_wood_bottom", GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(BlockMultiblockCasing0.CasingType.SEALED_WOOD_BOTTOM),
+                "PhP", "QFQ", "PwP",
+                'P', new UnificationEntry(plate, SealedWood),
+                'Q', new UnificationEntry(stick, Iron),
+                'F', new UnificationEntry(frameGt, Steel));
+
         //蓄水库外壁
         ModHandler.addShapedRecipe(true, "tank_wall", GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(BlockMultiblockCasing0.CasingType.TANK_WALL),
                 "PhP", "QFQ", "PwP",
@@ -291,456 +195,21 @@ public class MiscRecipes {
     }
 
     private static void MachineRecipes() {
-        //合金窑
-        ModHandler.addShapedRecipe(true, "alloy_kiln", GTSteamMetaTileEntities.ALLOY_KILN.getStackForm(),
-                "PIP", "IwI", "PIP",
-                'P', GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(GALVANIZED_PORCELAIN_TILES),
-                'I', new UnificationEntry(OrePrefix.plate, Iron));
-
-        ModHandler.addShapedRecipe(true, "alloy_kiln_import_hatch", ALLOY_KILN_IMPORT_HATCH.getStackForm(),
-                "wh", "CB",
-                'C', Blocks.CHEST,
-                'B', GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(GALVANIZED_PORCELAIN_TILES));
-
-        ModHandler.addShapedRecipe(true, "alloy_kiln_export_hatch", ALLOY_KILN_EXPORT_HATCH.getStackForm(),
-                "hw", "CB",
-                'C', Blocks.CHEST,
-                'B', GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(GALVANIZED_PORCELAIN_TILES));
-
-        //工业土高炉
-        ModHandler.addShapedRecipe(true, "industrial_primitive_blast_furnace",
-                INDUSTRIAL_PRIMITIVE_BLAST_FURNACE.getStackForm(), "PPP", "CFC", "BBB",
-                'C', new UnificationEntry(circuit, LV),
-                'P', new UnificationEntry(plate, Steel),
-                'F', new UnificationEntry(frameGt, Steel),
-                'B', PRIMITIVE_BLAST_FURNACE.getStackForm());
-
-        //原始化学反应釜
-        ModHandler.addShapedRecipe(true, "primitive_chemical_reactor", COAGULATION_TANK.getStackForm(),
-                "PRP", "sQh", "PSP",
-                'P', new UnificationEntry(plate, TreatedWood),
-                'Q', new UnificationEntry(pipeLargeFluid, TreatedWood),
-                'R', new UnificationEntry(rotor, Steel),
-                'S', new UnificationEntry(screw, Steel));
-
-        //大型储罐
-        ModHandler.addShapedRecipe(true, "large_fluid_tank", LARGE_FLUID_TANK.getStackForm(),
-                "PPP", "CFC", "BBB",
-                'C', new UnificationEntry(circuit, ULV),
-                'P', new UnificationEntry(plate, Steel),
-                'F', new UnificationEntry(frameGt, Steel),
-                'B', STEEL_TANK.getStackForm());
-
         MIXER_RECIPES.recipeBuilder()
                 .input(DIRT, 1)
                 .input(dust, Stone, 2)
                 .input(dust, SiliconDioxide, 2)
-                .fluidInputs(Concrete.getFluid(200))
                 .circuitMeta(5)
-                .output(GTSteamMetaBlocks.blockEvaporationBed.getState(BlockEvaporationBed.EvaporationBedType.DIRT).getBlock())
+                .output(blockEvaporationBed.getState(BlockEvaporationBed.EvaporationBedType.DIRT).getBlock())
                 .EUt(VA[GTValues.ULV])
                 .duration(200)
                 .buildAndRegister();
 
-        if (ConfigHolder.machines.steelSteamMultiblocks) {
-            ModHandler.addShapedRecipe(true, "steam_compressor", STEAM_COMPRESSOR.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Steel),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID),
-                    'M', MetaTileEntities.STEAM_COMPRESSOR_STEEL.getStackForm(),
-                    'G', new UnificationEntry(circuit, LV));
-
-
-            ModHandler.addShapedRecipe(true, "steam_extractor", STEAM_EXTRACTOR.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Steel),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID),
-                    'M', MetaTileEntities.STEAM_EXTRACTOR_STEEL.getStackForm(),
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_ore_washer", STEAM_ORE_WASHER.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Steel),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID),
-                    'M', ELECTRIC_PUMP_ULV,
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_hammer", STEAM_HAMMER.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Steel),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID),
-                    'M', MetaTileEntities.STEAM_HAMMER_STEEL.getStackForm(),
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_centrifuge", STEAM_CENTRIFUGE.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Steel),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID),
-                    'M', ELECTRIC_MOTOR_ULV,
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_mixer", STEAM_MIXER.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Steel),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID),
-                    'M', CONVEYOR_MODULE_ULV,
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_sifter", STEAM_SIFTER.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Steel),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID),
-                    'M', ROBOT_ARM_ULV,
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_lathe", STEAM_LATHE.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Steel),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID),
-                    'M', ELECTRIC_PISTON_ULV,
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_alloy_furnace", STEAM_ALLOY_FURNACE.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', MetaBlocks.BOILER_FIREBOX_CASING.getItemVariant(STEEL_FIREBOX),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID),
-                    'M', MetaTileEntities.STEAM_ALLOY_SMELTER_STEEL.getStackForm(),
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_bender", STEAM_BENDER.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Steel),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID),
-                    'M', ELECTRIC_PISTON_ULV,
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_wire_mill", STEAM_WIRE_MILL.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Steel),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID),
-                    'M', ELECTRIC_MOTOR_ULV,
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "bronze_multiblock_tank", BRONZE_TANK.getStackForm(), " R ",
-                    "hCw", " R ", 'R', new UnificationEntry(OrePrefix.ring, Steel), 'C',
-                    MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID));
-
-            ModHandler.addShapedRecipe(true, "bronze_tank_valve", BRONZE_TANK_VALVE.getStackForm(), " R ",
-                    "hCw", " O ", 'O', new UnificationEntry(OrePrefix.rotor, Materials.Steel), 'R',
-                    new UnificationEntry(OrePrefix.ring, Materials.Steel), 'C',
-                    MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID));
-        } else {
-
-            ModHandler.addShapedRecipe(true, "steam_compressor", STEAM_COMPRESSOR.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Bronze),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS),
-                    'M', STEAM_COMPRESSOR_BRONZE.getStackForm(),
-                    'G', new UnificationEntry(circuit, LV));
-
-
-            ModHandler.addShapedRecipe(true, "steam_extractor", STEAM_EXTRACTOR.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Bronze),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS),
-                    'M', STEAM_EXTRACTOR_BRONZE.getStackForm(),
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_ore_washer", STEAM_ORE_WASHER.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Bronze),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS),
-                    'M', ELECTRIC_PUMP_ULV,
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_hammer", STEAM_HAMMER.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Bronze),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS),
-                    'M', MetaTileEntities.STEAM_HAMMER_BRONZE.getStackForm(),
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_centrifuge", STEAM_CENTRIFUGE.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Bronze),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS),
-                    'M', ELECTRIC_MOTOR_ULV,
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_mixer", STEAM_MIXER.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Bronze),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS),
-                    'M', CONVEYOR_MODULE_ULV,
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_sifter", STEAM_SIFTER.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Bronze),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS),
-                    'M', ROBOT_ARM_ULV,
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_lathe", STEAM_LATHE.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Bronze),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS),
-                    'M', ELECTRIC_PISTON_ULV,
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_alloy_furnace", STEAM_ALLOY_FURNACE.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', MetaBlocks.BOILER_FIREBOX_CASING.getItemVariant(BRONZE_FIREBOX),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS),
-                    'M', MetaTileEntities.STEAM_ALLOY_SMELTER_BRONZE.getStackForm(),
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_bender", STEAM_BENDER.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Steel),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS),
-                    'M', ELECTRIC_PISTON_ULV,
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "steam_wire_mill", STEAM_WIRE_MILL.getStackForm(),
-                    "CGC", "FMF", "CGC",
-                    'F', new UnificationEntry(frameGt, Steel),
-                    'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS),
-                    'M', ELECTRIC_MOTOR_ULV,
-                    'G', new UnificationEntry(circuit, LV));
-
-            ModHandler.addShapedRecipe(true, "bronze_multiblock_tank", BRONZE_TANK.getStackForm(), " R ",
-                    "hCw", " R ", 'R', new UnificationEntry(OrePrefix.ring, Materials.Bronze), 'C',
-                    MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
-
-            ModHandler.addShapedRecipe(true, "bronze_tank_valve", BRONZE_TANK_VALVE.getStackForm(), " R ",
-                    "hCw", " O ", 'O', new UnificationEntry(OrePrefix.rotor, Materials.Bronze), 'R',
-                    new UnificationEntry(OrePrefix.ring, Materials.Bronze), 'C',
-                    MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
-
-        }
-
-        ModHandler.addShapedRecipe(true, "large_steam_tank", LARGE_STEAM_TANK.getStackForm(),
-                "PRP", "hCw", "PRP",
-                'R', new UnificationEntry(screw, Iron),
-                'P', new UnificationEntry(pipeNormalFluid, Materials.Bronze),
-                'C', BRONZE_TANK.getStackForm());
-
-        //锅炉
-        ModHandler.addShapedRecipe(true, "steam_solar_boiler", STEAM_SOLAR_BOILER.getStackForm(),
-                "PSP", "SAS", "PSP",
-                'P', new UnificationEntry(OrePrefix.cableGtSingle, Materials.Steel),
-                'S', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.ULV),
-                'A', blockMultiblockCasing1.getItemVariant(SOLAR_COLLECTOR));
-
-        ModHandler.addShapedRecipe(true, "low_pressure_solid_boiler", LOW_PRESSURE_SOLID_BOILER.getStackForm(),
-                "PSP", "SAS", "PSP",
-                'P', new UnificationEntry(plate, Steel),
-                'S', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.ULV),
-                'A', blockFireboxCasing0.getItemVariant(ITEM_FIREBOX));
-
-        ModHandler.addShapedRecipe(true, "high_pressure_solid_boiler", HIGH_PRESSURE_SOLID_BOILER.getStackForm(),
-                "PSP", "SAS", "PSP",
-                'P', new UnificationEntry(plate, GalvanizedSteel),
-                'S', ELECTRIC_PUMP_ULV,
-                'A', LOW_PRESSURE_SOLID_BOILER.getStackForm());
-
-        ModHandler.addShapedRecipe(true, "low_pressure_fluid_boiler", LOW_PRESSURE_FLUID_BOILER.getStackForm(),
-                "PSP", "SAS", "PSP",
-                'P', new UnificationEntry(plate, Steel),
-                'S', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.ULV),
-                'A', blockFireboxCasing0.getItemVariant(FLUID_FIREBOX));
-
-        ModHandler.addShapedRecipe(true, "high_pressure_fluid_boiler", HIGH_PRESSURE_FLUID_BOILER.getStackForm(),
-                "PSP", "SAS", "PSP",
-                'P', new UnificationEntry(plate, GalvanizedSteel),
-                'S', ELECTRIC_PUMP_ULV,
-                'A', LOW_PRESSURE_FLUID_BOILER.getStackForm());
-
-        // MACHINES
-        ModHandler.addShapedRecipe(true, "alloy_smelter.ulv", ALLOY_SMELTER.getStackForm(),
-                "ECE", "CMC", "WCW",
-                'M', HULL[0].getStackForm(),
-                'E', new UnificationEntry(circuit, ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy),
-                'C', new UnificationEntry(OrePrefix.wireGtQuadruple, Materials.Copper));
-
-        ModHandler.addShapedRecipe(true, "bender.ulv", BENDER.getStackForm(),
-                "PWP", "CMC", "EBE",
-                'M', HULL[0].getStackForm(),
-                'E', ELECTRIC_MOTOR_ULV,
-                'P', ELECTRIC_PISTON_ULV,
-                'C', new UnificationEntry(circuit, ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy),
-                'B', new UnificationEntry(OrePrefix.plate, Materials.WroughtIron));
-
-        ModHandler.addShapedRecipe(true, "compressor.ulv", COMPRESSOR.getStackForm()
-                , " C ", "PMP", "WCW",
-                'M', HULL[0].getStackForm(),
-                'P', ELECTRIC_PISTON_ULV,
-                'C', new UnificationEntry(circuit, ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy));
-
-        ModHandler.addShapedRecipe(true, "cutter.ulv", CUTTER.getStackForm(),
-                "WCG", "VMB", "CWE",
-                'M', HULL[0].getStackForm(),
-                'E', ELECTRIC_MOTOR_ULV,
-                'V', CONVEYOR_MODULE_ULV,
-                'C', new UnificationEntry(circuit, ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy),
-                'G', new ItemStack(Blocks.GLASS, 1),
-                'B', new UnificationEntry(OrePrefix.toolHeadBuzzSaw, Materials.Bronze));
-
-        ModHandler.addShapedRecipe(true, "electric_furnace.ulv", ELECTRIC_FURNACE.getStackForm(),
-                "ECE", "CMC", "WCW",
-                'M', HULL[0].getStackForm(),
-                'E', new UnificationEntry(circuit, ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy),
-                'C', new UnificationEntry(OrePrefix.wireGtDouble, Materials.Copper));
-
-        ModHandler.addShapedRecipe(true, "extractor.ulv", EXTRACTOR.getStackForm(),
-                "GCG", "EMP", "WCW",
-                'M', HULL[0].getStackForm(),
-                'E', ELECTRIC_PISTON_ULV,
-                'P', ELECTRIC_PUMP_ULV,
-                'C', new UnificationEntry(circuit, ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy),
-                'G', new ItemStack(Blocks.GLASS, 1));
-
-        ModHandler.addShapedRecipe(true, "lathe.ulv", LATHE.getStackForm(),
-                "WCW", "EMD", "CWP",
-                'M', HULL[0].getStackForm(),
-                'E', ELECTRIC_MOTOR_ULV,
-                'P', ELECTRIC_PISTON_ULV,
-                'C', new UnificationEntry(circuit, ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy),
-                'D', new UnificationEntry(OrePrefix.gem, Materials.Diamond));
-
-        ModHandler.addShapedRecipe(true, "macerator.ulv", MACERATOR.getStackForm(),
-                "PEG", "WWM", "CCW",
-                'M', HULL[0].getStackForm(),
-                'E', ELECTRIC_MOTOR_ULV,
-                'P', ELECTRIC_PISTON_ULV,
-                'C', new UnificationEntry(circuit, ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy),
-                'G', new UnificationEntry(OrePrefix.gem, Materials.Diamond));
-
-
-        ModHandler.addShapedRecipe(true, "wiremill.ulv", WIREMILL.getStackForm(),
-                "EWE", "CMC", "EWE",
-                'M', HULL[0].getStackForm(),
-                'E', ELECTRIC_MOTOR_ULV,
-                'C', new UnificationEntry(circuit, ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy));
-
-        ModHandler.addShapedRecipe(true, "centrifuge.ulv", CENTRIFUGE.getStackForm(),
-                "CEC", "WMW", "CEC",
-                'M', HULL[0].getStackForm(),
-                'E', ELECTRIC_MOTOR_ULV,
-                'C', new UnificationEntry(circuit, ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy));
-
-        ModHandler.addShapedRecipe(true, "ore_washer.ulv", ORE_WASHER.getStackForm(),
-                "RGR", "CEC", "WMW",
-                'M', HULL[0].getStackForm(),
-                'R', new UnificationEntry(OrePrefix.rotor, Materials.Tin),
-                'E', ELECTRIC_MOTOR_ULV,
-                'C', new UnificationEntry(circuit, ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy),
-                'G', new ItemStack(Blocks.GLASS, 1));
-
-        ModHandler.addShapedRecipe(true, "packer.ulv", PACKER.getStackForm(),
-                "BCB", "RMV", "WCW",
-                'M', HULL[0].getStackForm(),
-                'R', ROBOT_ARM_ULV,
-                'V', CONVEYOR_MODULE_ULV,
-                'C', new UnificationEntry(circuit, ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy),
-                'B', OreDictNames.chestWood);
-
-        ModHandler.addShapedRecipe(true, "brewery.ulv", BREWERY.getStackForm(),
-                "GPG", "WMW", "CBC",
-                'M', HULL[0].getStackForm(),
-                'P', ELECTRIC_PUMP_ULV,
-                'B', new UnificationEntry(OrePrefix.stick, Materials.Blaze),
-                'C', new UnificationEntry(circuit, ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy),
-                'G', new ItemStack(Blocks.GLASS, 1));
-
-        ModHandler.addShapedRecipe(true, "fermenter.ulv", FERMENTER.getStackForm(),
-                "WPW", "GMG", "WCW",
-                'M', HULL[0].getStackForm(),
-                'P', ELECTRIC_PUMP_ULV,
-                'C', new UnificationEntry(circuit, ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy),
-                'G', new ItemStack(Blocks.GLASS, 1));
-
-        ModHandler.addShapedRecipe(true, "chemical_bath.ulv", CHEMICAL_BATH.getStackForm(),
-                "VGW", "PGV", "CMC",
-                'M', HULL[0].getStackForm(),
-                'P', ELECTRIC_PUMP_ULV,
-                'V', CONVEYOR_MODULE_ULV,
-                'C', new UnificationEntry(circuit, ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy),
-                'G', new ItemStack(Blocks.GLASS, 1));
-
-        ModHandler.addShapedRecipe(true, "mixer.ulv", MIXER.getStackForm(),
-                "GRG", "GEG", "CMC",
-                'M', HULL[0].getStackForm(),
-                'E', ELECTRIC_MOTOR_ULV,
-                'R', new UnificationEntry(OrePrefix.rotor, Materials.Tin),
-                'C', new UnificationEntry(circuit, ULV),
-                'G', new ItemStack(Blocks.GLASS, 1));
-
-        ModHandler.addShapedRecipe(true, "forge_hammer.ulv", FORGE_HAMMER.getStackForm(),
-                "WPW", "CMC", "WAW",
-                'M', HULL[0].getStackForm(),
-                'P', ELECTRIC_PISTON_ULV,
-                'C', new UnificationEntry(circuit, ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy),
-                'A', OreDictNames.craftingAnvil);
-
-        ModHandler.addShapedRecipe(true, "sifter.ulv", SIFTER.getStackForm(),
-                "WFW", "PMP", "CFC",
-                'M', HULL[0].getStackForm(),
-                'P', ELECTRIC_PISTON_ULV,
-                'F', MetaItems.ITEM_FILTER,
-                'C', new UnificationEntry(circuit, ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy));
-
-        ModHandler.addShapedRecipe(true, "steam_turbine_ulv", STEAM_TURBINE.getStackForm(),
-                "PCP", "RMR", "EWE",
-                'M', MetaTileEntities.HULL[GTValues.ULV].getStackForm(),
-                'E', ELECTRIC_MOTOR_ULV,
-                'R', new UnificationEntry(OrePrefix.rotor, Materials.Tin),
-                'C', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy),
-                'P', new UnificationEntry(OrePrefix.pipeNormalFluid, Copper));
-
-        ModHandler.addShapedRecipe(true, "gas_turbine_lv", GAS_TURBINE.getStackForm(),
-                "CRC", "RMR", "EWE",
-                'M', MetaTileEntities.HULL[GTValues.ULV].getStackForm(),
-                'E', ELECTRIC_MOTOR_ULV,
-                'R', new UnificationEntry(OrePrefix.rotor, Materials.Tin),
-                'C', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy));
-
-        ModHandler.addShapedRecipe(true, "diesel_generator_ulv", COMBUSTION_GENERATOR.getStackForm(),
-                "PCP", "EME", "GWG",
-                'M', MetaTileEntities.HULL[GTValues.ULV].getStackForm(),
-                'P', ELECTRIC_PISTON_ULV,
-                'E', ELECTRIC_MOTOR_ULV,
-                'C', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, RedAlloy),
-                'G', new UnificationEntry(OrePrefix.gear, WroughtIron));
-
-        ModHandler.addShapedRecipe(true, "semi_fluid_generator_ulv", SEMI_FLUID_GENERATOR.getStackForm(),
-                "PCP", "EME", "GWG",
-                'M', MetaTileEntities.HULL[GTValues.ULV].getStackForm(),
-                'P', ELECTRIC_PISTON_ULV,
-                'E', ELECTRIC_PUMP_ULV,
-                'C', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.ULV),
-                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy),
-                'G', new UnificationEntry(OrePrefix.gear, Materials.WroughtIron));
+        ModHandler.addShapedRecipe(true, "evaporation_bed_dirt",
+                blockEvaporationBed.getItemVariant(BlockEvaporationBed.EvaporationBedType.DIRT),
+                " S ", "IDI", " S ",
+                'D', DIRT,
+                'I', new UnificationEntry(OrePrefix.dust, SiliconDioxide),
+                'S', new UnificationEntry(OrePrefix.dust, Stone));
     }
 }
