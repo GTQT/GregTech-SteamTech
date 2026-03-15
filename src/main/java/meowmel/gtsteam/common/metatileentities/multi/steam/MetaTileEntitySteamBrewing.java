@@ -36,6 +36,14 @@ public class MetaTileEntitySteamBrewing extends RecipeMapSteamMultiblockControll
         this.recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 
+    private static IBlockState getGlassState() {
+        return Blocks.GLASS.getDefaultState();
+    }
+
+    private static IBlockState getFrameState() {
+        return MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel);
+    }
+
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity metaTileEntityHolder) {
         return new MetaTileEntitySteamBrewing(metaTileEntityId);
@@ -64,20 +72,14 @@ public class MetaTileEntitySteamBrewing extends RecipeMapSteamMultiblockControll
                 .build();
     }
 
-    private static IBlockState getGlassState() {
-        return Blocks.GLASS.getDefaultState();
-    }
-
-    private static IBlockState getFrameState() {
-        return MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel);
-    }
-
     public IBlockState getCasingState() {
         return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.SEALED_WOOD_WALL);
     }
+
     public IBlockState getButtonState() {
         return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.SEALED_WOOD_BOTTOM);
     }
+
     @SideOnly(Side.CLIENT)
     @Override
     public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {

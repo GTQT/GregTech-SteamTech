@@ -11,7 +11,6 @@ import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
-import gregtech.common.ConfigHolder;
 import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
@@ -21,6 +20,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -41,9 +41,9 @@ public class MetaTileEntitySteamAlloyFurnace extends RecipeMapSteamMultiblockCon
     @Override
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
-                .aisle("XXX", "CCC", "CCC")
-                .aisle("XCX", "C#C", "CCC")
-                .aisle("XXX", "CSC", "CCC")
+                .aisle("CCC", "XXX", "XXX", "CCC")
+                .aisle("CCC", "X#X", "X#X", "CCC")
+                .aisle("CSC", "XXX", "XXX", "CCC")
                 .where('S', selfPredicate())
                 .where('X', states(getFireboxState())
                         .or(autoAbilities(true, false, false, false, false, false, false).setMinGlobalLimited(1)
@@ -55,15 +55,11 @@ public class MetaTileEntitySteamAlloyFurnace extends RecipeMapSteamMultiblockCon
     }
 
     public IBlockState getCasingState() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID) :
-                MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
+        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
     }
 
     public IBlockState getFireboxState() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX) :
-                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
+        return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
     }
 
     private boolean isFireboxPart(IMultiblockPart sourcePart) {
@@ -73,23 +69,15 @@ public class MetaTileEntitySteamAlloyFurnace extends RecipeMapSteamMultiblockCon
     @SideOnly(Side.CLIENT)
     @Override
     public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
-        if (ConfigHolder.machines.steelSteamMultiblocks) {
-            if (sourcePart != null && isFireboxPart(sourcePart)) {
-                return lastActive ? Textures.STEEL_FIREBOX_ACTIVE : Textures.STEEL_FIREBOX;
-            }
-            return Textures.SOLID_STEEL_CASING;
-
-        } else {
-            if (sourcePart != null && isFireboxPart(sourcePart)) {
-                return lastActive ? Textures.BRONZE_FIREBOX_ACTIVE : Textures.BRONZE_FIREBOX;
-            }
-            return Textures.BRONZE_PLATED_BRICKS;
+        if (sourcePart != null && isFireboxPart(sourcePart)) {
+            return lastActive ? Textures.BRONZE_FIREBOX_ACTIVE : Textures.BRONZE_FIREBOX;
         }
+        return Textures.BRONZE_PLATED_BRICKS;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    protected ICubeRenderer getFrontOverlay() {
+    protected @NotNull ICubeRenderer getFrontOverlay() {
         return Textures.ELECTRIC_FURNACE_OVERLAY;
     }
 

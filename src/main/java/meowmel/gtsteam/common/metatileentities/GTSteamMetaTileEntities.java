@@ -55,6 +55,7 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntitySteamSifter STEAM_SIFTER;
     public static MetaTileEntitySteamLathe STEAM_LATHE;
     public static MetaTileEntitySteamBrewing STEAM_BREWING;
+    public static MetaTileEntitySteamLavaFurnace STEAM_LAVA_FURNACE;
     public static MetaTileEntitySteamWaterPump STEAM_WATER_PUMP;
 
     public static MetaTileEntitySteamTranscendentPlasmaForge STEAM_TRANSCENDENT_PLASMA_FORGE;
@@ -146,6 +147,7 @@ public class GTSteamMetaTileEntities {
         STEAM_SIFTER = registerMetaTileEntity(19, new MetaTileEntitySteamSifter(gtsId("steam_sifter")));
         STEAM_LATHE = registerMetaTileEntity(20, new MetaTileEntitySteamLathe(gtsId("steam_lathe")));
         STEAM_BREWING = registerMetaTileEntity(21, new MetaTileEntitySteamBrewing(gtsId("steam_brewing")));
+        STEAM_LAVA_FURNACE = registerMetaTileEntity(22, new MetaTileEntitySteamLavaFurnace(gtsId("steam_lava_furnace")));
 
         SCALABLE_STORAGE = registerMetaTileEntity(25, new MetaTileEntityScalableStorage(gtsId("scalable_storage")));
 

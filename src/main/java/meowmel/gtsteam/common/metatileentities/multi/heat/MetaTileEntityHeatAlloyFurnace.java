@@ -43,16 +43,16 @@ public class MetaTileEntityHeatAlloyFurnace extends HeatMultiblockController {
     @Override
     protected @NotNull BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
-                .aisle("FFF", "CCC", "CCC")
-                .aisle("FCF", "C#C", "CCC")
-                .aisle("FFF", "CSC", "CCC")
+                .aisle("CCC", "XXX", "XXX", "CCC")
+                .aisle("CCC", "X#X", "X#X", "CCC")
+                .aisle("CSC", "XXX", "XXX", "CCC")
                 .where('S', selfPredicate())
                 .where('C', states(getCasingState())
                         .or(abilities(MultiblockAbility.EXPORT_ITEMS).setMinGlobalLimited(1).setMaxGlobalLimited(3))
                         .or(abilities(MultiblockAbility.IMPORT_ITEMS).setMinGlobalLimited(1).setMaxGlobalLimited(3))
                         .or(abilities(MultiblockAbility.INPUT_HEAT).setExactLimit(1))
                 )
-                .where('F', states(getFireBoxState()))
+                .where('X', states(getFireBoxState()))
                 .where('#', any())
                 .build();
     }

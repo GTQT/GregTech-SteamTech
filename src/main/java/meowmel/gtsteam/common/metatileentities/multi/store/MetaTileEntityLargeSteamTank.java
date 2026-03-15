@@ -63,21 +63,15 @@ public class MetaTileEntityLargeSteamTank extends MultiblockWithDisplayBase {
     }
 
     private static IBlockState getFrameState() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.FRAMES.get(Materials.Steel).getBlock(Materials.Steel) :
-                MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
+        return MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
     }
 
     public IBlockState getCasingState() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID) :
-                MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
+        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
     }
 
     private IBlockState getBoilerState() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.BOILER_CASING.getState(STEEL_PIPE) :
-                MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
+        return MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
     }
 
     @Override
@@ -134,13 +128,13 @@ public class MetaTileEntityLargeSteamTank extends MultiblockWithDisplayBase {
     }
 
     private MetaTileEntity getValve() {
-        return ConfigHolder.machines.steelSteamMultiblocks ? MetaTileEntities.STEEL_TANK_VALVE : GTSteamMetaTileEntities.BRONZE_TANK_VALVE;
+        return GTSteamMetaTileEntities.BRONZE_TANK_VALVE;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
-        return ConfigHolder.machines.steelSteamMultiblocks ? SOLID_STEEL_CASING : BRONZE_PLATED_BRICKS;
+        return BRONZE_PLATED_BRICKS;
     }
 
     @Override

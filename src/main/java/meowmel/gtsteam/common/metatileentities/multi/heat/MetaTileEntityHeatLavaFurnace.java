@@ -25,8 +25,11 @@ import java.util.List;
 
 public class MetaTileEntityHeatLavaFurnace extends HeatMultiblockController {
 
+    private static final int PARALLEL_LIMIT = 4;
+
     public MetaTileEntityHeatLavaFurnace(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GTSRecipeMaps.LAVA_FURNACE_RECIPES);
+        recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 
     @Override
@@ -37,9 +40,9 @@ public class MetaTileEntityHeatLavaFurnace extends HeatMultiblockController {
     @Override
     protected BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
-                .aisle("XXX", "CCC", "#C#")
+                .aisle("XXX", "CCC", "CCC")
                 .aisle("XCX", "C#C", "CCC")
-                .aisle("XXX", "CSC", "#C#")
+                .aisle("XXX", "CSC", "CCC")
                 .where('S', selfPredicate())
                 .where('X', states(getFireboxState()))
                 .where('C', states(getCasingState()).setMinGlobalLimited(6)
@@ -88,7 +91,7 @@ public class MetaTileEntityHeatLavaFurnace extends HeatMultiblockController {
     public void addInformation(ItemStack stack, World player, List<String> tooltip,
                                boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
-        TooltipBuilder.create().addSteamMachine(1).build(this, tooltip);
+        TooltipBuilder.create().addHeatMachine(PARALLEL_LIMIT).build(this, tooltip);
     }
 
 }

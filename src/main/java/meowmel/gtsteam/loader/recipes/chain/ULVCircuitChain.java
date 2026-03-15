@@ -7,6 +7,7 @@ import meowmel.gtsteam.common.item.GTSMetaitems;
 import static gregtech.api.GTValues.LV;
 import static gregtech.api.GTValues.VA;
 import static gregtech.api.recipes.RecipeMaps.ASSEMBLER_RECIPES;
+import static gregtech.api.recipes.RecipeMaps.CHEMICAL_BATH_RECIPES;
 import static gregtech.api.unification.material.Materials.*;
 import static gregtech.api.unification.ore.OrePrefix.*;
 import static gregtech.common.items.MetaItems.*;
@@ -23,6 +24,23 @@ public class ULVCircuitChain {
         //原：木板+粘性树脂
         //改：杂酚油 + 木板= 防腐木
         //改：防腐木 + 粘性树脂 = 覆膜电路基板
+
+        // 封蜡木
+        CHEMICAL_BATH_RECIPES.recipeBuilder()
+                .input(plate, Wood)
+                .output(plate, SealedWood)
+                .fluidInputs(SeedOil.getFluid(120))
+                .duration(100)
+                .EUt(8)
+                .buildAndRegister();
+
+        CHEMICAL_BATH_RECIPES.recipeBuilder()
+                .input(frameGt, Wood)
+                .output(frameGt, SealedWood)
+                .fluidInputs(SeedOil.getFluid(240))
+                .duration(100)
+                .EUt(8)
+                .buildAndRegister();
 
         //LV电路板
         //原：合成台

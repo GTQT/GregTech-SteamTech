@@ -27,13 +27,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
-import static gregtech.client.renderer.texture.Textures.SOLID_STEEL_CASING;
 import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.BRONZE_PIPE;
-import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.STEEL_PIPE;
 
 public class MetaTileEntitySteamExtractor extends RecipeMapSteamMultiblockController {
 
@@ -45,9 +44,7 @@ public class MetaTileEntitySteamExtractor extends RecipeMapSteamMultiblockContro
     }
 
     public IBlockState getFireboxState() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX) :
-                MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
+        return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
     }
 
     @Override
@@ -56,7 +53,7 @@ public class MetaTileEntitySteamExtractor extends RecipeMapSteamMultiblockContro
     }
 
     @Override
-    protected BlockPattern createStructurePattern() {
+    protected @NotNull BlockPattern createStructurePattern() {
         return FactoryBlockPattern.start()
                 .aisle("XXX", "XXX", "XXX")
                 .aisle("XXX", "FTF", "XXX")
@@ -71,21 +68,17 @@ public class MetaTileEntitySteamExtractor extends RecipeMapSteamMultiblockContro
     }
 
     private IBlockState getPipeState() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.BOILER_CASING.getState(STEEL_PIPE) :
-                MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
+        return MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
     }
 
     public IBlockState getCasingState() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID) :
-                MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
+        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
-        return ConfigHolder.machines.steelSteamMultiblocks ? SOLID_STEEL_CASING : BRONZE_PLATED_BRICKS;
+        return BRONZE_PLATED_BRICKS;
     }
 
     @SideOnly(Side.CLIENT)

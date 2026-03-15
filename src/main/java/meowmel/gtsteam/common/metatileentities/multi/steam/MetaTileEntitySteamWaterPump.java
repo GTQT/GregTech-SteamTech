@@ -17,7 +17,6 @@ import gregtech.api.unification.material.Materials;
 import gregtech.api.util.LocalizationUtils;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
-import gregtech.common.ConfigHolder;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.blocks.wood.BlockGregPlanks;
@@ -43,7 +42,6 @@ import java.util.List;
 import java.util.Set;
 
 import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
-import static gregtech.client.renderer.texture.Textures.SOLID_STEEL_CASING;
 
 public class MetaTileEntitySteamWaterPump extends MultiblockControllerBase implements IPrimitivePump {
     private IFluidTank waterTank;
@@ -172,15 +170,13 @@ public class MetaTileEntitySteamWaterPump extends MultiblockControllerBase imple
     }
 
     public IBlockState getCasingState() {
-        return ConfigHolder.machines.steelSteamMultiblocks ?
-                MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID) :
-                MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
+        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
     public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
-        return ConfigHolder.machines.steelSteamMultiblocks ? SOLID_STEEL_CASING : BRONZE_PLATED_BRICKS;
+        return BRONZE_PLATED_BRICKS;
     }
 
     @Nonnull

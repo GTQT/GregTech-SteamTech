@@ -141,16 +141,15 @@ public class MiscRecipes {
                 'F', new UnificationEntry(frameGt, Steel));
 
         ModHandler.addShapedRecipe(true, "sealed_wood_wall", GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(BlockMultiblockCasing0.CasingType.SEALED_WOOD_WALL),
-                "PhP", "QFQ", "PwP",
+                "PhP", "PFP", "PwP",
                 'P', new UnificationEntry(plate, SealedWood),
-                'Q', new UnificationEntry(plate, Steel),
                 'F', new UnificationEntry(frameGt, TreatedWood));
 
         ModHandler.addShapedRecipe(true, "sealed_wood_bottom", GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(BlockMultiblockCasing0.CasingType.SEALED_WOOD_BOTTOM),
-                "PhP", "QFQ", "PwP",
+                "PQP", "hFw", "PQP",
                 'P', new UnificationEntry(plate, SealedWood),
-                'Q', new UnificationEntry(stick, Iron),
-                'F', new UnificationEntry(frameGt, Steel));
+                'Q', new UnificationEntry(screw, Iron),
+                'F', new UnificationEntry(frameGt, Iron));
 
         //蓄水库外壁
         ModHandler.addShapedRecipe(true, "tank_wall", GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(BlockMultiblockCasing0.CasingType.TANK_WALL),
