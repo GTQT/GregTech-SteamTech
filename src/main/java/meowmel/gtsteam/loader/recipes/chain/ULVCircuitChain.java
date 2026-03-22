@@ -21,9 +21,7 @@ import static net.minecraftforge.fml.common.Loader.isModLoaded;
 public class ULVCircuitChain {
     public static void init() {
         //覆膜电路基板
-        //原：木板+粘性树脂
-        //改：杂酚油 + 木板= 防腐木
-        //改：防腐木 + 粘性树脂 = 覆膜电路基板
+        //改：蜡封木板 + 粘性树脂 = 覆膜电路基板
 
         // 封蜡木
         CHEMICAL_BATH_RECIPES.recipeBuilder()

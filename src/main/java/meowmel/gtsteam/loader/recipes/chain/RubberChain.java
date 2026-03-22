@@ -31,24 +31,24 @@ public class RubberChain {
                 .fluidInputs(Water.getFluid(10))
                 .fluidOutputs(Latex.getFluid(100))
                 .blockStates("latex_logs", MetaBlocks.RUBBER_LOG.getBlockState())
-                .duration(200)
-                .EUt(7)
+                .duration(400)
+                .EUt(30)
                 .buildAndRegister();
 
         SAP_COLLECTOR_RECIPES.recipeBuilder()
                 .fluidInputs(DistilledWater.getFluid(10))
                 .fluidOutputs(Resin.getFluid(100))
                 .blockStates("extractable_logs_1", Blocks.LOG.getBlockState())
-                .duration(200)
-                .EUt(7)
+                .duration(400)
+                .EUt(30)
                 .buildAndRegister();
 
         SAP_COLLECTOR_RECIPES.recipeBuilder()
                 .fluidInputs(Lubricant.getFluid(10))
                 .fluidOutputs(Resin.getFluid(100))
                 .blockStates("extractable_logs_2", Blocks.LOG2.getBlockState())
-                .duration(200)
-                .EUt(7)
+                .duration(400)
+                .EUt(30)
                 .buildAndRegister();
     }
 
@@ -116,7 +116,7 @@ public class RubberChain {
                 .inputs(STICKY_RESIN.getStackForm(3))
                 .input(dust, Salt, 2)
                 .fluidInputs(Water.getFluid(1000))
-                .fluidInputs(AceticAcid.getFluid(200))
+                .notConsumable(AceticAcid.getFluid(2002))
                 .fluidOutputs(RawRubberWhey.getFluid(1000))
                 .output(ingot, RawRubberPrecipitate, 2)
                 .buildAndRegister();
@@ -127,8 +127,8 @@ public class RubberChain {
                 OreDictUnifier.get(dust, Latex));
 
         COAGULATION_RECIPES.recipeBuilder()
-                .circuitMeta(1)
                 .notConsumable(stick, Iron)
+                .notConsumable(SulfuricAcid.getFluid(200))
                 .fluidInputs(Latex.getFluid(1000))
                 .output(dust, Latex)
                 .duration(5 * SECOND)
@@ -136,26 +136,28 @@ public class RubberChain {
 
         COAGULATION_RECIPES.recipeBuilder()
                 .notConsumable(stick, Iron)
-                .notConsumable(dust, CalciumChloride)
-                .fluidInputs(Latex.getFluid(1000))
-                .output(dust, Latex)
-                .duration(2 * SECOND + 5 * TICK)
-                .buildAndRegister();
-
-        COAGULATION_RECIPES.recipeBuilder()
-                .notConsumable(stick, Iron)
-                .notConsumable(SulfuricAcid.getFluid(1))
+                .notConsumable(AceticAcid.getFluid(200))
                 .fluidInputs(Latex.getFluid(1000))
                 .output(dust, Latex)
                 .duration(SECOND)
                 .buildAndRegister();
 
-        COAGULATION_RECIPES.recipeBuilder()
-                .notConsumable(stick, Iron)
-                .notConsumable(AceticAcid.getFluid(1))
+        HEAT_CHEMICAL_RECIPES.recipeBuilder()
+                .notConsumable(SulfuricAcid.getFluid(200))
+                .fluidInputs(Latex.getFluid(1000))
+                .output(dust, Latex)
+                .duration(SECOND)
+                .Temperature(673)
+                .Heat(30)
+                .buildAndRegister();
+
+        HEAT_CHEMICAL_RECIPES.recipeBuilder()
+                .notConsumable(AceticAcid.getFluid(200))
                 .fluidInputs(Latex.getFluid(1000))
                 .output(dust, Latex)
                 .duration(5 * TICK)
+                .Temperature(673)
+                .Heat(30)
                 .buildAndRegister();
 
         RubberRecipes.registerRecipes(Latex,Rubber,0);

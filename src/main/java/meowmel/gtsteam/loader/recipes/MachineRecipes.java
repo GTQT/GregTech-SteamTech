@@ -231,7 +231,7 @@ public class MachineRecipes {
 
         ModHandler.addShapedRecipe(true, "heat_chemical_reactor", HEAT_CHEMICAL_REACTOR.getStackForm(),
                 "CRC", "PMP", "CHC",
-                'C', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.LV),
+                'C', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.ULV),
                 'R', OreDictUnifier.get(OrePrefix.rotor, Steel),
                 'P', OreDictUnifier.get(OrePrefix.pipeLargeFluid, Steel),
                 'M', ELECTRIC_PUMP_ULV.getStackForm(),
@@ -255,7 +255,7 @@ public class MachineRecipes {
                 "CEC", "PHP", "CEC",
                 'C', ROBOT_ARM_ULV,
                 'E', CONVEYOR_MODULE_ULV,
-                'P', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.LV),
+                'P', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.ULV),
                 'H', MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID));
 
         registerMachineRecipe(GTSteamMetaTileEntities.LATEX_COLLECTOR,

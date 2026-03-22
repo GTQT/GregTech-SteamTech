@@ -10,6 +10,7 @@ import static gregtech.api.unification.material.Materials.*;
 import static gregtech.api.unification.ore.OrePrefix.dust;
 import static gregtech.api.unification.ore.OrePrefix.stick;
 import static meowmel.gtsteam.api.recipes.GTSRecipeMaps.COAGULATION_RECIPES;
+import static meowmel.gtsteam.api.recipes.GTSRecipeMaps.HEAT_CHEMICAL_RECIPES;
 import static meowmel.gtsteam.api.unification.GTSteamMaterials.Resin;
 
 public class ResinChain {
@@ -19,8 +20,8 @@ public class ResinChain {
 
         // Coagulate resin liquid to dust.
         COAGULATION_RECIPES.recipeBuilder()
-                .circuitMeta(1)
                 .notConsumable(stick, Iron)
+                .notConsumable(SulfuricAcid.getFluid(200))
                 .fluidInputs(Resin.getFluid(1000))
                 .output(dust, Resin)
                 .duration(5 * SECOND)
@@ -28,26 +29,28 @@ public class ResinChain {
 
         COAGULATION_RECIPES.recipeBuilder()
                 .notConsumable(stick, Iron)
-                .notConsumable(dust, CalciumChloride)
+                .notConsumable(AceticAcid.getFluid(200))
                 .fluidInputs(Resin.getFluid(1000))
                 .output(dust, Resin)
-                .duration(2 * SECOND + 5 * TICK)
+                .duration(SECOND)
                 .buildAndRegister();
 
-        COAGULATION_RECIPES.recipeBuilder()
-                .notConsumable(stick, Iron)
-                .notConsumable(SulfuricAcid.getFluid(1))
+        HEAT_CHEMICAL_RECIPES.recipeBuilder()
+                .notConsumable(SulfuricAcid.getFluid(200))
                 .fluidInputs(Resin.getFluid(1000))
                 .output(dust, Resin)
-                .duration(1 * SECOND)
+                .duration(SECOND)
+                .Temperature(673)
+                .Heat(30)
                 .buildAndRegister();
 
-        COAGULATION_RECIPES.recipeBuilder()
-                .notConsumable(stick, Iron)
-                .notConsumable(AceticAcid.getFluid(1))
+        HEAT_CHEMICAL_RECIPES.recipeBuilder()
+                .notConsumable(AceticAcid.getFluid(200))
                 .fluidInputs(Resin.getFluid(1000))
                 .output(dust, Resin)
                 .duration(5 * TICK)
+                .Temperature(673)
+                .Heat(30)
                 .buildAndRegister();
     }
 }
