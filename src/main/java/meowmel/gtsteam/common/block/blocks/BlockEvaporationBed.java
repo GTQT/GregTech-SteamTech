@@ -10,6 +10,7 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
@@ -27,13 +28,13 @@ public class BlockEvaporationBed extends VariantActiveBlock<BlockEvaporationBed.
 
 
     @Override
-    public BlockRenderLayer getRenderLayer() {
+    public @NotNull BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.SOLID;
     }
 
     @Override
-    public boolean canCreatureSpawn(IBlockState state, IBlockAccess world, BlockPos pos,
-                                    EntityLiving.SpawnPlacementType type) {
+    public boolean canCreatureSpawn(@NotNull IBlockState state, @NotNull IBlockAccess world, @NotNull BlockPos pos,
+                                    EntityLiving.@NotNull SpawnPlacementType type) {
         return false;
     }
 

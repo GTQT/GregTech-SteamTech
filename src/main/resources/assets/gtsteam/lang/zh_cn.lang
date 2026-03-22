@@ -1,5 +1,6 @@
 #配方
 recipemap.alloy_klin.name=合金窑
+recipemap.sap_collector.name=乳胶收集
 recipemap.coagulation.name=凝固缸
 recipemap.lava_furnace.name=熔岩炉
 recipemap.evaporation_pool.name=蒸发池
@@ -32,6 +33,8 @@ gtsteam.material.synthesis_gas=合成气
 gtsteam.material.rubber_pulp=橡胶浆料
 gtsteam.material.raw_rubber_whey=生橡胶乳清液
 gtsteam.material.raw_rubber_precipitate=生橡胶沉淀
+gtsteam.material.latex=乳胶
+gtsteam.material.resin=树脂
 #方块
 tile.multiblock_casing.galvanized_porcelain_tiles.name=镀锌瓷瓦砖
 tile.multiblock_casing.tank_wall.name=储罐外壁
@@ -48,6 +51,8 @@ tile.boiler_casing.item_firebox.name=固体燃烧室
 tile.boiler_casing.fluid_firebox.name=液体燃烧室
 
 tile.evaporation_bed.dirt.name=砂壤土
+
+tile.serpentine.basic.name=蛇形铜管方块
 #物品
 metaitem.cover.electric_motor.steam.name=蒸汽马达 (Steam)
 metaitem.cover.electric_piston.steam.name=蒸汽活塞 (Steam)
@@ -143,6 +148,10 @@ gtsteam.multiblock.steam_solar_boiler.throttle_button.tooltip=配置锅炉节流
 gtsteam.multiblock.steam_solar_boiler.throttle.title=锅炉节流
 gtsteam.multiblock.steam_solar_boiler.description=一个多方块太阳能锅炉
 
+gtsteam.machine.heat_radiator.name=热辐射器
+gtsteam.multiblock.heat_radiator.tooltip.1=散热效率与面积成正比
+gtsteam.multiblock.heat_radiator.tooltip.2=§b尺寸：§f3x3至11x16
+
 #原始锅炉
 gtsteam.machine.solid_boiler.low_pressure.name=低压固体锅炉
 gtsteam.machine.solid_boiler.high_pressure.name=高压固体锅炉
@@ -152,12 +161,6 @@ gtsteam.machine.fluid_boiler.high_pressure.name=高压流体锅炉
 #蒸汽水泵
 gtsteam.machine.steam_water_pump.name=蒸汽水泵
 gtsteam.machine.steam_water_pump.description=消耗蒸汽输出等量的水
-
-gtsteam.machine.tank_valve.bronze.name=青铜储罐阀门
-gtsteam.machine.tank.bronze.name=青铜多方块储罐
-#大型蒸汽储罐
-gtsteam.machine.large_steam_tank.name=大型蒸汽储罐
-gtsteam.machine.large_steam_tank.fluid_amount_text=蒸汽数量:
 
 gtsteam.machine.large_fluid_tank.name=大型流体储罐
 gtsteam.machine.large_fluid_tank.size=结构大小: %d×%d×%d
@@ -325,5 +328,18 @@ gtsteam.machine.combustion_generator.ulv.tooltip=吃燃料吐电火花
 
 gtsteam.machine.semi_fluid_generator.ulv.name=简易半流质发电机
 gtsteam.machine.semi_fluid_generator.ulv.tooltip=并不是发酵池
+
+# Latex Collector
+gregtech.block_group_members.extractable_logs_1.name=白桦木，丛林木，橡木或云杉木
+gregtech.block_group_members.extractable_logs_2.name=金合欢木或深色橡木
+gregtech.block_group_members.latex_logs.name=橡胶木
+gregtech.recipe.blocks=有效方块：%s
+gtsteam.machine.latex_collector.tooltip=从相邻的原木中提取液体。
+gtsteam.machine.latex_collector.lv.name=基础乳胶收集器
+gtsteam.machine.latex_collector.mv.name=进阶乳胶收集器
+gtsteam.machine.latex_collector.hv.name=进阶乳胶收集器 II
+gtsteam.machine.latex_collector.ev.name=进阶乳胶收集器 III
+gtsteam.machine.latex_collector.iv.name=进阶乳胶收集器 IV
+
 
 # top

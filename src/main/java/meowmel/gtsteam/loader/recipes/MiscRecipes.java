@@ -8,6 +8,7 @@ import gregtech.api.unification.ore.OrePrefix;
 import gregtech.api.unification.stack.UnificationEntry;
 import gregtech.api.util.GTUtility;
 import gregtech.common.ConfigHolder;
+import meowmel.gtsteam.api.recipes.GTSRecipeMaps;
 import meowmel.gtsteam.common.block.GTSteamMetaBlocks;
 import meowmel.gtsteam.common.block.blocks.BlockEvaporationBed;
 import meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing0;
@@ -37,6 +38,7 @@ public class MiscRecipes {
         LavaFurnaceRecipes();
         EvaporationRecipes();
         ItemRecipes();
+        processCooling();
     }
 
 
@@ -210,5 +212,36 @@ public class MiscRecipes {
                 'D', DIRT,
                 'I', new UnificationEntry(OrePrefix.dust, SiliconDioxide),
                 'S', new UnificationEntry(OrePrefix.dust, Stone));
+    }
+
+
+    public static void processCooling() {
+        // steam exhaust generator fuels 200:1
+        GTSRecipeMaps.NATURAL_DRAFT_COOLING_TOWER.recipeBuilder()
+                .fluidInputs(SteamExhaust.getFluid(800))
+                .fluidOutputs(DistilledWater.getFluid(4))
+                .duration(1)
+                .buildAndRegister();
+
+        // steam generator fuels 160:1
+        GTSRecipeMaps.NATURAL_DRAFT_COOLING_TOWER.recipeBuilder()
+                .fluidInputs(Steam.getFluid(640))
+                .fluidOutputs(DistilledWater.getFluid(4))
+                .duration(2)
+                .buildAndRegister();
+
+        // high pressure steam fuels 80:1
+        GTSRecipeMaps.NATURAL_DRAFT_COOLING_TOWER.recipeBuilder()
+                .fluidInputs(HighPressureSteam.getFluid(320))
+                .fluidOutputs(DistilledWater.getFluid(4))
+                .duration(5)
+                .buildAndRegister();
+
+        // supercritical steam fuels 40:1
+        GTSRecipeMaps.NATURAL_DRAFT_COOLING_TOWER.recipeBuilder()
+                .fluidInputs(SupercriticalSteam.getFluid(160))
+                .fluidOutputs(DistilledWater.getFluid(4))
+                .duration(10)
+                .buildAndRegister();
     }
 }

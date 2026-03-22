@@ -162,7 +162,13 @@ public class HeatSteamBoilerRecipeLogic extends AbstractRecipeLogic implements I
                         }
                     } else {
                         setLastTickSteam(generatedSteam);
-                        getOutputTank().fill(Materials.Steam.getFluid(generatedSteam), true);
+                        //拆分出蒸汽废气
+                        if (currentHeat < 573) {
+                            //计算蒸汽废气占比
+                            int generatedSteamGas = generatedSteam * (573 - currentHeat) / 200;
+                            getOutputTank().fill(Materials.SteamExhaust.getFluid(generatedSteamGas), true);
+                            getOutputTank().fill(Materials.Steam.getFluid(generatedSteam - generatedSteamGas), true);
+                        } else getOutputTank().fill(Materials.Steam.getFluid(generatedSteam), true);
                     }
                 }
             }

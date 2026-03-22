@@ -642,11 +642,11 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
     public void setWorkingEnabled(boolean isWorkingAllowed) {
         recipeLogic.setWorkingEnabled(isWorkingAllowed);
     }
-
+    @Override
     public boolean hasMaintenanceMechanics() {
         return false;
     }
-
+    @Override
     public boolean hasMufflerMechanics() {
         return false;
     }

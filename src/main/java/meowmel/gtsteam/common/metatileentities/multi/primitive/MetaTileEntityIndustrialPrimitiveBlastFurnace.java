@@ -1,11 +1,14 @@
 package meowmel.gtsteam.common.metatileentities.multi.primitive;
 
 import gregtech.api.GTValues;
+import gregtech.api.capability.impl.NoEnergyMultiblockRecipeLogic;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
+import gregtech.api.metatileentity.multiblock.NoEnergyMultiblockController;
 import gregtech.api.metatileentity.multiblock.ui.KeyManager;
+import gregtech.api.metatileentity.multiblock.ui.MultiblockUIBuilder;
 import gregtech.api.metatileentity.multiblock.ui.UISyncer;
 import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.pattern.BlockPattern;
@@ -26,8 +29,6 @@ import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
-import meowmel.gtsteam.api.capability.impl.NoEnergyMultiblockRecipeLogic;
-import meowmel.gtsteam.api.metatileentity.multiblock.NoEnergyMultiblockController;
 import meowmel.gtsteam.api.pattern.TraceabilityPredicate;
 import meowmel.gtsteam.client.textures.GTSteamTextures;
 import meowmel.gtsteam.common.block.GTSteamMetaBlocks;
@@ -66,7 +67,7 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
 
     public MetaTileEntityIndustrialPrimitiveBlastFurnace(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, PRIMITIVE_BLAST_FURNACE_RECIPES);
-        this.recipeMapWorkable = new IndustrialPrimitiveBlastFurnaceLogic(this, PRIMITIVE_BLAST_FURNACE_RECIPES);
+        this.recipeMapWorkable = new IndustrialPrimitiveBlastFurnaceLogic(this);
     }
 
     private static IBlockState getFrameState() {
@@ -160,7 +161,18 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
         return Textures.PRIMITIVE_BLAST_FURNACE_OVERLAY;
     }
 
+
     @Override
+    protected void configureDisplayText(MultiblockUIBuilder builder) {
+        builder.setWorkingStatus(recipeMapWorkable.isWorkingEnabled(), recipeMapWorkable.isActive())
+                .addEnergyTierLine(GTUtility.getTierByVoltage(recipeMapWorkable.getMaxVoltage()))
+                .addCustom(this::addCustomCapacity)
+                .addParallelsLine(recipeMapWorkable.getParallelLimit())
+                .addWorkingStatusLine()
+                .addProgressLine(recipeMapWorkable.getProgress(), recipeMapWorkable.getMaxProgress())
+                .addRecipeOutputLine(recipeMapWorkable);
+    }
+
     public void addCustomCapacity(KeyManager keyManager, UISyncer syncer) {
         keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.multiblock.ip.amount.1", syncer.syncInt(TEMP), MAX_TEMP));
         keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace", syncer.syncInt(auxiliaryBlastFurnaceNumber)));
@@ -260,8 +272,8 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
 
     protected class IndustrialPrimitiveBlastFurnaceLogic extends NoEnergyMultiblockRecipeLogic {
 
-        public IndustrialPrimitiveBlastFurnaceLogic(NoEnergyMultiblockController tileEntity, RecipeMap<?> recipeMap) {
-            super(tileEntity, recipeMap);
+        public IndustrialPrimitiveBlastFurnaceLogic(NoEnergyMultiblockController tileEntity) {
+            super(tileEntity);
         }
 
         @Override

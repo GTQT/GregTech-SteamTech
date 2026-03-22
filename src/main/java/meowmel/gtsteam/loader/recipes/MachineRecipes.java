@@ -10,6 +10,8 @@ import gregtech.api.unification.stack.UnificationEntry;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.items.MetaItems;
 import gregtech.common.metatileentities.MetaTileEntities;
+import gregtech.loaders.recipe.CraftingComponent;
+import gtqt.common.metatileentities.GTQTMetaTileEntities;
 import meowmel.gtsteam.common.block.GTSteamMetaBlocks;
 import meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing0;
 import meowmel.gtsteam.common.item.GTSMetaitems;
@@ -26,6 +28,7 @@ import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.BRONZE_BRI
 import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.STEEL_SOLID;
 import static gregtech.common.blocks.BlockWireCoil.CoilType.CUPRONICKEL;
 import static gregtech.common.metatileentities.MetaTileEntities.*;
+import static gregtech.loaders.recipe.MetaTileEntityLoader.registerMachineRecipe;
 import static meowmel.gtsteam.api.unification.GTSteamMaterials.GalvanizedSteel;
 import static meowmel.gtsteam.api.unification.GTSteamMaterials.SealedWood;
 import static meowmel.gtsteam.common.block.GTSteamMetaBlocks.blockFireboxCasing0;
@@ -139,16 +142,6 @@ public class MachineRecipes {
                 'C', MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS),
                 'M', ELECTRIC_MOTOR_STEAM,
                 'G', new UnificationEntry(circuit, ULV));
-
-        ModHandler.addShapedRecipe(true, "bronze_multiblock_tank", BRONZE_TANK.getStackForm(), " R ",
-                "hCw", " R ", 'R', new UnificationEntry(OrePrefix.ring, Materials.Bronze), 'C',
-                MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
-
-        ModHandler.addShapedRecipe(true, "bronze_tank_valve", BRONZE_TANK_VALVE.getStackForm(), " R ",
-                "hCw", " O ", 'O', new UnificationEntry(OrePrefix.rotor, Materials.Bronze), 'R',
-                new UnificationEntry(OrePrefix.ring, Materials.Bronze), 'C',
-                MetaBlocks.METAL_CASING.getItemVariant(BRONZE_BRICKS));
-
     }
 
     private static void HeatMultiblockRecipes() {
@@ -268,6 +261,13 @@ public class MachineRecipes {
                 'E', CONVEYOR_MODULE_ULV,
                 'P', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.LV),
                 'H', MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID));
+
+        registerMachineRecipe(GTSteamMetaTileEntities.LATEX_COLLECTOR,
+                "PCP", "AMA", "PCP",
+                'M', CraftingComponent.HULL,
+                'A', CraftingComponent.PIPE_NORMAL,
+                'C', CraftingComponent.GLASS,
+                'P', CraftingComponent.PUMP);
     }
 
     private static void PrimitiveRecipes() {
@@ -310,12 +310,5 @@ public class MachineRecipes {
                 'P', new UnificationEntry(plate, Steel),
                 'F', new UnificationEntry(frameGt, Steel),
                 'B', STEEL_TANK.getStackForm());
-
-        //大型蒸汽储罐
-        ModHandler.addShapedRecipe(true, "large_steam_tank", LARGE_STEAM_TANK.getStackForm(),
-                "PRP", "hCw", "PRP",
-                'R', new UnificationEntry(screw, Iron),
-                'P', new UnificationEntry(pipeNormalFluid, Materials.Bronze),
-                'C', BRONZE_TANK.getStackForm());
     }
 }

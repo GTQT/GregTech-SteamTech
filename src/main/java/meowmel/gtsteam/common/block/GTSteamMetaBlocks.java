@@ -1,10 +1,7 @@
 package meowmel.gtsteam.common.block;
 
 import gregtech.common.blocks.MetaBlocks;
-import meowmel.gtsteam.common.block.blocks.BlockEvaporationBed;
-import meowmel.gtsteam.common.block.blocks.BlockFireboxCasing0;
-import meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing0;
-import meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing1;
+import meowmel.gtsteam.common.block.blocks.*;
 import meowmel.gtsteam.common.item.storageupdate.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -19,6 +16,7 @@ public class GTSteamMetaBlocks {
     public static BlockMultiblockCasing1 blockMultiblockCasing1;
     public static BlockFireboxCasing0 blockFireboxCasing0;
     public static BlockEvaporationBed blockEvaporationBed;
+    public static BlockSerpentine blockSerpentine;
 
     private GTSteamMetaBlocks() {
     }
@@ -35,6 +33,9 @@ public class GTSteamMetaBlocks {
 
         blockEvaporationBed = new BlockEvaporationBed();
         blockEvaporationBed.setRegistryName("evaporation_bed");
+
+        blockSerpentine = new BlockSerpentine();
+        blockSerpentine.setRegistryName("serpentine");
     }
 
     @SideOnly(Side.CLIENT)
@@ -44,6 +45,7 @@ public class GTSteamMetaBlocks {
 
         blockFireboxCasing0.onModelRegister();
         blockEvaporationBed.onModelRegister();
+        blockSerpentine.onModelRegister();
 
         registerModel(ModItems.STORAGE_UPGRADE_TIER_1);
         registerModel(ModItems.STORAGE_UPGRADE_TIER_2);

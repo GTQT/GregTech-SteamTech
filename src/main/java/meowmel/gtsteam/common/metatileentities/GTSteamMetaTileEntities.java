@@ -27,6 +27,7 @@ import meowmel.gtsteam.common.metatileentities.multi.steam.*;
 import meowmel.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamBiomimeticFactory;
 import meowmel.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamTranscendentPlasmaForge;
 import meowmel.gtsteam.common.metatileentities.multi.store.*;
+import meowmel.gtsteam.common.metatileentities.single.MetaTileEntityLatexCollector;
 import net.minecraft.util.ResourceLocation;
 
 import static gregtech.common.metatileentities.MetaTileEntities.registerMetaTileEntity;
@@ -76,9 +77,8 @@ public class GTSteamMetaTileEntities {
 
     public static MetaTileEntitySteamSolarBoiler STEAM_SOLAR_BOILER;
 
-    public static MetaTileEntityLargeSteamTank LARGE_STEAM_TANK;
-    public static MetaTileEntityTankValve BRONZE_TANK_VALVE;
-    public static MetaTileEntityMultiblockTank BRONZE_TANK;
+    public static MetaTileEntityHeatRadiator HEAT_RADIATOR;
+
     public static MetaTileEntityLargeFluidTank LARGE_FLUID_TANK;
 
     //MIT License //Author iristhepianist //https://github.com/iristhepianist/ScalableStorageCEu/
@@ -121,6 +121,8 @@ public class GTSteamMetaTileEntities {
     public static CoalCombustor[] DENSE_COAL_COMBUSTOR = new CoalCombustor[materials.length];
     public static LavaCombustor[] DENSE_LAVA_COMBUSTOR = new LavaCombustor[materials.length];
     public static SolarCombustor[] DENSE_SOLAR_COMBUSTOR = new SolarCombustor[materials.length];
+    //
+    public static MetaTileEntityLatexCollector[] LATEX_COLLECTOR = new MetaTileEntityLatexCollector[5];
 
     public static ResourceLocation gtsId(String id) {
         return new ResourceLocation(MODID, id);
@@ -153,10 +155,7 @@ public class GTSteamMetaTileEntities {
 
         STEAM_SOLAR_BOILER = registerMetaTileEntity(30, new MetaTileEntitySteamSolarBoiler(gtsId("steam_solar_boiler")));
 
-
-        BRONZE_TANK_VALVE = registerMetaTileEntity(40, new MetaTileEntityTankValve(gtsId("tank_valve.bronze")));
-        BRONZE_TANK = registerMetaTileEntity(41, new MetaTileEntityMultiblockTank(gtsId("tank.bronze"), 750 * 1000));
-        LARGE_STEAM_TANK = registerMetaTileEntity(42, new MetaTileEntityLargeSteamTank(gtsId("large_steam_tank"), 216000000));
+        HEAT_RADIATOR = registerMetaTileEntity(40, new MetaTileEntityHeatRadiator(gtsId("heat_radiator")));
 
         LARGE_FLUID_TANK = registerMetaTileEntity(45, new MetaTileEntityLargeFluidTank(gtsId("large_fluid_tank")));
 
@@ -227,5 +226,12 @@ public class GTSteamMetaTileEntities {
 
         //锅炉
         HEAT_STEAM_BOILER = registerMetaTileEntity(310, new MetaTileEntityHeatSteamBoiler(gtsId("heat_steam_boiler")));
+
+
+        LATEX_COLLECTOR[0] = registerMetaTileEntity(500, new MetaTileEntityLatexCollector(gtsId("latex_collector.lv"), 1));
+        LATEX_COLLECTOR[1] = registerMetaTileEntity(501, new MetaTileEntityLatexCollector(gtsId("latex_collector.mv"), 2));
+        LATEX_COLLECTOR[2] = registerMetaTileEntity(502, new MetaTileEntityLatexCollector(gtsId("latex_collector.hv"), 3));
+        LATEX_COLLECTOR[3] = registerMetaTileEntity(503, new MetaTileEntityLatexCollector(gtsId("latex_collector.ev"), 4));
+        LATEX_COLLECTOR[4] = registerMetaTileEntity(504, new MetaTileEntityLatexCollector(gtsId("latex_collector.iv"), 5));
     }
 }

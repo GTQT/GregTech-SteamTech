@@ -1,5 +1,6 @@
 #配方
 recipemap.alloy_klin.name=Alloy Kiln
+recipemap.sap_collector.name=乳胶收集
 recipemap.coagulation.name=coagulation
 recipemap.lava_furnace.name=Lava Furnace
 recipemap.evaporation_pool.name=Evaporation Pool
@@ -32,6 +33,8 @@ gtsteam.material.synthesis_gas=Synthesis Gas
 gtsteam.material.rubber_pulp=Rubber Pulp
 gtsteam.material.raw_rubber_whey=Raw Rubber Whey
 gtsteam.material.raw_rubber_precipitate=Raw Rubber Precipitate
+gtsteam.material.latex=乳胶
+gtsteam.material.resin=树脂
 #方块
 tile.multiblock_casing.galvanized_porcelain_tiles.name=Galvanized Porcelain Tiles
 tile.multiblock_casing.tank_wall.name=Tank outer wall
@@ -48,6 +51,8 @@ tile.boiler_casing.item_firebox.name=Solid combustion chamber
 tile.boiler_casing.fluid_firebox.name=Liquid combustion chamber
 
 tile.evaporation_bed.dirt.name=Sandy Loam
+
+tile.serpentine.basic.name=蛇形铜管方块
 #物品
 metaitem.cover.electric_motor.steam.name=蒸汽马达 (Steam)
 metaitem.cover.electric_piston.steam.name=蒸汽活塞 (Steam)
@@ -144,6 +149,10 @@ gtsteam.multiblock.steam_solar_boiler.throttle_button.tooltip=Configure boiler t
 gtsteam.multiblock.steam_solar_boiler.throttle.title=Boiler Throttle
 gtsteam.multiblock.steam_solar_boiler.description=A multiblock solar boiler
 
+gtsteam.machine.heat_radiator.name=热辐射器
+gtsteam.multiblock.heat_radiator.tooltip.1=散热效率与面积成正比
+gtsteam.multiblock.heat_radiator.tooltip.2=§b尺寸：§f3x3至11x16
+
 # Boiler
 gtsteam.machine.solid_boiler.low_pressure.name=Low Pressure Solid Boiler
 gtsteam.machine.solid_boiler.high_pressure.name=High Pressure Solid Boiler
@@ -153,12 +162,6 @@ gtsteam.machine.fluid_boiler.high_pressure.name=High Pressure Fluid Boiler
 #Steam Water Pump
 gtsteam.machine.steam_water_pump.name=Steam Water Pump
 gtsteam.machine.steam_water_pump.description=Consumes steam and outputs an equal amount of water
-
-gtsteam.machine.tank_valve.bronze.name=Bronze tank valves
-gtsteam.machine.tank.bronze.name=Bronze multi-block storage tank
-#Large Steam Tank
-gtsteam.machine.large_steam_tank.name=Large Steam Tank
-gtsteam.machine.large_steam_tank.fluid_amount_text=Steam Quantity:
 
 gtsteam.machine.large_fluid_tank.name=Large Fluid Storage Tanks
 gtsteam.machine.large_fluid_tank.size=Size: %d×%d×%d
@@ -282,3 +285,15 @@ gtsteam.machine.combustion_generator.ulv.tooltip=A Simple combustion generator f
 
 gtsteam.machine.semi_fluid_generator.ulv.name=Simple Semi Fluid Generator
 gtsteam.machine.semi_fluid_generator.ulv.tooltip=Not a fermentation tank
+
+# Latex Collector
+gregtech.block_group_members.extractable_logs_1.name=白桦木，丛林木，橡木或云杉木
+gregtech.block_group_members.extractable_logs_2.name=金合欢木或深色橡木
+gregtech.block_group_members.latex_logs.name=橡胶木
+gregtech.recipe.blocks=有效方块：%s
+gtsteam.machine.latex_collector.tooltip=从相邻的原木中提取液体。
+gtsteam.machine.latex_collector.lv.name=基础乳胶收集器
+gtsteam.machine.latex_collector.mv.name=进阶乳胶收集器
+gtsteam.machine.latex_collector.hv.name=进阶乳胶收集器 II
+gtsteam.machine.latex_collector.ev.name=进阶乳胶收集器 III
+gtsteam.machine.latex_collector.iv.name=进阶乳胶收集器 IV

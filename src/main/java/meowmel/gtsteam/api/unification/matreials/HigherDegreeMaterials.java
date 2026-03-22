@@ -1,5 +1,6 @@
 package meowmel.gtsteam.api.unification.matreials;
 
+import gregtech.api.fluids.FluidBuilder;
 import gregtech.api.unification.material.Material;
 import meowmel.gtsteam.api.unification.GTSteamMaterials;
 
@@ -27,7 +28,6 @@ public class HigherDegreeMaterials {
         GTSteamMaterials.RubberPulp = new Material.Builder(getMaterialsId(), gtsId("rubber_pulp"))
                 .fluid()
                 .color(0xF5F5DC)
-                .flags(DISABLE_DECOMPOSITION)
                 .build()
                 .setTooltips("最原始的橡胶浆料");
 
@@ -35,16 +35,30 @@ public class HigherDegreeMaterials {
         GTSteamMaterials.RawRubberWhey = new Material.Builder(getMaterialsId(), gtsId("raw_rubber_whey"))
                 .fluid()
                 .color(0xF0E68C)
-                .flags(DISABLE_DECOMPOSITION)
                 .build()
                 .setTooltips("含橡胶颗粒的乳状液体，需要进一步分离");
 
         // 生橡胶沉淀
         GTSteamMaterials.RawRubberPrecipitate = new Material.Builder(getMaterialsId(), gtsId("raw_rubber_precipitate"))
-                .dust()
+                .ingot()
                 .color(0xD2B48C)
-                .flags(DISABLE_DECOMPOSITION)
                 .build()
                 .setTooltips("未纯化的橡胶沉淀，含有杂质");
+
+        // 乳胶
+        GTSteamMaterials.Latex = new Material.Builder(getMaterialsId(), gtsId("latex"))
+                .dust()
+                .polymer()
+                .liquid(new FluidBuilder().temperature(373))
+                .color(0xFFFADA)
+                .build();
+
+        // 树脂
+        GTSteamMaterials.Resin = new Material.Builder(getMaterialsId(), gtsId("resin"))
+                .dust()
+                .polymer()
+                .liquid(new FluidBuilder().temperature(373))
+                .color(0xB5803A)
+                .build();
     }
 }

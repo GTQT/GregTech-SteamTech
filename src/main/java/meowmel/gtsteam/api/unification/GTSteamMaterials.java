@@ -13,6 +13,8 @@ public class GTSteamMaterials {
     public static Material RubberPulp;
     public static Material RawRubberWhey;
     public static Material RawRubberPrecipitate;
+    public static Material Latex;
+    public static Material Resin;
 
     public static Material Calcimine;
     public static Material SealedWood;

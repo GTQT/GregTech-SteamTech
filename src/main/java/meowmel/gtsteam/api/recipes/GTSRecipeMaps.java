@@ -9,10 +9,14 @@ import gregtech.api.recipes.builders.PrimitiveRecipeBuilder;
 import gregtech.api.recipes.builders.SimpleRecipeBuilder;
 import gregtech.api.recipes.ui.impl.CrackerUnitUI;
 import gregtech.core.sound.GTSoundEvents;
+import meowmel.gtsteam.api.recipes.builder.PseudoMultiRecipeBuilder;
+import meowmel.gtsteam.client.textures.GTSteamGuiTextures;
+import meowmel.gtsteam.client.textures.GTSteamTextures;
 
 public class GTSRecipeMaps {
 
     public static final RecipeMap<SimpleRecipeBuilder> BIOMIMETIC_FACTORY_RECIPES;
+    public static final RecipeMap<PseudoMultiRecipeBuilder> SAP_COLLECTOR_RECIPES;
     public static final RecipeMap<HeatRecipeBuilder> LAVA_FURNACE_RECIPES;
     public static final RecipeMap<HeatRecipeBuilder> EVAPORATION_RECIPES;
     public static final RecipeMap<HeatRecipeBuilder> HEAT_CRACKING_RECIPES;
@@ -21,6 +25,7 @@ public class GTSRecipeMaps {
     public static final RecipeMap<HeatRecipeBuilder> ELECTRONIC_PROCESSOR_RECIPES;
     public static final RecipeMap<PrimitiveRecipeBuilder> ALLOY_KILN;
     public static final RecipeMap<PrimitiveRecipeBuilder> COAGULATION_RECIPES;
+    public static final RecipeMap<PrimitiveRecipeBuilder> NATURAL_DRAFT_COOLING_TOWER;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_STEAM_TURBINE_FUELS;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_GAS_TURBINE_FUELS;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_COMBUSTION_GENERATOR_FUELS;
@@ -39,6 +44,16 @@ public class GTSRecipeMaps {
                 .allowEmptyOutputs()
                 .disableJeiOverclockButton()
                 .generator()
+                .build();
+
+        SAP_COLLECTOR_RECIPES = new RecipeMapBuilder<>("sap_collector",new  PseudoMultiRecipeBuilder())
+                .itemOutputs(2)
+                .fluidInputs(1)
+                .fluidOutputs(2)
+                .uiBuilder((b) -> b
+                        .progressBar(GTSteamGuiTextures.PROGRESS_BAR_EXTRACTION)
+                )
+                .sound(GTSoundEvents.DRILL_TOOL)
                 .build();
 
         PRIMITIVE_GAS_TURBINE_FUELS = new RecipeMapBuilder<>("primitive_gas_turbine",
@@ -175,6 +190,15 @@ public class GTSRecipeMaps {
                 .sound(GTSoundEvents.FIRE)
                 .disableJeiOverclockButton()
                 .disableJeiOverclockButton()
+                .build();
+
+        NATURAL_DRAFT_COOLING_TOWER = new RecipeMapBuilder<>("natural_draft_cooling_tower", new PrimitiveRecipeBuilder())
+                .fluidInputs(1)
+                .fluidOutputs(1)
+                .uiBuilder(builder -> builder
+                        .progressBar(GTGuiTextures.PROGRESS_BAR_GAS_COLLECTOR)
+                )
+                .sound(GTSoundEvents.COOLING)
                 .build();
     }
 

@@ -33,6 +33,7 @@ public class CommonProxy {
         registry.register(GTSteamMetaBlocks.blockMultiblockCasing1);
         registry.register(GTSteamMetaBlocks.blockFireboxCasing0);
         registry.register(GTSteamMetaBlocks.blockEvaporationBed);
+        registry.register(GTSteamMetaBlocks.blockSerpentine);
     }
 
     @SubscribeEvent
@@ -42,6 +43,7 @@ public class CommonProxy {
         registry.register(createItemBlock(GTSteamMetaBlocks.blockMultiblockCasing1, VariantItemBlock::new));
         registry.register(createItemBlock(GTSteamMetaBlocks.blockFireboxCasing0, VariantItemBlock::new));
         registry.register(createItemBlock(GTSteamMetaBlocks.blockEvaporationBed, VariantItemBlock::new));
+        registry.register(createItemBlock(GTSteamMetaBlocks.blockSerpentine, VariantItemBlock::new));
     }
 
     private static <T extends Block> ItemBlock createItemBlock(T block, Function<T, ItemBlock> producer) {
