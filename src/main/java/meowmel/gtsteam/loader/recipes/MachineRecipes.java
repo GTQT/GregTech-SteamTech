@@ -1,6 +1,5 @@
 package meowmel.gtsteam.loader.recipes;
 
-import gregtech.api.GTValues;
 import gregtech.api.recipes.ModHandler;
 import gregtech.api.unification.OreDictUnifier;
 import gregtech.api.unification.material.MarkerMaterials;
@@ -8,13 +7,10 @@ import gregtech.api.unification.material.Materials;
 import gregtech.api.unification.ore.OrePrefix;
 import gregtech.api.unification.stack.UnificationEntry;
 import gregtech.common.blocks.MetaBlocks;
-import gregtech.common.items.MetaItems;
 import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.loaders.recipe.CraftingComponent;
-import gtqt.common.metatileentities.GTQTMetaTileEntities;
 import meowmel.gtsteam.common.block.GTSteamMetaBlocks;
 import meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing0;
-import meowmel.gtsteam.common.item.GTSMetaitems;
 import meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
 import net.minecraft.init.Blocks;
 
@@ -26,7 +22,6 @@ import static gregtech.common.blocks.BlockFireboxCasing.FireboxCasingType.BRONZE
 import static gregtech.common.blocks.BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX;
 import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.BRONZE_BRICKS;
 import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.STEEL_SOLID;
-import static gregtech.common.blocks.BlockWireCoil.CoilType.CUPRONICKEL;
 import static gregtech.common.metatileentities.MetaTileEntities.*;
 import static gregtech.loaders.recipe.MetaTileEntityLoader.registerMachineRecipe;
 import static meowmel.gtsteam.api.unification.GTSteamMaterials.GalvanizedSteel;
@@ -43,6 +38,7 @@ import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.AL
 import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.BREWERY;
 import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.ELECTRIC_FURNACE;
 import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.FERMENTER;
+import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.THERMAL_CENTRIFUGE;
 
 public class MachineRecipes {
     public static void init() {
@@ -230,7 +226,7 @@ public class MachineRecipes {
                 "CGC", "FMF", "CGC",
                 'F', new UnificationEntry(frameGt, Steel),
                 'C', MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID),
-                'M', CONVEYOR_MODULE_ULV.getStackForm(),
+                'M', new UnificationEntry(OrePrefix.wireGtQuadruple, Materials.Copper),
                 'G', new UnificationEntry(circuit, LV));
 
         ModHandler.addShapedRecipe(true, "heat_chemical_reactor", HEAT_CHEMICAL_REACTOR.getStackForm(),
@@ -238,14 +234,14 @@ public class MachineRecipes {
                 'C', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.LV),
                 'R', OreDictUnifier.get(OrePrefix.rotor, Steel),
                 'P', OreDictUnifier.get(OrePrefix.pipeLargeFluid, Steel),
-                'M', ELECTRIC_MOTOR_ULV.getStackForm(),
+                'M', ELECTRIC_PUMP_ULV.getStackForm(),
                 'H', MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID));
 
         ModHandler.addShapedRecipe(true, "heat_thermal_centrifuge", HEAT_THERMAL_CENTRIFUGE.getStackForm(),
                 "CGC", "FMF", "CGC",
                 'F', new UnificationEntry(screw, Steel),
                 'C', MetaBlocks.METAL_CASING.getItemVariant(STEEL_SOLID),
-                'M', ELECTRIC_MOTOR_ULV.getStackForm(),
+                'M', THERMAL_CENTRIFUGE.getStackForm(),
                 'G', new UnificationEntry(circuit, LV));
 
         ModHandler.addShapedRecipe(true, "heat_lava_furnace", HEAT_LAVA_FURNACE.getStackForm(),

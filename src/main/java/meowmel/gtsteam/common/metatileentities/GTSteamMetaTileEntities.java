@@ -102,6 +102,7 @@ public class GTSteamMetaTileEntities {
     public static SimpleMachineMetaTileEntity ORE_WASHER;
     public static SimpleMachineMetaTileEntity PACKER;
     public static SimpleMachineMetaTileEntity SIFTER;
+    public static SimpleMachineMetaTileEntity THERMAL_CENTRIFUGE;
     public static SimpleMachineMetaTileEntity WIREMILL;
 
     public static MetaTileEntitySingleTurbine STEAM_TURBINE;
@@ -196,7 +197,8 @@ public class GTSteamMetaTileEntities {
         ORE_WASHER = registerMetaTileEntity(114, new SimpleMachineMetaTileEntity(gtsId("ore_washer.ulv"), RecipeMaps.ORE_WASHER_RECIPES, Textures.ORE_WASHER_OVERLAY, 0, true));
         PACKER = registerMetaTileEntity(115, new SimpleMachineMetaTileEntity(gtsId("packer.ulv"), RecipeMaps.PACKER_RECIPES, Textures.PACKER_OVERLAY, 0, true));
         SIFTER = registerMetaTileEntity(116, new SimpleMachineMetaTileEntity(gtsId("sifter.ulv"), RecipeMaps.SIFTER_RECIPES, Textures.SIFTER_OVERLAY, 0, true));
-        WIREMILL = registerMetaTileEntity(117, new SimpleMachineMetaTileEntity(gtsId("wiremill.ulv"), RecipeMaps.WIREMILL_RECIPES, Textures.WIREMILL_OVERLAY, 0, true));
+        THERMAL_CENTRIFUGE = registerMetaTileEntity(117, new SimpleMachineMetaTileEntity(gtsId("thermal_centrifuge.ulv"), RecipeMaps.THERMAL_CENTRIFUGE_RECIPES, Textures.THERMAL_CENTRIFUGE_OVERLAY, 0, true));
+        WIREMILL = registerMetaTileEntity(118, new SimpleMachineMetaTileEntity(gtsId("wiremill.ulv"), RecipeMaps.WIREMILL_RECIPES, Textures.WIREMILL_OVERLAY, 0, true));
 
         //发电机ULV
         STEAM_TURBINE = registerMetaTileEntity(120, new MetaTileEntitySingleTurbine(gtsId("steam_turbine.ulv"), PRIMITIVE_STEAM_TURBINE_FUELS, Textures.STEAM_TURBINE_OVERLAY, 0, tier -> 2000, 1.0));
@@ -226,7 +228,6 @@ public class GTSteamMetaTileEntities {
 
         //锅炉
         HEAT_STEAM_BOILER = registerMetaTileEntity(310, new MetaTileEntityHeatSteamBoiler(gtsId("heat_steam_boiler")));
-
 
         LATEX_COLLECTOR[0] = registerMetaTileEntity(500, new MetaTileEntityLatexCollector(gtsId("latex_collector.lv"), 1));
         LATEX_COLLECTOR[1] = registerMetaTileEntity(501, new MetaTileEntityLatexCollector(gtsId("latex_collector.mv"), 2));

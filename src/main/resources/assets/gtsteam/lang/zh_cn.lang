@@ -313,6 +313,9 @@ gtsteam.machine.packer.ulv.tooltip=工业收纳术
 gtsteam.machine.sifter.ulv.name=简易筛选机
 gtsteam.machine.sifter.ulv.tooltip=材料大小"分班"仪式
 
+gtsteam.machine.thermal_centrifuge.ulv.name=热能离心机
+gtsteam.machine.thermal_centrifuge.ulv.tooltip=快速将高能材料分离
+
 gtsteam.machine.wiremill.ulv.name=简易线材轧机
 gtsteam.machine.wiremill.ulv.tooltip=金属变形记
 

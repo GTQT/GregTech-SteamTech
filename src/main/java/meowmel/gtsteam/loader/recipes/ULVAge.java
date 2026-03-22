@@ -10,6 +10,7 @@ import gregtech.api.unification.ore.OrePrefix;
 import gregtech.api.unification.stack.UnificationEntry;
 import gregtech.common.items.MetaItems;
 import gregtech.common.metatileentities.MetaTileEntities;
+import gregtech.loaders.recipe.CraftingComponent;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
@@ -17,6 +18,8 @@ import static gregtech.api.unification.material.MarkerMaterials.Tier.ULV;
 import static gregtech.api.unification.material.Materials.*;
 import static gregtech.api.unification.ore.OrePrefix.*;
 import static gregtech.common.metatileentities.MetaTileEntities.HULL;
+import static gregtech.loaders.recipe.CraftingComponent.*;
+import static gregtech.loaders.recipe.CraftingComponent.COIL_HEATING_DOUBLE;
 import static meowmel.gtsteam.common.item.GTSMetaitems.*;
 import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.*;
 import static meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities.DENSE_LAVA_COMBUSTOR;
@@ -294,6 +297,14 @@ public class ULVAge {
                 'M', HULL[0].getStackForm(),
                 'P', ELECTRIC_PISTON_ULV,
                 'F', MetaItems.ITEM_FILTER,
+                'C', new UnificationEntry(circuit, ULV),
+                'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy));
+
+        ModHandler.addShapedRecipe(true, "thermal_centrifuge.ulv", THERMAL_CENTRIFUGE.getStackForm(),
+                "CEC", "OMO", "WEW",
+                'M', HULL[0].getStackForm(),
+                'E', ELECTRIC_MOTOR_ULV,
+                'O', new UnificationEntry(OrePrefix.wireGtQuadruple, Materials.Copper),
                 'C', new UnificationEntry(circuit, ULV),
                 'W', new UnificationEntry(OrePrefix.cableGtSingle, Materials.RedAlloy));
 

@@ -1,6 +1,6 @@
 #配方
 recipemap.alloy_klin.name=Alloy Kiln
-recipemap.sap_collector.name=乳胶收集
+recipemap.sap_collector.name=Sap Collector
 recipemap.coagulation.name=coagulation
 recipemap.lava_furnace.name=Lava Furnace
 recipemap.evaporation_pool.name=Evaporation Pool
@@ -33,8 +33,8 @@ gtsteam.material.synthesis_gas=Synthesis Gas
 gtsteam.material.rubber_pulp=Rubber Pulp
 gtsteam.material.raw_rubber_whey=Raw Rubber Whey
 gtsteam.material.raw_rubber_precipitate=Raw Rubber Precipitate
-gtsteam.material.latex=乳胶
-gtsteam.material.resin=树脂
+gtsteam.material.latex=Latex
+gtsteam.material.resin=Resin
 #方块
 tile.multiblock_casing.galvanized_porcelain_tiles.name=Galvanized Porcelain Tiles
 tile.multiblock_casing.tank_wall.name=Tank outer wall
@@ -52,31 +52,31 @@ tile.boiler_casing.fluid_firebox.name=Liquid combustion chamber
 
 tile.evaporation_bed.dirt.name=Sandy Loam
 
-tile.serpentine.basic.name=蛇形铜管方块
-#物品
-metaitem.cover.electric_motor.steam.name=蒸汽马达 (Steam)
-metaitem.cover.electric_piston.steam.name=蒸汽活塞 (Steam)
-metaitem.cover.electric_pump.steam.name=蒸汽泵 (Steam)
-metaitem.cover.electric_pump.steam.tooltip=作§f覆盖板§7时以特定速率传输§f流体§7。/n§b传输速率:§f32 L/t§7
-metaitem.cover.conveyor_module.steam.name=传送带 (Steam)
-metaitem.cover.conveyor_module.steam.tooltip=作§f覆盖板§7时以特定速率传输§f物品§7。/n§b传输速率:§f4 件物品/s§7
-metaitem.cover.robot_arm.steam.name=蒸汽机械臂 (Steam)
-metaitem.cover.robot_arm.steam.tooltip=作§f覆盖板§7时对§f物品§7的量加以限制。/n§b传输速率:§f4 件物品/s§7
-metaitem.cover.emitter.steam.name=发射器 (Steam)
-metaitem.cover.sensor.steam.name=传感器 (Steam)
-metaitem.cover.field_generator.steam.name=力场发生器 (Steam)
+tile.serpentine.basic.name=Serpentine Copper Tube Block
+# Items
+metaitem.cover.electric_motor.steam.name=Steam Motor (Steam)
+metaitem.cover.electric_piston.steam.name=Steam Piston (Steam)
+metaitem.cover.electric_pump.steam.name=Steam Pump (Steam)
+metaitem.cover.electric_pump.steam.tooltip=When used as a §fcover§7, transfers §ffluids§7 at a specific rate./n§bTransfer rate: §f32 L/t§7
+metaitem.cover.conveyor_module.steam.name=Conveyor Module (Steam)
+metaitem.cover.conveyor_module.steam.tooltip=When used as a §fcover§7, transfers §fitems§7 at a specific rate./n§bTransfer rate: §f4 items/s§7
+metaitem.cover.robot_arm.steam.name=Steam Robot Arm (Steam)
+metaitem.cover.robot_arm.steam.tooltip=When used as a §fcover§7, restricts the quantity of §fitems§7./n§bTransfer rate: §f4 items/s§7
+metaitem.cover.emitter.steam.name=Emitter (Steam)
+metaitem.cover.sensor.steam.name=Sensor (Steam)
+metaitem.cover.field_generator.steam.name=Field Generator (Steam)
 
-metaitem.cover.electric_motor.ulv.name=机械马达 (ULV)
-metaitem.cover.electric_piston.ulv.name=机械活塞 (ULV)
-metaitem.cover.electric_pump.ulv.name=机械泵 (ULV)
-metaitem.cover.electric_pump.ulv.tooltip=作§f覆盖板§7时以特定速率传输§f流体§7。/n§b传输速率:§f64 L/t§7
-metaitem.cover.conveyor_module.ulv.name=传送带 (ULV)
-metaitem.cover.conveyor_module.ulv.tooltip=作§f覆盖板§7时以特定速率传输§f物品§7。/n§b传输速率:§f8 件物品/s§7
-metaitem.cover.robot_arm.ulv.name=机械臂 (ULV)
-metaitem.cover.robot_arm.ulv.tooltip=作§f覆盖板§7时对§f物品§7的量加以限制。/n§b传输速率:§f8 件物品/s§7
-metaitem.cover.emitter.ulv.name=发射器 (ULV)
-metaitem.cover.sensor.ulv.name=传感器 (ULV)
-metaitem.cover.field_generator.ulv.name=力场发生器 (ULV)
+metaitem.cover.electric_motor.ulv.name=Electric Motor (ULV)
+metaitem.cover.electric_piston.ulv.name=Electric Piston (ULV)
+metaitem.cover.electric_pump.ulv.name=Electric Pump (ULV)
+metaitem.cover.electric_pump.ulv.tooltip=When used as a §fcover§7, transfers §ffluids§7 at a specific rate./n§bTransfer rate: §f64 L/t§7
+metaitem.cover.conveyor_module.ulv.name=Conveyor Module (ULV)
+metaitem.cover.conveyor_module.ulv.tooltip=When used as a §fcover§7, transfers §fitems§7 at a specific rate./n§bTransfer rate: §f8 items/s§7
+metaitem.cover.robot_arm.ulv.name=Robot Arm (ULV)
+metaitem.cover.robot_arm.ulv.tooltip=When used as a §fcover§7, restricts the quantity of §fitems§7./n§bTransfer rate: §f8 items/s§7
+metaitem.cover.emitter.ulv.name=Emitter (ULV)
+metaitem.cover.sensor.ulv.name=Sensor (ULV)
+metaitem.cover.field_generator.ulv.name=Field Generator (ULV)
 
 metaitem.unburned_ceramic_tiles.name=Unfired Ceramic Tiles
 metaitem.burned_ceramic_tiles.name=Burned Ceramic Tiles
@@ -133,8 +133,8 @@ gtsteam.machine.industrial_primitive_blast_furnace.tooltip.3=For every 200K temp
 gtsteam.machine.industrial_coke_oven.name=Industrial Coke Oven
 gtsteam.machine.industrial_coke_oven.auxiliary_count=Attached coke oven: %s
 
-gtsteam.machine.industrial_coke_oven.tooltip.1=可拓展八个附属焦炉，附属焦炉数量决定每秒提升的温度。
-gtsteam.machine.industrial_coke_oven.tooltip.2=工作时温度持续上升（基础+1K/s，每座附属+1K/s），闲置时缓慢降温
+gtsteam.machine.industrial_coke_oven.tooltip.1=Can be expanded with up to eight auxiliary coke ovens. The number of auxiliary ovens determines the temperature increase per second.
+gtsteam.machine.industrial_coke_oven.tooltip.2=While operating, the temperature continuously rises (base +1 K/s, plus +1 K/s per auxiliary oven). When idle, it slowly cools down.
 gtsteam.machine.industrial_coke_oven.tooltip.3=For every 200K temperature increase, recipe duration is multiplied by 80%% (multiplicative).
 #Coagulation Tank
 gtsteam.machine.coagulation_tank.name=Coagulation Tank
@@ -149,9 +149,9 @@ gtsteam.multiblock.steam_solar_boiler.throttle_button.tooltip=Configure boiler t
 gtsteam.multiblock.steam_solar_boiler.throttle.title=Boiler Throttle
 gtsteam.multiblock.steam_solar_boiler.description=A multiblock solar boiler
 
-gtsteam.machine.heat_radiator.name=热辐射器
-gtsteam.multiblock.heat_radiator.tooltip.1=散热效率与面积成正比
-gtsteam.multiblock.heat_radiator.tooltip.2=§b尺寸：§f3x3至11x16
+gtsteam.machine.heat_radiator.name=Heat Radiator
+gtsteam.multiblock.heat_radiator.tooltip.1=Heat dissipation efficiency is proportional to its area.
+gtsteam.multiblock.heat_radiator.tooltip.2=§bSize: §f3x3 to 11x16
 
 # Boiler
 gtsteam.machine.solid_boiler.low_pressure.name=Low Pressure Solid Boiler
@@ -270,6 +270,9 @@ gtsteam.machine.packer.ulv.tooltip=A Simple packer for packing items.
 gtsteam.machine.sifter.ulv.name=Simple Sifter
 gtsteam.machine.sifter.ulv.tooltip=A Simple sifter for sifting materials.
 
+gtsteam.machine.thermal_centrifuge.ulv.name=Simple Thermal Centrifuge
+gtsteam.machine.thermal_centrifuge.ulv.tooltip=A Simple thermal centrifuge for separating materials.
+
 gtsteam.machine.wiremill.ulv.name=Simple Wiremill
 gtsteam.machine.wiremill.ulv.tooltip=A Simple wiremill for producing wires.
 
@@ -287,13 +290,13 @@ gtsteam.machine.semi_fluid_generator.ulv.name=Simple Semi Fluid Generator
 gtsteam.machine.semi_fluid_generator.ulv.tooltip=Not a fermentation tank
 
 # Latex Collector
-gregtech.block_group_members.extractable_logs_1.name=白桦木，丛林木，橡木或云杉木
-gregtech.block_group_members.extractable_logs_2.name=金合欢木或深色橡木
-gregtech.block_group_members.latex_logs.name=橡胶木
-gregtech.recipe.blocks=有效方块：%s
-gtsteam.machine.latex_collector.tooltip=从相邻的原木中提取液体。
-gtsteam.machine.latex_collector.lv.name=基础乳胶收集器
-gtsteam.machine.latex_collector.mv.name=进阶乳胶收集器
-gtsteam.machine.latex_collector.hv.name=进阶乳胶收集器 II
-gtsteam.machine.latex_collector.ev.name=进阶乳胶收集器 III
-gtsteam.machine.latex_collector.iv.name=进阶乳胶收集器 IV
+gregtech.block_group_members.extractable_logs_1.name=Birch, Jungle, Oak, or Spruce Logs
+gregtech.block_group_members.extractable_logs_2.name=Acacia or Dark Oak Logs
+gregtech.block_group_members.latex_logs.name=Rubber Logs
+gregtech.recipe.blocks=Valid blocks: %s
+gtsteam.machine.latex_collector.tooltip=Extracts liquid from adjacent logs.
+gtsteam.machine.latex_collector.lv.name=Basic Latex Collector
+gtsteam.machine.latex_collector.mv.name=Advanced Latex Collector
+gtsteam.machine.latex_collector.hv.name=Advanced Latex Collector II
+gtsteam.machine.latex_collector.ev.name=Advanced Latex Collector III
+gtsteam.machine.latex_collector.iv.name=Advanced Latex Collector IV
