@@ -14,7 +14,7 @@ import static meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing1.CasingT
 public enum PrimitiveBoilerType {
 
     //低压固体
-    LOW_PRESSURE_SOLID(800, 473, false,
+    LOW_PRESSURE_SOLID(1200, 473, false,
             blockMultiblockCasing1.getState(LOW_PRESSURE_TANK),
             blockFireboxCasing0.getState(ITEM_FIREBOX),
             GTSteamTextures.LOW_PRESSURE_SIDE,
@@ -22,7 +22,7 @@ public enum PrimitiveBoilerType {
             GTSteamTextures.ITEM_FIREBOX_FRONT_ACTIVE),
 
     //低压液体
-    LOW_PRESSURE_FLUID(800, 473, false,
+    LOW_PRESSURE_FLUID(1200, 473, false,
             blockMultiblockCasing1.getState(LOW_PRESSURE_TANK),
             blockFireboxCasing0.getState(FLUID_FIREBOX),
             GTSteamTextures.LOW_PRESSURE_SIDE,
@@ -30,7 +30,7 @@ public enum PrimitiveBoilerType {
             GTSteamTextures.FLUID_FIREBOX_FRONT_ACTIVE),
 
     //高压固体
-    HIGH_PRESSURE_SOLID(1200, 673, true,
+    HIGH_PRESSURE_SOLID(2400, 873, true,
             blockMultiblockCasing1.getState(HIGH_PRESSURE_TANK),
             blockFireboxCasing0.getState(ITEM_FIREBOX),
             GTSteamTextures.HIGH_PRESSURE_SIDE,
@@ -38,7 +38,7 @@ public enum PrimitiveBoilerType {
             GTSteamTextures.ITEM_FIREBOX_FRONT_ACTIVE),
 
     //高压液体
-    HIGH_PRESSURE_FLUID(1200, 673, true,
+    HIGH_PRESSURE_FLUID(2400, 873, true,
             blockMultiblockCasing1.getState(HIGH_PRESSURE_TANK),
             blockFireboxCasing0.getState(FLUID_FIREBOX),
             GTSteamTextures.HIGH_PRESSURE_SIDE,

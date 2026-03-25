@@ -22,6 +22,7 @@ import static gregtech.common.blocks.BlockFireboxCasing.FireboxCasingType.BRONZE
 import static gregtech.common.blocks.BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX;
 import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.BRONZE_BRICKS;
 import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.STEEL_SOLID;
+import static gregtech.common.items.MetaItems.ELECTRIC_PUMP_LV;
 import static gregtech.common.metatileentities.MetaTileEntities.*;
 import static gregtech.loaders.recipe.MetaTileEntityLoader.registerMachineRecipe;
 import static meowmel.gtsteam.api.unification.GTSteamMaterials.GalvanizedSteel;
@@ -157,7 +158,7 @@ public class MachineRecipes {
         ModHandler.addShapedRecipe(true, "high_pressure_solid_boiler", HIGH_PRESSURE_SOLID_BOILER.getStackForm(),
                 "PSP", "SAS", "PSP",
                 'P', new UnificationEntry(plate, GalvanizedSteel),
-                'S', ELECTRIC_PUMP_ULV,
+                'S', ELECTRIC_PUMP_LV,
                 'A', LOW_PRESSURE_SOLID_BOILER.getStackForm());
 
         ModHandler.addShapedRecipe(true, "low_pressure_fluid_boiler", LOW_PRESSURE_FLUID_BOILER.getStackForm(),
@@ -169,7 +170,7 @@ public class MachineRecipes {
         ModHandler.addShapedRecipe(true, "high_pressure_fluid_boiler", HIGH_PRESSURE_FLUID_BOILER.getStackForm(),
                 "PSP", "SAS", "PSP",
                 'P', new UnificationEntry(plate, GalvanizedSteel),
-                'S', ELECTRIC_PUMP_ULV,
+                'S', ELECTRIC_PUMP_LV,
                 'A', LOW_PRESSURE_FLUID_BOILER.getStackForm());
 
         //热力多方块
