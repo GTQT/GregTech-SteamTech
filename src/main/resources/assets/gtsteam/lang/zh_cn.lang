@@ -189,6 +189,7 @@ gtsteam.machine.heat_chemical_reactor.name=热力化学反应釜
 gtsteam.machine.heat_thermal_centrifuge.name=热力离心机
 gtsteam.machine.heat_lava_furnace.name=热力熔岩炉
 gtsteam.machine.heat_electronic_processor.name=热力电子加工台
+gtsteam.machine.heat_fluid_drill.name=热力流体钻
 
 gtsteam.machine.scalable_storage.name=可扩展存储筒仓
 gtsteam.machine.scalable_storage.capacity=最大容量：%s 个物品

@@ -75,6 +75,8 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntityHeatLavaFurnace HEAT_LAVA_FURNACE;
     public static MetaTileEntityHeatElectronicProcessor HEAT_ELECTRONIC_PROCESSOR;
 
+    public static MetaTileEntityHeatFluidDrill HEAT_FLUID_DRILL;
+
     public static MetaTileEntitySteamSolarBoiler STEAM_SOLAR_BOILER;
 
     public static MetaTileEntityHeatRadiator HEAT_RADIATOR;
@@ -178,6 +180,8 @@ public class GTSteamMetaTileEntities {
         HEAT_THERMAL_CENTRIFUGE = registerMetaTileEntity(79, new MetaTileEntityHeatThermalCentrifuge(gtsId("heat_thermal_centrifuge")));
         HEAT_LAVA_FURNACE = registerMetaTileEntity(80, new MetaTileEntityHeatLavaFurnace(gtsId("heat_lava_furnace")));
         HEAT_ELECTRONIC_PROCESSOR = registerMetaTileEntity(81, new MetaTileEntityHeatElectronicProcessor(gtsId("heat_electronic_processor")));
+
+        HEAT_FLUID_DRILL = registerMetaTileEntity(90, new MetaTileEntityHeatFluidDrill(gtsId("heat_fluid_drill")));
 
         //单方块ULV
         ELECTRIC_FURNACE = registerMetaTileEntity(100, new SimpleMachineMetaTileEntity(gtsId("electric_furnace.ulv"), RecipeMaps.FURNACE_RECIPES, Textures.FURNACE_OVERLAY, 0, false));

@@ -412,23 +412,6 @@ public abstract class Combustor extends MetaTileEntity implements IDataInfoProvi
                         .value(new DoubleSyncValue(this::getTemperaturePercent)) // 温度进度条
                         .pos(96, 26)
                         .size(10, 54))
-                .child(new ItemSlot()
-                        .debugName("fluid in")
-                        .background(getSlotBackground(false))
-                        .slot(new ModularSlot(containerInventory, 0)
-                                .singletonSlotGroup()) // 流体输入槽
-                        .pos(43, 26))
-                .child(new ItemSlot()
-                        .debugName("fluid out")
-                        .background(getSlotBackground(true))
-                        .slot(new ModularSlot(containerInventory, 1)
-                                .accessibility(false, true)) // 流体输出槽，只可取出
-                        .pos(43, 62))
-                .child(new Widget<>()
-                        .pos(43, 44)
-                        .size(18)
-                        .background(isHighPressure ? GTGuiTextures.CANISTER_OVERLAY_STEEL :
-                                GTGuiTextures.CANISTER_OVERLAY_BRONZE)) // 中间装饰
                 .bindPlayerInventory(); // 绑定玩家物品栏
     }
 

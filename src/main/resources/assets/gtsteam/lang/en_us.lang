@@ -190,6 +190,7 @@ gtsteam.machine.heat_chemical_reactor.name=Heat Chemical Reactor
 gtsteam.machine.heat_thermal_centrifuge.name=Heat Thermal Centrifuge
 gtsteam.machine.heat_lava_furnace.name=Heat Lava Furnace
 gtsteam.machine.heat_electronic_processor.name=Heat Electronic Processor
+gtsteam.machine.heat_fluid_drill.name=Heat Fluid Drill
 
 gtsteam.machine.scalable_storage.name=Scalable Storage Silo
 gtsteam.machine.scalable_storage.capacity=Max Capacity: %s items
