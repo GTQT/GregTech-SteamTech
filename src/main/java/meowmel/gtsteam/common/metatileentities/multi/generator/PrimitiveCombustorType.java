@@ -11,7 +11,7 @@ import static meowmel.gtsteam.common.block.blocks.BlockFireboxCasing0.FireboxCas
 import static meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing1.CasingType.HIGH_PRESSURE_TANK;
 import static meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing1.CasingType.LOW_PRESSURE_TANK;
 
-public enum PrimitiveBoilerType {
+public enum PrimitiveCombustorType {
 
     //低压固体
     LOW_PRESSURE_SOLID(1200, 473, false,
@@ -57,12 +57,12 @@ public enum PrimitiveBoilerType {
     private final int maxTemp;
     private final boolean isHighPressure;
 
-    PrimitiveBoilerType(int heatPerTick, int maxTemp, boolean isHighPressure,
-                        IBlockState casingState,
-                        IBlockState fireboxState,
-                        ICubeRenderer casingRenderer,
-                        ICubeRenderer fireboxIdleRenderer,
-                        ICubeRenderer fireboxActiveRenderer) {
+    PrimitiveCombustorType(int heatPerTick, int maxTemp, boolean isHighPressure,
+                           IBlockState casingState,
+                           IBlockState fireboxState,
+                           ICubeRenderer casingRenderer,
+                           ICubeRenderer fireboxIdleRenderer,
+                           ICubeRenderer fireboxActiveRenderer) {
 
         this.heatPerTick = heatPerTick;
         this.maxTemp = maxTemp;

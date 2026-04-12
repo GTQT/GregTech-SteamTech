@@ -18,8 +18,8 @@ import static gregtech.api.unification.material.MarkerMaterials.Tier.LV;
 import static gregtech.api.unification.material.MarkerMaterials.Tier.ULV;
 import static gregtech.api.unification.material.Materials.*;
 import static gregtech.api.unification.ore.OrePrefix.*;
-import static gregtech.common.blocks.BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX;
-import static gregtech.common.blocks.BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX;
+import static gregtech.common.blocks.BlockFireboxCasing.FireboxCasingType.*;
+import static gregtech.common.blocks.BlockFireboxCasing.FireboxCasingType.TUNGSTENSTEEL_FIREBOX;
 import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.BRONZE_BRICKS;
 import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.STEEL_SOLID;
 import static gregtech.common.items.MetaItems.ELECTRIC_PUMP_LV;
@@ -149,29 +149,61 @@ public class MachineRecipes {
                 'S', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.ULV),
                 'A', blockMultiblockCasing1.getItemVariant(SOLAR_COLLECTOR));
 
-        ModHandler.addShapedRecipe(true, "low_pressure_solid_boiler", LOW_PRESSURE_SOLID_BOILER.getStackForm(),
+        ModHandler.addShapedRecipe(true, "low_pressure_solid_combustor", LOW_PRESSURE_SOLID_COMBUSTOR.getStackForm(),
                 "PSP", "SAS", "PSP",
                 'P', new UnificationEntry(plate, Steel),
                 'S', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.ULV),
                 'A', blockFireboxCasing0.getItemVariant(ITEM_FIREBOX));
 
-        ModHandler.addShapedRecipe(true, "high_pressure_solid_boiler", HIGH_PRESSURE_SOLID_BOILER.getStackForm(),
+        ModHandler.addShapedRecipe(true, "high_pressure_solid_combustor", HIGH_PRESSURE_SOLID_COMBUSTOR.getStackForm(),
                 "PSP", "SAS", "PSP",
                 'P', new UnificationEntry(plate, GalvanizedSteel),
-                'S', ELECTRIC_PUMP_LV,
-                'A', LOW_PRESSURE_SOLID_BOILER.getStackForm());
+                'S', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.LV),
+                'A', LOW_PRESSURE_SOLID_COMBUSTOR.getStackForm());
 
-        ModHandler.addShapedRecipe(true, "low_pressure_fluid_boiler", LOW_PRESSURE_FLUID_BOILER.getStackForm(),
+        ModHandler.addShapedRecipe(true, "low_pressure_fluid_combustor", LOW_PRESSURE_FLUID_COMBUSTOR.getStackForm(),
                 "PSP", "SAS", "PSP",
                 'P', new UnificationEntry(plate, Steel),
                 'S', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.ULV),
                 'A', blockFireboxCasing0.getItemVariant(FLUID_FIREBOX));
 
-        ModHandler.addShapedRecipe(true, "high_pressure_fluid_boiler", HIGH_PRESSURE_FLUID_BOILER.getStackForm(),
+        ModHandler.addShapedRecipe(true, "high_pressure_fluid_combustor", HIGH_PRESSURE_FLUID_COMBUSTOR.getStackForm(),
                 "PSP", "SAS", "PSP",
                 'P', new UnificationEntry(plate, GalvanizedSteel),
-                'S', ELECTRIC_PUMP_LV,
-                'A', LOW_PRESSURE_FLUID_BOILER.getStackForm());
+                'S', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.LV),
+                'A', LOW_PRESSURE_FLUID_COMBUSTOR.getStackForm());
+
+        ModHandler.addShapedRecipe(true, "large_bronze_combustor", LARGE_BRONZE_COMBUSTOR.getStackForm(),
+                "PSP", "AXB", "PSP",
+                'P', new UnificationEntry(OrePrefix.cableGtSingle, Materials.Tin),
+                'S', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.LV),
+                'A', HIGH_PRESSURE_SOLID_COMBUSTOR.getStackForm(),
+                'B', HIGH_PRESSURE_FLUID_COMBUSTOR.getStackForm(),
+                'X', MetaBlocks.BOILER_FIREBOX_CASING.getItemVariant(BRONZE_FIREBOX));
+
+        ModHandler.addShapedRecipe(true, "large_steel_combustor", LARGE_STEEL_COMBUSTOR.getStackForm(),
+                "PSP", "AXB", "PSP",
+                'P', new UnificationEntry(OrePrefix.cableGtSingle, Materials.Copper),
+                'S', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.HV),
+                'A', HIGH_PRESSURE_SOLID_COMBUSTOR.getStackForm(),
+                'B', HIGH_PRESSURE_FLUID_COMBUSTOR.getStackForm(),
+                'X', MetaBlocks.BOILER_FIREBOX_CASING.getItemVariant(STEEL_FIREBOX));
+
+        ModHandler.addShapedRecipe(true, "large_titanium_combustor", LARGE_TITANIUM_COMBUSTOR.getStackForm(),
+                "PSP", "AXB", "PSP",
+                'P', new UnificationEntry(OrePrefix.cableGtSingle, Materials.Gold),
+                'S', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.EV),
+                'A', HIGH_PRESSURE_SOLID_COMBUSTOR.getStackForm(),
+                'B', HIGH_PRESSURE_FLUID_COMBUSTOR.getStackForm(),
+                'X', MetaBlocks.BOILER_FIREBOX_CASING.getItemVariant(TITANIUM_FIREBOX));
+
+        ModHandler.addShapedRecipe(true, "large_tungstensteel_combustor", LARGE_TUNGSTENSTEEL_COMBUSTOR.getStackForm(),
+                "PSP", "AXB", "PSP",
+                'P', new UnificationEntry(OrePrefix.cableGtSingle, Materials.Aluminium),
+                'S', new UnificationEntry(OrePrefix.circuit, MarkerMaterials.Tier.IV),
+                'A', HIGH_PRESSURE_SOLID_COMBUSTOR.getStackForm(),
+                'B', HIGH_PRESSURE_FLUID_COMBUSTOR.getStackForm(),
+                'X', MetaBlocks.BOILER_FIREBOX_CASING.getItemVariant(TUNGSTENSTEEL_FIREBOX));
 
         //热力多方块
         ModHandler.addShapedRecipe(true, "heat_furnace", HEAT_FURNACE.getStackForm(),

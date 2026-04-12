@@ -18,6 +18,7 @@ import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.SliderWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
+import gregtech.api.GTValues;
 import gregtech.api.capability.IControllable;
 import gregtech.api.capability.IHeatMachine;
 import gregtech.api.capability.IHeatable;
@@ -32,24 +33,31 @@ import gregtech.api.metatileentity.multiblock.MultiblockWithDisplayBase;
 import gregtech.api.metatileentity.multiblock.ProgressBarMultiblock;
 import gregtech.api.metatileentity.multiblock.ui.*;
 import gregtech.api.mui.GTGuiTextures;
-import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.mui.GTGuis;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.pattern.PatternMatchContext;
+import gregtech.api.pattern.TraceabilityPredicate;
+import gregtech.api.util.GTUtility;
 import gregtech.api.util.KeyUtil;
 import gregtech.api.util.TextFormattingUtil;
 import gregtech.api.util.tooltips.AbstractTooltipComponent;
 import gregtech.api.util.tooltips.TooltipBuilder;
+import gregtech.client.particle.VanillaParticleEffects;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
+import gregtech.common.ConfigHolder;
 import gregtech.core.sound.GTSoundEvents;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -62,22 +70,23 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
-import static meowmel.gtsteam.common.metatileentities.multi.generator.PrimitiveBoilerType.*;
-
-public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase implements ProgressBarMultiblock,
+public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase implements ProgressBarMultiblock,
         IControllable, IHeatMachine {
 
-    public final PrimitiveBoilerType boilerType;
-    protected PrimitiveBoilerRecipeLogic recipeLogic;
+    public final CombustorType boilerType;
+    protected LargeCombustorRecipeLogic recipeLogic;
     List<IHeatable> heatHatch = null;
     private FluidTankList fluidImportInventory;
     private ItemHandlerList itemImportInventory;
     private int throttlePercentage = 100;
 
-    public MetaTileEntityPrimitiveBoiler(ResourceLocation metaTileEntityId, PrimitiveBoilerType boilerType) {
+    private static final TraceabilityPredicate SNOW_PREDICATE = new TraceabilityPredicate(
+            bws -> GTUtility.isBlockSnow(bws.getBlockState()));
+
+    public MetaTileEntityLargeCombustor(ResourceLocation metaTileEntityId, CombustorType combustorType) {
         super(metaTileEntityId);
-        this.boilerType = boilerType;
-        this.recipeLogic = new PrimitiveBoilerRecipeLogic(this, boilerType.isHighPressure());
+        this.boilerType = combustorType;
+        this.recipeLogic = new LargeCombustorRecipeLogic(this);
         resetTileAbilities();
     }
 
@@ -87,7 +96,7 @@ public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase imp
 
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity tileEntity) {
-        return new MetaTileEntityPrimitiveBoiler(metaTileEntityId, boilerType);
+        return new MetaTileEntityLargeCombustor(metaTileEntityId, boilerType);
     }
 
     @Override
@@ -132,6 +141,56 @@ public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase imp
     }
 
     @Override
+    public void update() {
+        super.update();
+
+        if (this.isActive()) {
+            if (getWorld().isRemote) {
+                VanillaParticleEffects.PBF_SMOKE.runEffect(this);
+            } else {
+                damageEntitiesAndBreakSnow();
+                pollution(this.getPollutionAmount(), this.getPollutionTicks());
+            }
+        }
+    }
+
+    @Override
+    public double getPollutionAmount() {
+        return switch (boilerType) {
+            case BRONZE -> 0.01;
+            case STEEL -> 0.012;
+            case TITANIUM -> 0.015;
+            case TUNGSTENSTEEL -> 0.02;
+        };
+    }
+
+    private void damageEntitiesAndBreakSnow() {
+        BlockPos middlePos = this.getPos();
+        middlePos = middlePos.offset(getFrontFacing().getOpposite());
+        this.getWorld().getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(middlePos))
+                .forEach(entity -> entity.attackEntityFrom(DamageSource.LAVA, 3.0f));
+
+        if (getOffsetTimer() % 10 == 0) {
+            IBlockState state = getWorld().getBlockState(middlePos);
+            GTUtility.tryBreakSnow(getWorld(), middlePos, state, true);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void randomDisplayTick() {
+        if (this.isActive()) {
+            VanillaParticleEffects.defaultFrontEffect(this, 0.3F, EnumParticleTypes.SMOKE_LARGE,
+                    EnumParticleTypes.FLAME);
+            if (ConfigHolder.machines.machineSounds && GTValues.RNG.nextDouble() < 0.1) {
+                BlockPos pos = getPos();
+                getWorld().playSound(pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F,
+                        SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+            }
+        }
+    }
+
+    @Override
     protected void configureDisplayText(MultiblockUIBuilder builder) {
         builder.setWorkingStatus(recipeLogic.isWorkingEnabled(), recipeLogic.isActive())
                 .addCustom(this::addCustomData)
@@ -147,11 +206,6 @@ public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase imp
                         "gregtech.multiblock.heat_multiblock.no_heat"));
             }
         });
-    }
-
-    @Override
-    public GTGuiTheme getUITheme() {
-        return GTGuiTheme.STEEL;
     }
 
     @Override
@@ -281,37 +335,25 @@ public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase imp
     }
 
     @Override
-    protected BlockPattern createStructurePattern() {
-        if (boilerType == LOW_PRESSURE_SOLID || boilerType == HIGH_PRESSURE_SOLID) {
-            return FactoryBlockPattern.start()
-                    .aisle("XXX", "CCC", "CCC", "CCC")
-                    .aisle("XXX", "C C", "C C", "CCC")
-                    .aisle("XXX", "CSC", "CCC", "CCC")
-                    .where('S', selfPredicate())
-                    .where('X', states(boilerType.fireboxState)
-                            .or(abilities(MultiblockAbility.IMPORT_ITEMS).setExactLimit(1))
-                    )
-                    .where('C', states(boilerType.casingState)
-                            .or(abilities(MultiblockAbility.OUTPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(6)))
-                    .where(' ', air())
-                    .build();
-        } else {
-            return FactoryBlockPattern.start()
-                    .aisle("XXX", "CCC", "CCC", "CCC")
-                    .aisle("XXX", "C C", "C C", "CCC")
-                    .aisle("XXX", "CSC", "CCC", "CCC")
-                    .where('S', selfPredicate())
-                    .where('X', states(boilerType.fireboxState)
-                            .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setExactLimit(1))
-                    )
-                    .where('C', states(boilerType.casingState)
-                            .or(abilities(MultiblockAbility.OUTPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(6)))
-                    .where(' ', air())
-                    .build();
-        }
-
+    protected @NotNull BlockPattern createStructurePattern() {
+        return FactoryBlockPattern.start()
+                .aisle("VXXXV", "CCCCC", " CCC ", "   C ", "   C ", "   C ")
+                .aisle("XCCCX", "CPPPC", "P  &P", "PPC C", "  C C", "  C C")
+                .aisle("VXXXV", "CCCSC", " CCC ", "   C ", "   C ", "   C ")
+                .where('S', selfPredicate())
+                .where('P', states(boilerType.pipeState))
+                .where('X', states(boilerType.fireboxState).setMinGlobalLimited(4)
+                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setMinGlobalLimited(1, 1))
+                        // setting this to max 2 makes the import fluids max 2 for some reason
+                        .or(abilities(MultiblockAbility.IMPORT_ITEMS).setMaxGlobalLimited(2, 1))
+                        .or(autoAbilities())) // muffler, maintenance
+                .where('V', states(boilerType.casingState))
+                .where('C', states(boilerType.casingState).setMinGlobalLimited(16)
+                        .or(abilities(MultiblockAbility.OUTPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(6).setPreviewCount(1)))
+                .where('&', air().or(SNOW_PREDICATE)) // this won't stay in the structure, and will be broken while
+                .where(' ', air())
+                .build();
     }
-
     @Override
     public boolean hasMaintenanceMechanics() {
         return false;
@@ -331,15 +373,9 @@ public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase imp
     public void addInformation(ItemStack stack, @Nullable World player, @NotNull List<String> tooltip,
                                boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
-        if (boilerType == LOW_PRESSURE_FLUID || boilerType == HIGH_PRESSURE_FLUID) {
-            tooltip.add(TextFormatting.GREEN + I18n.format("-流体锅炉："));
-            tooltip.add(I18n.format("只运行流体配方，无法运行固体配方"));
-        }
-        if (boilerType == LOW_PRESSURE_SOLID || boilerType == HIGH_PRESSURE_SOLID) {
-            tooltip.add(TextFormatting.GREEN + I18n.format("-固体锅炉："));
-            tooltip.add(I18n.format("只运行固体配方，无法运行流体配方"));
-        }
-        TooltipBuilder.create().add(new BoilerInformation()).build(this, tooltip);
+        tooltip.add(TextFormatting.GREEN + I18n.format("-大型流体/固体燃烧室："));
+        tooltip.add(I18n.format("优先运行流体配方，其次运行固体配方"));
+        TooltipBuilder.create().add(new CombustorInformation()).build(this, tooltip);
     }
 
     @Override
@@ -419,7 +455,7 @@ public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase imp
 
     @Override
     protected boolean shouldUpdate(MTETrait trait) {
-        return !(trait instanceof PrimitiveBoilerRecipeLogic);
+        return !(trait instanceof LargeCombustorRecipeLogic);
     }
 
     @Override
@@ -507,7 +543,7 @@ public class MetaTileEntityPrimitiveBoiler extends MultiblockWithDisplayBase imp
         recipeLogic.setWorkingEnabled(isWorkingAllowed);
     }
 
-    public class BoilerInformation extends AbstractTooltipComponent {
+    public class CombustorInformation extends AbstractTooltipComponent {
 
         @Override
         public void addInformation(MetaTileEntity metaTileEntity, List<String> tooltip) {

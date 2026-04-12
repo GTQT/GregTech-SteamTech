@@ -10,12 +10,11 @@ import gregtech.client.renderer.texture.Textures;
 import gregtech.common.metatileentities.electric.MetaTileEntitySingleCombustion;
 import gregtech.common.metatileentities.electric.MetaTileEntitySingleTurbine;
 import gregtech.common.metatileentities.electric.SimpleMachineMetaTileEntityResizable;
+import gregtech.common.metatileentities.multi.MetaTileEntityLargeBoiler;
 import meowmel.gtsteam.common.metatileentities.combustor.CoalCombustor;
 import meowmel.gtsteam.common.metatileentities.combustor.LavaCombustor;
 import meowmel.gtsteam.common.metatileentities.combustor.SolarCombustor;
-import meowmel.gtsteam.common.metatileentities.multi.generator.MetaTileEntityPrimitiveBoiler;
-import meowmel.gtsteam.common.metatileentities.multi.generator.MetaTileEntitySteamSolarBoiler;
-import meowmel.gtsteam.common.metatileentities.multi.generator.PrimitiveBoilerType;
+import meowmel.gtsteam.common.metatileentities.multi.generator.*;
 import meowmel.gtsteam.common.metatileentities.multi.heat.*;
 import meowmel.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnExportHatch;
 import meowmel.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnImportHatch;
@@ -30,6 +29,7 @@ import meowmel.gtsteam.common.metatileentities.multi.store.*;
 import meowmel.gtsteam.common.metatileentities.single.MetaTileEntityLatexCollector;
 import net.minecraft.util.ResourceLocation;
 
+import static gregtech.api.util.GTUtility.gregtechId;
 import static gregtech.common.metatileentities.MetaTileEntities.registerMetaTileEntity;
 import static meowmel.gtsteam.GTSteam.MODID;
 import static meowmel.gtsteam.api.recipes.GTSRecipeMaps.*;
@@ -111,10 +111,17 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntitySingleTurbine GAS_TURBINE;
     public static MetaTileEntitySingleCombustion COMBUSTION_GENERATOR;
     public static MetaTileEntitySingleCombustion SEMI_FLUID_GENERATOR;
-    public static MetaTileEntityPrimitiveBoiler LOW_PRESSURE_SOLID_BOILER;
-    public static MetaTileEntityPrimitiveBoiler HIGH_PRESSURE_SOLID_BOILER;
-    public static MetaTileEntityPrimitiveBoiler LOW_PRESSURE_FLUID_BOILER;
-    public static MetaTileEntityPrimitiveBoiler HIGH_PRESSURE_FLUID_BOILER;
+
+    public static MetaTileEntityPrimitiveCombustor LOW_PRESSURE_SOLID_COMBUSTOR;
+    public static MetaTileEntityPrimitiveCombustor HIGH_PRESSURE_SOLID_COMBUSTOR;
+    public static MetaTileEntityPrimitiveCombustor LOW_PRESSURE_FLUID_COMBUSTOR;
+    public static MetaTileEntityPrimitiveCombustor HIGH_PRESSURE_FLUID_COMBUSTOR;
+
+    public static MetaTileEntityLargeCombustor LARGE_BRONZE_COMBUSTOR;
+    public static MetaTileEntityLargeCombustor LARGE_STEEL_COMBUSTOR;
+    public static MetaTileEntityLargeCombustor LARGE_TITANIUM_COMBUSTOR;
+    public static MetaTileEntityLargeCombustor LARGE_TUNGSTENSTEEL_COMBUSTOR;
+
     public static MetaTileEntityHeatSteamBoiler HEAT_STEAM_BOILER;
     //热学
     static Material[] materials = new Material[]{Materials.Lead, Materials.Bronze, Materials.Steel, Materials.Invar, Materials.Chrome, Materials.Titanium};
@@ -225,10 +232,20 @@ public class GTSteamMetaTileEntities {
         }
 
         //燃烧室
-        LOW_PRESSURE_SOLID_BOILER = registerMetaTileEntity(300, new MetaTileEntityPrimitiveBoiler(gtsId("solid_boiler.low_pressure"), PrimitiveBoilerType.LOW_PRESSURE_SOLID));
-        HIGH_PRESSURE_SOLID_BOILER = registerMetaTileEntity(301, new MetaTileEntityPrimitiveBoiler(gtsId("solid_boiler.high_pressure"), PrimitiveBoilerType.HIGH_PRESSURE_SOLID));
-        LOW_PRESSURE_FLUID_BOILER = registerMetaTileEntity(302, new MetaTileEntityPrimitiveBoiler(gtsId("fluid_boiler.low_pressure"), PrimitiveBoilerType.LOW_PRESSURE_FLUID));
-        HIGH_PRESSURE_FLUID_BOILER = registerMetaTileEntity(303, new MetaTileEntityPrimitiveBoiler(gtsId("fluid_boiler.high_pressure"), PrimitiveBoilerType.HIGH_PRESSURE_FLUID));
+        LOW_PRESSURE_SOLID_COMBUSTOR = registerMetaTileEntity(300, new MetaTileEntityPrimitiveCombustor(gtsId("solid_combustor.low_pressure"), PrimitiveCombustorType.LOW_PRESSURE_SOLID));
+        HIGH_PRESSURE_SOLID_COMBUSTOR = registerMetaTileEntity(301, new MetaTileEntityPrimitiveCombustor(gtsId("solid_combustor.high_pressure"), PrimitiveCombustorType.HIGH_PRESSURE_SOLID));
+        LOW_PRESSURE_FLUID_COMBUSTOR = registerMetaTileEntity(302, new MetaTileEntityPrimitiveCombustor(gtsId("fluid_combustor.low_pressure"), PrimitiveCombustorType.LOW_PRESSURE_FLUID));
+        HIGH_PRESSURE_FLUID_COMBUSTOR = registerMetaTileEntity(303, new MetaTileEntityPrimitiveCombustor(gtsId("fluid_combustor.high_pressure"), PrimitiveCombustorType.HIGH_PRESSURE_FLUID));
+
+        LARGE_BRONZE_COMBUSTOR = registerMetaTileEntity(304,
+                new MetaTileEntityLargeCombustor(gtsId("large_combustor.bronze"), CombustorType.BRONZE));
+        LARGE_STEEL_COMBUSTOR = registerMetaTileEntity(305,
+                new MetaTileEntityLargeCombustor(gtsId("large_combustor.steel"), CombustorType.STEEL));
+        LARGE_TITANIUM_COMBUSTOR = registerMetaTileEntity(306,
+                new MetaTileEntityLargeCombustor(gtsId("large_combustor.titanium"), CombustorType.TITANIUM));
+        LARGE_TUNGSTENSTEEL_COMBUSTOR = registerMetaTileEntity(307,
+                new MetaTileEntityLargeCombustor(gtsId("large_combustor.tungstensteel"), CombustorType.TUNGSTENSTEEL));
+
 
         //锅炉
         HEAT_STEAM_BOILER = registerMetaTileEntity(310, new MetaTileEntityHeatSteamBoiler(gtsId("heat_steam_boiler")));

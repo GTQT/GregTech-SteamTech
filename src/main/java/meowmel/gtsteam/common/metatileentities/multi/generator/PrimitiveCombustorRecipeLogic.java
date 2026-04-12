@@ -26,20 +26,20 @@ import java.util.Collections;
 import java.util.List;
 
 import static gregtech.api.capability.GregtechDataCodes.BOILER_LAST_TICK_STEAM;
-import static meowmel.gtsteam.common.metatileentities.multi.generator.PrimitiveBoilerType.*;
+import static meowmel.gtsteam.common.metatileentities.multi.generator.PrimitiveCombustorType.*;
 
 /**
  * 原始锅炉配方逻辑类
  * 处理锅炉的燃料燃烧、水加热、热量生成等核心逻辑
  */
-public class PrimitiveBoilerRecipeLogic extends AbstractRecipeLogic implements ICategoryOverride {
+public class PrimitiveCombustorRecipeLogic extends AbstractRecipeLogic implements ICategoryOverride {
 
     // 液体燃料消耗倍率（用于计算燃料燃烧时间）
     private static final int FLUID_DRAIN_MULTIPLIER = 100;
     // 液体燃料燃烧时间到EU的转换系数
     private static final int FLUID_BURNTIME_TO_EU = 800 / FLUID_DRAIN_MULTIPLIER;
     private final boolean isHighPressure;
-    MetaTileEntityPrimitiveBoiler metaTileEntity;
+    MetaTileEntityPrimitiveCombustor metaTileEntity;
     // 上一tick产生的热量
     private int lastTickHeatOutput;
     // 多余的燃料量（用于固体燃料的精确计算）
@@ -52,7 +52,7 @@ public class PrimitiveBoilerRecipeLogic extends AbstractRecipeLogic implements I
      *
      * @param tileEntity 关联的原始锅炉实体
      */
-    public PrimitiveBoilerRecipeLogic(MetaTileEntityPrimitiveBoiler tileEntity, boolean isHighPressure) {
+    public PrimitiveCombustorRecipeLogic(MetaTileEntityPrimitiveCombustor tileEntity, boolean isHighPressure) {
         super(tileEntity, null);
         // 锅炉没有物品和流体输出，直接生成热量
         this.fluidOutputs = Collections.emptyList();
@@ -90,7 +90,7 @@ public class PrimitiveBoilerRecipeLogic extends AbstractRecipeLogic implements I
      */
     @Override
     protected void trySearchNewRecipe() {
-        MetaTileEntityPrimitiveBoiler boiler = metaTileEntity;
+        MetaTileEntityPrimitiveCombustor boiler = metaTileEntity;
         IMultipleTankHandler importFluids = boiler.getImportFluids();
         boolean didStartRecipe = false;
 
@@ -226,7 +226,7 @@ public class PrimitiveBoilerRecipeLogic extends AbstractRecipeLogic implements I
      * @return 调整后的燃烧时间
      */
     private int adjustBurnTimeForThrottle(int rawBurnTime) {
-        MetaTileEntityPrimitiveBoiler boiler = metaTileEntity;
+        MetaTileEntityPrimitiveCombustor boiler = metaTileEntity;
         int EUt = boiler.boilerType.heatPerTick(); // 原始热量产量
         int adjustedEUt = adjustEUtForThrottle(EUt); // 调整后的热量产量
         // 计算调整后的燃烧时间，使总热量不变：原始EUt * 原始时间 = 调整后EUt * 调整后时间
@@ -342,8 +342,8 @@ public class PrimitiveBoilerRecipeLogic extends AbstractRecipeLogic implements I
      */
     @NotNull
     @Override
-    public MetaTileEntityPrimitiveBoiler getMetaTileEntity() {
-        return (MetaTileEntityPrimitiveBoiler) super.getMetaTileEntity();
+    public MetaTileEntityPrimitiveCombustor getMetaTileEntity() {
+        return (MetaTileEntityPrimitiveCombustor) super.getMetaTileEntity();
     }
 
     /**

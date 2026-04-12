@@ -152,11 +152,21 @@ gtsteam.machine.heat_radiator.name=热辐射器
 gtsteam.multiblock.heat_radiator.tooltip.1=散热效率与面积成正比
 gtsteam.multiblock.heat_radiator.tooltip.2=§b尺寸：§f3x3至11x16
 
-#原始锅炉
-gtsteam.machine.solid_boiler.low_pressure.name=低压固体锅炉
-gtsteam.machine.solid_boiler.high_pressure.name=高压固体锅炉
-gtsteam.machine.fluid_boiler.low_pressure.name=低压流体锅炉
-gtsteam.machine.fluid_boiler.high_pressure.name=高压流体锅炉
+# Combustor
+gtsteam.machine.solid_combustor.low_pressure.name=低压固体燃烧室
+gtsteam.machine.solid_combustor.high_pressure.name=高压固体燃烧室
+gtsteam.machine.fluid_combustor.low_pressure.name=低压流体燃烧室
+gtsteam.machine.fluid_combustor.high_pressure.name=高压流体燃烧室
+
+gtsteam.machine.large_combustor.bronze.name=大型青铜燃烧室
+gtsteam.machine.large_combustor.steel.name=大型钢燃烧室
+gtsteam.machine.large_combustor.titanium.name=大型钛燃烧室
+gtsteam.machine.large_combustor.tungstensteel.name=大型钨钢燃烧室
+
+gtsteam.machine.large_combustor.bronze.tooltip=再多来点热量！
+gtsteam.machine.large_combustor.steel.tooltip=并不是地暖
+gtsteam.machine.large_combustor.titanium.tooltip=我的家变成桑拿了
+gtsteam.machine.large_combustor.tungstensteel.tooltip=并不是太阳表面
 
 #蒸汽水泵
 gtsteam.machine.steam_water_pump.name=蒸汽水泵

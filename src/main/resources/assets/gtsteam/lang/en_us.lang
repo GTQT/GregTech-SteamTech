@@ -153,11 +153,21 @@ gtsteam.machine.heat_radiator.name=Heat Radiator
 gtsteam.multiblock.heat_radiator.tooltip.1=Heat dissipation efficiency is proportional to its area.
 gtsteam.multiblock.heat_radiator.tooltip.2=§bSize: §f3x3 to 11x16
 
-# Boiler
-gtsteam.machine.solid_boiler.low_pressure.name=Low Pressure Solid Boiler
-gtsteam.machine.solid_boiler.high_pressure.name=High Pressure Solid Boiler
-gtsteam.machine.fluid_boiler.low_pressure.name=Low Pressure Fluid Boiler
-gtsteam.machine.fluid_boiler.high_pressure.name=High Pressure Fluid Boiler
+# Combustor
+gtsteam.machine.solid_combustor.low_pressure.name=Low Pressure Solid Combustor
+gtsteam.machine.solid_combustor.high_pressure.name=High Pressure Solid Combustor
+gtsteam.machine.fluid_combustor.low_pressure.name=Low Pressure Fluid Combustor
+gtsteam.machine.fluid_combustor.high_pressure.name=High Pressure Fluid Combustor
+
+gtsteam.machine.large_combustor.bronze.name=Large Bronze Combustor
+gtsteam.machine.large_combustor.steel.name=Large Steel Combustor
+gtsteam.machine.large_combustor.titanium.name=Large Titanium Combustor
+gtsteam.machine.large_combustor.tungstensteel.name=Large Tungstensteel Combustor
+
+gtsteam.machine.large_combustor.bronze.tooltip=Bring on more heat!
+gtsteam.machine.large_combustor.steel.tooltip=Not underfloor heating.
+gtsteam.machine.large_combustor.titanium.tooltip=My home has turned into a sauna.
+gtsteam.machine.large_combustor.tungstensteel.tooltip=Not the surface of the sun.
 
 #Steam Water Pump
 gtsteam.machine.steam_water_pump.name=Steam Water Pump
