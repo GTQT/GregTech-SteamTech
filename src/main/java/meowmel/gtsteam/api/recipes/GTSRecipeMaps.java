@@ -25,7 +25,6 @@ public class GTSRecipeMaps {
     public static final RecipeMap<HeatRecipeBuilder> ELECTRONIC_PROCESSOR_RECIPES;
     public static final RecipeMap<PrimitiveRecipeBuilder> ALLOY_KILN;
     public static final RecipeMap<PrimitiveRecipeBuilder> COAGULATION_RECIPES;
-    public static final RecipeMap<PrimitiveRecipeBuilder> NATURAL_DRAFT_COOLING_TOWER;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_STEAM_TURBINE_FUELS;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_GAS_TURBINE_FUELS;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_COMBUSTION_GENERATOR_FUELS;
@@ -188,17 +187,6 @@ public class GTSRecipeMaps {
                 .fluidInputs(3)
                 .fluidOutputs(3)
                 .sound(GTSoundEvents.FIRE)
-                .disableJeiOverclockButton()
-                .disableJeiOverclockButton()
-                .build();
-
-        NATURAL_DRAFT_COOLING_TOWER = new RecipeMapBuilder<>("natural_draft_cooling_tower", new PrimitiveRecipeBuilder())
-                .fluidInputs(1)
-                .fluidOutputs(1)
-                .uiBuilder(builder -> builder
-                        .progressBar(GTGuiTextures.PROGRESS_BAR_GAS_COLLECTOR)
-                )
-                .sound(GTSoundEvents.COOLING)
                 .build();
     }
 

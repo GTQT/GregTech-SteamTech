@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
         name = "GTSteam",
         acceptedMinecraftVersions = "[1.12.2,1.13)",
         version = "0.0.1-beta",
-        dependencies = "required-after:gregtech@[2.9.0-beta,);"
+        dependencies = "required-after:gregtech@[1.9.0,);"
 )
 public class GTSteam {
 
