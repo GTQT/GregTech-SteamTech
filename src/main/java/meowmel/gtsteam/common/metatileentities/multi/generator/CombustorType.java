@@ -15,41 +15,33 @@ import static gregtech.common.blocks.MetaBlocks.BOILER_CASING;
 
 public enum CombustorType {
 
-    BRONZE(1600, 1073,
+    BRONZE(1200, 1073,
             METAL_CASING.getState(BRONZE_BRICKS),
             BOILER_FIREBOX_CASING.getState(BRONZE_FIREBOX),
             BOILER_CASING.getState(BRONZE_PIPE),
-            Textures.BRONZE_PLATED_BRICKS,
-            Textures.BRONZE_FIREBOX,
-            Textures.BRONZE_FIREBOX_ACTIVE,
-            Textures.LARGE_BRONZE_BOILER),
+            Textures.BRONZE_PLATED_BRICKS
+    ),
 
-    STEEL(3600, 1273,
+    STEEL(1800, 1273,
             METAL_CASING.getState(STEEL_SOLID),
             BOILER_FIREBOX_CASING.getState(STEEL_FIREBOX),
             BOILER_CASING.getState(STEEL_PIPE),
-            Textures.SOLID_STEEL_CASING,
-            Textures.STEEL_FIREBOX,
-            Textures.STEEL_FIREBOX_ACTIVE,
-            Textures.LARGE_STEEL_BOILER),
+            Textures.SOLID_STEEL_CASING
+    ),
 
-    TITANIUM(6400, 1473,
+    TITANIUM(3600, 1473,
             METAL_CASING.getState(TITANIUM_STABLE),
             BOILER_FIREBOX_CASING.getState(TITANIUM_FIREBOX),
             BOILER_CASING.getState(TITANIUM_PIPE),
-            Textures.STABLE_TITANIUM_CASING,
-            Textures.TITANIUM_FIREBOX,
-            Textures.TITANIUM_FIREBOX_ACTIVE,
-            Textures.LARGE_TITANIUM_BOILER),
+            Textures.STABLE_TITANIUM_CASING
+    ),
 
-    TUNGSTENSTEEL(12800, 1673,
+    TUNGSTENSTEEL(7200, 1673,
             METAL_CASING.getState(TUNGSTENSTEEL_ROBUST),
             BOILER_FIREBOX_CASING.getState(TUNGSTENSTEEL_FIREBOX),
             BOILER_CASING.getState(TUNGSTENSTEEL_PIPE),
-            Textures.ROBUST_TUNGSTENSTEEL_CASING,
-            Textures.TUNGSTENSTEEL_FIREBOX,
-            Textures.TUNGSTENSTEEL_FIREBOX_ACTIVE,
-            Textures.LARGE_TUNGSTENSTEEL_BOILER);
+            Textures.ROBUST_TUNGSTENSTEEL_CASING
+    );
 
     // Structure Data
     public final IBlockState casingState;
@@ -58,9 +50,6 @@ public enum CombustorType {
 
     // Rendering Data
     public final ICubeRenderer casingRenderer;
-    public final ICubeRenderer fireboxIdleRenderer;
-    public final ICubeRenderer fireboxActiveRenderer;
-    public final ICubeRenderer frontOverlay;
     // Workable Data
     private final int heatPerTick;
     private final int maxTemp;
@@ -69,10 +58,7 @@ public enum CombustorType {
                   IBlockState casingState,
                   IBlockState fireboxState,
                   IBlockState pipeState,
-                  ICubeRenderer casingRenderer,
-                  ICubeRenderer fireboxIdleRenderer,
-                  ICubeRenderer fireboxActiveRenderer,
-                  ICubeRenderer frontOverlay) {
+                  ICubeRenderer casingRenderer) {
 
         this.heatPerTick = heatPerTick;
         this.maxTemp = maxTemp;
@@ -82,9 +68,6 @@ public enum CombustorType {
         this.pipeState = pipeState;
 
         this.casingRenderer = casingRenderer;
-        this.fireboxIdleRenderer = fireboxIdleRenderer;
-        this.fireboxActiveRenderer = fireboxActiveRenderer;
-        this.frontOverlay = frontOverlay;
     }
 
     public int heatPerTick() {

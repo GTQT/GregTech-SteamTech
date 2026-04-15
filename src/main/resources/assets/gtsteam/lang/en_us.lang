@@ -169,6 +169,21 @@ gtsteam.machine.large_combustor.steel.tooltip=Not underfloor heating.
 gtsteam.machine.large_combustor.titanium.tooltip=My home has turned into a sauna.
 gtsteam.machine.large_combustor.tungstensteel.tooltip=Not the surface of the sun.
 
+gtsteam.machine.combustion_combustor.name=Fuel Combustor
+gtsteam.machine.extreme_combustion_combustor.name=Extreme Fuel Combustor
+
+gtsteam.machine.combustion_combustor.tooltip=Emits excessive greenhouse gases
+gtsteam.machine.extreme_combustion_combustor.tooltip=Causes global warming
+
+gtsteam.multiblock.large_combustor.efficiency=Efficiency: %s
+gtsteam.multiblock.large_combustor.heat_output=Heat output: %s
+gtsteam.multiblock.large_combustor.throttle_button.tooltip=Configure combustor throttle
+gtsteam.multiblock.large_combustor.throttle=Throttle: %s
+gtsteam.multiblock.large_combustor.throttle.title=Combustor Throttle
+gtsteam.multiblock.large_combustor.rate_tooltip=§7Each piece of §1Coal§7 produces §f%dL§7 of heat
+gtsteam.multiblock.large_combustor.heat_time_tooltip=§7Requires §f%d seconds§7 to preheat
+gtsteam.multiblock.large_combustor.explosion_tooltip=Providing fuel without water will cause an explosion
+
 #Steam Water Pump
 gtsteam.machine.steam_water_pump.name=Steam Water Pump
 gtsteam.machine.steam_water_pump.description=Consumes steam and outputs an equal amount of water

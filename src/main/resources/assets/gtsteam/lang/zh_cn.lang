@@ -168,6 +168,21 @@ gtsteam.machine.large_combustor.steel.tooltip=并不是地暖
 gtsteam.machine.large_combustor.titanium.tooltip=我的家变成桑拿了
 gtsteam.machine.large_combustor.tungstensteel.tooltip=并不是太阳表面
 
+gtsteam.machine.combustion_combustor.name=燃油燃烧室
+gtsteam.machine.extreme_combustion_combustor.name=极限燃油燃烧室
+
+gtsteam.machine.combustion_combustor.tooltip=排放过量的温室气体
+gtsteam.machine.extreme_combustion_combustor.tooltip=导致全球变暖
+
+gtsteam.multiblock.large_combustor.efficiency=效率：%s
+gtsteam.multiblock.large_combustor.heat_output=热量输出：%s
+gtsteam.multiblock.large_combustor.throttle_button.tooltip=配置燃烧室节流
+gtsteam.multiblock.large_combustor.throttle=节流：%s
+gtsteam.multiblock.large_combustor.throttle.title=燃烧室节流
+gtsteam.multiblock.large_combustor.rate_tooltip=§7每块§1煤炭§7可以生产§f%dL§7的热量
+gtsteam.multiblock.large_combustor.heat_time_tooltip=§7需要§f%d秒§7预热
+gtsteam.multiblock.large_combustor.explosion_tooltip=无水时提供燃料将爆炸
+
 #蒸汽水泵
 gtsteam.machine.steam_water_pump.name=蒸汽水泵
 gtsteam.machine.steam_water_pump.description=消耗蒸汽输出等量的水

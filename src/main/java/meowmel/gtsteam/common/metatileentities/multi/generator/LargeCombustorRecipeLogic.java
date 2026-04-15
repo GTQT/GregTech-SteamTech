@@ -88,8 +88,8 @@ public class LargeCombustorRecipeLogic extends AbstractRecipeLogic implements IC
      */
     @Override
     protected void trySearchNewRecipe() {
-        MetaTileEntityLargeCombustor boiler = metaTileEntity;
-        IMultipleTankHandler importFluids = boiler.getImportFluids();
+        MetaTileEntityLargeCombustor combustorType = metaTileEntity;
+        IMultipleTankHandler importFluids = combustorType.getImportFluids();
         boolean didStartRecipe = false;
 
         // 液体配方
@@ -99,8 +99,8 @@ public class LargeCombustorRecipeLogic extends AbstractRecipeLogic implements IC
             // 跳过水等不可作为燃料的流体
             if (fuelStack == null) continue;
 
-            // 尝试从内燃机燃料配方中查找匹配的配方
-            Recipe dieselRecipe = RecipeMaps.COMBUSTION_GENERATOR_FUELS.findRecipe(
+            // 尝试从燃气轮机配方中查找匹配的配方
+            Recipe dieselRecipe = RecipeMaps.GAS_TURBINE_FUELS.findRecipe(
                     GTValues.V[GTValues.MAX], Collections.emptyList(), Collections.singletonList(fuelStack));
             // 如果找到配方且流体量足够（乘以倍数以减少整数除法误差）
             if (dieselRecipe != null &&
@@ -109,7 +109,7 @@ public class LargeCombustorRecipeLogic extends AbstractRecipeLogic implements IC
                 fluidTank.drain(dieselRecipe.getFluidInputs().get(0).getAmount() * FLUID_DRAIN_MULTIPLIER, true);
                 // 计算燃烧时间：将配方EU和持续时间转换为燃烧时间，除以2（因为内燃机燃料燃烧时间减半）
                 // 并根据锅炉类型进行加速，最后根据节流阀调整
-                setMaxProgress(adjustBurnTimeForThrottle(Math.max(1, boiler.boilerType.runtimeBoost(
+                setMaxProgress(adjustBurnTimeForThrottle(Math.max(1, combustorType.combustorType.runtimeBoost(
                         GTUtility.safeCastLongToInt((Math.abs(dieselRecipe.getEUt()) * dieselRecipe.getDuration()) /
                                 FLUID_BURNTIME_TO_EU / 2)))));
                 didStartRecipe = true;
@@ -125,7 +125,7 @@ public class LargeCombustorRecipeLogic extends AbstractRecipeLogic implements IC
                 // 半流体燃料燃烧时间翻倍
                 setMaxProgress(adjustBurnTimeForThrottle(
                         Math.max(1,
-                                boiler.boilerType
+                                combustorType.combustorType
                                         .runtimeBoost(GTUtility.safeCastLongToInt((Math.abs(denseFuelRecipe.getEUt()) *
                                                 denseFuelRecipe.getDuration() / FLUID_BURNTIME_TO_EU * 2))))));
                 didStartRecipe = true;
@@ -135,7 +135,7 @@ public class LargeCombustorRecipeLogic extends AbstractRecipeLogic implements IC
 
         // 固体配方
         if (!didStartRecipe) {
-            IItemHandlerModifiable importItems = boiler.getImportItems();
+            IItemHandlerModifiable importItems = combustorType.getImportItems();
             for (int i = 0; i < importItems.getSlots(); i++) {
                 ItemStack stack = importItems.getStackInSlot(i);
                 // 获取物品的燃烧时间（来自熔炉燃料）
@@ -150,7 +150,7 @@ public class LargeCombustorRecipeLogic extends AbstractRecipeLogic implements IC
                     this.excessFuel %= 8;
                     // 设置总燃烧时间，包括累加的多余部分和本次燃料的燃烧时间，并根据锅炉类型加速和节流阀调整
                     setMaxProgress(excessProgress +
-                            adjustBurnTimeForThrottle(boiler.boilerType.runtimeBoost(fuelBurnTime / 8)));
+                            adjustBurnTimeForThrottle(combustorType.combustorType.runtimeBoost(fuelBurnTime / 8)));
                     stack.shrink(1); // 消耗一个物品
                     didStartRecipe = true;
                     break;
@@ -162,7 +162,7 @@ public class LargeCombustorRecipeLogic extends AbstractRecipeLogic implements IC
         if (didStartRecipe) {
             this.progressTime = 1; // 从1开始计数，因为当前tick已经消耗了燃料
             // 设置当前配方产生的热量（EU/t），并根据节流阀调整
-            this.recipeEUt = adjustEUtForThrottle(boiler.boilerType.heatPerTick());
+            this.recipeEUt = adjustEUtForThrottle(combustorType.combustorType.heatPerTick());
             if (wasActiveAndNeedsUpdate) {
                 wasActiveAndNeedsUpdate = false;
             } else {
@@ -225,7 +225,7 @@ public class LargeCombustorRecipeLogic extends AbstractRecipeLogic implements IC
      */
     private int adjustBurnTimeForThrottle(int rawBurnTime) {
         MetaTileEntityLargeCombustor boiler = metaTileEntity;
-        int EUt = boiler.boilerType.heatPerTick(); // 原始热量产量
+        int EUt = boiler.combustorType.heatPerTick(); // 原始热量产量
         int adjustedEUt = adjustEUtForThrottle(EUt); // 调整后的热量产量
         // 计算调整后的燃烧时间，使总热量不变：原始EUt * 原始时间 = 调整后EUt * 调整后时间
         int adjustedBurnTime = rawBurnTime * EUt / adjustedEUt;
@@ -279,7 +279,7 @@ public class LargeCombustorRecipeLogic extends AbstractRecipeLogic implements IC
 
     public int getMaximumHeat() {
         //不是热源仓的温度，而是理论锅炉燃烧达到的温度
-        return metaTileEntity.boilerType.getMaxTemp();
+        return metaTileEntity.combustorType.getMaxTemp();
     }
 
     /**
@@ -439,7 +439,7 @@ public class LargeCombustorRecipeLogic extends AbstractRecipeLogic implements IC
     @Override
     public @NotNull RecipeMap<?> @NotNull [] getJEIRecipeMapCategoryOverrides() {
         // 显示内燃机燃料和半流体燃料的配方
-        return new RecipeMap<?>[]{RecipeMaps.COMBUSTION_GENERATOR_FUELS, RecipeMaps.SEMI_FLUID_GENERATOR_FUELS};
+        return new RecipeMap<?>[]{RecipeMaps.GAS_TURBINE_FUELS, RecipeMaps.SEMI_FLUID_GENERATOR_FUELS};
     }
 
     @Override

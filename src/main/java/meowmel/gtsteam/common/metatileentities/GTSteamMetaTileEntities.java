@@ -122,6 +122,9 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntityLargeCombustor LARGE_TITANIUM_COMBUSTOR;
     public static MetaTileEntityLargeCombustor LARGE_TUNGSTENSTEEL_COMBUSTOR;
 
+    public static MetaTileEntityCombustionCombustor COMBUSTION_COMBUSTOR;
+    public static MetaTileEntityCombustionCombustor EXTREME_COMBUSTION_COMBUSTOR;
+
     public static MetaTileEntityHeatSteamBoiler HEAT_STEAM_BOILER;
     //热学
     static Material[] materials = new Material[]{Materials.Lead, Materials.Bronze, Materials.Steel, Materials.Invar, Materials.Chrome, Materials.Titanium};
@@ -246,6 +249,10 @@ public class GTSteamMetaTileEntities {
         LARGE_TUNGSTENSTEEL_COMBUSTOR = registerMetaTileEntity(307,
                 new MetaTileEntityLargeCombustor(gtsId("large_combustor.tungstensteel"), CombustorType.TUNGSTENSTEEL));
 
+        COMBUSTION_COMBUSTOR = registerMetaTileEntity(308,
+                new MetaTileEntityCombustionCombustor(gtsId("combustion_combustor"), CombustorType.TITANIUM));
+        EXTREME_COMBUSTION_COMBUSTOR = registerMetaTileEntity(309,
+                new MetaTileEntityCombustionCombustor(gtsId("extreme_combustion_combustor"), CombustorType.TUNGSTENSTEEL));
 
         //锅炉
         HEAT_STEAM_BOILER = registerMetaTileEntity(310, new MetaTileEntityHeatSteamBoiler(gtsId("heat_steam_boiler")));

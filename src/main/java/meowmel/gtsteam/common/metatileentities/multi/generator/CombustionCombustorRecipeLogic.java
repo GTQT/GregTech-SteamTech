@@ -12,34 +12,29 @@ import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.recipes.category.ICategoryOverride;
 import gregtech.api.util.GTLog;
 import gregtech.api.util.GTUtility;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
 
 import static gregtech.api.capability.GregtechDataCodes.BOILER_LAST_TICK_STEAM;
-import static meowmel.gtsteam.common.metatileentities.multi.generator.PrimitiveCombustorType.*;
 
 /**
- * 原始锅炉配方逻辑类
+ * 热力锅炉配方逻辑类
  * 处理锅炉的燃料燃烧、水加热、热量生成等核心逻辑
  */
-public class PrimitiveCombustorRecipeLogic extends AbstractRecipeLogic implements ICategoryOverride {
+public class CombustionCombustorRecipeLogic extends AbstractRecipeLogic implements ICategoryOverride {
 
     // 液体燃料消耗倍率（用于计算燃料燃烧时间）
     private static final int FLUID_DRAIN_MULTIPLIER = 100;
     // 液体燃料燃烧时间到EU的转换系数
     private static final int FLUID_BURNTIME_TO_EU = 800 / FLUID_DRAIN_MULTIPLIER;
-    private final boolean isHighPressure;
-    MetaTileEntityPrimitiveCombustor metaTileEntity;
+
+    MetaTileEntityCombustionCombustor metaTileEntity;
     // 上一tick产生的热量
     private int lastTickHeatOutput;
     // 多余的燃料量（用于固体燃料的精确计算）
@@ -47,18 +42,20 @@ public class PrimitiveCombustorRecipeLogic extends AbstractRecipeLogic implement
     // 多余的预计EU（用于节流阀调节时的精确计算）
     private int excessProjectedEU;
 
+    private boolean isExtreme;
+
     /**
      * 构造函数
      *
      * @param tileEntity 关联的原始锅炉实体
      */
-    public PrimitiveCombustorRecipeLogic(MetaTileEntityPrimitiveCombustor tileEntity, boolean isHighPressure) {
+    public CombustionCombustorRecipeLogic(MetaTileEntityCombustionCombustor tileEntity, boolean isExtreme) {
         super(tileEntity, null);
         // 锅炉没有物品和流体输出，直接生成热量
         this.fluidOutputs = Collections.emptyList();
         this.itemOutputs = Collections.emptyList();
-        this.isHighPressure = isHighPressure;
         metaTileEntity = tileEntity;
+        this.isExtreme = isExtreme;
     }
 
     /**
@@ -90,73 +87,32 @@ public class PrimitiveCombustorRecipeLogic extends AbstractRecipeLogic implement
      */
     @Override
     protected void trySearchNewRecipe() {
-        MetaTileEntityPrimitiveCombustor boiler = metaTileEntity;
-        IMultipleTankHandler importFluids = boiler.getImportFluids();
+        MetaTileEntityCombustionCombustor Combustor = metaTileEntity;
+        IMultipleTankHandler importFluids = Combustor.getImportFluids();
         boolean didStartRecipe = false;
 
-        // 液体锅炉（低压流体或高压流体）
-        if (boiler.boilerType == LOW_PRESSURE_FLUID || boiler.boilerType == HIGH_PRESSURE_FLUID) {
-            for (IFluidTank fluidTank : importFluids.getFluidTanks()) {
-                FluidStack fuelStack = fluidTank.drain(Integer.MAX_VALUE, false);
-                // 跳过水等不可作为燃料的流体
-                if (fuelStack == null) continue;
+        // 液体配方
 
-                // 尝试从燃气轮机配方中查找匹配的配方
-                Recipe dieselRecipe = RecipeMaps.GAS_TURBINE_FUELS.findRecipe(
-                        GTValues.V[GTValues.MAX], Collections.emptyList(), Collections.singletonList(fuelStack));
-                // 如果找到配方且流体量足够（乘以倍数以减少整数除法误差）
-                if (dieselRecipe != null &&
-                        fuelStack.amount >= dieselRecipe.getFluidInputs().get(0).getAmount() * FLUID_DRAIN_MULTIPLIER) {
-                    // 消耗燃料
-                    fluidTank.drain(dieselRecipe.getFluidInputs().get(0).getAmount() * FLUID_DRAIN_MULTIPLIER, true);
-                    // 计算燃烧时间：将配方EU和持续时间转换为燃烧时间，除以2（因为内燃机燃料燃烧时间减半）
-                    // 并根据锅炉类型进行加速，最后根据节流阀调整
-                    setMaxProgress(adjustBurnTimeForThrottle(Math.max(1, boiler.boilerType.runtimeBoost(
-                            GTUtility.safeCastLongToInt((Math.abs(dieselRecipe.getEUt()) * dieselRecipe.getDuration()) /
-                                    FLUID_BURNTIME_TO_EU / 2)))));
-                    didStartRecipe = true;
-                    break;
-                }
+        for (IFluidTank fluidTank : importFluids.getFluidTanks()) {
+            FluidStack fuelStack = fluidTank.drain(Integer.MAX_VALUE, false);
+            // 跳过水等不可作为燃料的流体
+            if (fuelStack == null) continue;
 
-                // 尝试从半流体发电机燃料配方中查找
-                Recipe denseFuelRecipe = RecipeMaps.SEMI_FLUID_GENERATOR_FUELS.findRecipe(
-                        GTValues.V[GTValues.MAX], Collections.emptyList(), Collections.singletonList(fuelStack));
-                if (denseFuelRecipe != null &&
-                        fuelStack.amount >= denseFuelRecipe.getFluidInputs().get(0).getAmount() * FLUID_DRAIN_MULTIPLIER) {
-                    fluidTank.drain(denseFuelRecipe.getFluidInputs().get(0).getAmount() * FLUID_DRAIN_MULTIPLIER, true);
-                    // 半流体燃料燃烧时间翻倍
-                    setMaxProgress(adjustBurnTimeForThrottle(
-                            Math.max(1,
-                                    boiler.boilerType
-                                            .runtimeBoost(GTUtility.safeCastLongToInt((Math.abs(denseFuelRecipe.getEUt()) *
-                                                    denseFuelRecipe.getDuration() / FLUID_BURNTIME_TO_EU * 2))))));
-                    didStartRecipe = true;
-                    break;
-                }
-            }
-        }
-        // 固体锅炉（低压固体或高压固体）
-        else if (boiler.boilerType == LOW_PRESSURE_SOLID || boiler.boilerType == HIGH_PRESSURE_SOLID) {
-            IItemHandlerModifiable importItems = boiler.getImportItems();
-            for (int i = 0; i < importItems.getSlots(); i++) {
-                ItemStack stack = importItems.getStackInSlot(i);
-                // 获取物品的燃烧时间（来自熔炉燃料）
-                int fuelBurnTime = (int) Math.ceil(TileEntityFurnace.getItemBurnTime(stack));
-                // 确保燃料至少能燃烧1tick（因为燃烧时间除以8）
-                if (fuelBurnTime / 8 > 0) {
-                    // 跳过流体容器（例如桶）
-                    if (FluidUtil.getFluidHandler(stack) != null) continue;
-                    // 处理多余的燃料时间（小于8的部分累加）
-                    this.excessFuel += fuelBurnTime % 8;
-                    int excessProgress = this.excessFuel / 8;
-                    this.excessFuel %= 8;
-                    // 设置总燃烧时间，包括累加的多余部分和本次燃料的燃烧时间，并根据锅炉类型加速和节流阀调整
-                    setMaxProgress(excessProgress +
-                            adjustBurnTimeForThrottle(boiler.boilerType.runtimeBoost(fuelBurnTime / 8)));
-                    stack.shrink(1); // 消耗一个物品
-                    didStartRecipe = true;
-                    break;
-                }
+            // 尝试从内燃机燃料配方中查找匹配的配方
+            Recipe dieselRecipe = RecipeMaps.COMBUSTION_GENERATOR_FUELS.findRecipe(
+                    GTValues.V[GTValues.MAX], Collections.emptyList(), Collections.singletonList(fuelStack));
+            // 如果找到配方且流体量足够（乘以倍数以减少整数除法误差）
+            if (dieselRecipe != null &&
+                    fuelStack.amount >= dieselRecipe.getFluidInputs().get(0).getAmount() * FLUID_DRAIN_MULTIPLIER) {
+                // 消耗燃料
+                fluidTank.drain(dieselRecipe.getFluidInputs().get(0).getAmount() * FLUID_DRAIN_MULTIPLIER, true);
+                // 计算燃烧时间：将配方EU和持续时间转换为燃烧时间，除以2（因为内燃机燃料燃烧时间减半）
+                // 并根据锅炉类型进行加速，最后根据节流阀调整
+                setMaxProgress(adjustBurnTimeForThrottle(Math.max(1, Combustor.combustorType.runtimeBoost(
+                        GTUtility.safeCastLongToInt((Math.abs(dieselRecipe.getEUt()) * dieselRecipe.getDuration()) /
+                                FLUID_BURNTIME_TO_EU / 2)))));
+                didStartRecipe = true;
+                break;
             }
         }
 
@@ -164,7 +120,7 @@ public class PrimitiveCombustorRecipeLogic extends AbstractRecipeLogic implement
         if (didStartRecipe) {
             this.progressTime = 1; // 从1开始计数，因为当前tick已经消耗了燃料
             // 设置当前配方产生的热量（EU/t），并根据节流阀调整
-            this.recipeEUt = adjustEUtForThrottle(boiler.boilerType.heatPerTick());
+            this.recipeEUt = adjustEUtForThrottle(Combustor.combustorType.heatPerTick());
             if (wasActiveAndNeedsUpdate) {
                 wasActiveAndNeedsUpdate = false;
             } else {
@@ -196,7 +152,7 @@ public class PrimitiveCombustorRecipeLogic extends AbstractRecipeLogic implement
             }
             // 如果热量未达到最大，则增加热量
             if (getCurrentTemp() < getMaximumHeat()) {
-                setTemp(Math.min(getCurrentTemp() + (isHighPressure ? 2 : 1), getMaxTemp()));
+                setTemp(Math.min(getCurrentTemp() + (isExtreme?6:4), getMaxTemp()));
             }
 
             // 检查燃烧是否完成
@@ -226,8 +182,8 @@ public class PrimitiveCombustorRecipeLogic extends AbstractRecipeLogic implement
      * @return 调整后的燃烧时间
      */
     private int adjustBurnTimeForThrottle(int rawBurnTime) {
-        MetaTileEntityPrimitiveCombustor boiler = metaTileEntity;
-        int EUt = boiler.boilerType.heatPerTick(); // 原始热量产量
+        MetaTileEntityCombustionCombustor boiler = metaTileEntity;
+        int EUt = boiler.combustorType.heatPerTick(); // 原始热量产量
         int adjustedEUt = adjustEUtForThrottle(EUt); // 调整后的热量产量
         // 计算调整后的燃烧时间，使总热量不变：原始EUt * 原始时间 = 调整后EUt * 调整后时间
         int adjustedBurnTime = rawBurnTime * EUt / adjustedEUt;
@@ -281,7 +237,7 @@ public class PrimitiveCombustorRecipeLogic extends AbstractRecipeLogic implement
 
     public int getMaximumHeat() {
         //不是热源仓的温度，而是理论锅炉燃烧达到的温度
-        return metaTileEntity.boilerType.getMaxTemp();
+        return metaTileEntity.combustorType.getMaxTemp();
     }
 
     /**
@@ -342,8 +298,8 @@ public class PrimitiveCombustorRecipeLogic extends AbstractRecipeLogic implement
      */
     @NotNull
     @Override
-    public MetaTileEntityPrimitiveCombustor getMetaTileEntity() {
-        return (MetaTileEntityPrimitiveCombustor) super.getMetaTileEntity();
+    public MetaTileEntityCombustionCombustor getMetaTileEntity() {
+        return (MetaTileEntityCombustionCombustor) super.getMetaTileEntity();
     }
 
     /**
@@ -441,12 +397,6 @@ public class PrimitiveCombustorRecipeLogic extends AbstractRecipeLogic implement
     @Override
     public @NotNull RecipeMap<?> @NotNull [] getJEIRecipeMapCategoryOverrides() {
         // 显示内燃机燃料和半流体燃料的配方
-        return new RecipeMap<?>[]{RecipeMaps.GAS_TURBINE_FUELS, RecipeMaps.SEMI_FLUID_GENERATOR_FUELS};
-    }
-
-    @Override
-    public @NotNull String @NotNull [] getJEICategoryOverrides() {
-        // 同时显示原版熔炉燃料配方
-        return new String[]{"minecraft.fuel"};
+        return new RecipeMap<?>[]{RecipeMaps.COMBUSTION_GENERATOR_FUELS};
     }
 }

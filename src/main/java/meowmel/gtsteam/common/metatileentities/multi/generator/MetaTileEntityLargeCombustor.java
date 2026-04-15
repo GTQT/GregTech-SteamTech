@@ -73,7 +73,7 @@ import java.util.function.UnaryOperator;
 public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase implements ProgressBarMultiblock,
         IControllable, IHeatMachine {
 
-    public final CombustorType boilerType;
+    public final CombustorType combustorType;
     protected LargeCombustorRecipeLogic recipeLogic;
     List<IHeatable> heatHatch = null;
     private FluidTankList fluidImportInventory;
@@ -85,7 +85,7 @@ public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase impl
 
     public MetaTileEntityLargeCombustor(ResourceLocation metaTileEntityId, CombustorType combustorType) {
         super(metaTileEntityId);
-        this.boilerType = combustorType;
+        this.combustorType = combustorType;
         this.recipeLogic = new LargeCombustorRecipeLogic(this);
         resetTileAbilities();
     }
@@ -96,7 +96,7 @@ public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase impl
 
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity tileEntity) {
-        return new MetaTileEntityLargeCombustor(metaTileEntityId, boilerType);
+        return new MetaTileEntityLargeCombustor(metaTileEntityId, combustorType);
     }
 
     @Override
@@ -145,9 +145,7 @@ public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase impl
         super.update();
 
         if (this.isActive()) {
-            if (getWorld().isRemote) {
-                VanillaParticleEffects.PBF_SMOKE.runEffect(this);
-            } else {
+            if (!getWorld().isRemote) {
                 damageEntitiesAndBreakSnow();
                 pollution(this.getPollutionAmount(), this.getPollutionTicks());
             }
@@ -156,7 +154,7 @@ public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase impl
 
     @Override
     public double getPollutionAmount() {
-        return switch (boilerType) {
+        return switch (combustorType) {
             case BRONZE -> 0.01;
             case STEEL -> 0.012;
             case TITANIUM -> 0.015;
@@ -217,7 +215,7 @@ public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase impl
                     return new ButtonWidget<>()
                             .size(18)
                             .overlay(GTGuiTextures.FILTER_SETTINGS_OVERLAY.asIcon().size(16))
-                            .addTooltipLine(IKey.lang("gregtech.multiblock.large_boiler.throttle_button.tooltip"))
+                            .addTooltipLine(IKey.lang("gtsteam.multiblock.large_combustor.throttle_button.tooltip"))
                             .onMousePressed(i -> {
                                 if (throttle.isPanelOpen()) {
                                     throttle.closePanel();
@@ -246,14 +244,14 @@ public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase impl
             IKey efficiency = KeyUtil.number(
                     getNumberColor(heatScaled), heatScaled, "%");
             keyManager.add(KeyUtil.lang(TextFormatting.GRAY,
-                    "gregtech.multiblock.large_boiler.efficiency", efficiency));
+                    "gtsteam.multiblock.large_combustor.efficiency", efficiency));
 
             // Throttle line
             IKey throttle = KeyUtil.number(
                     getNumberColor(throttleAmt),
                     throttleAmt, "%");
             keyManager.add(KeyUtil.lang(TextFormatting.GRAY,
-                    "gregtech.multiblock.large_boiler.throttle", throttle));
+                    "gtsteam.multiblock.large_combustor.throttle", throttle));
         }
     }
 
@@ -282,7 +280,7 @@ public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase impl
                                 .asWidget()
                                 .size(16)
                                 .marginRight(4))
-                        .child(IKey.lang("gregtech.multiblock.large_boiler.throttle.title")
+                        .child(IKey.lang("gtsteam.multiblock.large_combustor.throttle.title")
                                 .asWidget()
                                 .heightRel(1.0f)))
                 .child(Flow.row()
@@ -341,19 +339,20 @@ public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase impl
                 .aisle("XCCCX", "CPPPC", "P  &P", "PPC C", "  C C", "  C C")
                 .aisle("VXXXV", "CCCSC", " CCC ", "   C ", "   C ", "   C ")
                 .where('S', selfPredicate())
-                .where('P', states(boilerType.pipeState))
-                .where('X', states(boilerType.fireboxState).setMinGlobalLimited(4)
+                .where('P', states(combustorType.pipeState))
+                .where('X', states(combustorType.fireboxState))
+                .where('V', states(combustorType.casingState))
+                .where('C', states(combustorType.casingState).setMinGlobalLimited(16)
+                        .or(abilities(MultiblockAbility.OUTPUT_HEAT)
+                                .setMinGlobalLimited(1).setMaxGlobalLimited(6).setPreviewCount(1))
                         .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setMinGlobalLimited(1, 1))
-                        // setting this to max 2 makes the import fluids max 2 for some reason
                         .or(abilities(MultiblockAbility.IMPORT_ITEMS).setMaxGlobalLimited(2, 1))
-                        .or(autoAbilities())) // muffler, maintenance
-                .where('V', states(boilerType.casingState))
-                .where('C', states(boilerType.casingState).setMinGlobalLimited(16)
-                        .or(abilities(MultiblockAbility.OUTPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(6).setPreviewCount(1)))
+                )
                 .where('&', air().or(SNOW_PREDICATE)) // this won't stay in the structure, and will be broken while
                 .where(' ', air())
                 .build();
     }
+
     @Override
     public boolean hasMaintenanceMechanics() {
         return false;
@@ -366,7 +365,7 @@ public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase impl
 
     @Override
     public String[] getDescription() {
-        return new String[]{I18n.format("gregtech.multiblock.large_boiler.description")};
+        return new String[]{I18n.format("gtsteam.multiblock.large_combustor.description")};
     }
 
     @Override
@@ -385,24 +384,11 @@ public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase impl
                 recipeLogic.isWorkingEnabled());
     }
 
-    @SideOnly(Side.CLIENT)
-    @NotNull
-    @Override
-    protected ICubeRenderer getFrontOverlay() {
-        return Textures.PRIMITIVE_BLAST_FURNACE_OVERLAY;
-    }
-
-    private boolean isFireboxPart(IMultiblockPart sourcePart) {
-        return isStructureFormed() && (((MetaTileEntity) sourcePart).getPos().getY() < getPos().getY());
-    }
 
     @SideOnly(Side.CLIENT)
     @Override
     public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
-        if (sourcePart != null && isFireboxPart(sourcePart)) {
-            return isActive() ? boilerType.fireboxActiveRenderer : boilerType.fireboxIdleRenderer;
-        }
-        return boilerType.casingRenderer;
+        return combustorType.casingRenderer;
     }
 
     @Override
@@ -549,10 +535,10 @@ public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase impl
         public void addInformation(MetaTileEntity metaTileEntity, List<String> tooltip) {
             tooltip.add(I18n.format("每块煤炭可以生产 %s HU 的热量",
                     TextFormattingUtil
-                            .formatNumbers((int) (boilerType.heatPerTick() * 20 * boilerType.runtimeBoost(200) / 20.0))));
+                            .formatNumbers((int) (combustorType.heatPerTick() * 20 * combustorType.runtimeBoost(200) / 20.0))));
             tooltip.add(
-                    I18n.format("锅炉最大温度：%s K", boilerType.getMaxTemp()));
-            tooltip.add(I18n.format("gregtech.universal.tooltip.produces_heat", boilerType.heatPerTick()));
+                    I18n.format("锅炉最大温度：%s K", combustorType.getMaxTemp()));
+            tooltip.add(I18n.format("gregtech.universal.tooltip.produces_heat", combustorType.heatPerTick()));
         }
     }
 }
