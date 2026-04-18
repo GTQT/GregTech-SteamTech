@@ -10,18 +10,14 @@ import gregtech.client.renderer.texture.Textures;
 import gregtech.common.metatileentities.electric.MetaTileEntitySingleCombustion;
 import gregtech.common.metatileentities.electric.MetaTileEntitySingleTurbine;
 import gregtech.common.metatileentities.electric.SimpleMachineMetaTileEntityResizable;
-import gregtech.common.metatileentities.multi.MetaTileEntityLargeBoiler;
 import meowmel.gtsteam.common.metatileentities.combustor.CoalCombustor;
 import meowmel.gtsteam.common.metatileentities.combustor.LavaCombustor;
 import meowmel.gtsteam.common.metatileentities.combustor.SolarCombustor;
 import meowmel.gtsteam.common.metatileentities.multi.generator.*;
 import meowmel.gtsteam.common.metatileentities.multi.heat.*;
-import meowmel.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnExportHatch;
-import meowmel.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityAlloyKilnImportHatch;
-import meowmel.gtsteam.common.metatileentities.multi.primitive.MetaTileEntityAlloyKiln;
-import meowmel.gtsteam.common.metatileentities.multi.primitive.MetaTileEntityCoagulationTank;
-import meowmel.gtsteam.common.metatileentities.multi.primitive.MetaTileEntityIndustrialCokeOven;
-import meowmel.gtsteam.common.metatileentities.multi.primitive.MetaTileEntityIndustrialPrimitiveBlastFurnace;
+import meowmel.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityPrimitiveExportHatch;
+import meowmel.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityPrimitiveImportHatch;
+import meowmel.gtsteam.common.metatileentities.multi.primitive.*;
 import meowmel.gtsteam.common.metatileentities.multi.steam.*;
 import meowmel.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamBiomimeticFactory;
 import meowmel.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamTranscendentPlasmaForge;
@@ -29,7 +25,6 @@ import meowmel.gtsteam.common.metatileentities.multi.store.*;
 import meowmel.gtsteam.common.metatileentities.single.MetaTileEntityLatexCollector;
 import net.minecraft.util.ResourceLocation;
 
-import static gregtech.api.util.GTUtility.gregtechId;
 import static gregtech.common.metatileentities.MetaTileEntities.registerMetaTileEntity;
 import static meowmel.gtsteam.GTSteam.MODID;
 import static meowmel.gtsteam.api.recipes.GTSRecipeMaps.*;
@@ -37,8 +32,9 @@ import static meowmel.gtsteam.api.recipes.GTSRecipeMaps.*;
 public class GTSteamMetaTileEntities {
 
     public static MetaTileEntityAlloyKiln ALLOY_KILN;
-    public static MetaTileEntityAlloyKilnImportHatch ALLOY_KILN_IMPORT_HATCH;
-    public static MetaTileEntityAlloyKilnExportHatch ALLOY_KILN_EXPORT_HATCH;
+    public static MetaTileEntityPrimitiveFurnace PRIMITIVE_FURNACE;
+    public static MetaTileEntityPrimitiveImportHatch PRIMITIVE_IMPORT_HATCH;
+    public static MetaTileEntityPrimitiveExportHatch PRIMITIVE_EXPORT_HATCH;
 
     public static MetaTileEntityIndustrialPrimitiveBlastFurnace INDUSTRIAL_PRIMITIVE_BLAST_FURNACE;
     public static MetaTileEntityIndustrialCokeOven INDUSTRIAL_COKE_OVEN;
@@ -143,8 +139,11 @@ public class GTSteamMetaTileEntities {
 
     public static void initialization() {
         ALLOY_KILN = registerMetaTileEntity(1, new MetaTileEntityAlloyKiln(gtsId("alloy_klin")));
-        ALLOY_KILN_IMPORT_HATCH = registerMetaTileEntity(2, new MetaTileEntityAlloyKilnImportHatch(gtsId("alloy_klin_import_hatch")));
-        ALLOY_KILN_EXPORT_HATCH = registerMetaTileEntity(3, new MetaTileEntityAlloyKilnExportHatch(gtsId("alloy_klin_export_hatch")));
+        PRIMITIVE_FURNACE = registerMetaTileEntity(2, new MetaTileEntityPrimitiveFurnace(gtsId("primitive_furnace")));
+
+        PRIMITIVE_IMPORT_HATCH = registerMetaTileEntity(4, new MetaTileEntityPrimitiveImportHatch(gtsId("primitive_import_hatch")));
+        PRIMITIVE_EXPORT_HATCH = registerMetaTileEntity(5, new MetaTileEntityPrimitiveExportHatch(gtsId("primitive_export_hatch")));
+
 
         INDUSTRIAL_PRIMITIVE_BLAST_FURNACE = registerMetaTileEntity(6, new MetaTileEntityIndustrialPrimitiveBlastFurnace(gtsId("industrial_primitive_blast_furnace")));
         INDUSTRIAL_COKE_OVEN = registerMetaTileEntity(7, new MetaTileEntityIndustrialCokeOven(gtsId("industrial_coke_oven")));

@@ -30,9 +30,9 @@ import net.minecraftforge.items.IItemHandler;
 
 import java.util.List;
 
-public class MetaTileEntityAlloyKilnImportHatch extends MetaTileEntityMultiblockPart {
+public class MetaTileEntityPrimitiveImportHatch extends MetaTileEntityMultiblockPart {
 
-    public MetaTileEntityAlloyKilnImportHatch(ResourceLocation metaTileEntityId) {
+    public MetaTileEntityPrimitiveImportHatch(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, 0);
     }
 
@@ -85,7 +85,7 @@ public class MetaTileEntityAlloyKilnImportHatch extends MetaTileEntityMultiblock
 
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity tileEntity) {
-        return new MetaTileEntityAlloyKilnImportHatch(metaTileEntityId);
+        return new MetaTileEntityPrimitiveImportHatch(metaTileEntityId);
     }
 
     @Override

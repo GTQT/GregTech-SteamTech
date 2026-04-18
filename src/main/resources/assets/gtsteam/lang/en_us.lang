@@ -117,10 +117,19 @@ gtsteam.machine.steam_brewing.name=Steam Brewing
 gtsteam.machine.steam_alloy_furnace.name=Steam Alloy Furnace
 gtsteam.machine.steam_lava_furnace.name=Steam Lava Furnace
 gtsteam.machine.saw_mill.name=Saw Mill
-#Alloy Klin
-gtsteam.machine.alloy_klin.name=Alloy Klin
-gtsteam.machine.alloy_klin_import_hatch.name=Alloy Klin Import Hatch
-gtsteam.machine.alloy_klin_export_hatch.name=Alloy Klin Export Hatch
+# 原始设备
+gtsteam.machine.alloy_klin.name=Alloy Kiln
+gtsteam.machine.primitive_furnace.name=Primitive Furnace
+gtsteam.machine.primitive_import_hatch.name=Primitive Import Hatch
+gtsteam.machine.primitive_export_hatch.name=Primitive Export Hatch
+
+gtsteam.machine.alloy_klin.tooltip.1=Processing speed is 20 times that of the Steam Alloy Smelter.
+gtsteam.machine.alloy_klin.tooltip.2=Consumes a small amount of Lava.
+gtsteam.machine.alloy_klin.tooltip.3=Allows interaction with Primitive Import/Export Hatches.
+
+gtsteam.machine.primitive_furnace.tooltip.1=Smelting speed is 2 times that of a regular Furnace.
+gtsteam.machine.primitive_furnace.tooltip.2=Fuel durability is 4 times that of a regular Furnace.
+gtsteam.machine.primitive_furnace.tooltip.3=Allows interaction with Primitive Import/Export Hatches.
 # 工业土高炉
 gtsteam.machine.industrial_primitive_blast_furnace.name=Industrial Primitive Blast Furnace
 gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace=Attached blast furnace: %s

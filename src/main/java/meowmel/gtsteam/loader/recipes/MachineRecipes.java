@@ -13,6 +13,7 @@ import meowmel.gtsteam.common.block.GTSteamMetaBlocks;
 import meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing0;
 import meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 
 import static gregtech.api.unification.material.MarkerMaterials.Tier.LV;
 import static gregtech.api.unification.material.MarkerMaterials.Tier.ULV;
@@ -22,7 +23,6 @@ import static gregtech.common.blocks.BlockFireboxCasing.FireboxCasingType.*;
 import static gregtech.common.blocks.BlockFireboxCasing.FireboxCasingType.TUNGSTENSTEEL_FIREBOX;
 import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.BRONZE_BRICKS;
 import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.STEEL_SOLID;
-import static gregtech.common.items.MetaItems.ELECTRIC_PUMP_LV;
 import static gregtech.common.metatileentities.MetaTileEntities.*;
 import static gregtech.loaders.recipe.MetaTileEntityLoader.registerMachineRecipe;
 import static meowmel.gtsteam.api.unification.GTSteamMaterials.GalvanizedSteel;
@@ -304,14 +304,19 @@ public class MachineRecipes {
         ModHandler.addShapedRecipe(true, "alloy_kiln", GTSteamMetaTileEntities.ALLOY_KILN.getStackForm(),
                 "PIP", "IwI", "PIP",
                 'P', GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(GALVANIZED_PORCELAIN_TILES),
-                'I', new UnificationEntry(OrePrefix.plate, Iron));
+                'I', Items.LAVA_BUCKET);
 
-        ModHandler.addShapedRecipe(true, "alloy_kiln_import_hatch", ALLOY_KILN_IMPORT_HATCH.getStackForm(),
+        ModHandler.addShapedRecipe(true, "primitive_furnace", GTSteamMetaTileEntities.PRIMITIVE_FURNACE.getStackForm(),
+                "PIP", "IwI", "PIP",
+                'P', GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(GALVANIZED_PORCELAIN_TILES),
+                'I', Blocks.FURNACE);
+
+        ModHandler.addShapedRecipe(true, "primitive_import_hatch", PRIMITIVE_IMPORT_HATCH.getStackForm(),
                 "wh", "CB",
                 'C', Blocks.CHEST,
                 'B', GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(GALVANIZED_PORCELAIN_TILES));
 
-        ModHandler.addShapedRecipe(true, "alloy_kiln_export_hatch", ALLOY_KILN_EXPORT_HATCH.getStackForm(),
+        ModHandler.addShapedRecipe(true, "primitive_export_hatch", PRIMITIVE_EXPORT_HATCH.getStackForm(),
                 "hw", "CB",
                 'C', Blocks.CHEST,
                 'B', GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(GALVANIZED_PORCELAIN_TILES));

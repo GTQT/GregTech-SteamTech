@@ -19,6 +19,8 @@ import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.pattern.BlockPattern;
 import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.util.tooltips.InformationHandler;
+import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.mui.widget.GTFluidSlot;
@@ -28,15 +30,20 @@ import meowmel.gtsteam.common.block.GTSteamMetaBlocks;
 import meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing0;
 import meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockController {
 
@@ -57,8 +64,8 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
                 .aisle("XXX", "X&X", "#X#")
                 .aisle("XXX", "XYX", "#X#")
                 .where('X', states(getCasingState())
-                        .or(metaTileEntities(GTSteamMetaTileEntities.ALLOY_KILN_IMPORT_HATCH).setMaxGlobalLimited(2))
-                        .or(metaTileEntities(GTSteamMetaTileEntities.ALLOY_KILN_EXPORT_HATCH).setMaxGlobalLimited(1))
+                        .or(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_IMPORT_HATCH).setMaxGlobalLimited(2))
+                        .or(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_EXPORT_HATCH).setMaxGlobalLimited(1))
                 )
                 .where('#', any())
                 .where('&', air())
@@ -162,5 +169,15 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
             }
         }
         return super.onRightClick(playerIn, hand, facing, hitResult);
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, World player, List<String> tooltip, boolean advanced) {
+        InformationHandler.topTooltips("大型原始人熔炉", tooltip);
+        super.addInformation(stack, player, tooltip, advanced);
+        TooltipBuilder.create().addSpecialLogic().build(this, tooltip);
+        tooltip.add(I18n.format("gtsteam.machine.alloy_klin.tooltip.1"));
+        tooltip.add(I18n.format("gtsteam.machine.alloy_klin.tooltip.2"));
+        tooltip.add(I18n.format("gtsteam.machine.alloy_klin.tooltip.3"));
     }
 }

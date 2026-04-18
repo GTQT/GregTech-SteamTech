@@ -9,6 +9,7 @@ import meowmel.gtsteam.common.block.GTSteamMetaBlocks;
 
 import static gregtech.api.unification.material.Materials.*;
 import static gregtech.api.unification.ore.OrePrefix.*;
+import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.COKE_BRICKS;
 import static gregtech.common.blocks.BlockMetalCasing.MetalCasingType.PRIMITIVE_BRICKS;
 import static gregtech.common.items.MetaItems.WOODEN_FORM_BRICK;
 import static meowmel.gtsteam.api.unification.GTSteamMaterials.BoneCeramicClay;
@@ -41,9 +42,16 @@ public class CeramicChain {
                 .output(GALVANIZED_CERAMIC_TILE)
                 .duration(100).EUt(8).buildAndRegister();
 
-        ModHandler.addShapedRecipe("galvanized_porcelain_tiles", GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(GALVANIZED_PORCELAIN_TILES, 2),
+        ModHandler.addShapedRecipe("galvanized_porcelain_tiles_a", GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(GALVANIZED_PORCELAIN_TILES, 4),
                 "SXS", "XYX", "SXS",
                 'Y', MetaBlocks.METAL_CASING.getItemVariant(PRIMITIVE_BRICKS, 1),
+                'S', new UnificationEntry(screw, Iron),
+                'X', GALVANIZED_CERAMIC_TILE);
+
+
+        ModHandler.addShapedRecipe("galvanized_porcelain_tiles_b", GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(GALVANIZED_PORCELAIN_TILES, 1),
+                "SXS", "XYX", "SXS",
+                'Y', MetaBlocks.METAL_CASING.getItemVariant(COKE_BRICKS, 1),
                 'S', new UnificationEntry(screw, Iron),
                 'X', GALVANIZED_CERAMIC_TILE);
     }

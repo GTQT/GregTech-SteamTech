@@ -117,11 +117,20 @@ gtsteam.machine.steam_brewing.name=蒸汽酿造器
 gtsteam.machine.steam_alloy_furnace.name=蒸汽合金炉
 gtsteam.machine.steam_lava_furnace.name=蒸汽熔岩炉
 gtsteam.machine.saw_mill.name=锯木机
-#合金窑
+# 原始设备
 gtsteam.machine.alloy_klin.name=合金窑
-gtsteam.machine.alloy_klin_import_hatch.name=合金窑输入仓
-gtsteam.machine.alloy_klin_export_hatch.name=合金窑输出仓
-#工业土高炉
+gtsteam.machine.primitive_furnace.name=原始熔炉
+gtsteam.machine.primitive_import_hatch.name=原始输入仓
+gtsteam.machine.primitive_export_hatch.name=原始输出仓
+
+gtsteam.machine.alloy_klin.tooltip.1=加工速度是蒸汽合金炉的20倍
+gtsteam.machine.alloy_klin.tooltip.2=需要消耗少量岩浆
+gtsteam.machine.alloy_klin.tooltip.3=允许与原始输入仓/输出仓交互
+
+gtsteam.machine.primitive_furnace.tooltip.1=熔炼速度是普通熔炉的2倍
+gtsteam.machine.primitive_furnace.tooltip.2=燃料耐久度是普通熔炉的4倍
+gtsteam.machine.primitive_furnace.tooltip.3=允许与原始输入仓/输出仓交互
+# 工业土高炉
 gtsteam.machine.industrial_primitive_blast_furnace.name=工业级土高炉
 gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace=附属高炉： %s 座
 gtsteam.multiblock.ip.amount.1=温度：%sK(最高温度 %s K)
