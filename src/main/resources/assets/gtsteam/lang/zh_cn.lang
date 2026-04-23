@@ -84,14 +84,14 @@ metaitem.galvanized_ceramic_tile.name=镀锌的陶瓷瓦
 
 metaitem.component.vacuum_tube.name=真空管组件
 
-item.cactus_charcoal.name=仙人掌炭
-item.cactus_charcoal.tooltip=来自仙人掌的炭
-item.cactus_coal.name=仙人掌焦炭
-item.cactus_coal.tooltip=来自仙人掌的焦炭
-item.sugar_charcoal.name=糖炭
-item.sugar_charcoal.tooltip=来自糖的炭
-item.sugar_coal.name=糖焦炭
-item.sugar_coal.tooltip=来自糖的焦炭
+metaitem.cactus_charcoal.name=仙人掌炭
+metaitem.cactus_charcoal.tooltip=来自仙人掌的炭
+metaitem.cactus_coal.name=仙人掌焦炭
+metaitem.cactus_coal.tooltip=来自仙人掌的焦炭
+metaitem.sugar_charcoal.name=糖炭
+metaitem.sugar_charcoal.tooltip=来自糖的炭
+metaitem.sugar_coal.name=糖焦炭
+metaitem.sugar_coal.tooltip=来自糖的焦炭
 
 item.storage_upgrade_tier_1.name=基础存储升级
 item.storage_upgrade_tier_2.name=高级存储升级

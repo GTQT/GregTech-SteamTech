@@ -84,14 +84,14 @@ metaitem.galvanized_ceramic_tile.name=Galvanized Ceramic Tiles
 
 metaitem.component.vacuum_tube.name=Vacuum Tube Component
 
-item.cactus_charcoal.name=Cactus Charcoal
-item.cactus_charcoal.tooltip=Charcoal made from cactus
-item.cactus_coal.name=Cactus Coal
-item.cactus_coal.tooltip=Coal made from cactus
-item.sugar_charcoal.name=Sugar Charcoal
-item.sugar_charcoal.tooltip=Charcoal made from sugar
-item.sugar_coal.name=Sugar Coal
-item.sugar_coal.tooltip=Coal made from sugar
+metaitem.cactus_charcoal.name=Cactus Charcoal
+metaitem.cactus_charcoal.tooltip=Charcoal made from cactus
+metaitem.cactus_coal.name=Cactus Coal
+metaitem.cactus_coal.tooltip=Coal made from cactus
+metaitem.sugar_charcoal.name=Sugar Charcoal
+metaitem.sugar_charcoal.tooltip=Charcoal made from sugar
+metaitem.sugar_coal.name=Sugar Coal
+metaitem.sugar_coal.tooltip=Coal made from sugar
 
 item.storage_upgrade_tier_1.name=Basic Storage Upgrade
 item.storage_upgrade_tier_2.name=Advanced Storage Upgrade
