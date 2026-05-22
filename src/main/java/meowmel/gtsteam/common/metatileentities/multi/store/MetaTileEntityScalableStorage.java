@@ -13,9 +13,12 @@ import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.MultiblockDisplayText;
 import gregtech.api.metatileentity.multiblock.MultiblockWithDisplayBase;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.BlockPatternTemplate;
 import gregtech.api.pattern.PatternMatchContext;
+import gregtech.api.pattern.SoftTemplate;
+import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.casing.CasingDefinition;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.util.TextFormattingUtil;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
@@ -44,6 +47,17 @@ public class MetaTileEntityScalableStorage extends MultiblockWithDisplayBase {
 
     private static final int BASE_CAPACITY = 4000000;
     private static final int DURABILITY_INTERVAL = 200;
+    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:scalable_storage", () ->
+            DeclarativePatternBuilder.start()
+                    .aisle("CCC", "CCC", "CCC")
+                    .aisle("CCC", "CCC", "CCC")
+                    .aisle("CCC", "CSC", "CCC")
+                    .where('S', selfPredicate(MetaTileEntityScalableStorage.class))
+                    .casing('C', CasingDefinition.simple(getCasingState()))
+                    .itemInput(1, 4)
+                    .itemOutput(1, 4)
+                    .buildTemplate()
+    );
     private ItemStackHandler storageHandler;
     private ItemStack storedItemType = ItemStack.EMPTY;
     private int virtualStoredCount = 0;
@@ -307,16 +321,8 @@ public class MetaTileEntityScalableStorage extends MultiblockWithDisplayBase {
     }
 
     @Override
-    protected @NotNull BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start()
-                .aisle("CCC", "CCC", "CCC")
-                .aisle("CCC", "CCC", "CCC")
-                .aisle("CCC", "CSC", "CCC")
-                .where('S', selfPredicate())
-                .where('C', states(getCasingState())
-                        .or(abilities(MultiblockAbility.IMPORT_ITEMS).setMinGlobalLimited(1).setMaxGlobalLimited(4))
-                        .or(abilities(MultiblockAbility.EXPORT_ITEMS).setMinGlobalLimited(1).setMaxGlobalLimited(4)))
-                .build();
+    protected @NotNull BlockPatternTemplate createStructureTemplate() {
+        return TEMPLATE.get();
     }
 
     @Override

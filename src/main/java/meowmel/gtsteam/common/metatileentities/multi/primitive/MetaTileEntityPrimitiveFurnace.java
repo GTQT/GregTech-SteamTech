@@ -20,8 +20,11 @@ import gregtech.api.metatileentity.multiblock.ui.MultiblockUIFactory;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.mui.widget.RecipeProgressWidget;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.BlockPatternTemplate;
+import gregtech.api.pattern.SoftTemplate;
+import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.casing.CasingDefinition;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.util.GTUtility;
 import gregtech.api.util.tooltips.InformationHandler;
@@ -55,12 +58,28 @@ import java.util.List;
 
 public class MetaTileEntityPrimitiveFurnace extends RecipeMapPrimitiveMultiblockController {
 
+    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:primitive_furnace", () ->
+            DeclarativePatternBuilder.start()
+                    .aisle("XXX", "XXX", "XXX")
+                    .aisle("XXX", "X X", "XXX")
+                    .aisle("XXX", "XYX", "XXX")
+                    .casing('X', CasingDefinition.simple(getCasingState()))
+                    .custom(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_IMPORT_HATCH), 2)
+                    .custom(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_EXPORT_HATCH), 1)
+                    .where(' ', air())
+                    .where('Y', selfPredicate(MetaTileEntityPrimitiveFurnace.class))
+                    .buildTemplate()
+    );
     protected IItemHandlerModifiable fuelStack;
 
     public MetaTileEntityPrimitiveFurnace(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.FURNACE_RECIPES);
         this.recipeMapWorkable = new PrimitiveFurnaceRecipeLogic(this);
         this.recipeMapWorkable.setSpeedBonus(0.5f);
+    }
+
+    protected static IBlockState getCasingState() {
+        return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES);
     }
 
     @Override
@@ -86,26 +105,10 @@ public class MetaTileEntityPrimitiveFurnace extends RecipeMapPrimitiveMultiblock
         return new MetaTileEntityPrimitiveFurnace(metaTileEntityId);
     }
 
-    @NotNull
     @Override
-    protected BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start()
-                .aisle("XXX", "XXX", "XXX")
-                .aisle("XXX", "X X", "XXX")
-                .aisle("XXX", "XYX", "XXX")
-                .where('X', states(getCasingState())
-                        .or(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_IMPORT_HATCH).setMaxGlobalLimited(2))
-                        .or(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_EXPORT_HATCH).setMaxGlobalLimited(1))
-                )
-                .where(' ', air())
-                .where('Y', selfPredicate())
-                .build();
+    protected @NotNull BlockPatternTemplate createStructureTemplate() {
+        return TEMPLATE.get();
     }
-
-    protected IBlockState getCasingState() {
-        return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES);
-    }
-
 
     @SideOnly(Side.CLIENT)
     @Override
@@ -218,7 +221,7 @@ public class MetaTileEntityPrimitiveFurnace extends RecipeMapPrimitiveMultiblock
     }
 
     @Override
-    public void addInformation(ItemStack stack, World player, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, World player, @NotNull List<String> tooltip, boolean advanced) {
         InformationHandler.topTooltips("大型原始人熔炉", tooltip);
         super.addInformation(stack, player, tooltip, advanced);
         TooltipBuilder.create().addSpecialLogic().build(this, tooltip);
@@ -241,8 +244,7 @@ public class MetaTileEntityPrimitiveFurnace extends RecipeMapPrimitiveMultiblock
             if (fuelBurnTimeLeft > 0) {
                 super.updateRecipeProgress();
                 fuelBurnTimeLeft--;
-            }
-            else tryConsumeNewFuel();
+            } else tryConsumeNewFuel();
         }
 
         protected void tryConsumeNewFuel() {

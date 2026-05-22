@@ -10,9 +10,11 @@ import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.IPrimitivePump;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.MultiblockControllerBase;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.BlockPatternTemplate;
 import gregtech.api.pattern.PatternMatchContext;
+import gregtech.api.pattern.SoftTemplate;
+import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.unification.material.Materials;
 import gregtech.api.util.LocalizationUtils;
 import gregtech.client.renderer.ICubeRenderer;
@@ -44,6 +46,22 @@ import java.util.Set;
 import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
 
 public class MetaTileEntitySteamWaterPump extends MultiblockControllerBase implements IPrimitivePump {
+    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:steam_water_pump", () ->
+            DeclarativePatternBuilder.start()
+                    .aisle("A   A", "A   A", "BBBBB", "A   A", "A   A", "BBBBB")
+                    .aisle("     ", "     ", "BBBBB", " CCC ", " CCC ", "BBBBB")
+                    .aisle("     ", "     ", "BBBBB", " CCC ", " CCC ", "BBBBB")
+                    .aisle("     ", "     ", "BBBBB", " CSC ", " CCC ", "BBBBB")
+                    .aisle("A   A", "A   A", "BBBBB", "A   A", "A   A", "BBBBB")
+                    .where('S', selfPredicate(MetaTileEntitySteamWaterPump.class))
+                    .where('A', frames(Materials.TreatedWood))
+                    .where('B', states(MetaBlocks.PLANKS.getState(BlockGregPlanks.BlockType.TREATED_PLANK)))
+                    .where('C', states(getCasingState())
+                            .or(metaTileEntities(MetaTileEntities.FLUID_EXPORT_HATCH[0], MetaTileEntities.FLUID_EXPORT_HATCH[1]).setExactLimit(1))
+                            .or(metaTileEntities(MetaTileEntities.STEAM_HATCH).setExactLimit(1)))
+                    .where(' ', any())
+                    .buildTemplate()
+    );
     private IFluidTank waterTank;
     private int biomeModifier = 0;
     private int hatchModifier = 0;
@@ -52,6 +70,10 @@ public class MetaTileEntitySteamWaterPump extends MultiblockControllerBase imple
     public MetaTileEntitySteamWaterPump(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId);
         resetTileAbilities();
+    }
+
+    public static IBlockState getCasingState() {
+        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
     }
 
     @Override
@@ -152,25 +174,8 @@ public class MetaTileEntitySteamWaterPump extends MultiblockControllerBase imple
     }
 
     @Override
-    protected @NotNull BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start()
-                .aisle("A   A", "A   A", "BBBBB", "A   A", "A   A", "BBBBB")
-                .aisle("     ", "     ", "BBBBB", " CCC ", " CCC ", "BBBBB")
-                .aisle("     ", "     ", "BBBBB", " CCC ", " CCC ", "BBBBB")
-                .aisle("     ", "     ", "BBBBB", " CSC ", " CCC ", "BBBBB")
-                .aisle("A   A", "A   A", "BBBBB", "A   A", "A   A", "BBBBB")
-                .where('S', selfPredicate())
-                .where('A', frames(Materials.TreatedWood))
-                .where('B', states(MetaBlocks.PLANKS.getState(BlockGregPlanks.BlockType.TREATED_PLANK)))
-                .where('C', states(getCasingState())
-                        .or(metaTileEntities(MetaTileEntities.FLUID_EXPORT_HATCH[0], MetaTileEntities.FLUID_EXPORT_HATCH[1]).setExactLimit(1))
-                        .or(metaTileEntities(MetaTileEntities.STEAM_HATCH).setExactLimit(1)))
-                .where(' ', any())
-                .build();
-    }
-
-    public IBlockState getCasingState() {
-        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
+    protected @NotNull BlockPatternTemplate createStructureTemplate() {
+        return TEMPLATE.get();
     }
 
     @SideOnly(Side.CLIENT)

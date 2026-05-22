@@ -5,17 +5,14 @@ import gregtech.api.capability.impl.NoEnergyMultiblockRecipeLogic;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
-import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.NoEnergyMultiblockController;
 import gregtech.api.metatileentity.multiblock.ui.KeyManager;
 import gregtech.api.metatileentity.multiblock.ui.MultiblockUIBuilder;
 import gregtech.api.metatileentity.multiblock.ui.UISyncer;
 import gregtech.api.mui.GTGuiTheme;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
-import gregtech.api.pattern.MultiblockShapeInfo;
-import gregtech.api.pattern.PatternMatchContext;
-import gregtech.api.recipes.RecipeMap;
+import gregtech.api.pattern.*;
+import gregtech.api.pattern.casing.CasingDefinition;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.recipes.logic.OCResult;
 import gregtech.api.recipes.properties.RecipePropertyStorage;
 import gregtech.api.unification.material.Materials;
@@ -58,13 +55,39 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
 
     private static final gregtech.api.pattern.TraceabilityPredicate SNOW_PREDICATE = new gregtech.api.pattern.TraceabilityPredicate(
             bws -> GTUtility.isBlockSnow(bws.getBlockState()));
-
+    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:industrial_primitive_blast_furnace", () ->
+            DeclarativePatternBuilder.start()
+                    .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
+                    .aisle("    CDDDC    ", "    CDDDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
+                    .aisle("AAAGDDDDDJFFF", "GGG D###D JJJ", " G  D###D  J ", " G  D###D  J ", " G   DDD   J ", " G    D    J ", "      D      ", "      D      ", "      D      ")
+                    .aisle("AAAGDDDDDJFFF", "G@GHD#&#DIJ$J", "G G D###D J J", "G*G D###D J!J", "G*G D###D J!J", "G*G  D#D  J!J", "     D#D     ", "     D#D     ", "     D#D     ")
+                    .aisle("AAAGDDDDDJFFF", "GGG D###D JJJ", " G  D###D  J ", " G  D###D  J ", " G   DDD   J ", " G    D    J ", "      D      ", "      D      ", "      D      ")
+                    .aisle("    CDDDC    ", "    CDSDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
+                    .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
+                    .where('S', selfPredicate(MetaTileEntityIndustrialPrimitiveBlastFurnace.class))
+                    .where('A', TraceabilityPredicate.optionalStates("AuxiliaryBlastFurnace1", getFireBoxState()))
+                    .where('C', states(getFrameState()))
+                    .casing('D', CasingDefinition.simple(getCasingState()))
+                    .optionalItemInput(4)
+                    .optionalItemOutput(4)
+                    .where('F', TraceabilityPredicate.optionalStates("AuxiliaryBlastFurnace2", getFireBoxState()))
+                    .where('G', TraceabilityPredicate.optionalStates("AuxiliaryBlastFurnace1", getCasingState()))
+                    .where('H', TraceabilityPredicate.optionalStates("AuxiliaryBlastFurnace1", getBoilerState()))
+                    .where('I', TraceabilityPredicate.optionalStates("AuxiliaryBlastFurnace2", getBoilerState()))
+                    .where('J', TraceabilityPredicate.optionalStates("AuxiliaryBlastFurnace2", getCasingState()))
+                    .where('&', air().or(SNOW_PREDICATE))
+                    .where('#', air())
+                    .where('@', any())
+                    .where('*', any())
+                    .where('$', any())
+                    .where('!', any())
+                    .where(' ', any())
+                    .buildTemplate()
+    );
     int TEMP = 300;
     int MIN_TEMP = 300;
     int MAX_TEMP = 1500;
-
     private byte auxiliaryBlastFurnaceNumber = 0;
-
     public MetaTileEntityIndustrialPrimitiveBlastFurnace(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, PRIMITIVE_BLAST_FURNACE_RECIPES);
         this.recipeMapWorkable = new IndustrialPrimitiveBlastFurnaceLogic(this);
@@ -82,8 +105,13 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
         return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX);
     }
 
-    protected IBlockState getCasingState() {
+    protected static IBlockState getCasingState() {
         return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES);
+    }
+
+    @Override
+    protected @NotNull BlockPatternTemplate createStructureTemplate() {
+        return TEMPLATE.get();
     }
 
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
@@ -118,37 +146,6 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
         auxiliaryBlastFurnaceNumber = 0;
     }
 
-    @Override
-    protected BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start()
-                .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
-                .aisle("    CDDDC    ", "    CDDDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
-                .aisle("AAAGDDDDDJFFF", "GGG D###D JJJ", " G  D###D  J ", " G  D###D  J ", " G   DDD   J ", " G    D    J ", "      D      ", "      D      ", "      D      ")
-                .aisle("AAAGDDDDDJFFF", "G@GHD#&#DIJ$J", "G G D###D J J", "G*G D###D J!J", "G*G D###D J!J", "G*G  D#D  J!J", "     D#D     ", "     D#D     ", "     D#D     ")
-                .aisle("AAAGDDDDDJFFF", "GGG D###D JJJ", " G  D###D  J ", " G  D###D  J ", " G   DDD   J ", " G    D    J ", "      D      ", "      D      ", "      D      ")
-                .aisle("    CDDDC    ", "    CDSDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
-                .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
-                .where('S', selfPredicate())
-                .where('A', TraceabilityPredicate.optionalStates("AuxiliaryBlastFurnace1", getFireBoxState()))
-                .where('C', states(getFrameState()))
-                .where('D', states(getCasingState())
-                        .or(abilities(MultiblockAbility.IMPORT_ITEMS).setMaxGlobalLimited(2))
-                        .or(abilities(MultiblockAbility.EXPORT_ITEMS).setMaxGlobalLimited(2)))
-                .where('F', TraceabilityPredicate.optionalStates("AuxiliaryBlastFurnace2", getFireBoxState()))
-                .where('G', TraceabilityPredicate.optionalStates("AuxiliaryBlastFurnace1", getCasingState()))
-                .where('H', TraceabilityPredicate.optionalStates("AuxiliaryBlastFurnace1", getBoilerState()))
-                .where('I', TraceabilityPredicate.optionalStates("AuxiliaryBlastFurnace2", getBoilerState()))
-                .where('J', TraceabilityPredicate.optionalStates("AuxiliaryBlastFurnace2", getCasingState()))
-                .where('&', air().or(SNOW_PREDICATE))
-                .where('#', air())
-                .where('@', any())
-                .where('*', any())
-                .where('$', any())
-                .where('!', any())
-                .where(' ', any())
-                .build();
-    }
-
     @SideOnly(Side.CLIENT)
     @Override
     public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
@@ -157,10 +154,9 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
 
     @SideOnly(Side.CLIENT)
     @Override
-    protected ICubeRenderer getFrontOverlay() {
+    protected @NotNull ICubeRenderer getFrontOverlay() {
         return Textures.PRIMITIVE_BLAST_FURNACE_OVERLAY;
     }
-
 
     @Override
     protected void configureDisplayText(MultiblockUIBuilder builder) {
@@ -179,7 +175,7 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
     }
 
     @Override
-    public void addInformation(ItemStack stack, World player, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, World player, @NotNull List<String> tooltip, boolean advanced) {
         InformationHandler.topTooltips("前期批发钢材的最好选择", tooltip);
         super.addInformation(stack, player, tooltip, advanced);
         TooltipBuilder.create().addSpecialLogic().build(this, tooltip);

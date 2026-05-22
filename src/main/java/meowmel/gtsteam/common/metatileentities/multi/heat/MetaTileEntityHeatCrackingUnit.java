@@ -5,8 +5,10 @@ import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.HeatMultiblockController;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.BlockPatternTemplate;
+import gregtech.api.pattern.SoftTemplate;
+import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
@@ -30,6 +32,20 @@ import java.util.List;
 
 public class MetaTileEntityHeatCrackingUnit extends HeatMultiblockController {
 
+    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:heat_cracking_unit", () ->
+            DeclarativePatternBuilder.start()
+                    .aisle("CFCFC", "CFCFC", "CFCFC")
+                    .aisle("CCCCC", "I###O", "CCICC")
+                    .aisle("CFCFC", "CFSFC", "CFCFC")
+                    .where('S', selfPredicate(MetaTileEntityHeatCrackingUnit.class))
+                    .where('C', states(getCasingState()).or(abilities(MultiblockAbility.INPUT_HEAT).setExactLimit(1)))
+                    .where('I', states(getCasingState()).or(abilities(MultiblockAbility.IMPORT_FLUIDS).setExactLimit(2)))
+                    .where('O', states(getCasingState()).or(abilities(MultiblockAbility.EXPORT_FLUIDS).setExactLimit(1)))
+                    .where('F', states(getFireBoxState()))
+                    .where('#', air())
+                    .buildTemplate()
+    );
+
     public MetaTileEntityHeatCrackingUnit(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GTSRecipeMaps.HEAT_CRACKING_RECIPES);
     }
@@ -42,23 +58,13 @@ public class MetaTileEntityHeatCrackingUnit extends HeatMultiblockController {
         return MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE);
     }
 
-    @Override
-    protected @NotNull BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start()
-                .aisle("CFCFC", "CFCFC", "CFCFC")
-                .aisle("CCCCC", "I###O", "CCICC")
-                .aisle("CFCFC", "CFSFC", "CFCFC")
-                .where('S', selfPredicate())
-                .where('C', states(getCasingState()).or(abilities(MultiblockAbility.INPUT_HEAT).setExactLimit(1)))
-                .where('I', states(getCasingState()).or(abilities(MultiblockAbility.IMPORT_FLUIDS).setExactLimit(2)))
-                .where('O', states(getCasingState()).or(abilities(MultiblockAbility.EXPORT_FLUIDS).setExactLimit(1)))
-                .where('F', states(getFireBoxState()))
-                .where('#', air())
-                .build();
+    private static IBlockState getFireBoxState() {
+        return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX);
     }
 
-    private IBlockState getFireBoxState() {
-        return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX);
+    @Override
+    protected @NotNull BlockPatternTemplate createStructureTemplate() {
+        return TEMPLATE.get();
     }
 
     @Override

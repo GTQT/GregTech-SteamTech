@@ -34,9 +34,11 @@ import gregtech.api.metatileentity.multiblock.ui.*;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.mui.GTGuis;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.BlockPatternTemplate;
 import gregtech.api.pattern.PatternMatchContext;
+import gregtech.api.pattern.SoftTemplate;
+import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.util.KeyUtil;
 import gregtech.api.util.TextFormattingUtil;
 import gregtech.api.util.tooltips.AbstractTooltipComponent;
@@ -59,13 +61,28 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.UnaryOperator;
 
 import static meowmel.gtsteam.common.metatileentities.multi.generator.PrimitiveCombustorType.*;
 
 public class MetaTileEntityPrimitiveCombustor extends MultiblockWithDisplayBase implements ProgressBarMultiblock,
         IControllable, IHeatMachine {
+
+    private static final Map<PrimitiveCombustorType, SoftTemplate> TEMPLATES = new HashMap<>();
+
+    static {
+        TEMPLATES.put(LOW_PRESSURE_SOLID, TemplatePool.getInstance()
+                .register("gtsteam:solid_combustor.low_pressure", () -> buildTemplate(LOW_PRESSURE_SOLID)));
+        TEMPLATES.put(HIGH_PRESSURE_SOLID, TemplatePool.getInstance()
+                .register("gtsteam:solid_combustor.high_pressure", () -> buildTemplate(HIGH_PRESSURE_SOLID)));
+        TEMPLATES.put(LOW_PRESSURE_FLUID, TemplatePool.getInstance()
+                .register("gtsteam:fluid_combustor.low_pressure", () -> buildTemplate(LOW_PRESSURE_FLUID)));
+        TEMPLATES.put(HIGH_PRESSURE_FLUID, TemplatePool.getInstance()
+                .register("gtsteam:fluid_combustor.high_pressure", () -> buildTemplate(HIGH_PRESSURE_FLUID)));
+    }
 
     public final PrimitiveCombustorType boilerType;
     protected PrimitiveCombustorRecipeLogic recipeLogic;
@@ -79,6 +96,39 @@ public class MetaTileEntityPrimitiveCombustor extends MultiblockWithDisplayBase 
         this.boilerType = combustorType;
         this.recipeLogic = new PrimitiveCombustorRecipeLogic(this, combustorType.isHighPressure());
         resetTileAbilities();
+    }
+
+    private static BlockPatternTemplate buildTemplate(PrimitiveCombustorType boilerType) {
+
+        if (boilerType == LOW_PRESSURE_SOLID || boilerType == HIGH_PRESSURE_SOLID) {
+            return DeclarativePatternBuilder.start()
+                    .aisle("XXX", "CCC", "CCC", "CCC")
+                    .aisle("XXX", "C C", "C C", "CCC")
+                    .aisle("XXX", "CSC", "CCC", "CCC")
+                    .where('S', selfPredicate(MetaTileEntityPrimitiveCombustor.class))
+                    .where('X', states(boilerType.fireboxState)
+                            .or(abilities(MultiblockAbility.IMPORT_ITEMS).setExactLimit(1))
+                    )
+                    .where('C', states(boilerType.casingState)
+                            .or(abilities(MultiblockAbility.OUTPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(6)))
+                    .where(' ', air())
+                    .buildTemplate();
+        } else {
+            return DeclarativePatternBuilder.start()
+                    .aisle("XXX", "CCC", "CCC", "CCC")
+                    .aisle("XXX", "C C", "C C", "CCC")
+                    .aisle("XXX", "CSC", "CCC", "CCC")
+                    .where('S', selfPredicate(MetaTileEntityPrimitiveCombustor.class))
+                    .where('X', states(boilerType.fireboxState)
+                            .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setExactLimit(1))
+                    )
+                    .where('C', states(boilerType.casingState)
+                            .or(abilities(MultiblockAbility.OUTPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(6)))
+                    .where(' ', air())
+                    .buildTemplate();
+        }
+
+
     }
 
     public List<IHeatable> getHeatHatch() {
@@ -158,7 +208,7 @@ public class MetaTileEntityPrimitiveCombustor extends MultiblockWithDisplayBase 
     protected MultiblockUIFactory createUIFactory() {
         return super.createUIFactory()
                 .createFlexButton((guiData, syncManager) -> {
-                    var throttle = syncManager.panel("throttle_panel", this::makeThrottlePanel, true);
+                    var throttle = syncManager.syncedPanel("throttle_panel", true, this::makeThrottlePanel);
 
                     return new ButtonWidget<>()
                             .size(18)
@@ -280,36 +330,14 @@ public class MetaTileEntityPrimitiveCombustor extends MultiblockWithDisplayBase 
         return super.isActive() && recipeLogic.isActive() && recipeLogic.isWorkingEnabled();
     }
 
+    @NotNull
     @Override
-    protected @NotNull BlockPattern createStructurePattern() {
-        if (boilerType == LOW_PRESSURE_SOLID || boilerType == HIGH_PRESSURE_SOLID) {
-            return FactoryBlockPattern.start()
-                    .aisle("XXX", "CCC", "CCC", "CCC")
-                    .aisle("XXX", "C C", "C C", "CCC")
-                    .aisle("XXX", "CSC", "CCC", "CCC")
-                    .where('S', selfPredicate())
-                    .where('X', states(boilerType.fireboxState)
-                            .or(abilities(MultiblockAbility.IMPORT_ITEMS).setExactLimit(1))
-                    )
-                    .where('C', states(boilerType.casingState)
-                            .or(abilities(MultiblockAbility.OUTPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(6)))
-                    .where(' ', air())
-                    .build();
-        } else {
-            return FactoryBlockPattern.start()
-                    .aisle("XXX", "CCC", "CCC", "CCC")
-                    .aisle("XXX", "C C", "C C", "CCC")
-                    .aisle("XXX", "CSC", "CCC", "CCC")
-                    .where('S', selfPredicate())
-                    .where('X', states(boilerType.fireboxState)
-                            .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setExactLimit(1))
-                    )
-                    .where('C', states(boilerType.casingState)
-                            .or(abilities(MultiblockAbility.OUTPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(6)))
-                    .where(' ', air())
-                    .build();
+    protected BlockPatternTemplate createStructureTemplate() {
+        SoftTemplate softTemplate = TEMPLATES.get(boilerType);
+        if (softTemplate == null) {
+            throw new IllegalStateException("Unknown turbine type: " + boilerType);
         }
-
+        return softTemplate.get();
     }
 
     @Override

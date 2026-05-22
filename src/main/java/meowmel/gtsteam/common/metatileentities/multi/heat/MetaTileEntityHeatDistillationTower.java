@@ -5,8 +5,11 @@ import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.HeatMultiblockController;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.BlockPatternTemplate;
+import gregtech.api.pattern.SoftTemplate;
+import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
+import gregtech.api.pattern.casing.GTStructureChannels;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
@@ -34,6 +37,27 @@ import static meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing0.CasingT
 
 public class MetaTileEntityHeatDistillationTower extends HeatMultiblockController {
 
+    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:heat_distillation_tower", () ->
+            DeclarativePatternBuilder.start(RIGHT, FRONT, UP)
+                    .aisle("FFF", "FCF", "FFF")
+                    .aisle("CSC", "C#C", "CCC")
+                    .aisleRepeatable(1, 8, "XXX", "X#X", "XXX")
+                    .withAisleChannel(GTStructureChannels.STRUCTURE_HEIGHT.getName())
+                    .aisle("XXX", "XXX", "XXX")
+                    .where('S', selfPredicate(MetaTileEntityHeatDistillationTower.class))
+                    .where('F', states(getFireBoxState()))
+                    .where('C', states(getCasingState())
+                            .or(abilities(MultiblockAbility.EXPORT_ITEMS).setMaxGlobalLimited(1))
+                            .or(abilities(MultiblockAbility.INPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(3))
+                            .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setExactLimit(1)))
+                    .where('X', states(getTankCasingState())
+                            .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMaxLayerLimited(1, 1))
+                            .maintenance()
+                    )
+                    .where('#', air())
+                    .buildTemplate()
+    );
+
     public MetaTileEntityHeatDistillationTower(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GTSRecipeMaps.HEAT_DISTILLATION_RECIPES);
     }
@@ -42,32 +66,17 @@ public class MetaTileEntityHeatDistillationTower extends HeatMultiblockControlle
         return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
     }
 
-    @Override
-    protected @NotNull BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start(RIGHT, FRONT, UP)
-                .aisle("FFF", "FCF", "FFF")
-                .aisle("CSC", "C#C", "CCC")
-                .aisle("XXX", "X#X", "XXX").setRepeatable(1, 8)
-                .aisle("XXX", "XXX", "XXX")
-                .where('S', selfPredicate())
-                .where('F', states(getFireBoxState()))
-                .where('C', states(getCasingState())
-                        .or(abilities(MultiblockAbility.EXPORT_ITEMS).setMaxGlobalLimited(1))
-                        .or(abilities(MultiblockAbility.INPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(3))
-                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setExactLimit(1)))
-                .where('X', states(getTankCasingState())
-                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMaxLayerLimited(1, 1))
-                        .or(autoAbilities(true, false)))
-                .where('#', air())
-                .build();
-    }
-
-    public IBlockState getTankCasingState() {
+    public static IBlockState getTankCasingState() {
         return blockMultiblockCasing0.getState(TANK_WALL);
     }
 
-    private IBlockState getFireBoxState() {
+    private static IBlockState getFireBoxState() {
         return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX);
+    }
+
+    @Override
+    protected @NotNull BlockPatternTemplate createStructureTemplate() {
+        return TEMPLATE.get();
     }
 
     @Override

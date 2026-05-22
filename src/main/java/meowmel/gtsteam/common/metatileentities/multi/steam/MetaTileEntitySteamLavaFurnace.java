@@ -3,10 +3,14 @@ package meowmel.gtsteam.common.metatileentities.multi.steam;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.BlockPatternTemplate;
+import gregtech.api.pattern.SoftTemplate;
+import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.casing.CasingDefinition;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
@@ -26,8 +30,34 @@ import java.util.List;
 
 public class MetaTileEntitySteamLavaFurnace extends RecipeMapSteamMultiblockController {
 
+    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:steam_lava_furnace", () ->
+            DeclarativePatternBuilder.start()
+                    .aisle("XXX", "CCC", "CCC")
+                    .aisle("XCX", "C#C", "CCC")
+                    .aisle("XXX", "CSC", "CCC")
+                    .where('S', selfPredicate(MetaTileEntitySteamLavaFurnace.class))
+                    .where('X', states(getFireboxState())
+                            .or(abilities(MultiblockAbility.STEAM).setExactLimit(1))
+                    )
+
+                    .casing('C', CasingDefinition.simple(getCasingState()))
+                    .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1, 2)
+                    .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1, 2)
+
+                    .where('#', any())
+                    .buildTemplate()
+    );
+
     public MetaTileEntitySteamLavaFurnace(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GTSRecipeMaps.LAVA_FURNACE_RECIPES, CONVERSION_RATE, ParallelLogicType.MULTIPLY);
+    }
+
+    public static IBlockState getCasingState() {
+        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
+    }
+
+    public static IBlockState getFireboxState() {
+        return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
     }
 
     @Override
@@ -36,27 +66,8 @@ public class MetaTileEntitySteamLavaFurnace extends RecipeMapSteamMultiblockCont
     }
 
     @Override
-    protected BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start()
-                .aisle("XXX", "CCC", "CCC")
-                .aisle("XCX", "C#C", "CCC")
-                .aisle("XXX", "CSC", "CCC")
-                .where('S', selfPredicate())
-                .where('X', states(getFireboxState())
-                        .or(autoAbilities(true, false, false, false, false, false, false).setMinGlobalLimited(1)
-                                .setMaxGlobalLimited(3)))
-                .where('C', states(getCasingState()).setMinGlobalLimited(6)
-                        .or(autoAbilities(false, false, true, true, false, false, false)))
-                .where('#', any())
-                .build();
-    }
-
-    public IBlockState getCasingState() {
-        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
-    }
-
-    public IBlockState getFireboxState() {
-        return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
+    protected @NotNull BlockPatternTemplate createStructureTemplate() {
+        return TEMPLATE.get();
     }
 
     private boolean isFireboxPart(IMultiblockPart sourcePart) {
@@ -85,7 +96,7 @@ public class MetaTileEntitySteamLavaFurnace extends RecipeMapSteamMultiblockCont
 
 
     @Override
-    public void addInformation(ItemStack stack, World player, List<String> tooltip,
+    public void addInformation(ItemStack stack, World player, @NotNull List<String> tooltip,
                                boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         TooltipBuilder.create().addSteamMachine(1).build(this, tooltip);

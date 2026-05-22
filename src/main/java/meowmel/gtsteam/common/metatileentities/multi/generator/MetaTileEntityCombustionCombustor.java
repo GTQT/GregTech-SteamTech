@@ -18,12 +18,10 @@ import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.SliderWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
-import gregtech.api.GTValues;
 import gregtech.api.capability.IControllable;
 import gregtech.api.capability.IHeatMachine;
 import gregtech.api.capability.IHeatable;
 import gregtech.api.capability.impl.FluidTankList;
-import gregtech.api.capability.impl.ItemHandlerList;
 import gregtech.api.metatileentity.MTETrait;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
@@ -34,41 +32,55 @@ import gregtech.api.metatileentity.multiblock.ProgressBarMultiblock;
 import gregtech.api.metatileentity.multiblock.ui.*;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuis;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.BlockPatternTemplate;
 import gregtech.api.pattern.PatternMatchContext;
+import gregtech.api.pattern.SoftTemplate;
+import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.util.KeyUtil;
 import gregtech.api.util.TextFormattingUtil;
 import gregtech.api.util.tooltips.AbstractTooltipComponent;
 import gregtech.api.util.tooltips.TooltipBuilder;
-import gregtech.client.particle.VanillaParticleEffects;
 import gregtech.client.renderer.ICubeRenderer;
-import gregtech.client.renderer.texture.Textures;
-import gregtech.common.ConfigHolder;
 import gregtech.common.blocks.BlockMultiblockCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.core.sound.GTSoundEvents;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.UnaryOperator;
+
+import static meowmel.gtsteam.common.metatileentities.multi.generator.CombustorType.*;
 
 public class MetaTileEntityCombustionCombustor extends MultiblockWithDisplayBase implements ProgressBarMultiblock,
         IControllable, IHeatMachine {
+
+    private static final Map<CombustorType, SoftTemplate> TEMPLATES = new HashMap<>();
+
+    static {
+        TEMPLATES.put(BRONZE, TemplatePool.getInstance()
+                .register("gtsteam:combustion_combustor.bronze", () -> buildTemplate(BRONZE)));
+        TEMPLATES.put(STEEL, TemplatePool.getInstance()
+                .register("gtsteam:combustion_combustor.steel", () -> buildTemplate(STEEL)));
+        TEMPLATES.put(TITANIUM, TemplatePool.getInstance()
+                .register("gtsteam:combustion_combustor", () -> buildTemplate(TITANIUM)));
+        TEMPLATES.put(TUNGSTENSTEEL, TemplatePool.getInstance()
+                .register("gtsteam:extreme_combustion_combustor", () -> buildTemplate(TUNGSTENSTEEL)));
+    }
 
     public final CombustorType combustorType;
     protected CombustionCombustorRecipeLogic recipeLogic;
@@ -79,8 +91,31 @@ public class MetaTileEntityCombustionCombustor extends MultiblockWithDisplayBase
     public MetaTileEntityCombustionCombustor(ResourceLocation metaTileEntityId, CombustorType combustorType) {
         super(metaTileEntityId);
         this.combustorType = combustorType;
-        this.recipeLogic = new CombustionCombustorRecipeLogic(this, combustorType == CombustorType.TUNGSTENSTEEL);
+        this.recipeLogic = new CombustionCombustorRecipeLogic(this, combustorType == TUNGSTENSTEEL);
         resetTileAbilities();
+    }
+
+    private static BlockPatternTemplate buildTemplate(CombustorType combustorType) {
+        return DeclarativePatternBuilder.start()
+                .aisle("CCCFFFFFC", "CCCOOOOOC", "CCCAAAAAC")
+                .aisle("CCCCCCCCC", "CPPPPPPCC", "CCCMMMMMC")
+                .aisle("CCCFFFFFC", "CSCIIIIIC", "CCCAAAAAC")
+                .where('S', selfPredicate(MetaTileEntityCombustionCombustor.class))
+                .where('P', states(combustorType.pipeState))
+                .where('F', states(combustorType.fireboxState))
+                .where('I', states(combustorType.casingState)
+                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS)))
+                .where('C', states(combustorType.casingState))
+                .where('M', abilities(MultiblockAbility.MUFFLER_HATCH))
+                .where('A', states(getIntakeState(combustorType)))
+                .where('O', states(combustorType.casingState)
+                        .or(abilities(MultiblockAbility.OUTPUT_HEAT)))
+                .buildTemplate();
+    }
+
+    public static IBlockState getIntakeState(CombustorType combustorType) {
+        return combustorType == TUNGSTENSTEEL ? MetaBlocks.MULTIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.EXTREME_ENGINE_INTAKE_CASING) :
+                MetaBlocks.MULTIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.ENGINE_INTAKE_CASING);
     }
 
     public List<IHeatable> getHeatHatch() {
@@ -174,7 +209,7 @@ public class MetaTileEntityCombustionCombustor extends MultiblockWithDisplayBase
     protected MultiblockUIFactory createUIFactory() {
         return super.createUIFactory()
                 .createFlexButton((guiData, syncManager) -> {
-                    var throttle = syncManager.panel("throttle_panel", this::makeThrottlePanel, true);
+                    var throttle = syncManager.syncedPanel("throttle_panel", true, this::makeThrottlePanel);
 
                     return new ButtonWidget<>()
                             .size(18)
@@ -296,29 +331,16 @@ public class MetaTileEntityCombustionCombustor extends MultiblockWithDisplayBase
         return super.isActive() && recipeLogic.isActive() && recipeLogic.isWorkingEnabled();
     }
 
+    @NotNull
     @Override
-    protected @NotNull BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start()
-                .aisle("CCCFFFFFC", "CCCOOOOOC", "CCCAAAAAC")
-                .aisle("CCCCCCCCC", "CPPPPPPCC", "CCCMMMMMC")
-                .aisle("CCCFFFFFC", "CSCIIIIIC", "CCCAAAAAC")
-                .where('S', selfPredicate())
-                .where('P', states(combustorType.pipeState))
-                .where('F', states(combustorType.fireboxState))
-                .where('I', states(combustorType.casingState)
-                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS)))
-                .where('C', states(combustorType.casingState))
-                .where('M',abilities(MultiblockAbility.MUFFLER_HATCH))
-                .where('A', states(getIntakeState()))
-                .where('O', states(combustorType.casingState)
-                        .or(abilities(MultiblockAbility.OUTPUT_HEAT)))
-                .build();
+    protected BlockPatternTemplate createStructureTemplate() {
+        SoftTemplate softTemplate = TEMPLATES.get(combustorType);
+        if (softTemplate == null) {
+            throw new IllegalStateException("Unknown turbine type: " + combustorType);
+        }
+        return softTemplate.get();
     }
 
-    public IBlockState getIntakeState() {
-        return combustorType == CombustorType.TUNGSTENSTEEL ? MetaBlocks.MULTIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.EXTREME_ENGINE_INTAKE_CASING) :
-                MetaBlocks.MULTIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.ENGINE_INTAKE_CASING);
-    }
     @Override
     public boolean hasMaintenanceMechanics() {
         return false;

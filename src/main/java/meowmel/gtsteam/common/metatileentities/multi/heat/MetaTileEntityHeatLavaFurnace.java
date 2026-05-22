@@ -5,8 +5,11 @@ import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.HeatMultiblockController;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.BlockPatternTemplate;
+import gregtech.api.pattern.SoftTemplate;
+import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.casing.CasingDefinition;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
@@ -20,16 +23,39 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class MetaTileEntityHeatLavaFurnace extends HeatMultiblockController {
 
     private static final int PARALLEL_LIMIT = 4;
+    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:heat_lava_furnace", () ->
+            DeclarativePatternBuilder.start()
+                    .aisle("XXX", "CCC", "CCC")
+                    .aisle("XCX", "C#C", "CCC")
+                    .aisle("XXX", "CSC", "CCC")
+                    .where('S', selfPredicate(MetaTileEntityHeatLavaFurnace.class))
+                    .where('X', states(getFireboxState()))
+                    .casing('C', CasingDefinition.simple(getCasingState()))
+                    .itemInput(1, 2)
+                    .fluidOutput(1, 2)
+                    .hatch(MultiblockAbility.INPUT_HEAT, 1)
+                    .where('#', any())
+                    .buildTemplate()
+    );
 
     public MetaTileEntityHeatLavaFurnace(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GTSRecipeMaps.LAVA_FURNACE_RECIPES);
         recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
+    }
+
+    public static IBlockState getCasingState() {
+        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
+    }
+
+    public static IBlockState getFireboxState() {
+        return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX);
     }
 
     @Override
@@ -38,28 +64,8 @@ public class MetaTileEntityHeatLavaFurnace extends HeatMultiblockController {
     }
 
     @Override
-    protected BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start()
-                .aisle("XXX", "CCC", "CCC")
-                .aisle("XCX", "C#C", "CCC")
-                .aisle("XXX", "CSC", "CCC")
-                .where('S', selfPredicate())
-                .where('X', states(getFireboxState()))
-                .where('C', states(getCasingState()).setMinGlobalLimited(6)
-                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMinGlobalLimited(1).setMaxGlobalLimited(3))
-                        .or(abilities(MultiblockAbility.IMPORT_ITEMS).setMinGlobalLimited(1).setMaxGlobalLimited(3))
-                        .or(abilities(MultiblockAbility.INPUT_HEAT).setExactLimit(1))
-                )
-                .where('#', any())
-                .build();
-    }
-
-    public IBlockState getCasingState() {
-        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
-    }
-
-    public IBlockState getFireboxState() {
-        return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX);
+    protected @NotNull BlockPatternTemplate createStructureTemplate() {
+        return TEMPLATE.get();
     }
 
     private boolean isFireboxPart(IMultiblockPart sourcePart) {
@@ -77,18 +83,12 @@ public class MetaTileEntityHeatLavaFurnace extends HeatMultiblockController {
 
     @SideOnly(Side.CLIENT)
     @Override
-    protected ICubeRenderer getFrontOverlay() {
+    protected @NotNull ICubeRenderer getFrontOverlay() {
         return Textures.ELECTRIC_FURNACE_OVERLAY;
     }
 
     @Override
-    public boolean hasMaintenanceMechanics() {
-        return false;
-    }
-
-
-    @Override
-    public void addInformation(ItemStack stack, World player, List<String> tooltip,
+    public void addInformation(ItemStack stack, World player, @NotNull List<String> tooltip,
                                boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         TooltipBuilder.create().addHeatMachine(PARALLEL_LIMIT).build(this, tooltip);

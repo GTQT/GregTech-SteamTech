@@ -17,8 +17,10 @@ import gregtech.api.metatileentity.multiblock.RecipeMapPrimitiveMultiblockContro
 import gregtech.api.metatileentity.multiblock.ui.MultiblockUIFactory;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuiTheme;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.BlockPatternTemplate;
+import gregtech.api.pattern.SoftTemplate;
+import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.util.tooltips.InformationHandler;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
@@ -42,14 +44,34 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockController {
 
 
+    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:alloy_klin", () ->
+            DeclarativePatternBuilder.start()
+                    .aisle("XXX", "XXX", "#X#")
+                    .aisle("XXX", "X&X", "#X#")
+                    .aisle("XXX", "XYX", "#X#")
+                    .where('Y', selfPredicate(MetaTileEntityAlloyKiln.class))
+                    .where('X', states(getCasingState())
+                            .or(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_IMPORT_HATCH).setMaxGlobalLimited(2))
+                            .or(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_EXPORT_HATCH).setMaxGlobalLimited(1))
+                    )
+                    .where('#', any())
+                    .where('&', air())
+                    .buildTemplate()
+    );
+
     public MetaTileEntityAlloyKiln(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GTSRecipeMaps.ALLOY_KILN);
+    }
+
+    protected static IBlockState getCasingState() {
+        return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES);
     }
 
     @Override
@@ -58,24 +80,8 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
     }
 
     @Override
-    protected BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start()
-                .aisle("XXX", "XXX", "#X#")
-                .aisle("XXX", "X&X", "#X#")
-                .aisle("XXX", "XYX", "#X#")
-                .where('X', states(getCasingState())
-                        .or(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_IMPORT_HATCH).setMaxGlobalLimited(2))
-                        .or(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_EXPORT_HATCH).setMaxGlobalLimited(1))
-                )
-                .where('#', any())
-                .where('&', air())
-
-                .where('Y', selfPredicate())
-                .build();
-    }
-
-    protected IBlockState getCasingState() {
-        return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES);
+    protected @NotNull BlockPatternTemplate createStructureTemplate() {
+        return TEMPLATE.get();
     }
 
     @Override

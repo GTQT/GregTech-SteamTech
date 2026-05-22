@@ -3,10 +3,14 @@ package meowmel.gtsteam.common.metatileentities.multi.steam;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.BlockPatternTemplate;
+import gregtech.api.pattern.SoftTemplate;
+import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.casing.CasingDefinition;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.unification.material.Materials;
 import gregtech.api.util.tooltips.TooltipBuilder;
@@ -32,6 +36,26 @@ import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.BRONZE_P
 public class MetaTileEntitySteamOreWasher extends RecipeMapSteamMultiblockController {
 
     private static final int PARALLEL_LIMIT = 8;
+    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:steam_ore_washer", () ->
+            DeclarativePatternBuilder.start()
+                    .aisle("MTTTM", "MMMMM", "MMMMM")
+                    .aisle("TPPPT", "MFFFM", "M###M")
+                    .aisle("TPPPT", "MFFFM", "M###M")
+                    .aisle("TPPPT", "MFFFM", "M###M")
+                    .aisle("MTTTM", "MMCMM", "MMMMM")
+                    .where('C', selfPredicate(MetaTileEntitySteamOreWasher.class))
+                    .casing('M', CasingDefinition.simple(getCasingState()))
+                    .optionalHatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 4)
+                    .optionalHatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 4)
+                    .optionalHatch(MultiblockAbility.STEAM_IMPORT_FLUID, 4)
+                    .optionalHatch(MultiblockAbility.STEAM_EXPORT_FLUID, 4)
+                    .hatch(MultiblockAbility.STEAM, 1)
+                    .where('F', states(getFrameState()))
+                    .where('P', states(getBoilerState()))
+                    .where('T', states(getFireboxState()))
+                    .where('#', air())
+                    .buildTemplate()
+    );
 
     public MetaTileEntitySteamOreWasher(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.ORE_WASHER_RECIPES, CONVERSION_RATE, ParallelLogicType.MULTIPLY);
@@ -42,38 +66,26 @@ public class MetaTileEntitySteamOreWasher extends RecipeMapSteamMultiblockContro
         return MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
     }
 
+    public static IBlockState getFireboxState() {
+        return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
+    }
+
+    private static IBlockState getBoilerState() {
+        return MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
+    }
+
+    public static IBlockState getCasingState() {
+        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
+    }
+
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity metaTileEntityHolder) {
         return new MetaTileEntitySteamOreWasher(metaTileEntityId);
     }
 
     @Override
-    protected @NotNull BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start()
-                .aisle("MTTTM", "MMMMM", "MMMMM")
-                .aisle("TPPPT", "MFFFM", "M###M")
-                .aisle("TPPPT", "MFFFM", "M###M")
-                .aisle("TPPPT", "MFFFM", "M###M")
-                .aisle("MTTTM", "MMCMM", "MMMMM")
-                .where('C', selfPredicate())
-                .where('M', states(getCasingState()).setMinGlobalLimited(40).or(autoAbilities()))
-                .where('F', states(getFrameState()))
-                .where('P', states(getBoilerState()))
-                .where('T', states(getFireboxState()))
-                .where('#', air())
-                .build();
-    }
-
-    public IBlockState getFireboxState() {
-        return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
-    }
-
-    private IBlockState getBoilerState() {
-        return MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
-    }
-
-    public IBlockState getCasingState() {
-        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
+    protected @NotNull BlockPatternTemplate createStructureTemplate() {
+        return TEMPLATE.get();
     }
 
     @SideOnly(Side.CLIENT)

@@ -21,9 +21,12 @@ import gregtech.api.metatileentity.multiblock.ui.MultiblockUIBuilder;
 import gregtech.api.metatileentity.multiblock.ui.TemplateBarBuilder;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuiTheme;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.BlockPatternTemplate;
 import gregtech.api.pattern.PatternMatchContext;
+import gregtech.api.pattern.SoftTemplate;
+import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.casing.CasingDefinition;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.unification.material.Materials;
 import gregtech.api.util.GTTransferUtils;
 import gregtech.api.util.KeyUtil;
@@ -32,7 +35,10 @@ import gregtech.api.util.tooltips.AbstractTooltipComponent;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
-import gregtech.common.blocks.*;
+import gregtech.common.blocks.BlockBoilerCasing;
+import gregtech.common.blocks.BlockMetalCasing;
+import gregtech.common.blocks.BlockMultiblockCasing;
+import gregtech.common.blocks.MetaBlocks;
 import lombok.Getter;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -54,9 +60,35 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
-public class MetaTileEntityHeatFluidDrill extends MultiblockWithDisplayBase
-        implements IWorkable, ProgressBarMultiblock {
+public class MetaTileEntityHeatFluidDrill extends MultiblockWithDisplayBase implements IWorkable, ProgressBarMultiblock {
 
+    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:heat_fluid_drill", () ->
+            DeclarativePatternBuilder.start()
+                    .aisle("FF           FF", "FF           FF", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
+                    .aisle("FF           FF", "FF           FF", " FF         FF ", " FF         FF ", "               ", "     FFFFF     ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
+                    .aisle("               ", "               ", " FF         FF ", " FF         FF ", "  FFFFFFFFFFF  ", "    FF   FF    ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
+                    .aisle("               ", "               ", "               ", "               ", "  FFF     FFF  ", "   FFFFFFFFF   ", "   FF     FF   ", "   FF     FF   ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
+                    .aisle("               ", "               ", "               ", "               ", "  FF       FF  ", "  FF       FF  ", "   FF     FF   ", "   FF     FF   ", "    FF   FF    ", "    FF   FF    ", "               ", "               ", "               ", "               ", "               ", "               ")
+                    .aisle("               ", "               ", "               ", "               ", "  F         F  ", " FFF  CCC  FFF ", "      CCC      ", "      CCC      ", "    FFCCCFF    ", "    FFF FFF    ", "     F F F     ", "     FF FF     ", "               ", "               ", "               ", "               ")
+                    .aisle("               ", "               ", "       C       ", "       C       ", "  F   CCC   F  ", " F F CCCCC F F ", "     CPPPC     ", "     CPPPC     ", "     CCPCC     ", "     F C F     ", "       C       ", "     F C F     ", "       C       ", "       G       ", "       G       ", "      GGG      ")
+                    .aisle("       P       ", "       P       ", "      CPC      ", "      CPC      ", "  F   CPC   F  ", " F F CCPCC F F ", "     CPPPC     ", "     CPPPC     ", "     CPPPC     ", "      CPC      ", "     FCPCF     ", "      CPC      ", "      CPC      ", "      GPG      ", "      GPG      ", "      GPG      ")
+                    .aisle("               ", "               ", "       C       ", "       C       ", "  F   CCC   F  ", " F F CCCCC F F ", "     CPPPC     ", "     CPPPC     ", "     CCPCC     ", "     F C F     ", "       C       ", "     F C F     ", "       C       ", "       G       ", "       G       ", "      GGG      ")
+                    .aisle("               ", "               ", "               ", "               ", "  F         F  ", " FFF  CCC  FFF ", "      CCC      ", "      CSC      ", "    FFCCCFF    ", "    FFF FFF    ", "     F F F     ", "     FF FF     ", "               ", "               ", "               ", "               ")
+                    .aisle("               ", "               ", "               ", "               ", "  FF       FF  ", "  FF       FF  ", "   FF     FF   ", "   FF     FF   ", "    FF   FF    ", "    FF   FF    ", "               ", "               ", "               ", "               ", "               ", "               ")
+                    .aisle("               ", "               ", "               ", "               ", "  FFF     FFF  ", "   FFFFFFFFF   ", "   FF     FF   ", "   FF     FF   ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
+                    .aisle("               ", "               ", " FF         FF ", " FF         FF ", "  FFFFFFFFFFF  ", "    FF   FF    ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
+                    .aisle("FF           FF", "FF           FF", " FF         FF ", " FF         FF ", "               ", "     FFFFF     ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
+                    .aisle("FF           FF", "FF           FF", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
+                    .where('S', selfPredicate(MetaTileEntityHeatFluidDrill.class))
+                    .casing('C', CasingDefinition.simple(getCasingState()))
+                    .fluidOutput(1)
+                    .hatch(MultiblockAbility.INPUT_HEAT, 1)
+                    .where('P', states(getPipeCasingState()))
+                    .where('F', frames(Materials.Steel))
+                    .where('G', states(getGrateState()))
+                    .where(' ', any())
+                    .buildTemplate()
+    );
     private final HeatFluidDrillLogic minerLogic;
     protected IMultipleTankHandler inputFluidInventory;
     protected IMultipleTankHandler outputFluidInventory;
@@ -67,6 +99,18 @@ public class MetaTileEntityHeatFluidDrill extends MultiblockWithDisplayBase
     public MetaTileEntityHeatFluidDrill(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId);
         minerLogic = new HeatFluidDrillLogic(this);
+    }
+
+    protected static IBlockState getCasingState() {
+        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
+    }
+
+    protected static IBlockState getGrateState() {
+        return MetaBlocks.MULTIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING);
+    }
+
+    protected static IBlockState getPipeCasingState() {
+        return MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE);
     }
 
     protected void initializeAbilities() {
@@ -110,7 +154,6 @@ public class MetaTileEntityHeatFluidDrill extends MultiblockWithDisplayBase
     public int getMaxProgress() {
         return FluidDrillLogic.MAX_PROGRESS;
     }
-
 
     @Override
     protected void updateFormedValid() {
@@ -213,48 +256,11 @@ public class MetaTileEntityHeatFluidDrill extends MultiblockWithDisplayBase
                 Collections.singletonList(stack));
     }
 
-
-    protected IBlockState getCasingState() {
-        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
-    }
-
-    protected IBlockState getGrateState() {
-        return MetaBlocks.MULTIBLOCK_CASING.getState(BlockMultiblockCasing.MultiblockCasingType.GRATE_CASING);
-    }
-
-    protected IBlockState getPipeCasingState() {
-        return MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE);
-    }
-
     @Override
-    protected @NotNull BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start()
-                .aisle("FF           FF", "FF           FF", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
-                .aisle("FF           FF", "FF           FF", " FF         FF ", " FF         FF ", "               ", "     FFFFF     ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
-                .aisle("               ", "               ", " FF         FF ", " FF         FF ", "  FFFFFFFFFFF  ", "    FF   FF    ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
-                .aisle("               ", "               ", "               ", "               ", "  FFF     FFF  ", "   FFFFFFFFF   ", "   FF     FF   ", "   FF     FF   ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
-                .aisle("               ", "               ", "               ", "               ", "  FF       FF  ", "  FF       FF  ", "   FF     FF   ", "   FF     FF   ", "    FF   FF    ", "    FF   FF    ", "               ", "               ", "               ", "               ", "               ", "               ")
-                .aisle("               ", "               ", "               ", "               ", "  F         F  ", " FFF  CCC  FFF ", "      CCC      ", "      CCC      ", "    FFCCCFF    ", "    FFF FFF    ", "     F F F     ", "     FF FF     ", "               ", "               ", "               ", "               ")
-                .aisle("               ", "               ", "       C       ", "       C       ", "  F   CCC   F  ", " F F CCCCC F F ", "     CPPPC     ", "     CPPPC     ", "     CCPCC     ", "     F C F     ", "       C       ", "     F C F     ", "       C       ", "       G       ", "       G       ", "      GGG      ")
-                .aisle("       P       ", "       P       ", "      CPC      ", "      CPC      ", "  F   CPC   F  ", " F F CCPCC F F ", "     CPPPC     ", "     CPPPC     ", "     CPPPC     ", "      CPC      ", "     FCPCF     ", "      CPC      ", "      CPC      ", "      GPG      ", "      GPG      ", "      GPG      ")
-                .aisle("               ", "               ", "       C       ", "       C       ", "  F   CCC   F  ", " F F CCCCC F F ", "     CPPPC     ", "     CPPPC     ", "     CCPCC     ", "     F C F     ", "       C       ", "     F C F     ", "       C       ", "       G       ", "       G       ", "      GGG      ")
-                .aisle("               ", "               ", "               ", "               ", "  F         F  ", " FFF  CCC  FFF ", "      CCC      ", "      CSC      ", "    FFCCCFF    ", "    FFF FFF    ", "     F F F     ", "     FF FF     ", "               ", "               ", "               ", "               ")
-                .aisle("               ", "               ", "               ", "               ", "  FF       FF  ", "  FF       FF  ", "   FF     FF   ", "   FF     FF   ", "    FF   FF    ", "    FF   FF    ", "               ", "               ", "               ", "               ", "               ", "               ")
-                .aisle("               ", "               ", "               ", "               ", "  FFF     FFF  ", "   FFFFFFFFF   ", "   FF     FF   ", "   FF     FF   ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
-                .aisle("               ", "               ", " FF         FF ", " FF         FF ", "  FFFFFFFFFFF  ", "    FF   FF    ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
-                .aisle("FF           FF", "FF           FF", " FF         FF ", " FF         FF ", "               ", "     FFFFF     ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
-                .aisle("FF           FF", "FF           FF", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
-                .where('S', selfPredicate())
-                .where('C', states(getCasingState())
-                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS))
-                        .or(abilities(MultiblockAbility.INPUT_ENERGY))
-                )
-                .where('P', states(getPipeCasingState()))
-                .where('F', frames(Materials.Steel))
-                .where('G', states(getGrateState()))
-                .where(' ', any())
-                .build();
+    protected @NotNull BlockPatternTemplate createStructureTemplate() {
+        return TEMPLATE.get();
     }
+
 
     public void changeHeat(long amount) {
         if (this.getHeatHatch() != null) {

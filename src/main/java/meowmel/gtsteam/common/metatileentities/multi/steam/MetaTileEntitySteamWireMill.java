@@ -3,10 +3,14 @@ package meowmel.gtsteam.common.metatileentities.multi.steam;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.BlockPatternTemplate;
+import gregtech.api.pattern.SoftTemplate;
+import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.casing.CasingDefinition;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.unification.material.Materials;
 import gregtech.api.util.tooltips.TooltipBuilder;
@@ -21,6 +25,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -30,6 +35,22 @@ import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.BRONZE_P
 public class MetaTileEntitySteamWireMill extends RecipeMapSteamMultiblockController {
 
     private static final int PARALLEL_LIMIT = 4;
+    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:steam_wire_mill", () ->
+            DeclarativePatternBuilder.start()
+                    .aisle("TTTFXXXX", "XXXFXXXX", "TTTFXXXX")
+                    .aisle("TXXFXXXX", "XGGGGGGX", "TXXFXXXX")
+                    .aisle("TTTFXXXX", "XSXFXXXX", "TTTFXXXX")
+                    .where('S', selfPredicate(MetaTileEntitySteamWireMill.class))
+                    .casing('X', CasingDefinition.simple(getCasingState()))
+                    .optionalHatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 4)
+                    .optionalHatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 4)
+                    .hatch(MultiblockAbility.STEAM, 1)
+                    .where('G', states(getBoilerState()))
+                    .where('F', states(getFrameState()))
+                    .where('T', states(getFireboxState()))
+                    .where(' ', any())
+                    .buildTemplate()
+    );
 
     public MetaTileEntitySteamWireMill(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.WIREMILL_RECIPES, CONVERSION_RATE, ParallelLogicType.MULTIPLY);
@@ -40,36 +61,21 @@ public class MetaTileEntitySteamWireMill extends RecipeMapSteamMultiblockControl
         return MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
     }
 
-    @Override
-    public MetaTileEntity createMetaTileEntity(IGregTechTileEntity metaTileEntityHolder) {
-        return new MetaTileEntitySteamWireMill(metaTileEntityId);
-    }
-
-    @Override
-    protected BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start()
-                .aisle("TTTFXXXX", "XXXFXXXX", "TTTFXXXX")
-                .aisle("TXXFXXXX", "XGGGGGGX", "TXXFXXXX")
-                .aisle("TTTFXXXX", "XSXFXXXX", "TTTFXXXX")
-                .where('S', selfPredicate())
-                .where('X', states(getCasingState()).setMinGlobalLimited(35).or(autoAbilities()))
-                .where('G', states(getBoilerState()))
-                .where('F', states(getFrameState()))
-                .where('T', states(getFireboxState()))
-                .where(' ', any())
-                .build();
-    }
-
-    public IBlockState getFireboxState() {
+    public static IBlockState getFireboxState() {
         return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
     }
 
-    private IBlockState getBoilerState() {
+    private static IBlockState getBoilerState() {
         return MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
     }
 
-    public IBlockState getCasingState() {
+    public static IBlockState getCasingState() {
         return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
+    }
+
+    @Override
+    public MetaTileEntity createMetaTileEntity(IGregTechTileEntity metaTileEntityHolder) {
+        return new MetaTileEntitySteamWireMill(metaTileEntityId);
     }
 
     @SideOnly(Side.CLIENT)
@@ -89,6 +95,10 @@ public class MetaTileEntitySteamWireMill extends RecipeMapSteamMultiblockControl
         return false;
     }
 
+    @Override
+    protected @NotNull BlockPatternTemplate createStructureTemplate() {
+        return TEMPLATE.get();
+    }
 
     @Override
     public void addInformation(ItemStack stack, World player, List<String> tooltip,

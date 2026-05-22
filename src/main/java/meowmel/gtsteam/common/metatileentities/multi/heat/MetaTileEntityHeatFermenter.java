@@ -5,8 +5,11 @@ import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.HeatMultiblockController;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.BlockPatternTemplate;
+import gregtech.api.pattern.SoftTemplate;
+import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.casing.CasingDefinition;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
@@ -30,6 +33,25 @@ import java.util.List;
 public class MetaTileEntityHeatFermenter extends HeatMultiblockController {
 
     private static final int PARALLEL_LIMIT = 16;
+    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:heat_fermenter", () ->
+            DeclarativePatternBuilder.start()
+                    .aisle("CCCCC", "CFFFC", "CFFFC", "CCCCC")
+                    .aisle("CCCCC", "F###F", "F###F", "CCCCC")
+                    .aisle("CCCCC", "F###F", "F###F", "CCCCC")
+                    .aisle("CCCCC", "F###F", "F###F", "CCCCC")
+                    .aisle("CCSCC", "CFFFC", "CFFFC", "CCCCC")
+                    .where('S', selfPredicate(MetaTileEntityHeatFermenter.class))
+                    .casing('C', CasingDefinition.simple(getCasingState()))
+                    .itemInput(1, 3)
+                    .itemOutput(1, 3)
+                    .fluidInput(1, 3)
+                    .fluidOutput(1, 3)
+                    .hatch(MultiblockAbility.INPUT_HEAT, 1)
+                    .where('F', states(getFireBoxState()))
+                    .where('P', states(getPipeState()))
+                    .where('#', any())
+                    .buildTemplate()
+    );
 
     public MetaTileEntityHeatFermenter(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.FERMENTING_RECIPES);
@@ -44,35 +66,18 @@ public class MetaTileEntityHeatFermenter extends HeatMultiblockController {
         return MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.STEEL_PIPE);
     }
 
+    private static IBlockState getFireBoxState() {
+        return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX);
+    }
+
+    @Override
+    protected @NotNull BlockPatternTemplate createStructureTemplate() {
+        return TEMPLATE.get();
+    }
+
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity iGregTechTileEntity) {
         return new MetaTileEntityHeatFermenter(metaTileEntityId);
-    }
-
-    @Override
-    protected @NotNull BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start()
-                .aisle("CCCCC", "CFFFC", "CFFFC", "CCCCC")
-                .aisle("CCCCC", "F###F", "F###F", "CCCCC")
-                .aisle("CCCCC", "F###F", "F###F", "CCCCC")
-                .aisle("CCCCC", "F###F", "F###F", "CCCCC")
-                .aisle("CCSCC", "CFFFC", "CFFFC", "CCCCC")
-                .where('S', selfPredicate())
-                .where('C', states(getCasingState())
-                        .or(abilities(MultiblockAbility.EXPORT_ITEMS).setMinGlobalLimited(1).setMaxGlobalLimited(3))
-                        .or(abilities(MultiblockAbility.IMPORT_ITEMS).setMinGlobalLimited(1).setMaxGlobalLimited(3))
-                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMinGlobalLimited(1).setMaxGlobalLimited(3))
-                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setMinGlobalLimited(1).setMaxGlobalLimited(3))
-                        .or(abilities(MultiblockAbility.INPUT_HEAT).setExactLimit(1))
-                )
-                .where('F', states(getFireBoxState()))
-                .where('P', states(getPipeState()))
-                .where('#', any())
-                .build();
-    }
-
-    private IBlockState getFireBoxState() {
-        return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX);
     }
 
     @SideOnly(Side.CLIENT)

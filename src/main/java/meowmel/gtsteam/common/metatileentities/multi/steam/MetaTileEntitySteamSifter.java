@@ -3,10 +3,14 @@ package meowmel.gtsteam.common.metatileentities.multi.steam;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.BlockPatternTemplate;
+import gregtech.api.pattern.SoftTemplate;
+import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.casing.CasingDefinition;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.unification.material.Materials;
 import gregtech.api.util.tooltips.TooltipBuilder;
@@ -30,6 +34,24 @@ import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.BRONZE_P
 public class MetaTileEntitySteamSifter extends RecipeMapSteamMultiblockController {
 
     private static final int PARALLEL_LIMIT = 8;
+    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:steam_sifter", () ->
+            DeclarativePatternBuilder.start()
+                    .aisle("XXXXX", "F F F", "F F F", "XXXXX", "XXXXX")
+                    .aisle("XXXXX", "     ", "     ", "XTTTX", "X   X")
+                    .aisle("XXXXX", "F T F", "F T F", "XTTTX", "X   X")
+                    .aisle("XXXXX", "     ", "     ", "XTTTX", "X   X")
+                    .aisle("XXXXX", "F S X", "F F F", "XXXXX", "XXXXX")
+                    .where('S', selfPredicate(MetaTileEntitySteamSifter.class))
+                    .casing('X', CasingDefinition.simple(getCasingState()))
+                    .optionalHatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 4)
+                    .optionalHatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 4)
+
+                    .hatch(MultiblockAbility.STEAM, 1)
+                    .where('T', states(getBoilerState()))
+                    .where('F', states(getFrameState()))
+                    .where(' ', any())
+                    .buildTemplate()
+    );
 
     public MetaTileEntitySteamSifter(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.SIFTER_RECIPES, CONVERSION_RATE, ParallelLogicType.APPEND_ITEMS);
@@ -40,33 +62,22 @@ public class MetaTileEntitySteamSifter extends RecipeMapSteamMultiblockControlle
         return MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
     }
 
+    private static IBlockState getBoilerState() {
+        return MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
+    }
+
+    public static IBlockState getCasingState() {
+        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
+    }
+
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity metaTileEntityHolder) {
         return new MetaTileEntitySteamSifter(metaTileEntityId);
     }
 
     @Override
-    protected BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start()
-                .aisle("XXXXX", "F F F", "F F F", "XXXXX", "XXXXX")
-                .aisle("XXXXX", "     ", "     ", "XTTTX", "X   X")
-                .aisle("XXXXX", "F T F", "F T F", "XTTTX", "X   X")
-                .aisle("XXXXX", "     ", "     ", "XTTTX", "X   X")
-                .aisle("XXXXX", "F S X", "F F F", "XXXXX", "XXXXX")
-                .where('S', selfPredicate())
-                .where('X', states(getCasingState()).setMinGlobalLimited(50).or(autoAbilities()))
-                .where('T', states(getBoilerState()))
-                .where('F', states(getFrameState()))
-                .where(' ', any())
-                .build();
-    }
-
-    private IBlockState getBoilerState() {
-        return MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
-    }
-
-    public IBlockState getCasingState() {
-        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
+    protected @NotNull BlockPatternTemplate createStructureTemplate() {
+        return TEMPLATE.get();
     }
 
     @SideOnly(Side.CLIENT)

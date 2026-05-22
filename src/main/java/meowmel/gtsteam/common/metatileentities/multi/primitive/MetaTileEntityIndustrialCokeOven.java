@@ -5,16 +5,18 @@ import gregtech.api.capability.impl.NoEnergyMultiblockRecipeLogic;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
-import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.NoEnergyMultiblockController;
 import gregtech.api.metatileentity.multiblock.ui.KeyManager;
 import gregtech.api.metatileentity.multiblock.ui.MultiblockUIBuilder;
 import gregtech.api.metatileentity.multiblock.ui.UISyncer;
 import gregtech.api.mui.GTGuiTheme;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.BlockPatternTemplate;
 import gregtech.api.pattern.PatternMatchContext;
-import gregtech.api.recipes.RecipeMap;
+import gregtech.api.pattern.SoftTemplate;
+import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.casing.CasingDefinition;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
+import gregtech.api.pattern.casing.GTStructureChannels;
 import gregtech.api.recipes.logic.OCResult;
 import gregtech.api.recipes.properties.RecipePropertyStorage;
 import gregtech.api.unification.material.Materials;
@@ -56,6 +58,28 @@ public class MetaTileEntityIndustrialCokeOven extends NoEnergyMultiblockControll
 
     private static final int MIN_TEMP = 300;
     private static final int MAX_TEMP = 1500;
+    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:industrial_coke_oven", () ->
+            DeclarativePatternBuilder.start(RIGHT, UP, FRONT)
+                    .aisle("XXXXX", "#XYX#", "#XXX#", "#####", "#####", "#####")
+                    .aisle("XXXXX", "#XPX#", "#XXX#", "#####", "#####", "#####")
+                    .aisle("XXXXX", "FXPXF", "FXXXF", "FFFFF", "#####", "#####")
+                    .aisle("BXXXB", "X#P#X", "X###X", "FXXXF", "##X##", "##X##")
+                    .aisleRepeatable(1, 8, "BXXXB", "X#P#X", "X###X", "FX&XF", "#X#X#", "#X#X#")
+                    .withAisleChannel(GTStructureChannels.STRUCTURE_LENGTH.getName())
+                    .aisle("BXXXB", "X#P#X", "X###X", "FXXXF", "##X##", "##X##")
+                    .aisle("XXXXX", "FXXXF", "FXXXF", "FFFFF", "#####", "#####")
+                    .where('Y', selfPredicate(MetaTileEntityIndustrialCokeOven.class))
+                    .where('B', states(getFireBoxState()))
+                    .where('P', states(getBoilerState()))
+                    .where('F', states(getFrameState()))
+                    .casing('X', CasingDefinition.simple(getCasingState()))
+                    .optionalItemInput(4)
+                    .optionalItemOutput(4)
+                    .optionalFluidOutput(4)
+                    .where('#', any())
+                    .where('&', air().or(SNOW_PREDICATE)) // this won't stay in the structure, and will be broken while
+                    .buildTemplate()
+    );
     int size;
     private int TEMP = MIN_TEMP;
 
@@ -76,10 +100,9 @@ public class MetaTileEntityIndustrialCokeOven extends NoEnergyMultiblockControll
         return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX);
     }
 
-    protected IBlockState getCasingState() {
+    protected static IBlockState getCasingState() {
         return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES);
     }
-
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound data) {
@@ -102,31 +125,14 @@ public class MetaTileEntityIndustrialCokeOven extends NoEnergyMultiblockControll
     @Override
     protected void formStructure(PatternMatchContext context) {
         super.formStructure(context);
-        size = structurePattern.formedRepetitionCount[1];
+        if (multiblockState != null) {
+            size = multiblockState.formedRepetitionCount[1] + 1;
+        } else size = 1;
     }
 
     @Override
-    protected BlockPattern createStructurePattern() {
-        FactoryBlockPattern pattern = FactoryBlockPattern.start(RIGHT, UP, FRONT)
-                .aisle("XXXXX", "#XYX#", "#XXX#", "#####", "#####", "#####")
-                .aisle("XXXXX", "#XPX#", "#XXX#", "#####", "#####", "#####")
-                .aisle("XXXXX", "FXPXF", "FXXXF", "FFFFF", "#####", "#####")
-                .aisle("BXXXB", "X#P#X", "X###X", "FXXXF", "##X##", "##X##")
-                .aisle("BXXXB", "X#P#X", "X###X", "FX&XF", "#X#X#", "#X#X#").setRepeatable(1, 8)
-                .aisle("BXXXB", "X#P#X", "X###X", "FXXXF", "##X##", "##X##")
-                .aisle("XXXXX", "FXXXF", "FXXXF", "FFFFF", "#####", "#####")
-                .where('B', states(getFireBoxState()))
-                .where('P', states(getBoilerState()))
-                .where('F', states(getFrameState()))
-                .where('X', states(getCasingState())
-                        .or(abilities(MultiblockAbility.IMPORT_ITEMS).setPreviewCount(1).setMaxGlobalLimited(4))
-                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setPreviewCount(1).setMaxGlobalLimited(4))
-                        .or(abilities(MultiblockAbility.EXPORT_ITEMS).setPreviewCount(1).setMaxGlobalLimited(4)))
-                .where('#', any())
-                .where('&', air().or(SNOW_PREDICATE)) // this won't stay in the structure, and will be broken while
-                // running
-                .where('Y', selfPredicate());
-        return pattern.build();
+    protected @NotNull BlockPatternTemplate createStructureTemplate() {
+        return TEMPLATE.get();
     }
 
     @SideOnly(Side.CLIENT)
@@ -137,7 +143,7 @@ public class MetaTileEntityIndustrialCokeOven extends NoEnergyMultiblockControll
 
     @SideOnly(Side.CLIENT)
     @Override
-    protected ICubeRenderer getFrontOverlay() {
+    protected @NotNull ICubeRenderer getFrontOverlay() {
         return Textures.COKE_OVEN_OVERLAY;
     }
 
@@ -158,7 +164,7 @@ public class MetaTileEntityIndustrialCokeOven extends NoEnergyMultiblockControll
     }
 
     @Override
-    public void addInformation(ItemStack stack, World player, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, World player, @NotNull List<String> tooltip, boolean advanced) {
         InformationHandler.topTooltips("高效批量生产焦炭与副产品的工业级解决方案", tooltip);
         super.addInformation(stack, player, tooltip, advanced);
         TooltipBuilder.create().addSpecialLogic().build(this, tooltip);

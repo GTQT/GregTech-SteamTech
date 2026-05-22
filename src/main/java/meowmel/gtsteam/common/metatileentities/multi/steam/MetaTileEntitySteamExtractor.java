@@ -4,10 +4,14 @@ import gregtech.api.GTValues;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.BlockPatternTemplate;
+import gregtech.api.pattern.SoftTemplate;
+import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.casing.CasingDefinition;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
@@ -37,14 +41,38 @@ import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.BRONZE_P
 public class MetaTileEntitySteamExtractor extends RecipeMapSteamMultiblockController {
 
     private static final int PARALLEL_LIMIT = 4;
+    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:steam_extractor", () ->
+            DeclarativePatternBuilder.start()
+                    .aisle("XXX", "XXX", "XXX")
+                    .aisle("XXX", "FTF", "XXX")
+                    .aisle("XXX", "FTF", "XXX")
+                    .aisle("XXX", "XSX", "XXX")
+                    .where('S', selfPredicate(MetaTileEntitySteamExtractor.class))
+                    .casing('X', CasingDefinition.simple(getCasingState()))
+                    .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1, 2)
+                    .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1, 2)
+                    .hatch(MultiblockAbility.STEAM, 1)
+                    .where('T', states(getPipeState()))
+                    .where('F', states(getFireboxState()))
+                    .where('#', any())
+                    .buildTemplate()
+    );
 
     public MetaTileEntitySteamExtractor(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.EXTRACTOR_RECIPES, CONVERSION_RATE, ParallelLogicType.APPEND_ITEMS);
         this.recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 
-    public IBlockState getFireboxState() {
+    public static IBlockState getFireboxState() {
         return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
+    }
+
+    private static IBlockState getPipeState() {
+        return MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
+    }
+
+    public static IBlockState getCasingState() {
+        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
     }
 
     @Override
@@ -53,26 +81,8 @@ public class MetaTileEntitySteamExtractor extends RecipeMapSteamMultiblockContro
     }
 
     @Override
-    protected @NotNull BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start()
-                .aisle("XXX", "XXX", "XXX")
-                .aisle("XXX", "FTF", "XXX")
-                .aisle("XXX", "FTF", "XXX")
-                .aisle("XXX", "XSX", "XXX")
-                .where('S', selfPredicate())
-                .where('X', states(getCasingState()).setMinGlobalLimited(16).or(autoAbilities()))
-                .where('T', states(getPipeState()))
-                .where('F', states(getFireboxState()))
-                .where('#', any())
-                .build();
-    }
-
-    private IBlockState getPipeState() {
-        return MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
-    }
-
-    public IBlockState getCasingState() {
-        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
+    protected @NotNull BlockPatternTemplate createStructureTemplate() {
+        return TEMPLATE.get();
     }
 
     @SideOnly(Side.CLIENT)
@@ -83,7 +93,7 @@ public class MetaTileEntitySteamExtractor extends RecipeMapSteamMultiblockContro
 
     @SideOnly(Side.CLIENT)
     @Override
-    protected ICubeRenderer getFrontOverlay() {
+    protected @NotNull ICubeRenderer getFrontOverlay() {
         return Textures.ELECTRIC_FURNACE_OVERLAY;
     }
 
@@ -93,7 +103,7 @@ public class MetaTileEntitySteamExtractor extends RecipeMapSteamMultiblockContro
     }
 
     @Override
-    public void addInformation(ItemStack stack, World player, List<String> tooltip,
+    public void addInformation(ItemStack stack, World player, @NotNull List<String> tooltip,
                                boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         TooltipBuilder.create().addSteamMachine(PARALLEL_LIMIT).build(this, tooltip);

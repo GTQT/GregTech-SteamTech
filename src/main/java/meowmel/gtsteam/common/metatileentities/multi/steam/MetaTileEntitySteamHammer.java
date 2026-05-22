@@ -4,10 +4,14 @@ import gregtech.api.GTValues;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.BlockPatternTemplate;
+import gregtech.api.pattern.SoftTemplate;
+import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.casing.CasingDefinition;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.unification.material.Materials;
 import gregtech.api.util.tooltips.TooltipBuilder;
@@ -27,6 +31,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -35,6 +40,20 @@ import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
 public class MetaTileEntitySteamHammer extends RecipeMapSteamMultiblockController {
 
     private static final int PARALLEL_LIMIT = 8;
+    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:steam_hammer", () ->
+            DeclarativePatternBuilder.start()
+                    .aisle("XXX", "XXX", "XXX")
+                    .aisle("XXX", "XFX", "XXX")
+                    .aisle("XXX", "XSX", "XXX")
+                    .where('S', selfPredicate(MetaTileEntitySteamHammer.class))
+                    .casing('X', CasingDefinition.simple(getCasingState()))
+                    .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1, 2)
+                    .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1, 2)
+                    .hatch(MultiblockAbility.STEAM, 1)
+                    .where('F', states(getFrameState()))
+                    .where('#', air())
+                    .buildTemplate()
+    );
 
     public MetaTileEntitySteamHammer(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.FORGE_HAMMER_RECIPES, CONVERSION_RATE, ParallelLogicType.APPEND_ITEMS);
@@ -51,19 +70,11 @@ public class MetaTileEntitySteamHammer extends RecipeMapSteamMultiblockControlle
     }
 
     @Override
-    protected BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start()
-                .aisle("XXX", "XXX", "XXX")
-                .aisle("XXX", "XFX", "XXX")
-                .aisle("XXX", "XSX", "XXX")
-                .where('S', selfPredicate())
-                .where('X', states(getCasingState()).setMinGlobalLimited(20).or(autoAbilities()))
-                .where('F', states(getFrameState()))
-                .where('#', air())
-                .build();
+    protected @NotNull BlockPatternTemplate createStructureTemplate() {
+        return TEMPLATE.get();
     }
 
-    public IBlockState getCasingState() {
+    public static IBlockState getCasingState() {
         return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
     }
 
@@ -75,7 +86,7 @@ public class MetaTileEntitySteamHammer extends RecipeMapSteamMultiblockControlle
 
     @SideOnly(Side.CLIENT)
     @Override
-    protected ICubeRenderer getFrontOverlay() {
+    protected @NotNull ICubeRenderer getFrontOverlay() {
         return Textures.ELECTRIC_FURNACE_OVERLAY;
     }
 
@@ -86,7 +97,7 @@ public class MetaTileEntitySteamHammer extends RecipeMapSteamMultiblockControlle
 
 
     @Override
-    public void addInformation(ItemStack stack, World player, List<String> tooltip,
+    public void addInformation(ItemStack stack, World player, @NotNull List<String> tooltip,
                                boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         TooltipBuilder.create().addSteamMachine(PARALLEL_LIMIT).build(this, tooltip);

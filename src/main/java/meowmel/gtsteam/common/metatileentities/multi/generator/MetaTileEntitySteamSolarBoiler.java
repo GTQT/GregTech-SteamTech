@@ -170,7 +170,7 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
     protected MultiblockUIFactory createUIFactory() {
         return super.createUIFactory()
                 .createFlexButton((guiData, syncManager) -> {
-                    var throttle = syncManager.panel("throttle_panel", this::makeThrottlePanel, true);
+                    var throttle = syncManager.syncedPanel("throttle_panel", true, this::makeThrottlePanel);
 
                     return new ButtonWidget<>()
                             .size(18)

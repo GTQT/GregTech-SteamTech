@@ -8,13 +8,12 @@ import codechicken.lib.vec.Matrix4;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
-import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.NoEnergyMultiblockController;
 import gregtech.api.mui.GTGuiTheme;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
-import gregtech.api.pattern.PatternMatchContext;
-import gregtech.api.pattern.TraceabilityPredicate;
+import gregtech.api.pattern.*;
+import gregtech.api.pattern.casing.CasingDefinition;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
+import gregtech.api.pattern.casing.GTStructureChannels;
 import gregtech.api.util.GTUtility;
 import gregtech.api.util.tooltips.InformationHandler;
 import gregtech.api.util.tooltips.TooltipBuilder;
@@ -28,6 +27,7 @@ import meowmel.gtsteam.api.recipes.GTSRecipeMaps;
 import meowmel.gtsteam.client.textures.GTSteamTextures;
 import meowmel.gtsteam.common.block.GTSteamMetaBlocks;
 import meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing0;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -46,11 +46,40 @@ public class MetaTileEntityCoagulationTank extends NoEnergyMultiblockController 
 
     private static final TraceabilityPredicate SNOW_PREDICATE = new TraceabilityPredicate(
             bws -> GTUtility.isBlockSnow(bws.getBlockState()));
-
+    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:coagulation_tank", () ->
+            DeclarativePatternBuilder.start(RIGHT, UP, FRONT)
+                    .aisle("BBB", "XYX", "XXX")
+                    .aisleRepeatable(1, 8, "BBB", "X&X", "X#X")
+                    .withAisleChannel(GTStructureChannels.STRUCTURE_LENGTH.getName())
+                    .aisle("BBB", "XXX", "XXX")
+                    .where('Y', selfPredicate(MetaTileEntityCoagulationTank.class))
+                    .where('B', states(getCasingBottomState()))
+                    .casing('X', CasingDefinition.simple(getCasingState()))
+                    .optionalItemInput(4)
+                    .optionalItemOutput(4)
+                    .optionalFluidInput(4)
+                    .optionalFluidOutput(4)
+                    .where('#', air())
+                    .where('&', air().or(SNOW_PREDICATE)) // this won't stay in the structure, and will be broken while
+                    .buildTemplate()
+    );
     int size;
 
     public MetaTileEntityCoagulationTank(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GTSRecipeMaps.COAGULATION_RECIPES);
+    }
+
+    protected static IBlockState getCasingState() {
+        return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.REINFORCED_TREATED_WOOD_WALL);
+    }
+
+    protected static IBlockState getCasingBottomState() {
+        return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.REINFORCED_TREATED_WOOD_BOTTOM);
+    }
+
+    @Override
+    protected @NotNull BlockPatternTemplate createStructureTemplate() {
+        return TEMPLATE.get();
     }
 
     @Override
@@ -61,27 +90,10 @@ public class MetaTileEntityCoagulationTank extends NoEnergyMultiblockController 
     @Override
     protected void formStructure(PatternMatchContext context) {
         super.formStructure(context);
-        size = structurePattern.formedRepetitionCount[1];
+        if (multiblockState != null) {
+            size = multiblockState.formedRepetitionCount[1] + 1;
+        } else size = 1;
         this.recipeMapWorkable.setParallelLimit(size);
-    }
-
-    @Override
-    protected BlockPattern createStructurePattern() {
-        FactoryBlockPattern pattern = FactoryBlockPattern.start(RIGHT, UP, FRONT)
-                .aisle("BBB", "XYX", "XXX")
-                .aisle("BBB", "X&X", "X#X").setRepeatable(1, 8)
-                .aisle("BBB", "XXX", "XXX")
-                .where('B', states(GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.REINFORCED_TREATED_WOOD_BOTTOM)))
-                .where('X', states(GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.REINFORCED_TREATED_WOOD_WALL)).setMinGlobalLimited(6)
-                        .or(abilities(MultiblockAbility.IMPORT_ITEMS).setPreviewCount(1))
-                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setPreviewCount(1))
-                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setPreviewCount(1))
-                        .or(abilities(MultiblockAbility.EXPORT_ITEMS).setPreviewCount(1)))
-                .where('#', air())
-                .where('&', air().or(SNOW_PREDICATE)) // this won't stay in the structure, and will be broken while
-                // running
-                .where('Y', selfPredicate());
-        return pattern.build();
     }
 
     @SideOnly(Side.CLIENT)
@@ -91,7 +103,7 @@ public class MetaTileEntityCoagulationTank extends NoEnergyMultiblockController 
     }
 
     @Override
-    public void addInformation(ItemStack stack, World player, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, World player, @NotNull List<String> tooltip, boolean advanced) {
         InformationHandler.topTooltips("村里的大缸（远离司马光）", tooltip);
         super.addInformation(stack, player, tooltip, advanced);
         TooltipBuilder.create().addSpecialLogic().build(this, tooltip);
