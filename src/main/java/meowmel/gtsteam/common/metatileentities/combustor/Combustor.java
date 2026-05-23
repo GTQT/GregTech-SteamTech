@@ -1,6 +1,5 @@
 package meowmel.gtsteam.common.metatileentities.combustor;
 
-
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.ColourMultiplier;
 import codechicken.lib.render.pipeline.IVertexOperation;
@@ -68,38 +67,27 @@ import static gregtech.api.GTValues.V;
 import static gregtech.api.capability.GregtechCapabilities.CAPABILITY_HEAT_CONTAINER;
 import static gregtech.api.capability.GregtechDataCodes.IS_WORKING;
 
-/**
- * 热量锅炉的抽象基类
- * 处理燃料燃烧、水加热、 热量生成等核心逻辑
- */
 public abstract class Combustor extends MetaTileEntity implements IDataInfoProvider {
 
-    // 用于GUI纹理路径替换的正则表达式模式
     private static final Pattern STRING_SUBSTITUTION_PATTERN = Pattern.compile("%s", Pattern.LITERAL);
 
-    // GUI相关纹理
     public final TextureArea bronzeSlotBackgroundTexture;
     public final TextureArea slotFurnaceBackground;
 
-    // 锅炉类型：高压还是低压
     protected final boolean isHighPressure;
     protected final SimpleOverlayRenderer render_side = GTSteamTextures.HU_BURRING_BOX_SIDE_OVERLAY;
     protected final SimpleOverlayRenderer renderer_full = GTSteamTextures.HU_BURRING_BOX_SIDE_FULL_OVERLAY;
     protected final IHeatable heatable;
-    // 渲染器，用于显示锅炉状态
     private final ICubeRenderer renderer;
-    // 容器物品栏，用于流体容器交互
     private final ItemStackHandler containerInventory;
     protected int tier;
     protected Material material;
     protected int color;
-    // 燃料燃烧相关变量
-    private int fuelBurnTimeLeft;       // 剩余燃烧时间
-    private int fuelMaxBurnTime;        // 最大燃烧时间
-    private int timeBeforeCoolingDown;  // 冷却倒计时
-    // 锅炉状态
-    private boolean isBurning;           // 是否正在燃烧
-    private boolean wasBurningAndNeedsUpdate; // 燃烧状态需要更新标志
+    private int fuelBurnTimeLeft;
+    private int fuelMaxBurnTime;
+    private int timeBeforeCoolingDown;
+    private boolean isBurning;
+    private boolean wasBurningAndNeedsUpdate;
 
     /**
      * 构造函数
@@ -112,10 +100,8 @@ public abstract class Combustor extends MetaTileEntity implements IDataInfoProvi
         super(metaTileEntityId);
         this.renderer = renderer;
         this.isHighPressure = isHighPressure;
-        // 获取GUI纹理
         this.bronzeSlotBackgroundTexture = getGuiTexture("slot_%s");
         this.slotFurnaceBackground = getGuiTexture("slot_%s_furnace_background");
-        // 初始化物品栏：0号槽输入流体容器，1号槽输出空容器
         this.containerInventory = new GTItemStackHandler(this, 2);
 
         this.tier = tier;
@@ -499,13 +485,11 @@ public abstract class Combustor extends MetaTileEntity implements IDataInfoProvi
     @Override
     public void randomDisplayTick() {
         if (this.isActive()) {
-            // 根据压力类型选择烟雾粒子
             EnumParticleTypes smokeParticle = isHighPressure ? EnumParticleTypes.SMOKE_LARGE :
                     EnumParticleTypes.SMOKE_NORMAL;
-            // 在前方显示烟雾和火焰粒子
+
             VanillaParticleEffects.defaultFrontEffect(this, smokeParticle, EnumParticleTypes.FLAME);
 
-            // 随机播放火焰音效
             if (ConfigHolder.machines.machineSounds && GTValues.RNG.nextDouble() < 0.1) {
                 BlockPos pos = getPos();
                 getWorld().playSound(pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F,

@@ -2,9 +2,9 @@ package meowmel.gtsteam.integration.theoneprobe.provider;
 
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
+import mcjty.theoneprobe.api.*;
 import meowmel.gtsteam.GTSteam;
 import meowmel.gtsteam.common.metatileentities.multi.store.MetaTileEntityLargeFluidTank;
-import mcjty.theoneprobe.api.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
