@@ -147,6 +147,8 @@ gtsteam.machine.industrial_coke_oven.tooltip.2=工作时温度持续上升（基
 gtsteam.machine.industrial_coke_oven.tooltip.3=窑温每提升200K，配方耗时*80%%（乘算）。
 #凝固缸
 gtsteam.machine.coagulation_tank.name=凝固缸
+#化粪池
+gtsteam.machine.septic_tank.name=化粪池
 #太阳能锅炉
 gtsteam.machine.steam_solar_boiler.name=太阳能锅炉
 gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip=需要§f%d秒§7预热,白天时热量上升，夜晚或下雨热量下降

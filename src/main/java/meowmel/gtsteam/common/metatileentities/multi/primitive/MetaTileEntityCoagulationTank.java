@@ -145,4 +145,9 @@ public class MetaTileEntityCoagulationTank extends NoEnergyMultiblockController 
     public boolean hasMaintenanceMechanics() {
         return false;
     }
+
+    @Override
+    public boolean isBatchAllowed() {
+        return false;
+    }
 }

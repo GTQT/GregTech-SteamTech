@@ -262,6 +262,11 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
     }
 
     @Override
+    public boolean isBatchAllowed() {
+        return false;
+    }
+
+    @Override
     public GTGuiTheme getUITheme() {
         return GTGuiTheme.BRONZE;
     }

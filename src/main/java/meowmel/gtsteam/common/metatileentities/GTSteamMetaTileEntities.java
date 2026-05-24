@@ -39,6 +39,7 @@ public class GTSteamMetaTileEntities {
     public static MetaTileEntityIndustrialPrimitiveBlastFurnace INDUSTRIAL_PRIMITIVE_BLAST_FURNACE;
     public static MetaTileEntityIndustrialCokeOven INDUSTRIAL_COKE_OVEN;
     public static MetaTileEntityCoagulationTank COAGULATION_TANK;
+    public static MetaTileEntitySepticTank SEPTIC_TANK;
 
     public static MetaTileEntitySteamCompressor STEAM_COMPRESSOR;
     public static MetaTileEntitySteamExtractor STEAM_EXTRACTOR;
@@ -148,6 +149,7 @@ public class GTSteamMetaTileEntities {
         INDUSTRIAL_PRIMITIVE_BLAST_FURNACE = registerMetaTileEntity(6, new MetaTileEntityIndustrialPrimitiveBlastFurnace(gtsId("industrial_primitive_blast_furnace")));
         INDUSTRIAL_COKE_OVEN = registerMetaTileEntity(7, new MetaTileEntityIndustrialCokeOven(gtsId("industrial_coke_oven")));
         COAGULATION_TANK = registerMetaTileEntity(8, new MetaTileEntityCoagulationTank(gtsId("coagulation_tank")));
+        SEPTIC_TANK = registerMetaTileEntity(9, new MetaTileEntitySepticTank(gtsId("septic_tank")));
 
         STEAM_COMPRESSOR = registerMetaTileEntity(10, new MetaTileEntitySteamCompressor(gtsId("steam_compressor")));
         STEAM_EXTRACTOR = registerMetaTileEntity(11, new MetaTileEntitySteamExtractor(gtsId("steam_extractor")));

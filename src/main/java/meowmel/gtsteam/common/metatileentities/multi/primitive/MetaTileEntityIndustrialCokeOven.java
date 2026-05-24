@@ -180,6 +180,11 @@ public class MetaTileEntityIndustrialCokeOven extends NoEnergyMultiblockControll
     }
 
     @Override
+    public boolean isBatchAllowed() {
+        return false;
+    }
+
+    @Override
     public void update() {
         super.update();
 

@@ -329,13 +329,21 @@ public class MachineRecipes {
                 'F', new UnificationEntry(frameGt, Steel),
                 'B', PRIMITIVE_BLAST_FURNACE.getStackForm());
 
-        //原始化学反应釜
-        ModHandler.addShapedRecipe(true, "primitive_chemical_reactor", COAGULATION_TANK.getStackForm(),
+        //凝固缸
+        ModHandler.addShapedRecipe(true, "coagulation_tank", COAGULATION_TANK.getStackForm(),
                 "PRP", "sQh", "PSP",
                 'P', new UnificationEntry(plate, TreatedWood),
                 'Q', new UnificationEntry(pipeLargeFluid, TreatedWood),
                 'R', new UnificationEntry(rotor, Steel),
                 'S', new UnificationEntry(screw, Steel));
+
+        //化粪池
+        ModHandler.addShapedRecipe(true, "septic_tank", SEPTIC_TANK.getStackForm(),
+                "PRP", "sQh", "PSP",
+                'P', Blocks.BRICK_BLOCK,
+                'Q', new UnificationEntry(pipeLargeFluid, Wood),
+                'R', new UnificationEntry(rotor, Iron),
+                'S', new UnificationEntry(screw, Iron));
 
         //大型储罐
         ModHandler.addShapedRecipe(true, "large_fluid_tank", LARGE_FLUID_TANK.getStackForm(),

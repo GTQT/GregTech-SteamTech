@@ -147,6 +147,8 @@ gtsteam.machine.industrial_coke_oven.tooltip.2=While operating, the temperature 
 gtsteam.machine.industrial_coke_oven.tooltip.3=For every 200K temperature increase, recipe duration is multiplied by 80%% (multiplicative).
 #Coagulation Tank
 gtsteam.machine.coagulation_tank.name=Coagulation Tank
+#Septic Tank
+gtsteam.machine.septic_tank.name=Septic Tank
 #Solar Boiler
 gtsteam.machine.steam_solar_boiler.name=Solar Boiler
 gtsteam.multiblock.steam_solar_boiler.heat_time_tooltip=Requires §f%d seconds§7 to preheat, heat increases during daytime and decreases at night or rain
