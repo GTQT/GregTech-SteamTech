@@ -234,6 +234,11 @@ public class MetaTileEntityIndustrialCokeOven extends NoEnergyMultiblockControll
     }
 
     @Override
+    public double getPollutionAmount() {
+        return 0.0075;
+    }
+
+    @Override
     public GTGuiTheme getUITheme() {
         return GTGuiTheme.BRONZE;
     }

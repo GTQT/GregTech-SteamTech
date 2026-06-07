@@ -306,6 +306,11 @@ public class MachineRecipes {
                 'P', GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(GALVANIZED_PORCELAIN_TILES),
                 'I', Items.LAVA_BUCKET);
 
+        ModHandler.addShapedRecipe(true, "brick_kiln", GTSteamMetaTileEntities.BRICK_KILN.getStackForm(),
+                "PIP", "IwI", "PIP",
+                'P', GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(GALVANIZED_PORCELAIN_TILES),
+                'I', new UnificationEntry(frameGt, Steel));
+
         ModHandler.addShapedRecipe(true, "primitive_furnace", GTSteamMetaTileEntities.PRIMITIVE_FURNACE.getStackForm(),
                 "PIP", "IwI", "PIP",
                 'P', GTSteamMetaBlocks.blockMultiblockCasing0.getItemVariant(GALVANIZED_PORCELAIN_TILES),

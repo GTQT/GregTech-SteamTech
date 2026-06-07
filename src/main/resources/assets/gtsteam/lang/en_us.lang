@@ -1,5 +1,6 @@
 #配方
-recipemap.alloy_klin.name=Alloy Kiln
+recipemap.alloy_kiln.name=Alloy Kiln
+recipemap.brick_kiln.name=Brick Kiln
 recipemap.sap_collector.name=Sap Collector
 recipemap.coagulation.name=coagulation
 recipemap.lava_furnace.name=Lava Furnace
@@ -118,15 +119,18 @@ gtsteam.machine.steam_alloy_furnace.name=Steam Alloy Furnace
 gtsteam.machine.steam_lava_furnace.name=Steam Lava Furnace
 gtsteam.machine.saw_mill.name=Saw Mill
 # 原始设备
-gtsteam.machine.alloy_klin.name=Alloy Kiln
+gtsteam.machine.alloy_kiln.name=Alloy Kiln
+gtsteam.machine.alloy_kiln.tooltip.1=Processing speed is 20 times that of the Steam Alloy Smelter.
+gtsteam.machine.alloy_kiln.tooltip.2=Consumes a small amount of Lava.
+gtsteam.machine.alloy_kiln.tooltip.3=Allows interaction with Primitive Import/Export Hatches.
+
+gtsteam.machine.brick_kiln.name=Brick Kiln
+gtsteam.machine.brick_kiln.tooltip.1=Can quickly burn bricks
+gtsteam.machine.brick_kiln.tooltip.2=Allows interaction with Primitive Import/Export Hatches.
+
 gtsteam.machine.primitive_furnace.name=Primitive Furnace
 gtsteam.machine.primitive_import_hatch.name=Primitive Import Hatch
 gtsteam.machine.primitive_export_hatch.name=Primitive Export Hatch
-
-gtsteam.machine.alloy_klin.tooltip.1=Processing speed is 20 times that of the Steam Alloy Smelter.
-gtsteam.machine.alloy_klin.tooltip.2=Consumes a small amount of Lava.
-gtsteam.machine.alloy_klin.tooltip.3=Allows interaction with Primitive Import/Export Hatches.
-
 gtsteam.machine.primitive_furnace.tooltip.1=Smelting speed is 2 times that of a regular Furnace.
 gtsteam.machine.primitive_furnace.tooltip.2=Fuel durability is 4 times that of a regular Furnace.
 gtsteam.machine.primitive_furnace.tooltip.3=Allows interaction with Primitive Import/Export Hatches.

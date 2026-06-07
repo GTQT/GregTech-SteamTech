@@ -1,7 +1,6 @@
 package meowmel.gtsteam.loader.recipes;
 
 import meowmel.gtsteam.loader.recipes.chain.*;
-import meowmel.gtsteam.loader.recipes.chain.*;
 
 public class GTSRecipeManger {
     private GTSRecipeManger() {
@@ -12,7 +11,8 @@ public class GTSRecipeManger {
     }
 
     public static void init() {
-        AlloyKlinRecipes.init();
+        AlloyKilnRecipes.init();
+        BrickKilnRecipes.init();
         MiscRecipes.init();
         MachineRecipes.init();
         ULVAge.init();

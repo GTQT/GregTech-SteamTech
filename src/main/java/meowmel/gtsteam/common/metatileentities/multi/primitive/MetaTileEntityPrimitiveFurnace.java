@@ -217,7 +217,7 @@ public class MetaTileEntityPrimitiveFurnace extends RecipeMapPrimitiveMultiblock
 
     @Override
     public double getPollutionAmount() {
-        return 0.005;
+        return 0.0025;
     }
 
     @Override
@@ -281,4 +281,6 @@ public class MetaTileEntityPrimitiveFurnace extends RecipeMapPrimitiveMultiblock
             this.fuelMaxBurnTime = compound.getInteger("FuelMaxBurnTime");
         }
     }
+
+
 }

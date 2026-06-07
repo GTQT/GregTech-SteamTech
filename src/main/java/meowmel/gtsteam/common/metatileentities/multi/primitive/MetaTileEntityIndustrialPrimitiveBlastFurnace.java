@@ -88,6 +88,7 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
     int MIN_TEMP = 300;
     int MAX_TEMP = 1500;
     private byte auxiliaryBlastFurnaceNumber = 0;
+
     public MetaTileEntityIndustrialPrimitiveBlastFurnace(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, PRIMITIVE_BLAST_FURNACE_RECIPES);
         this.recipeMapWorkable = new IndustrialPrimitiveBlastFurnaceLogic(this);
@@ -264,6 +265,11 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
     @Override
     public boolean isBatchAllowed() {
         return false;
+    }
+
+    @Override
+    public double getPollutionAmount() {
+        return 0.0075;
     }
 
     @Override

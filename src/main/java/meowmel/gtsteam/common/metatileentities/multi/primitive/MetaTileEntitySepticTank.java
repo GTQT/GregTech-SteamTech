@@ -9,15 +9,12 @@ import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
-import gregtech.api.pattern.casing.GTCasingGroups;
-import gregtech.api.pattern.casing.GTStructureChannels;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.util.tooltips.InformationHandler;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.MetaBlocks;
 import meowmel.gtsteam.client.textures.GTSteamTextures;
-import meowmel.gtsteam.common.metatileentities.multi.heat.MetaTileEntityHeatFermenter;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -50,12 +47,12 @@ public class MetaTileEntitySepticTank extends NoEnergyMultiblockController {
                     .buildTemplate()
     );
 
-    private static IBlockState getCoilState() {
-        return MetaBlocks.WIRE_COIL.getState(CUPRONICKEL);
-    }
-
     public MetaTileEntitySepticTank(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, RecipeMaps.FERMENTING_RECIPES);
+    }
+
+    private static IBlockState getCoilState() {
+        return MetaBlocks.WIRE_COIL.getState(CUPRONICKEL);
     }
 
     private static IBlockState getCasingState() {
@@ -88,6 +85,11 @@ public class MetaTileEntitySepticTank extends NoEnergyMultiblockController {
     public void addInformation(ItemStack stack, World player, @NotNull List<String> tooltip, boolean advanced) {
         InformationHandler.topTooltips("神奇的微生物在哪里", tooltip);
         super.addInformation(stack, player, tooltip, advanced);
+    }
+
+    @Override
+    public double getPollutionAmount() {
+        return 0.0025;
     }
 
     @Override

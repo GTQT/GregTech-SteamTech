@@ -12,7 +12,7 @@ import java.util.List;
 import static gregtech.api.unification.material.Materials.Lava;
 import static meowmel.gtsteam.api.recipes.GTSRecipeMaps.ALLOY_KILN;
 
-public class AlloyKlinRecipes {
+public class AlloyKilnRecipes {
 
     public static void init() {
 

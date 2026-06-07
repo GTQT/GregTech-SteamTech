@@ -24,6 +24,7 @@ public class GTSRecipeMaps {
     public static final RecipeMap<HeatRecipeBuilder> HEAT_CHEMICAL_RECIPES;
     public static final RecipeMap<HeatRecipeBuilder> ELECTRONIC_PROCESSOR_RECIPES;
     public static final RecipeMap<PrimitiveRecipeBuilder> ALLOY_KILN;
+    public static final RecipeMap<PrimitiveRecipeBuilder> BRICK_KILN;
     public static final RecipeMap<PrimitiveRecipeBuilder> COAGULATION_RECIPES;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_STEAM_TURBINE_FUELS;
     public static final RecipeMap<FuelRecipeBuilder> PRIMITIVE_GAS_TURBINE_FUELS;
@@ -170,12 +171,20 @@ public class GTSRecipeMaps {
                 .disableJeiOverclockButton()
                 .build();
 
-        ALLOY_KILN = new RecipeMapBuilder<>("alloy_klin",
+        ALLOY_KILN = new RecipeMapBuilder<>("alloy_kiln",
                 new PrimitiveRecipeBuilder())
                 .itemInputs(2)
                 .itemOutputs(2)
                 .fluidInputs(1)
                 .fluidOutputs(0)
+                .sound(GTSoundEvents.FIRE)
+                .disableJeiOverclockButton()
+                .build();
+
+        BRICK_KILN = new RecipeMapBuilder<>("brick_kiln",
+                new PrimitiveRecipeBuilder())
+                .itemInputs(2)
+                .itemOutputs(2)
                 .sound(GTSoundEvents.FIRE)
                 .disableJeiOverclockButton()
                 .build();

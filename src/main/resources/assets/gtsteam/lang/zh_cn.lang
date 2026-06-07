@@ -1,5 +1,6 @@
 #配方
 recipemap.alloy_klin.name=合金窑
+recipemap.brick_kiln.name=砖窑
 recipemap.sap_collector.name=乳胶收集
 recipemap.coagulation.name=凝固缸
 recipemap.lava_furnace.name=熔岩炉
@@ -118,15 +119,18 @@ gtsteam.machine.steam_alloy_furnace.name=蒸汽合金炉
 gtsteam.machine.steam_lava_furnace.name=蒸汽熔岩炉
 gtsteam.machine.saw_mill.name=锯木机
 # 原始设备
-gtsteam.machine.alloy_klin.name=合金窑
+gtsteam.machine.alloy_kiln.name=合金窑
+gtsteam.machine.alloy_kiln.tooltip.1=加工速度是蒸汽合金炉的20倍
+gtsteam.machine.alloy_kiln.tooltip.2=需要消耗少量岩浆
+gtsteam.machine.alloy_kiln.tooltip.3=允许与原始输入仓/输出仓交互
+
+gtsteam.machine.brick_kiln.name=砖窑
+gtsteam.machine.brick_kiln.tooltip.1=能够快速烧制砖块
+gtsteam.machine.brick_kiln.tooltip.2=允许与原始输入仓/输出仓交互
+
 gtsteam.machine.primitive_furnace.name=原始熔炉
 gtsteam.machine.primitive_import_hatch.name=原始输入仓
 gtsteam.machine.primitive_export_hatch.name=原始输出仓
-
-gtsteam.machine.alloy_klin.tooltip.1=加工速度是蒸汽合金炉的20倍
-gtsteam.machine.alloy_klin.tooltip.2=需要消耗少量岩浆
-gtsteam.machine.alloy_klin.tooltip.3=允许与原始输入仓/输出仓交互
-
 gtsteam.machine.primitive_furnace.tooltip.1=熔炼速度是普通熔炉的2倍
 gtsteam.machine.primitive_furnace.tooltip.2=燃料耐久度是普通熔炉的4倍
 gtsteam.machine.primitive_furnace.tooltip.3=允许与原始输入仓/输出仓交互

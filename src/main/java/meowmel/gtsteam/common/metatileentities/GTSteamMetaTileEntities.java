@@ -32,6 +32,7 @@ import static meowmel.gtsteam.api.recipes.GTSRecipeMaps.*;
 public class GTSteamMetaTileEntities {
 
     public static MetaTileEntityAlloyKiln ALLOY_KILN;
+    public static MetaTileEntityBrickKiln BRICK_KILN;
     public static MetaTileEntityPrimitiveFurnace PRIMITIVE_FURNACE;
     public static MetaTileEntityPrimitiveImportHatch PRIMITIVE_IMPORT_HATCH;
     public static MetaTileEntityPrimitiveExportHatch PRIMITIVE_EXPORT_HATCH;
@@ -139,12 +140,12 @@ public class GTSteamMetaTileEntities {
     }
 
     public static void initialization() {
-        ALLOY_KILN = registerMetaTileEntity(1, new MetaTileEntityAlloyKiln(gtsId("alloy_klin")));
-        PRIMITIVE_FURNACE = registerMetaTileEntity(2, new MetaTileEntityPrimitiveFurnace(gtsId("primitive_furnace")));
+        ALLOY_KILN = registerMetaTileEntity(1, new MetaTileEntityAlloyKiln(gtsId("alloy_kiln")));
+        BRICK_KILN = registerMetaTileEntity(2, new MetaTileEntityBrickKiln(gtsId("brick_kiln")));
+        PRIMITIVE_FURNACE = registerMetaTileEntity(3, new MetaTileEntityPrimitiveFurnace(gtsId("primitive_furnace")));
 
         PRIMITIVE_IMPORT_HATCH = registerMetaTileEntity(4, new MetaTileEntityPrimitiveImportHatch(gtsId("primitive_import_hatch")));
         PRIMITIVE_EXPORT_HATCH = registerMetaTileEntity(5, new MetaTileEntityPrimitiveExportHatch(gtsId("primitive_export_hatch")));
-
 
         INDUSTRIAL_PRIMITIVE_BLAST_FURNACE = registerMetaTileEntity(6, new MetaTileEntityIndustrialPrimitiveBlastFurnace(gtsId("industrial_primitive_blast_furnace")));
         INDUSTRIAL_COKE_OVEN = registerMetaTileEntity(7, new MetaTileEntityIndustrialCokeOven(gtsId("industrial_coke_oven")));

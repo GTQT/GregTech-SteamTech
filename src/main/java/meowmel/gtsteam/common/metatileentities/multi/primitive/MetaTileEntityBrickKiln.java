@@ -1,62 +1,67 @@
 package meowmel.gtsteam.common.metatileentities.multi.primitive;
 
-import codechicken.lib.raytracer.CuboidRayTraceResult;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
+import codechicken.lib.texture.TextureUtils;
+import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Matrix4;
 import com.cleanroommc.modularui.api.drawable.IKey;
-import com.cleanroommc.modularui.utils.Alignment;
 import com.cleanroommc.modularui.value.sync.DoubleSyncValue;
 import com.cleanroommc.modularui.widgets.slot.ItemSlot;
 import com.cleanroommc.modularui.widgets.slot.ModularSlot;
+import gregtech.api.GTValues;
 import gregtech.api.metatileentity.MetaTileEntity;
-import gregtech.api.metatileentity.MetaTileEntityUIFactory;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.RecipeMapPrimitiveMultiblockController;
 import gregtech.api.metatileentity.multiblock.ui.MultiblockUIFactory;
 import gregtech.api.mui.GTGuiTextures;
-import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.pattern.BlockPatternTemplate;
 import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
+import gregtech.api.util.GTUtility;
 import gregtech.api.util.tooltips.InformationHandler;
 import gregtech.api.util.tooltips.TooltipBuilder;
+import gregtech.client.particle.VanillaParticleEffects;
+import gregtech.client.renderer.CubeRendererState;
 import gregtech.client.renderer.ICubeRenderer;
+import gregtech.client.renderer.cclop.ColourOperation;
+import gregtech.client.renderer.cclop.LightMapOperation;
 import gregtech.client.renderer.texture.Textures;
-import gregtech.common.mui.widget.GTFluidSlot;
+import gregtech.client.utils.BloomEffectUtil;
+import gregtech.common.ConfigHolder;
 import meowmel.gtsteam.api.recipes.GTSRecipeMaps;
 import meowmel.gtsteam.client.textures.GTSteamTextures;
 import meowmel.gtsteam.common.block.GTSteamMetaBlocks;
 import meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing0;
 import meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockController {
+public class MetaTileEntityBrickKiln extends RecipeMapPrimitiveMultiblockController {
 
 
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:alloy_kiln", () ->
+    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:brick_kiln", () ->
             DeclarativePatternBuilder.start()
                     .aisle("XXX", "XXX", "#X#")
-                    .aisle("XXX", "X&X", "#X#")
+                    .aisle("XXX", "X&X", "X&X")
                     .aisle("XXX", "XYX", "#X#")
-                    .where('Y', selfPredicate(MetaTileEntityAlloyKiln.class))
+                    .where('Y', selfPredicate(MetaTileEntityBrickKiln.class))
                     .where('X', states(getCasingState())
                             .or(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_IMPORT_HATCH).setMaxGlobalLimited(2))
                             .or(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_EXPORT_HATCH).setMaxGlobalLimited(1))
@@ -66,8 +71,8 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
                     .buildTemplate()
     );
 
-    public MetaTileEntityAlloyKiln(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, GTSRecipeMaps.ALLOY_KILN);
+    public MetaTileEntityBrickKiln(ResourceLocation metaTileEntityId) {
+        super(metaTileEntityId, GTSRecipeMaps.BRICK_KILN);
     }
 
     protected static IBlockState getCasingState() {
@@ -76,7 +81,7 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
 
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity tileEntity) {
-        return new MetaTileEntityAlloyKiln(metaTileEntityId);
+        return new MetaTileEntityBrickKiln(metaTileEntityId);
     }
 
     @Override
@@ -114,44 +119,34 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
                             .child(new ItemSlot()
                                     .slot(new ModularSlot(exportItems, 1)
                                             .accessibility(false, true))
-                                    .pos(103, 48))
-                            .child(new GTFluidSlot()
-                                    .overlay(GTGuiTextures.PRIMITIVE_LARGE_FLUID_TANK_OVERLAY.asIcon()
-                                            .alignment(Alignment.CenterRight)
-                                            .marginLeft(1))
-                                    .syncHandler(GTFluidSlot.sync(importFluids.getTankAt(0))
-                                            .drawAlwaysFull(false)
-                                            .showAmountOnSlot(false)
-                                            .accessibility(true, true))
-                                    .pos(10, 22)
-                                    .size(20, 58));
+                                    .pos(103, 48));
                 });
     }
 
-
-    @Override
-    public GTGuiTheme getUITheme() {
-        return GTGuiTheme.PRIMITIVE;
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
-        return GTSteamTextures.PORCELAIN_TILES;
-    }
-
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    protected ICubeRenderer getFrontOverlay() {
-        return Textures.PRIMITIVE_BLAST_FURNACE_OVERLAY;
-    }
 
     @Override
     public void renderMetaTileEntity(CCRenderState renderState, Matrix4 translation, IVertexOperation[] pipeline) {
         super.renderMetaTileEntity(renderState, translation, pipeline);
         getFrontOverlay().renderOrientedState(renderState, translation, pipeline, getFrontFacing(),
                 recipeMapWorkable.isActive(), recipeMapWorkable.isWorkingEnabled());
+        if (recipeMapWorkable.isActive() && isStructureFormed()) {
+            EnumFacing back = getFrontFacing().getOpposite();
+            Matrix4 offset = translation.copy().translate(back.getXOffset(), -0.3, back.getZOffset());
+            CubeRendererState op = Textures.RENDER_STATE.get();
+            Textures.RENDER_STATE.set(new CubeRendererState(op.layer, CubeRendererState.PASS_MASK, op.world));
+            Textures.renderFace(renderState, offset,
+                    ArrayUtils.addAll(pipeline, new LightMapOperation(240, 240), new ColourOperation(0xFFFFFFFF)),
+                    EnumFacing.UP, Cuboid6.full, TextureUtils.getBlockTexture("lava_still"),
+                    BloomEffectUtil.getEffectiveBloomLayer());
+            Textures.RENDER_STATE.set(op);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @NotNull
+    @Override
+    protected ICubeRenderer getFrontOverlay() {
+        return Textures.PRIMITIVE_BLAST_FURNACE_OVERLAY;
     }
 
     @Override
@@ -160,21 +155,50 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
     }
 
     @Override
-    public boolean onRightClick(EntityPlayer playerIn, EnumHand hand, EnumFacing facing,
-                                CuboidRayTraceResult hitResult) {
-        // try to fill a bucket (or similar) with creosote on right click (if not sneaking)
-        if (playerIn.getHeldItem(hand).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
-            if (!playerIn.isSneaking()) {
-                return getWorld().isRemote || FluidUtil.interactWithFluidHandler(playerIn, hand, getFluidInventory());
+    public void update() {
+        super.update();
+
+        if (this.isActive()) {
+            if (getWorld().isRemote) {
+                VanillaParticleEffects.PBF_SMOKE.runEffect(this);
             } else {
-                // allow opening UI on shift-right-click with fluid container item
-                if (getWorld() != null && !getWorld().isRemote) {
-                    MetaTileEntityUIFactory.INSTANCE.openUI(getHolder(), (EntityPlayerMP) playerIn);
-                }
-                return true;
+                damageEntitiesAndBreakSnow();
+                pollution(this.getPollutionAmount(), this.getPollutionTicks());
             }
         }
-        return super.onRightClick(playerIn, hand, facing, hitResult);
+    }
+
+    private void damageEntitiesAndBreakSnow() {
+        BlockPos middlePos = this.getPos();
+        middlePos = middlePos.offset(getFrontFacing().getOpposite());
+        this.getWorld().getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(middlePos))
+                .forEach(entity -> entity.attackEntityFrom(DamageSource.LAVA, 3.0f));
+
+        if (getOffsetTimer() % 10 == 0) {
+            IBlockState state = getWorld().getBlockState(middlePos);
+            GTUtility.tryBreakSnow(getWorld(), middlePos, state, true);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void randomDisplayTick() {
+        if (this.isActive()) {
+            VanillaParticleEffects.defaultFrontEffect(this, 0.3F, EnumParticleTypes.SMOKE_LARGE,
+                    EnumParticleTypes.FLAME);
+            if (ConfigHolder.machines.machineSounds && GTValues.RNG.nextDouble() < 0.1) {
+                BlockPos pos = getPos();
+                getWorld().playSound(pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F,
+                        SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+            }
+        }
+    }
+
+
+    @NotNull
+    @Override
+    public SoundType getSoundType() {
+        return SoundType.STONE;
     }
 
     @Override
@@ -182,13 +206,18 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
         return 0.0025;
     }
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {
+        return GTSteamTextures.PORCELAIN_TILES;
+    }
+
     @Override
     public void addInformation(ItemStack stack, World player, @NotNull List<String> tooltip, boolean advanced) {
-        InformationHandler.topTooltips("大型原始人熔炉", tooltip);
+        InformationHandler.topTooltips("黑窑厂", tooltip);
         super.addInformation(stack, player, tooltip, advanced);
         TooltipBuilder.create().addSpecialLogic().build(this, tooltip);
-        tooltip.add(I18n.format("gtsteam.machine.alloy_kiln.tooltip.1"));
-        tooltip.add(I18n.format("gtsteam.machine.alloy_kiln.tooltip.2"));
-        tooltip.add(I18n.format("gtsteam.machine.alloy_kiln.tooltip.3"));
+        tooltip.add(I18n.format("gtsteam.machine.brick_kiln.tooltip.1"));
+        tooltip.add(I18n.format("gtsteam.machine.brick_kiln.tooltip.2"));
     }
 }
