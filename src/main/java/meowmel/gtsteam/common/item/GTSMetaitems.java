@@ -4,15 +4,6 @@ import gregtech.api.items.metaitem.MetaItem;
 
 public class GTSMetaitems {
     //  Covers
-    public static MetaItem<?>.MetaValueItem ELECTRIC_MOTOR_STEAM;
-    public static MetaItem<?>.MetaValueItem ELECTRIC_PISTON_STEAM;
-    public static MetaItem<?>.MetaValueItem ELECTRIC_PUMP_STEAM;
-    public static MetaItem<?>.MetaValueItem CONVEYOR_MODULE_STEAM;
-    public static MetaItem<?>.MetaValueItem ROBOT_ARM_STEAM;
-    public static MetaItem<?>.MetaValueItem EMITTER_STEAM;
-    public static MetaItem<?>.MetaValueItem SENSOR_STEAM;
-    public static MetaItem<?>.MetaValueItem FIELD_GENERATOR_STEAM;
-
     public static MetaItem<?>.MetaValueItem ELECTRIC_MOTOR_ULV;
     public static MetaItem<?>.MetaValueItem ELECTRIC_PISTON_ULV;
     public static MetaItem<?>.MetaValueItem ELECTRIC_PUMP_ULV;

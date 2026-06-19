@@ -10,23 +10,14 @@ public class GTSMetaItem extends StandardMetaItem {
 
     public void registerSubItems() {
         //  Covers
-        GTSMetaitems.ELECTRIC_MOTOR_STEAM = this.addItem(0, "cover.electric_motor.steam");
-        GTSMetaitems.ELECTRIC_PISTON_STEAM = this.addItem(1, "cover.electric_piston.steam");
-        GTSMetaitems.ELECTRIC_PUMP_STEAM = this.addItem(2, "cover.electric_pump.steam");
-        GTSMetaitems.CONVEYOR_MODULE_STEAM = this.addItem(3, "cover.conveyor_module.steam");
-        GTSMetaitems.ROBOT_ARM_STEAM = this.addItem(4, "cover.robot_arm.steam");
-        GTSMetaitems.EMITTER_STEAM = this.addItem(5, "cover.emitter.steam");
-        GTSMetaitems.SENSOR_STEAM = this.addItem(6, "cover.sensor.steam");
-        GTSMetaitems.FIELD_GENERATOR_STEAM = this.addItem(7, "cover.field_generator.steam");
-
-        GTSMetaitems.ELECTRIC_MOTOR_ULV = this.addItem(10, "cover.electric_motor.ulv");
-        GTSMetaitems.ELECTRIC_PISTON_ULV = this.addItem(11, "cover.electric_piston.ulv");
-        GTSMetaitems.ELECTRIC_PUMP_ULV = this.addItem(12, "cover.electric_pump.ulv");
-        GTSMetaitems.CONVEYOR_MODULE_ULV = this.addItem(13, "cover.conveyor_module.ulv");
-        GTSMetaitems.ROBOT_ARM_ULV = this.addItem(14, "cover.robot_arm.ulv");
-        GTSMetaitems.EMITTER_ULV = this.addItem(15, "cover.emitter.ulv");
-        GTSMetaitems.SENSOR_ULV = this.addItem(16, "cover.sensor.ulv");
-        GTSMetaitems.FIELD_GENERATOR_ULV = this.addItem(17, "cover.field_generator.ulv");
+        GTSMetaitems.ELECTRIC_MOTOR_ULV = this.addItem(0, "cover.electric_motor.ulv");
+        GTSMetaitems.ELECTRIC_PISTON_ULV = this.addItem(1, "cover.electric_piston.ulv");
+        GTSMetaitems.ELECTRIC_PUMP_ULV = this.addItem(2, "cover.electric_pump.ulv");
+        GTSMetaitems.CONVEYOR_MODULE_ULV = this.addItem(3, "cover.conveyor_module.ulv");
+        GTSMetaitems.ROBOT_ARM_ULV = this.addItem(4, "cover.robot_arm.ulv");
+        GTSMetaitems.EMITTER_ULV = this.addItem(5, "cover.emitter.ulv");
+        GTSMetaitems.SENSOR_ULV = this.addItem(6, "cover.sensor.ulv");
+        GTSMetaitems.FIELD_GENERATOR_ULV = this.addItem(7, "cover.field_generator.ulv");
 
         //陶瓷线 20-
         //未烧制的陶瓷瓦

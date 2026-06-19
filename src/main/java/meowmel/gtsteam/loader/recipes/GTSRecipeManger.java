@@ -16,7 +16,6 @@ public class GTSRecipeManger {
         MiscRecipes.init();
         MachineRecipes.init();
         ULVAge.init();
-        SteamAge.init();
         LigniteChain.init();
         WoodChain.init();
         GenerateRecipes.init();

@@ -1,6 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "gtsteam:items/metaitems/cover.electric_piston.steam"
-  }
-}
