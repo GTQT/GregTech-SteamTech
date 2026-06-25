@@ -43,7 +43,7 @@ public class MetaTileEntitySteamOreWasher extends RecipeMapSteamMultiblockContro
                     .aisle("TPPPT", "MFFFM", "M###M")
                     .aisle("TPPPT", "MFFFM", "M###M")
                     .aisle("MTTTM", "MMCMM", "MMMMM")
-                    .where('C', selfPredicate(MetaTileEntitySteamOreWasher.class))
+                    .self('C', MetaTileEntitySteamOreWasher.class)
                     .casing('M', CasingDefinition.simple(getCasingState()))
                     .optionalHatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 4)
                     .optionalHatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 4)

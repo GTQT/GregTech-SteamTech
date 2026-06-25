@@ -41,7 +41,7 @@ public class MetaTileEntitySteamMixer extends RecipeMapSteamMultiblockController
                     .aisle("XXXXX", "XTFTX", "XXXXX")
                     .aisle("XXXXX", "XTTTX", "XXXXX")
                     .aisle(" XXX ", " XSX ", " XXX ")
-                    .where('S', selfPredicate(MetaTileEntitySteamMixer.class))
+                    .self('S', MetaTileEntitySteamMixer.class)
                     .casing('X', CasingDefinition.simple(getCasingState()))
                     .optionalHatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 4)
                     .optionalHatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 4)

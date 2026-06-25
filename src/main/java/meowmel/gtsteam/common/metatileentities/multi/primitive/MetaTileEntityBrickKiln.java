@@ -61,7 +61,7 @@ public class MetaTileEntityBrickKiln extends RecipeMapPrimitiveMultiblockControl
                     .aisle("XXX", "XXX", "#X#")
                     .aisle("XXX", "X&X", "X&X")
                     .aisle("XXX", "XYX", "#X#")
-                    .where('Y', selfPredicate(MetaTileEntityBrickKiln.class))
+                    .self('Y', MetaTileEntityBrickKiln.class)
                     .where('X', states(getCasingState())
                             .or(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_IMPORT_HATCH).setMaxGlobalLimited(2))
                             .or(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_EXPORT_HATCH).setMaxGlobalLimited(1))

@@ -37,7 +37,7 @@ public class MetaTileEntityHeatCrackingUnit extends HeatMultiblockController {
                     .aisle("CFCFC", "CFCFC", "CFCFC")
                     .aisle("CCCCC", "I###O", "CCICC")
                     .aisle("CFCFC", "CFSFC", "CFCFC")
-                    .where('S', selfPredicate(MetaTileEntityHeatCrackingUnit.class))
+                    .self('S', MetaTileEntityHeatCrackingUnit.class)
                     .where('C', states(getCasingState()).or(abilities(MultiblockAbility.INPUT_HEAT).setExactLimit(1)))
                     .where('I', states(getCasingState()).or(abilities(MultiblockAbility.IMPORT_FLUIDS).setExactLimit(2)))
                     .where('O', states(getCasingState()).or(abilities(MultiblockAbility.EXPORT_FLUIDS).setExactLimit(1)))

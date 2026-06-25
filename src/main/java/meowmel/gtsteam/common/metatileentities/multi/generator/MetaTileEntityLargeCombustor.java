@@ -338,7 +338,7 @@ public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase impl
                 .aisle("VXXXV", "CCCCC", " CCC ", "   C ", "   C ", "   C ")
                 .aisle("XCCCX", "CPPPC", "P  &P", "PPC C", "  C C", "  C C")
                 .aisle("VXXXV", "CCCSC", " CCC ", "   C ", "   C ", "   C ")
-                .where('S', selfPredicate())
+                .self('S')
                 .where('P', states(combustorType.pipeState))
                 .where('X', states(combustorType.fireboxState))
                 .where('V', states(combustorType.casingState))

@@ -55,18 +55,6 @@ tile.evaporation_bed.dirt.name=Sandy Loam
 
 tile.serpentine.basic.name=Serpentine Copper Tube Block
 # Items
-metaitem.cover.electric_motor.steam.name=Steam Motor (Steam)
-metaitem.cover.electric_piston.steam.name=Steam Piston (Steam)
-metaitem.cover.electric_pump.steam.name=Steam Pump (Steam)
-metaitem.cover.electric_pump.steam.tooltip=When used as a §fcover§7, transfers §ffluids§7 at a specific rate./n§bTransfer rate: §f32 L/t§7
-metaitem.cover.conveyor_module.steam.name=Conveyor Module (Steam)
-metaitem.cover.conveyor_module.steam.tooltip=When used as a §fcover§7, transfers §fitems§7 at a specific rate./n§bTransfer rate: §f4 items/s§7
-metaitem.cover.robot_arm.steam.name=Steam Robot Arm (Steam)
-metaitem.cover.robot_arm.steam.tooltip=When used as a §fcover§7, restricts the quantity of §fitems§7./n§bTransfer rate: §f4 items/s§7
-metaitem.cover.emitter.steam.name=Emitter (Steam)
-metaitem.cover.sensor.steam.name=Sensor (Steam)
-metaitem.cover.field_generator.steam.name=Field Generator (Steam)
-
 metaitem.cover.electric_motor.ulv.name=Electric Motor (ULV)
 metaitem.cover.electric_piston.ulv.name=Electric Piston (ULV)
 metaitem.cover.electric_pump.ulv.name=Electric Pump (ULV)
@@ -75,9 +63,6 @@ metaitem.cover.conveyor_module.ulv.name=Conveyor Module (ULV)
 metaitem.cover.conveyor_module.ulv.tooltip=When used as a §fcover§7, transfers §fitems§7 at a specific rate./n§bTransfer rate: §f8 items/s§7
 metaitem.cover.robot_arm.ulv.name=Robot Arm (ULV)
 metaitem.cover.robot_arm.ulv.tooltip=When used as a §fcover§7, restricts the quantity of §fitems§7./n§bTransfer rate: §f8 items/s§7
-metaitem.cover.emitter.ulv.name=Emitter (ULV)
-metaitem.cover.sensor.ulv.name=Sensor (ULV)
-metaitem.cover.field_generator.ulv.name=Field Generator (ULV)
 
 metaitem.unburned_ceramic_tiles.name=Unfired Ceramic Tiles
 metaitem.burned_ceramic_tiles.name=Burned Ceramic Tiles

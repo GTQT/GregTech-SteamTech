@@ -35,7 +35,7 @@ public class MetaTileEntityHeatLavaFurnace extends HeatMultiblockController {
                     .aisle("XXX", "CCC", "CCC")
                     .aisle("XCX", "C#C", "CCC")
                     .aisle("XXX", "CSC", "CCC")
-                    .where('S', selfPredicate(MetaTileEntityHeatLavaFurnace.class))
+                    .self('S', MetaTileEntityHeatLavaFurnace.class)
                     .where('X', states(getFireboxState()))
                     .casing('C', CasingDefinition.simple(getCasingState()))
                     .itemInput(1, 2)

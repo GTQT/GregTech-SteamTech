@@ -75,7 +75,7 @@ public class MetaTileEntitySteamBiomimeticFactory extends RecipeMapSteamMultiblo
                     .aisle("                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "               A A               ", "               A A               ", "               A A               ", "            AAAAAAAAA            ", "               A A               ", "            AAAAAAAAA            ", "               A A               ", "               A A               ", "               A A               ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ")
 
 
-                    .where('M', selfPredicate(MetaTileEntitySteamBiomimeticFactory.class))
+                    .self('M', MetaTileEntitySteamBiomimeticFactory.class)
                     .casing('F', CasingDefinition.simple(getCasingState()))
                     .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1, 2)

@@ -122,30 +122,6 @@ public class ULVAge {
                 'R', "wool",
                 'C', new UnificationEntry(pipeTinyFluid, Bronze),
                 'M', ELECTRIC_MOTOR_ULV.getStackForm());
-
-        //  ULV
-        ModHandler.addShapedRecipe(true, "emitter.ulv", EMITTER_ULV.getStackForm(),
-                "CRX", "RGR", "XRC",
-                'R', new UnificationEntry(stick, TinAlloy),
-                'C', new UnificationEntry(pipeTinyFluid, Bronze),
-                'G', new UnificationEntry(gem, Sapphire),
-                'X', new UnificationEntry(circuit, MarkerMaterials.Tier.ULV));
-
-        //  ULV
-        ModHandler.addShapedRecipe(true, "sensor.ulv", SENSOR_ULV.getStackForm(),
-                "P G", "PR ", "XPP",
-                'P', new UnificationEntry(plate, WroughtIron),
-                'R', new UnificationEntry(stick, TinAlloy),
-                'G', new UnificationEntry(gem, Sapphire),
-                'X', new UnificationEntry(circuit, MarkerMaterials.Tier.ULV));
-
-        //  ULV
-        ModHandler.addShapedRecipe(true, "field_generator.ulv", FIELD_GENERATOR_ULV.getStackForm(),
-                "WPW", "XGX", "WPW",
-                'W', new UnificationEntry(pipeLargeFluid, Lead),
-                'P', new UnificationEntry(plate, WroughtIron),
-                'G', new UnificationEntry(gem, Ruby),
-                'X', new UnificationEntry(circuit, MarkerMaterials.Tier.ULV));
     }
 
     private static void ULVStageMachines() {

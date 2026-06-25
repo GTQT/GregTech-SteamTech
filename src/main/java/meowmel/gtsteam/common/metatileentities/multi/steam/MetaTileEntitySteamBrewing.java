@@ -39,7 +39,7 @@ public class MetaTileEntitySteamBrewing extends RecipeMapSteamMultiblockControll
                     .aisle("F#F", "BBB", "CCC", "CCC", "CCC")
                     .aisle("###", "BOB", "G#G", "G#G", "CCC")
                     .aisle("F#F", "BBB", "CSC", "CCC", "CCC")
-                    .where('S', selfPredicate(MetaTileEntitySteamBrewing.class))
+                    .self('S', MetaTileEntitySteamBrewing.class)
                     .casing('C', CasingDefinition.simple(getCasingState()))
                     .hatch(MultiblockAbility.STEAM, 1)
                     .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1, 4)

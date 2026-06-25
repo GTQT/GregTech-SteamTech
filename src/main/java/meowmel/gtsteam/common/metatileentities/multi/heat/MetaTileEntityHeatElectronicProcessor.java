@@ -39,7 +39,7 @@ public class MetaTileEntityHeatElectronicProcessor extends HeatMultiblockControl
                     .aisle("FFFGGG", "CCCCCC", "CCCCCC")
                     .aisle("FCF###", "CPPPPC", "CCCCCC")
                     .aisle("FFFGGG", "CSCCCC", "CCCCCC")
-                    .where('S', selfPredicate(MetaTileEntityHeatElectronicProcessor.class))
+                    .self('S', MetaTileEntityHeatElectronicProcessor.class)
                     .casing('C', CasingDefinition.simple(getCasingState()))
                     .itemInput(1, 3)
                     .itemOutput(1, 3)

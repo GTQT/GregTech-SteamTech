@@ -40,7 +40,7 @@ public class MetaTileEntitySteamCentrifuge extends RecipeMapSteamMultiblockContr
                     .aisle("XXXXX", "X X X", "X X X", "X X X", "XXXXX")
                     .aisle("XXXXX", "XT TX", "XT TX", "XT TX", " XXX ")
                     .aisle("XXXXX", " XSX ", " XXX ", " XXX ", "  X  ")
-                    .where('S', selfPredicate(MetaTileEntitySteamCentrifuge.class))
+                    .self('S', MetaTileEntitySteamCentrifuge.class)
                     .casing('X', CasingDefinition.simple(getCasingState()))
                     .optionalHatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 4)
                     .optionalHatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 4)

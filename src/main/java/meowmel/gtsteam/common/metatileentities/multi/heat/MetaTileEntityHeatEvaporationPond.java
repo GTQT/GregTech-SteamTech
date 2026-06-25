@@ -17,7 +17,6 @@ import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.core.sound.GTSoundEvents;
-import gtqt.common.metatileentities.GTQTMetaTileEntities;
 import meowmel.gtsteam.api.recipes.GTSRecipeMaps;
 import meowmel.gtsteam.common.block.GTSteamMetaBlocks;
 import meowmel.gtsteam.common.block.blocks.BlockEvaporationBed;
@@ -42,6 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static gregtech.common.metatileentities.MetaTileEntities.HEAT_INPUT_HATCH;
 import static net.minecraft.util.EnumFacing.NORTH;
 import static net.minecraft.util.EnumFacing.SOUTH;
 
@@ -167,7 +167,7 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
                 .aisle("FCCCF", " CSC ")
                 .aisle("FFFFF", "     ")
                 .where('S', GTSteamMetaTileEntities.HEAT_EVAPORATION_POND, SOUTH)
-                .where('I', GTQTMetaTileEntities.HEAT_INPUT_HATCH[0], NORTH)
+                .where('I', HEAT_INPUT_HATCH[0], NORTH)
                 .where('C', getCasingState())
                 .where('F', getFireBoxState())
                 .where('P', getPipeState())
@@ -184,7 +184,7 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
                 .aisle("FCCCCCF", " CCSCC ")
                 .aisle("FFFFFFF", "       ")
                 .where('S', GTSteamMetaTileEntities.HEAT_EVAPORATION_POND, SOUTH)
-                .where('I', GTQTMetaTileEntities.HEAT_INPUT_HATCH[0], NORTH)
+                .where('I', HEAT_INPUT_HATCH[0], NORTH)
                 .where('C', getCasingState())
                 .where('F', getFireBoxState())
                 .where('P', getPipeState())
@@ -203,7 +203,7 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
                 .aisle("FCCCCCCCF", " CCCSCCC ")
                 .aisle("FFFFFFFFF", "         ")
                 .where('S', GTSteamMetaTileEntities.HEAT_EVAPORATION_POND, SOUTH)
-                .where('I', GTQTMetaTileEntities.HEAT_INPUT_HATCH[0], NORTH)
+                .where('I', HEAT_INPUT_HATCH[0], NORTH)
                 .where('C', getCasingState())
                 .where('F', getFireBoxState())
                 .where('P', getPipeState())
@@ -224,7 +224,7 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
                 .aisle("FCCCCCCCCCF", " CCCCSCCCC ")
                 .aisle("FFFFFFFFFFF", "           ")
                 .where('S', GTSteamMetaTileEntities.HEAT_EVAPORATION_POND, SOUTH)
-                .where('I', GTQTMetaTileEntities.HEAT_INPUT_HATCH[0], NORTH)
+                .where('I', HEAT_INPUT_HATCH[0], NORTH)
                 .where('C', getCasingState())
                 .where('F', getFireBoxState())
                 .where('P', getPipeState())
@@ -247,7 +247,7 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
                 .aisle("FCCCCCCCCCCCF", " CCCCCSCCCCC ")
                 .aisle("FFFFFFFFFFFFF", "             ")
                 .where('S', GTSteamMetaTileEntities.HEAT_EVAPORATION_POND, SOUTH)
-                .where('I', GTQTMetaTileEntities.HEAT_INPUT_HATCH[0], NORTH)
+                .where('I', HEAT_INPUT_HATCH[0], NORTH)
                 .where('C', getCasingState())
                 .where('F', getFireBoxState())
                 .where('P', getPipeState())

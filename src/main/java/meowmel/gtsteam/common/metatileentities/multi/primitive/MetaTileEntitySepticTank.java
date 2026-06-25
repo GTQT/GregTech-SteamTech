@@ -36,7 +36,7 @@ public class MetaTileEntitySepticTank extends NoEnergyMultiblockController {
                     .aisle("CCCCC", "F###F", "F###F", "CCCCC")
                     .aisle("CCCCC", "F###F", "F###F", "CCCCC")
                     .aisle("CCSCC", "CFFFC", "CFFFC", "CCCCC")
-                    .where('S', selfPredicate(MetaTileEntitySepticTank.class))
+                    .self('S', MetaTileEntitySepticTank.class)
                     .casing('C', CasingDefinition.simple(getCasingState()))
                     .itemInput(1, 3)
                     .itemOutput(1, 3)

@@ -52,7 +52,7 @@ public class MetaTileEntityScalableStorage extends MultiblockWithDisplayBase {
                     .aisle("CCC", "CCC", "CCC")
                     .aisle("CCC", "CCC", "CCC")
                     .aisle("CCC", "CSC", "CCC")
-                    .where('S', selfPredicate(MetaTileEntityScalableStorage.class))
+                    .self('S', MetaTileEntityScalableStorage.class)
                     .casing('C', CasingDefinition.simple(getCasingState()))
                     .itemInput(1, 4)
                     .itemOutput(1, 4)

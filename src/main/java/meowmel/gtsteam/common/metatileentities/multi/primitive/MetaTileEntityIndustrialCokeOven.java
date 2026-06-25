@@ -10,10 +10,7 @@ import gregtech.api.metatileentity.multiblock.ui.KeyManager;
 import gregtech.api.metatileentity.multiblock.ui.MultiblockUIBuilder;
 import gregtech.api.metatileentity.multiblock.ui.UISyncer;
 import gregtech.api.mui.GTGuiTheme;
-import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.PatternMatchContext;
-import gregtech.api.pattern.SoftTemplate;
-import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.*;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.pattern.casing.GTStructureChannels;
@@ -58,17 +55,25 @@ public class MetaTileEntityIndustrialCokeOven extends NoEnergyMultiblockControll
 
     private static final int MIN_TEMP = 300;
     private static final int MAX_TEMP = 1500;
+
+    /** Piece name for the repeatable body section */
+    private static final String PIECE_BODY = "body";
+    private static final StructurePieceKey BODY_PIECE = StructurePieceKey.of(PIECE_BODY);
+
     private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:industrial_coke_oven", () ->
             DeclarativePatternBuilder.start(RIGHT, UP, FRONT)
+                    .piece("bottom")
                     .aisle("XXXXX", "#XYX#", "#XXX#", "#####", "#####", "#####")
                     .aisle("XXXXX", "#XPX#", "#XXX#", "#####", "#####", "#####")
                     .aisle("XXXXX", "FXPXF", "FXXXF", "FFFFF", "#####", "#####")
                     .aisle("BXXXB", "X#P#X", "X###X", "FXXXF", "##X##", "##X##")
-                    .aisleRepeatable(1, 8, "BXXXB", "X#P#X", "X###X", "FX&XF", "#X#X#", "#X#X#")
-                    .withAisleChannel(GTStructureChannels.STRUCTURE_LENGTH.getName())
+                    .repeatablePiece("body", 1, 8)
+                    .aisle("BXXXB", "X#P#X", "X###X", "FX&XF", "#X#X#", "#X#X#")
+                    .withAisleChannel(GTStructureChannels.STRUCTURE_HEIGHT.getName())
+                    .piece("top")
                     .aisle("BXXXB", "X#P#X", "X###X", "FXXXF", "##X##", "##X##")
                     .aisle("XXXXX", "FXXXF", "FXXXF", "FFFFF", "#####", "#####")
-                    .where('Y', selfPredicate(MetaTileEntityIndustrialCokeOven.class))
+                    .self('Y', MetaTileEntityIndustrialCokeOven.class)
                     .where('B', states(getFireBoxState()))
                     .where('P', states(getBoilerState()))
                     .where('F', states(getFrameState()))
@@ -123,11 +128,9 @@ public class MetaTileEntityIndustrialCokeOven extends NoEnergyMultiblockControll
     }
 
     @Override
-    protected void formStructure(PatternMatchContext context) {
-        super.formStructure(context);
-        if (multiblockState != null) {
-            size = multiblockState.formedRepetitionCount[1] + 1;
-        } else size = 1;
+    protected void formStructure(@NotNull FormedStructureView formed) {
+        formRecipeMapStructure(formed);
+        size = formed.getPieceRepeat(BODY_PIECE, 0);
     }
 
     @Override

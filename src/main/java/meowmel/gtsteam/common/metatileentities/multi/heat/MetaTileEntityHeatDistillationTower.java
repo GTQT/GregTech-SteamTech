@@ -7,6 +7,7 @@ import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.pattern.BlockPatternTemplate;
 import gregtech.api.pattern.SoftTemplate;
+import gregtech.api.pattern.StructurePieceKey;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.pattern.casing.GTStructureChannels;
@@ -39,12 +40,15 @@ public class MetaTileEntityHeatDistillationTower extends HeatMultiblockControlle
 
     private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:heat_distillation_tower", () ->
             DeclarativePatternBuilder.start(RIGHT, FRONT, UP)
+                    .piece("bottom")
                     .aisle("FFF", "FCF", "FFF")
                     .aisle("CSC", "C#C", "CCC")
-                    .aisleRepeatable(1, 8, "XXX", "X#X", "XXX")
+                    .repeatablePiece("body", 1, 8)
+                    .aisle("XXX", "X#X", "XXX")
                     .withAisleChannel(GTStructureChannels.STRUCTURE_HEIGHT.getName())
+                    .piece("top")
                     .aisle("XXX", "XXX", "XXX")
-                    .where('S', selfPredicate(MetaTileEntityHeatDistillationTower.class))
+                    .self('S', MetaTileEntityHeatDistillationTower.class)
                     .where('F', states(getFireBoxState()))
                     .where('C', states(getCasingState())
                             .or(abilities(MultiblockAbility.EXPORT_ITEMS).setMaxGlobalLimited(1))

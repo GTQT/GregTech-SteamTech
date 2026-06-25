@@ -35,7 +35,7 @@ public class MetaTileEntitySteamLavaFurnace extends RecipeMapSteamMultiblockCont
                     .aisle("XXX", "CCC", "CCC")
                     .aisle("XCX", "C#C", "CCC")
                     .aisle("XXX", "CSC", "CCC")
-                    .where('S', selfPredicate(MetaTileEntitySteamLavaFurnace.class))
+                    .self('S', MetaTileEntitySteamLavaFurnace.class)
                     .where('X', states(getFireboxState())
                             .or(abilities(MultiblockAbility.STEAM).setExactLimit(1))
                     )

@@ -55,18 +55,6 @@ tile.evaporation_bed.dirt.name=砂壤土
 
 tile.serpentine.basic.name=蛇形铜管方块
 #物品
-metaitem.cover.electric_motor.steam.name=蒸汽马达 (Steam)
-metaitem.cover.electric_piston.steam.name=蒸汽活塞 (Steam)
-metaitem.cover.electric_pump.steam.name=蒸汽泵 (Steam)
-metaitem.cover.electric_pump.steam.tooltip=作§f覆盖板§7时以特定速率传输§f流体§7。/n§b传输速率:§f32 L/t§7
-metaitem.cover.conveyor_module.steam.name=传送带 (Steam)
-metaitem.cover.conveyor_module.steam.tooltip=作§f覆盖板§7时以特定速率传输§f物品§7。/n§b传输速率:§f4 件物品/s§7
-metaitem.cover.robot_arm.steam.name=蒸汽机械臂 (Steam)
-metaitem.cover.robot_arm.steam.tooltip=作§f覆盖板§7时对§f物品§7的量加以限制。/n§b传输速率:§f4 件物品/s§7
-metaitem.cover.emitter.steam.name=发射器 (Steam)
-metaitem.cover.sensor.steam.name=传感器 (Steam)
-metaitem.cover.field_generator.steam.name=力场发生器 (Steam)
-
 metaitem.cover.electric_motor.ulv.name=机械马达 (ULV)
 metaitem.cover.electric_piston.ulv.name=机械活塞 (ULV)
 metaitem.cover.electric_pump.ulv.name=机械泵 (ULV)
@@ -75,9 +63,6 @@ metaitem.cover.conveyor_module.ulv.name=传送带 (ULV)
 metaitem.cover.conveyor_module.ulv.tooltip=作§f覆盖板§7时以特定速率传输§f物品§7。/n§b传输速率:§f8 件物品/s§7
 metaitem.cover.robot_arm.ulv.name=机械臂 (ULV)
 metaitem.cover.robot_arm.ulv.tooltip=作§f覆盖板§7时对§f物品§7的量加以限制。/n§b传输速率:§f8 件物品/s§7
-metaitem.cover.emitter.ulv.name=发射器 (ULV)
-metaitem.cover.sensor.ulv.name=传感器 (ULV)
-metaitem.cover.field_generator.ulv.name=力场发生器 (ULV)
 
 metaitem.unburned_ceramic_tiles.name=未烧制的陶瓷瓦
 metaitem.burned_ceramic_tiles.name=已烧制的陶瓷瓦

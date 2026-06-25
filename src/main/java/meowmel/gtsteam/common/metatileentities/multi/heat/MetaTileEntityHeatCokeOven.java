@@ -40,7 +40,7 @@ public class MetaTileEntityHeatCokeOven extends HeatMultiblockController {
                     .aisle("FCF", "FPF", "FCF")
                     .aisle("FCF", "FPF", "FCF")
                     .aisle("CCC", "CSC", "CCC")
-                    .where('S', selfPredicate(MetaTileEntityHeatCokeOven.class))
+                    .self('S', MetaTileEntityHeatCokeOven.class)
                     .casing('C', CasingDefinition.simple(getCasingState()))
                     .itemInput(1, 3)
                     .itemOutput(1, 3)

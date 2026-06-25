@@ -79,7 +79,7 @@ public class MetaTileEntityHeatFluidDrill extends MultiblockWithDisplayBase impl
                     .aisle("               ", "               ", " FF         FF ", " FF         FF ", "  FFFFFFFFFFF  ", "    FF   FF    ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
                     .aisle("FF           FF", "FF           FF", " FF         FF ", " FF         FF ", "               ", "     FFFFF     ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
                     .aisle("FF           FF", "FF           FF", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
-                    .where('S', selfPredicate(MetaTileEntityHeatFluidDrill.class))
+                    .self('S', MetaTileEntityHeatFluidDrill.class)
                     .casing('C', CasingDefinition.simple(getCasingState()))
                     .fluidOutput(1)
                     .hatch(MultiblockAbility.INPUT_HEAT, 1)

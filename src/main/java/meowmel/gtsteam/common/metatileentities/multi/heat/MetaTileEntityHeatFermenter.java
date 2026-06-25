@@ -40,7 +40,7 @@ public class MetaTileEntityHeatFermenter extends HeatMultiblockController {
                     .aisle("CCCCC", "F###F", "F###F", "CCCCC")
                     .aisle("CCCCC", "F###F", "F###F", "CCCCC")
                     .aisle("CCSCC", "CFFFC", "CFFFC", "CCCCC")
-                    .where('S', selfPredicate(MetaTileEntityHeatFermenter.class))
+                    .self('S', MetaTileEntityHeatFermenter.class)
                     .casing('C', CasingDefinition.simple(getCasingState()))
                     .itemInput(1, 3)
                     .itemOutput(1, 3)

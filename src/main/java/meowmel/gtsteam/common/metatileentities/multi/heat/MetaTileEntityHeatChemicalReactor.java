@@ -38,7 +38,7 @@ public class MetaTileEntityHeatChemicalReactor extends HeatMultiblockController 
                     .aisle("CCC", "CFC", "CCC")
                     .aisle("CCC", "CPC", "CCC")
                     .aisle("CCC", "CSC", "CCC")
-                    .where('S', selfPredicate(MetaTileEntityHeatChemicalReactor.class))
+                    .self('S', MetaTileEntityHeatChemicalReactor.class)
                     .casing('C', CasingDefinition.simple(getCasingState()))
                     .itemInput(1, 3)
                     .itemOutput(1, 3)

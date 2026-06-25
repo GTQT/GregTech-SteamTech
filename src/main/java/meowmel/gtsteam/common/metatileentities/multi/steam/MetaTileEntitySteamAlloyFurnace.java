@@ -36,7 +36,7 @@ public class MetaTileEntitySteamAlloyFurnace extends RecipeMapSteamMultiblockCon
                     .aisle("CCC", "XXX", "XXX", "CCC")
                     .aisle("CCC", "X#X", "X#X", "CCC")
                     .aisle("CSC", "XXX", "XXX", "CCC")
-                    .where('S', selfPredicate(MetaTileEntitySteamAlloyFurnace.class))
+                    .self('S', MetaTileEntitySteamAlloyFurnace.class)
                     .where('X', states(getFireboxState())
                             .or(abilities(MultiblockAbility.STEAM).setExactLimit(1)))
                     .casing('C', CasingDefinition.simple(getCasingState()))

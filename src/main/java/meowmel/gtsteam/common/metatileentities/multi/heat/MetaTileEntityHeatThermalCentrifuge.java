@@ -41,7 +41,7 @@ public class MetaTileEntityHeatThermalCentrifuge extends HeatMultiblockControlle
                     .aisle("CCCCC", "F###F", "CCCCC")
                     .aisle("CCCCC", "F###F", "CCCCC")
                     .aisle("#CSC#", "#FFF#", "#CCC#")
-                    .where('S', selfPredicate(MetaTileEntityHeatThermalCentrifuge.class))
+                    .self('S', MetaTileEntityHeatThermalCentrifuge.class)
                     .casing('C', CasingDefinition.simple(getCasingState()))
                     .itemInput(1, 2)
                     .itemOutput(1, 2)

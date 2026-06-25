@@ -113,7 +113,7 @@ public class MetaTileEntityHeatRadiator extends MetaTileEntityBaseWithControl {
                 .aisle(rowPattern(rowType.BOTTOM, sDist))
                 .aisle(rowPattern(rowType.MIDDLE, sDist)).setRepeatable(1, bDist)
                 .aisle(rowPattern(rowType.TOP, sDist))
-                .where('S', selfPredicate())
+                .self('S')
                 .where('A', states(getCasingState())
                         .or(abilities(MultiblockAbility.INPUT_HEAT).setMinGlobalLimited(1, 1))
                 )

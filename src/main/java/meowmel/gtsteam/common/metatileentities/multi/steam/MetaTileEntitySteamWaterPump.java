@@ -53,7 +53,7 @@ public class MetaTileEntitySteamWaterPump extends MultiblockControllerBase imple
                     .aisle("     ", "     ", "BBBBB", " CCC ", " CCC ", "BBBBB")
                     .aisle("     ", "     ", "BBBBB", " CSC ", " CCC ", "BBBBB")
                     .aisle("A   A", "A   A", "BBBBB", "A   A", "A   A", "BBBBB")
-                    .where('S', selfPredicate(MetaTileEntitySteamWaterPump.class))
+                    .self('S', MetaTileEntitySteamWaterPump.class)
                     .where('A', frames(Materials.TreatedWood))
                     .where('B', states(MetaBlocks.PLANKS.getState(BlockGregPlanks.BlockType.TREATED_PLANK)))
                     .where('C', states(getCasingState())

@@ -41,7 +41,7 @@ public class MetaTileEntitySteamSifter extends RecipeMapSteamMultiblockControlle
                     .aisle("XXXXX", "F T F", "F T F", "XTTTX", "X   X")
                     .aisle("XXXXX", "     ", "     ", "XTTTX", "X   X")
                     .aisle("XXXXX", "F S X", "F F F", "XXXXX", "XXXXX")
-                    .where('S', selfPredicate(MetaTileEntitySteamSifter.class))
+                    .self('S', MetaTileEntitySteamSifter.class)
                     .casing('X', CasingDefinition.simple(getCasingState()))
                     .optionalHatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 4)
                     .optionalHatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 4)

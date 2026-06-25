@@ -38,7 +38,7 @@ public class MetaTileEntityHeatAlloyFurnace extends HeatMultiblockController {
                     .aisle("CCC", "XXX", "XXX", "CCC")
                     .aisle("CCC", "X#X", "X#X", "CCC")
                     .aisle("CSC", "XXX", "XXX", "CCC")
-                    .where('S', selfPredicate(MetaTileEntityHeatAlloyFurnace.class))
+                    .self('S',MetaTileEntityHeatAlloyFurnace.class)
                     .casing('C', CasingDefinition.simple(getCasingState()))
                     .itemOutput(1, 3)
                     .itemInput(1, 3)

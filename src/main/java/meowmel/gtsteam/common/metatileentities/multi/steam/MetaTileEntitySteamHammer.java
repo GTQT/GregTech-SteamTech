@@ -45,7 +45,7 @@ public class MetaTileEntitySteamHammer extends RecipeMapSteamMultiblockControlle
                     .aisle("XXX", "XXX", "XXX")
                     .aisle("XXX", "XFX", "XXX")
                     .aisle("XXX", "XSX", "XXX")
-                    .where('S', selfPredicate(MetaTileEntitySteamHammer.class))
+                    .self('S', MetaTileEntitySteamHammer.class)
                     .casing('X', CasingDefinition.simple(getCasingState()))
                     .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1, 2)

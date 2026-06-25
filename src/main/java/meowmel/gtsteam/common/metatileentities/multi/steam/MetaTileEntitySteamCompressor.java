@@ -37,7 +37,7 @@ public class MetaTileEntitySteamCompressor extends RecipeMapSteamMultiblockContr
                     .aisle("XXX", "XXX", "XXX")
                     .aisle("XXX", "X#X", "XXX")
                     .aisle("XXX", "XSX", "XXX")
-                    .where('S', selfPredicate(MetaTileEntitySteamCompressor.class))
+                    .self('S', MetaTileEntitySteamCompressor.class)
                     .casing('X', CasingDefinition.simple(getCasingState()))
                     .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1, 2)

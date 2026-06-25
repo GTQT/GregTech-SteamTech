@@ -67,7 +67,7 @@ public class MetaTileEntityPrimitiveFurnace extends RecipeMapPrimitiveMultiblock
                     .custom(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_IMPORT_HATCH), 2)
                     .custom(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_EXPORT_HATCH), 1)
                     .where(' ', air())
-                    .where('Y', selfPredicate(MetaTileEntityPrimitiveFurnace.class))
+                    .self('Y', MetaTileEntityPrimitiveFurnace.class)
                     .buildTemplate()
     );
     protected IItemHandlerModifiable fuelStack;

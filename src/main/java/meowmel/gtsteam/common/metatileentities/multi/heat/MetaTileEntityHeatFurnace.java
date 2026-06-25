@@ -38,7 +38,7 @@ public class MetaTileEntityHeatFurnace extends HeatMultiblockController {
                     .aisle("FFF", "CCC", "#C#")
                     .aisle("FCF", "C#C", "#C#")
                     .aisle("FFF", "CSC", "#C#")
-                    .where('S', selfPredicate(MetaTileEntityHeatFurnace.class))
+                    .self('S', MetaTileEntityHeatFurnace.class)
                     .casing('C', CasingDefinition.simple(getCasingState()))
                     .itemInput(1, 3)
                     .itemOutput(1, 3)

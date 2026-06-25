@@ -36,7 +36,6 @@ import gregtech.api.util.KeyUtil;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.metatileentities.MetaTileEntities;
-import gtqt.common.metatileentities.GTQTMetaTileEntities;
 import meowmel.gtsteam.client.textures.GTSteamTextures;
 import meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
 import net.minecraft.block.state.IBlockState;
@@ -60,6 +59,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
+import static gregtech.common.metatileentities.MetaTileEntities.HEAT_INPUT_HATCH;
 import static meowmel.gtsteam.common.block.GTSteamMetaBlocks.blockMultiblockCasing0;
 import static meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing0.CasingType.TANK_WALL;
 import static net.minecraft.util.EnumFacing.*;
@@ -357,7 +357,7 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
                     .where('S', GTSteamMetaTileEntities.HEAT_STEAM_BOILER, SOUTH)
                     .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], DOWN)
                     .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], NORTH)
-                    .where('H', GTQTMetaTileEntities.HEAT_INPUT_HATCH[GTValues.ULV], WEST)
+                    .where('H', HEAT_INPUT_HATCH[GTValues.ULV], WEST)
                     .where('C', getULVCasingState())
                     .where('G', Blocks.GLASS.getDefaultState())
                     .where(' ', Blocks.AIR.getDefaultState());
@@ -376,7 +376,7 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
                     .where('S', GTSteamMetaTileEntities.HEAT_STEAM_BOILER, SOUTH)
                     .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], SOUTH)
                     .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], SOUTH)
-                    .where('H', GTQTMetaTileEntities.HEAT_INPUT_HATCH[GTValues.ULV], SOUTH)
+                    .where('H', HEAT_INPUT_HATCH[GTValues.ULV], SOUTH)
                     .where('C', getULVCasingState())
                     .where('G', Blocks.GLASS.getDefaultState())
                     .where(' ', Blocks.AIR.getDefaultState());
@@ -397,7 +397,7 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
                     .where('S', GTSteamMetaTileEntities.HEAT_STEAM_BOILER, SOUTH)
                     .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], SOUTH)
                     .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], SOUTH)
-                    .where('H', GTQTMetaTileEntities.HEAT_INPUT_HATCH[GTValues.ULV], SOUTH)
+                    .where('H', HEAT_INPUT_HATCH[GTValues.ULV], SOUTH)
                     .where('C', getULVCasingState())
                     .where('G', Blocks.GLASS.getDefaultState())
                     .where(' ', Blocks.AIR.getDefaultState());
@@ -420,7 +420,7 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
                     .where('S', GTSteamMetaTileEntities.HEAT_STEAM_BOILER, SOUTH)
                     .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], SOUTH)
                     .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], SOUTH)
-                    .where('H', GTQTMetaTileEntities.HEAT_INPUT_HATCH[GTValues.ULV], SOUTH)
+                    .where('H', HEAT_INPUT_HATCH[GTValues.ULV], SOUTH)
                     .where('C', getULVCasingState())
                     .where('G', Blocks.GLASS.getDefaultState())
                     .where(' ', Blocks.AIR.getDefaultState());
@@ -445,7 +445,7 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
                     .where('S', GTSteamMetaTileEntities.HEAT_STEAM_BOILER, SOUTH)
                     .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], SOUTH)
                     .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], SOUTH)
-                    .where('H', GTQTMetaTileEntities.HEAT_INPUT_HATCH[GTValues.ULV], SOUTH)
+                    .where('H', HEAT_INPUT_HATCH[GTValues.ULV], SOUTH)
                     .where('C', getULVCasingState())
                     .where('G', Blocks.GLASS.getDefaultState())
                     .where(' ', Blocks.AIR.getDefaultState());

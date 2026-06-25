@@ -64,7 +64,7 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
                     .aisle("AAAGDDDDDJFFF", "GGG D###D JJJ", " G  D###D  J ", " G  D###D  J ", " G   DDD   J ", " G    D    J ", "      D      ", "      D      ", "      D      ")
                     .aisle("    CDDDC    ", "    CDSDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
                     .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
-                    .where('S', selfPredicate(MetaTileEntityIndustrialPrimitiveBlastFurnace.class))
+                    .self('S', MetaTileEntityIndustrialPrimitiveBlastFurnace.class)
                     .where('A', TraceabilityPredicate.optionalStates("AuxiliaryBlastFurnace1", getFireBoxState()))
                     .where('C', states(getFrameState()))
                     .casing('D', CasingDefinition.simple(getCasingState()))

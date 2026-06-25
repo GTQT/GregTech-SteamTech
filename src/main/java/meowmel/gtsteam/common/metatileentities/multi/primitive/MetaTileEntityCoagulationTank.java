@@ -46,13 +46,21 @@ public class MetaTileEntityCoagulationTank extends NoEnergyMultiblockController 
 
     private static final TraceabilityPredicate SNOW_PREDICATE = new TraceabilityPredicate(
             bws -> GTUtility.isBlockSnow(bws.getBlockState()));
+    /** Piece name for the repeatable body section */
+    private static final String PIECE_BODY = "body";
+    private static final StructurePieceKey BODY_PIECE = StructurePieceKey.of(PIECE_BODY);
     private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:coagulation_tank", () ->
             DeclarativePatternBuilder.start(RIGHT, UP, FRONT)
+                    .piece("bottom")
                     .aisle("BBB", "XYX", "XXX")
-                    .aisleRepeatable(1, 8, "BBB", "X&X", "X#X")
+
+                    .repeatablePiece(PIECE_BODY, 1, 8)
+                    .aisle("BBB", "X&X", "X#X")
                     .withAisleChannel(GTStructureChannels.STRUCTURE_LENGTH.getName())
+
+                    .piece("top")
                     .aisle("BBB", "XXX", "XXX")
-                    .where('Y', selfPredicate(MetaTileEntityCoagulationTank.class))
+                    .self('Y', MetaTileEntityCoagulationTank.class)
                     .where('B', states(getCasingBottomState()))
                     .casing('X', CasingDefinition.simple(getCasingState()))
                     .optionalItemInput(4)
@@ -88,11 +96,9 @@ public class MetaTileEntityCoagulationTank extends NoEnergyMultiblockController 
     }
 
     @Override
-    protected void formStructure(PatternMatchContext context) {
-        super.formStructure(context);
-        if (multiblockState != null) {
-            size = multiblockState.formedRepetitionCount[1] + 1;
-        } else size = 1;
+    protected void formStructure(@NotNull FormedStructureView formed) {
+        formRecipeMapStructure(formed);
+        this.size = formed.getPieceRepeat(BODY_PIECE, 0);
         this.recipeMapWorkable.setParallelLimit(size);
     }
 
