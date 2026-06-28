@@ -20,6 +20,7 @@ import gregtech.api.pattern.BlockPatternTemplate;
 import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
+import gregtech.api.pattern.element.Elements;
 import gregtech.api.util.GTUtility;
 import gregtech.api.util.tooltips.InformationHandler;
 import gregtech.api.util.tooltips.TooltipBuilder;
@@ -62,10 +63,9 @@ public class MetaTileEntityBrickKiln extends RecipeMapPrimitiveMultiblockControl
                     .aisle("XXX", "X&X", "X&X")
                     .aisle("XXX", "XYX", "#X#")
                     .self('Y', MetaTileEntityBrickKiln.class)
-                    .where('X', states(getCasingState())
-                            .or(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_IMPORT_HATCH).setMaxGlobalLimited(2))
-                            .or(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_EXPORT_HATCH).setMaxGlobalLimited(1))
-                    )
+                    .casing('X', getCasingState())
+                    .custom(Elements.metaTileEntities(0, 2, 2, GTSteamMetaTileEntities.PRIMITIVE_IMPORT_HATCH), 2)
+                    .custom(Elements.metaTileEntities(0, 2, 2, GTSteamMetaTileEntities.PRIMITIVE_EXPORT_HATCH), 2)
                     .where('#', any())
                     .where('&', air())
                     .buildTemplate()
@@ -75,7 +75,7 @@ public class MetaTileEntityBrickKiln extends RecipeMapPrimitiveMultiblockControl
         super(metaTileEntityId, GTSRecipeMaps.BRICK_KILN);
     }
 
-    protected static IBlockState getCasingState() {
+    public static IBlockState getCasingState() {
         return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES);
     }
 
@@ -133,7 +133,7 @@ public class MetaTileEntityBrickKiln extends RecipeMapPrimitiveMultiblockControl
             EnumFacing back = getFrontFacing().getOpposite();
             Matrix4 offset = translation.copy().translate(back.getXOffset(), -0.3, back.getZOffset());
             CubeRendererState op = Textures.RENDER_STATE.get();
-            Textures.RENDER_STATE.set(new CubeRendererState(op.layer, CubeRendererState.PASS_MASK, op.world));
+            Textures.RENDER_STATE.set(new CubeRendererState(op.layer, CubeRendererState.PASS_MASK, op.world, op.pos));
             Textures.renderFace(renderState, offset,
                     ArrayUtils.addAll(pipeline, new LightMapOperation(240, 240), new ColourOperation(0xFFFFFFFF)),
                     EnumFacing.UP, Cuboid6.full, TextureUtils.getBlockTexture("lava_still"),

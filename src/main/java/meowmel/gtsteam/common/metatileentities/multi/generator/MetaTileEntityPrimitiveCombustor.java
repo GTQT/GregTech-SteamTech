@@ -35,7 +35,7 @@ import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.mui.GTGuis;
 import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.PatternMatchContext;
+import gregtech.api.pattern.FormedStructureView;
 import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
@@ -46,6 +46,7 @@ import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.core.sound.GTSoundEvents;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -127,8 +128,11 @@ public class MetaTileEntityPrimitiveCombustor extends MultiblockWithDisplayBase 
                     .where(' ', air())
                     .buildTemplate();
         }
+    }
 
-
+    @Override
+    public IBlockState getCasingBlock() {
+        return boilerType.casingState;
     }
 
     public List<IHeatable> getHeatHatch() {
@@ -141,8 +145,8 @@ public class MetaTileEntityPrimitiveCombustor extends MultiblockWithDisplayBase 
     }
 
     @Override
-    protected void formStructure(PatternMatchContext context) {
-        super.formStructure(context);
+    protected void formStructure(@NotNull FormedStructureView formed) {
+        super.formStructure(formed);
         initializeAbilities();
     }
 
@@ -382,6 +386,14 @@ public class MetaTileEntityPrimitiveCombustor extends MultiblockWithDisplayBase 
     @Override
     protected ICubeRenderer getFrontOverlay() {
         return Textures.PRIMITIVE_BLAST_FURNACE_OVERLAY;
+    }
+
+    @Override
+    public IBlockState getCasingBlock(@Nullable IMultiblockPart sourcePart) {
+        if (sourcePart != null && isFireboxPart(sourcePart)) {
+            return boilerType.fireboxState;
+        }
+        return boilerType.casingState;
     }
 
     private boolean isFireboxPart(IMultiblockPart sourcePart) {

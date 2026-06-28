@@ -41,7 +41,7 @@ public class MetaTileEntityHeatFermenter extends HeatMultiblockController {
                     .aisle("CCCCC", "F###F", "F###F", "CCCCC")
                     .aisle("CCSCC", "CFFFC", "CFFFC", "CCCCC")
                     .self('S', MetaTileEntityHeatFermenter.class)
-                    .casing('C', CasingDefinition.simple(getCasingState()))
+                    .casing('C', getCasingState())
                     .itemInput(1, 3)
                     .itemOutput(1, 3)
                     .fluidInput(1, 3)
@@ -58,7 +58,7 @@ public class MetaTileEntityHeatFermenter extends HeatMultiblockController {
         recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 
-    private static IBlockState getCasingState() {
+    public static IBlockState getCasingState() {
         return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
     }
 

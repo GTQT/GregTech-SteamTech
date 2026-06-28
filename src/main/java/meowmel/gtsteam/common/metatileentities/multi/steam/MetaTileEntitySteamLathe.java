@@ -41,7 +41,7 @@ public class MetaTileEntitySteamLathe extends RecipeMapSteamMultiblockController
                     .aisle("XXXXXXXXX", "XPPPPPPPX", "XXXXXXXXX")
                     .aisle("FFFTTTFFF", "XXXXSXXXX", "FFFTTTFFF")
                     .self('S', MetaTileEntitySteamLathe.class)
-                    .casing('X', CasingDefinition.simple(getCasingState()))
+                    .casing('X', getCasingState())
                     .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM, 1)

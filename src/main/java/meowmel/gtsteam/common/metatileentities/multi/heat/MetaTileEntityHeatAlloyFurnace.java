@@ -39,7 +39,7 @@ public class MetaTileEntityHeatAlloyFurnace extends HeatMultiblockController {
                     .aisle("CCC", "X#X", "X#X", "CCC")
                     .aisle("CSC", "XXX", "XXX", "CCC")
                     .self('S',MetaTileEntityHeatAlloyFurnace.class)
-                    .casing('C', CasingDefinition.simple(getCasingState()))
+                    .casing('C',getCasingState())
                     .itemOutput(1, 3)
                     .itemInput(1, 3)
                     .hatch(MultiblockAbility.INPUT_HEAT, 1)
@@ -53,7 +53,7 @@ public class MetaTileEntityHeatAlloyFurnace extends HeatMultiblockController {
         recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 
-    private static IBlockState getCasingState() {
+    public static IBlockState getCasingState() {
         return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
     }
 

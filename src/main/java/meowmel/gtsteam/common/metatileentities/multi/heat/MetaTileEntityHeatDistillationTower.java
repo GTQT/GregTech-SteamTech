@@ -5,12 +5,11 @@ import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.HeatMultiblockController;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
-import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.SoftTemplate;
-import gregtech.api.pattern.StructurePieceKey;
+import gregtech.api.pattern.SoftReferenceHolder;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.pattern.casing.GTStructureChannels;
+import gregtech.api.pattern.element.StructureDefinition;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
@@ -38,35 +37,35 @@ import static meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing0.CasingT
 
 public class MetaTileEntityHeatDistillationTower extends HeatMultiblockController {
 
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:heat_distillation_tower", () ->
-            DeclarativePatternBuilder.start(RIGHT, FRONT, UP)
-                    .piece("bottom")
-                    .aisle("FFF", "FCF", "FFF")
-                    .aisle("CSC", "C#C", "CCC")
-                    .repeatablePiece("body", 1, 8)
-                    .aisle("XXX", "X#X", "XXX")
-                    .withAisleChannel(GTStructureChannels.STRUCTURE_HEIGHT.getName())
-                    .piece("top")
-                    .aisle("XXX", "XXX", "XXX")
-                    .self('S', MetaTileEntityHeatDistillationTower.class)
-                    .where('F', states(getFireBoxState()))
-                    .where('C', states(getCasingState())
-                            .or(abilities(MultiblockAbility.EXPORT_ITEMS).setMaxGlobalLimited(1))
-                            .or(abilities(MultiblockAbility.INPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(3))
-                            .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setExactLimit(1)))
-                    .where('X', states(getTankCasingState())
-                            .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMaxLayerLimited(1, 1))
-                            .maintenance()
-                    )
-                    .where('#', air())
-                    .buildTemplate()
-    );
+    private static final SoftReferenceHolder<? extends StructureDefinition<?>> STRUCTURE_DEFINITION =
+            TemplatePool.getInstance().registerStructure("gtsteam:heat_distillation_tower", () ->
+                    DeclarativePatternBuilder.start(RIGHT, BACK, UP)
+                            .piece("bottom")
+                            .aisle("FFF", "FCF", "FFF")
+                            .aisle("CSC", "C#C", "CCC")
+                            .repeatablePiece("body", 1, 8)
+                            .aisle("XXX", "X#X", "XXX")
+                            .withAisleChannel(GTStructureChannels.STRUCTURE_HEIGHT.getName())
+                            .piece("top")
+                            .aisle("XXX", "XXX", "XXX")
+                            .self('S', MetaTileEntityHeatDistillationTower.class)
+                            .where('F', states(getFireBoxState()))
+                            .where('C', states(getCasingState())
+                                    .or(abilities(MultiblockAbility.EXPORT_ITEMS).setMaxGlobalLimited(1))
+                                    .or(abilities(MultiblockAbility.INPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(3))
+                                    .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setExactLimit(1)))
+                            .where('X', states(getTankCasingState())
+                                    .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMaxLayerLimited(1, 1))
+                                    .maintenance())
+                            .where('#', air())
+                            .buildStructureDefinition()
+            );
 
     public MetaTileEntityHeatDistillationTower(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GTSRecipeMaps.HEAT_DISTILLATION_RECIPES);
     }
 
-    private static IBlockState getCasingState() {
+    public static IBlockState getCasingState() {
         return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
     }
 
@@ -79,8 +78,8 @@ public class MetaTileEntityHeatDistillationTower extends HeatMultiblockControlle
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return STRUCTURE_DEFINITION.get();
     }
 
     @Override
@@ -90,6 +89,14 @@ public class MetaTileEntityHeatDistillationTower extends HeatMultiblockControlle
 
     private boolean isTankPart(IMultiblockPart sourcePart) {
         return isStructureFormed() && (((MetaTileEntity) sourcePart).getPos().getY() > getPos().getY());
+    }
+
+    @Override
+    public IBlockState getCasingBlock(@Nullable IMultiblockPart sourcePart) {
+        if (sourcePart != null && isTankPart(sourcePart)) {
+            return getTankCasingState();
+        }
+        return getCasingState();
     }
 
     @SideOnly(Side.CLIENT)

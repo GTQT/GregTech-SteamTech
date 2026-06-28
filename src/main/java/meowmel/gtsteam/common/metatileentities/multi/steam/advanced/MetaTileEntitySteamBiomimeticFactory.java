@@ -76,7 +76,7 @@ public class MetaTileEntitySteamBiomimeticFactory extends RecipeMapSteamMultiblo
 
 
                     .self('M', MetaTileEntitySteamBiomimeticFactory.class)
-                    .casing('F', CasingDefinition.simple(getCasingState()))
+                    .casing('F', getCasingState())
                     .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM, 1)

@@ -13,10 +13,7 @@ import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.MultiblockDisplayText;
 import gregtech.api.metatileentity.multiblock.MultiblockWithDisplayBase;
-import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.PatternMatchContext;
-import gregtech.api.pattern.SoftTemplate;
-import gregtech.api.pattern.TemplatePool;
+import gregtech.api.pattern.*;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.util.TextFormattingUtil;
@@ -53,7 +50,7 @@ public class MetaTileEntityScalableStorage extends MultiblockWithDisplayBase {
                     .aisle("CCC", "CCC", "CCC")
                     .aisle("CCC", "CSC", "CCC")
                     .self('S', MetaTileEntityScalableStorage.class)
-                    .casing('C', CasingDefinition.simple(getCasingState()))
+                    .casing('C', getCasingState())
                     .itemInput(1, 4)
                     .itemOutput(1, 4)
                     .buildTemplate()
@@ -72,7 +69,7 @@ public class MetaTileEntityScalableStorage extends MultiblockWithDisplayBase {
         initializeStorageHandler();
     }
 
-    private static IBlockState getCasingState() {
+    public static IBlockState getCasingState() {
         return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
     }
 
@@ -326,8 +323,8 @@ public class MetaTileEntityScalableStorage extends MultiblockWithDisplayBase {
     }
 
     @Override
-    protected void formStructure(PatternMatchContext context) {
-        super.formStructure(context);
+    protected void formStructure(@NotNull FormedStructureView formed) {
+        super.formStructure(formed);
         this.importItems = new ItemHandlerList(getAbilities(MultiblockAbility.IMPORT_ITEMS));
         this.exportItems = new ItemHandlerList(getAbilities(MultiblockAbility.EXPORT_ITEMS));
         calculateStorageCapacity();

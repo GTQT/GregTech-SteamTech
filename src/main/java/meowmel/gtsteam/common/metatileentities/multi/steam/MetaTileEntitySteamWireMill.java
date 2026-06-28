@@ -41,7 +41,7 @@ public class MetaTileEntitySteamWireMill extends RecipeMapSteamMultiblockControl
                     .aisle("TXXFXXXX", "XGGGGGGX", "TXXFXXXX")
                     .aisle("TTTFXXXX", "XSXFXXXX", "TTTFXXXX")
                     .self('S', MetaTileEntitySteamWireMill.class)
-                    .casing('X', CasingDefinition.simple(getCasingState()))
+                    .casing('X', getCasingState())
                     .optionalHatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 4)
                     .optionalHatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 4)
                     .hatch(MultiblockAbility.STEAM, 1)

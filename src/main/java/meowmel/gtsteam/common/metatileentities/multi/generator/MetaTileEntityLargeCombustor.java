@@ -34,10 +34,12 @@ import gregtech.api.metatileentity.multiblock.ProgressBarMultiblock;
 import gregtech.api.metatileentity.multiblock.ui.*;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuis;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
-import gregtech.api.pattern.PatternMatchContext;
+import gregtech.api.pattern.FormedStructureView;
+import gregtech.api.pattern.SoftReferenceHolder;
+import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.TraceabilityPredicate;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
+import gregtech.api.pattern.element.StructureDefinition;
 import gregtech.api.util.GTUtility;
 import gregtech.api.util.KeyUtil;
 import gregtech.api.util.TextFormattingUtil;
@@ -45,7 +47,6 @@ import gregtech.api.util.tooltips.AbstractTooltipComponent;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.particle.VanillaParticleEffects;
 import gregtech.client.renderer.ICubeRenderer;
-import gregtech.client.renderer.texture.Textures;
 import gregtech.common.ConfigHolder;
 import gregtech.core.sound.GTSoundEvents;
 import net.minecraft.block.state.IBlockState;
@@ -67,11 +68,31 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.UnaryOperator;
 
 public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase implements ProgressBarMultiblock,
         IControllable, IHeatMachine {
+
+    private static final Map<String, SoftReferenceHolder<? extends StructureDefinition<?>>> STRUCTURE_DEFINITIONS =
+            new HashMap<>();
+    private static final TraceabilityPredicate SNOW_PREDICATE = new TraceabilityPredicate(
+            bws -> GTUtility.isBlockSnow(bws.getBlockState()));
+
+    static {
+        STRUCTURE_DEFINITIONS.put("bronze", TemplatePool.getInstance()
+                .registerStructure("gtsteam:large_combustor.bronze", () -> buildStructureDefinition(CombustorType.BRONZE)));
+        STRUCTURE_DEFINITIONS.put("steel", TemplatePool.getInstance()
+                .registerStructure("gtsteam:large_combustor.steel", () -> buildStructureDefinition(CombustorType.STEEL)));
+        STRUCTURE_DEFINITIONS.put("titanium", TemplatePool.getInstance()
+                .registerStructure("gtsteam:large_combustor.titanium",
+                        () -> buildStructureDefinition(CombustorType.TITANIUM)));
+        STRUCTURE_DEFINITIONS.put("tungstensteel", TemplatePool.getInstance()
+                .registerStructure("gtsteam:large_combustor.tungstensteel",
+                        () -> buildStructureDefinition(CombustorType.TUNGSTENSTEEL)));
+    }
 
     public final CombustorType combustorType;
     protected LargeCombustorRecipeLogic recipeLogic;
@@ -80,14 +101,45 @@ public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase impl
     private ItemHandlerList itemImportInventory;
     private int throttlePercentage = 100;
 
-    private static final TraceabilityPredicate SNOW_PREDICATE = new TraceabilityPredicate(
-            bws -> GTUtility.isBlockSnow(bws.getBlockState()));
-
     public MetaTileEntityLargeCombustor(ResourceLocation metaTileEntityId, CombustorType combustorType) {
         super(metaTileEntityId);
         this.combustorType = combustorType;
         this.recipeLogic = new LargeCombustorRecipeLogic(this);
         resetTileAbilities();
+    }
+
+    private static StructureDefinition<?> buildStructureDefinition(CombustorType combustorType) {
+        return DeclarativePatternBuilder.start()
+                .aisle("XXXXX", "CCCCC", " CCC ", "   C ", "   C ", "   C ")
+                .aisle("XCCCX", "CPPPC", "P  &P", "PPC C", "  C C", "  C C")
+                .aisle("XXXXX", "CCCSC", " CCC ", "   C ", "   C ", "   C ")
+                .self('S', MetaTileEntityLargeCombustor.class)
+                .where('P', states(combustorType.pipeState))
+                .where('X', states(combustorType.fireboxState))
+                .casing('C', combustorType.casingState)
+                .fluidInput(1, 2)
+                .itemInput(1, 2)
+                .hatch(MultiblockAbility.OUTPUT_HEAT, 1, 6)
+                .where('&', air().or(SNOW_PREDICATE)) // this won't stay in the structure, and will be broken while
+                .where(' ', air())
+                .buildStructureDefinition();
+    }
+
+    @Override
+    public IBlockState getCasingBlock() {
+        return combustorType.casingState;
+    }
+
+    @Override
+    public IBlockState getCasingBlock(@Nullable IMultiblockPart sourcePart) {
+        if (sourcePart != null && isFireboxPart(sourcePart)) {
+            return combustorType.fireboxState;
+        }
+        return combustorType.casingState;
+    }
+
+    private boolean isFireboxPart(IMultiblockPart sourcePart) {
+        return isStructureFormed() && (((MetaTileEntity) sourcePart).getPos().getY() < getPos().getY());
     }
 
     public List<IHeatable> getHeatHatch() {
@@ -99,9 +151,20 @@ public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase impl
         return new MetaTileEntityLargeCombustor(metaTileEntityId, combustorType);
     }
 
+    @NotNull
     @Override
-    protected void formStructure(PatternMatchContext context) {
-        super.formStructure(context);
+    protected StructureDefinition<?> createStructureDefinition() {
+        SoftReferenceHolder<? extends StructureDefinition<?>> definition = STRUCTURE_DEFINITIONS.get(
+                combustorType.getName());
+        if (definition == null) {
+            throw new IllegalStateException("Unknown boiler type: " + combustorType.getName());
+        }
+        return definition.get();
+    }
+
+    @Override
+    protected void formStructure(@NotNull FormedStructureView formed) {
+        super.formStructure(formed);
         initializeAbilities();
     }
 
@@ -330,27 +393,6 @@ public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase impl
     @Override
     public boolean isActive() {
         return super.isActive() && recipeLogic.isActive() && recipeLogic.isWorkingEnabled();
-    }
-
-    @Override
-    protected @NotNull BlockPattern createStructurePattern() {
-        return FactoryBlockPattern.start()
-                .aisle("VXXXV", "CCCCC", " CCC ", "   C ", "   C ", "   C ")
-                .aisle("XCCCX", "CPPPC", "P  &P", "PPC C", "  C C", "  C C")
-                .aisle("VXXXV", "CCCSC", " CCC ", "   C ", "   C ", "   C ")
-                .self('S')
-                .where('P', states(combustorType.pipeState))
-                .where('X', states(combustorType.fireboxState))
-                .where('V', states(combustorType.casingState))
-                .where('C', states(combustorType.casingState).setMinGlobalLimited(16)
-                        .or(abilities(MultiblockAbility.OUTPUT_HEAT)
-                                .setMinGlobalLimited(1).setMaxGlobalLimited(6).setPreviewCount(1))
-                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setMinGlobalLimited(1, 1))
-                        .or(abilities(MultiblockAbility.IMPORT_ITEMS).setMaxGlobalLimited(2, 1))
-                )
-                .where('&', air().or(SNOW_PREDICATE)) // this won't stay in the structure, and will be broken while
-                .where(' ', air())
-                .build();
     }
 
     @Override

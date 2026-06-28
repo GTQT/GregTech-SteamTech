@@ -37,7 +37,7 @@ public class MetaTileEntityHeatLavaFurnace extends HeatMultiblockController {
                     .aisle("XXX", "CSC", "CCC")
                     .self('S', MetaTileEntityHeatLavaFurnace.class)
                     .where('X', states(getFireboxState()))
-                    .casing('C', CasingDefinition.simple(getCasingState()))
+                    .casing('C', getCasingState())
                     .itemInput(1, 2)
                     .fluidOutput(1, 2)
                     .hatch(MultiblockAbility.INPUT_HEAT, 1)

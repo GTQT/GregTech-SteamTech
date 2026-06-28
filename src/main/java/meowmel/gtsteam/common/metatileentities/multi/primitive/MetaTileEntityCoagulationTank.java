@@ -14,6 +14,7 @@ import gregtech.api.pattern.*;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.pattern.casing.GTStructureChannels;
+import gregtech.api.pattern.element.StructureDefinition;
 import gregtech.api.util.GTUtility;
 import gregtech.api.util.tooltips.InformationHandler;
 import gregtech.api.util.tooltips.TooltipBuilder;
@@ -49,35 +50,34 @@ public class MetaTileEntityCoagulationTank extends NoEnergyMultiblockController 
     /** Piece name for the repeatable body section */
     private static final String PIECE_BODY = "body";
     private static final StructurePieceKey BODY_PIECE = StructurePieceKey.of(PIECE_BODY);
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:coagulation_tank", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, FRONT)
-                    .piece("bottom")
-                    .aisle("BBB", "XYX", "XXX")
-
-                    .repeatablePiece(PIECE_BODY, 1, 8)
-                    .aisle("BBB", "X&X", "X#X")
-                    .withAisleChannel(GTStructureChannels.STRUCTURE_LENGTH.getName())
-
-                    .piece("top")
-                    .aisle("BBB", "XXX", "XXX")
-                    .self('Y', MetaTileEntityCoagulationTank.class)
-                    .where('B', states(getCasingBottomState()))
-                    .casing('X', CasingDefinition.simple(getCasingState()))
-                    .optionalItemInput(4)
-                    .optionalItemOutput(4)
-                    .optionalFluidInput(4)
-                    .optionalFluidOutput(4)
-                    .where('#', air())
-                    .where('&', air().or(SNOW_PREDICATE)) // this won't stay in the structure, and will be broken while
-                    .buildTemplate()
-    );
+    private static final SoftReferenceHolder<? extends StructureDefinition<?>> STRUCTURE_DEFINITION =
+            TemplatePool.getInstance().registerStructure("gtsteam:coagulation_tank", () ->
+                    DeclarativePatternBuilder.start(RIGHT, UP, FRONT)
+                            .piece("bottom")
+                            .aisle("BBB", "XYX", "XXX")
+                            .repeatablePiece(PIECE_BODY, 1, 8)
+                            .aisle("BBB", "X&X", "X#X")
+                            .withAisleChannel(GTStructureChannels.STRUCTURE_LENGTH.getName())
+                            .piece("top")
+                            .aisle("BBB", "XXX", "XXX")
+                            .self('Y', MetaTileEntityCoagulationTank.class)
+                            .where('B', states(getCasingBottomState()))
+                            .casing('X', getCasingState())
+                            .optionalItemInput(4)
+                            .optionalItemOutput(4)
+                            .optionalFluidInput(4)
+                            .optionalFluidOutput(4)
+                            .where('#', air())
+                            .where('&', air().or(SNOW_PREDICATE))
+                            .buildStructureDefinition()
+            );
     int size;
 
     public MetaTileEntityCoagulationTank(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, GTSRecipeMaps.COAGULATION_RECIPES);
     }
 
-    protected static IBlockState getCasingState() {
+    public static IBlockState getCasingState() {
         return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.REINFORCED_TREATED_WOOD_WALL);
     }
 
@@ -86,8 +86,8 @@ public class MetaTileEntityCoagulationTank extends NoEnergyMultiblockController 
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return STRUCTURE_DEFINITION.get();
     }
 
     @Override
@@ -126,7 +126,7 @@ public class MetaTileEntityCoagulationTank extends NoEnergyMultiblockController 
             for (int i = 1; i <= size; i++) {
                 Matrix4 offset = translation.copy().translate(back.getXOffset() * size, -0.3, back.getZOffset() * size);
                 CubeRendererState op = Textures.RENDER_STATE.get();
-                Textures.RENDER_STATE.set(new CubeRendererState(op.layer, CubeRendererState.PASS_MASK, op.world));
+                Textures.RENDER_STATE.set(new CubeRendererState(op.layer, CubeRendererState.PASS_MASK, op.world, op.pos));
                 Textures.renderFace(renderState, offset,
                         ArrayUtils.addAll(pipeline, new LightMapOperation(240, 240), new ColourOperation(0xFFFFFFFF)),
                         EnumFacing.UP, Cuboid6.full, TextureUtils.getBlockTexture("water_still"),

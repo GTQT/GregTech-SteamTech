@@ -42,7 +42,7 @@ public class MetaTileEntityHeatThermalCentrifuge extends HeatMultiblockControlle
                     .aisle("CCCCC", "F###F", "CCCCC")
                     .aisle("#CSC#", "#FFF#", "#CCC#")
                     .self('S', MetaTileEntityHeatThermalCentrifuge.class)
-                    .casing('C', CasingDefinition.simple(getCasingState()))
+                    .casing('C', getCasingState())
                     .itemInput(1, 2)
                     .itemOutput(1, 2)
                     .hatch(MultiblockAbility.INPUT_HEAT, 1)
@@ -57,7 +57,7 @@ public class MetaTileEntityHeatThermalCentrifuge extends HeatMultiblockControlle
         recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 
-    private static IBlockState getCasingState() {
+    public static IBlockState getCasingState() {
         return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
     }
 

@@ -40,7 +40,7 @@ public class MetaTileEntityHeatBrewingVat extends HeatMultiblockController {
                     .aisle(" F F ", " XXX ", "X###X", "X###X", "X###X", " XXX ")
                     .aisle("     ", "     ", " XXX ", " XSX ", " XXX ", "     ")
                     .self('S', MetaTileEntityHeatBrewingVat.class)
-                    .casing('X', CasingDefinition.simple(getCasingState()))
+                    .casing('X', getCasingState())
                     .optionalItemInput(2)
                     .optionalItemOutput(2)
                     .optionalFluidInput(2)

@@ -46,7 +46,7 @@ public class MetaTileEntitySteamHammer extends RecipeMapSteamMultiblockControlle
                     .aisle("XXX", "XFX", "XXX")
                     .aisle("XXX", "XSX", "XXX")
                     .self('S', MetaTileEntitySteamHammer.class)
-                    .casing('X', CasingDefinition.simple(getCasingState()))
+                    .casing('X', getCasingState())
                     .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM, 1)

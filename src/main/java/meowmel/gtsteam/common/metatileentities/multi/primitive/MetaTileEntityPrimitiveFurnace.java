@@ -25,6 +25,7 @@ import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
+import gregtech.api.pattern.element.Elements;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.util.GTUtility;
 import gregtech.api.util.tooltips.InformationHandler;
@@ -63,9 +64,9 @@ public class MetaTileEntityPrimitiveFurnace extends RecipeMapPrimitiveMultiblock
                     .aisle("XXX", "XXX", "XXX")
                     .aisle("XXX", "X X", "XXX")
                     .aisle("XXX", "XYX", "XXX")
-                    .casing('X', CasingDefinition.simple(getCasingState()))
-                    .custom(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_IMPORT_HATCH), 2)
-                    .custom(metaTileEntities(GTSteamMetaTileEntities.PRIMITIVE_EXPORT_HATCH), 1)
+                    .casing('X', getCasingState())
+                    .custom(Elements.metaTileEntities(0, 2, 2, GTSteamMetaTileEntities.PRIMITIVE_IMPORT_HATCH), 2)
+                    .custom(Elements.metaTileEntities(0, 2, 2, GTSteamMetaTileEntities.PRIMITIVE_EXPORT_HATCH), 2)
                     .where(' ', air())
                     .self('Y', MetaTileEntityPrimitiveFurnace.class)
                     .buildTemplate()
@@ -78,7 +79,7 @@ public class MetaTileEntityPrimitiveFurnace extends RecipeMapPrimitiveMultiblock
         this.recipeMapWorkable.setSpeedBonus(0.5f);
     }
 
-    protected static IBlockState getCasingState() {
+    public static IBlockState getCasingState() {
         return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES);
     }
 

@@ -39,7 +39,7 @@ public class MetaTileEntityHeatChemicalReactor extends HeatMultiblockController 
                     .aisle("CCC", "CPC", "CCC")
                     .aisle("CCC", "CSC", "CCC")
                     .self('S', MetaTileEntityHeatChemicalReactor.class)
-                    .casing('C', CasingDefinition.simple(getCasingState()))
+                    .casing('C', getCasingState())
                     .itemInput(1, 3)
                     .itemOutput(1, 3)
                     .hatch(MultiblockAbility.INPUT_HEAT, 1)
@@ -53,7 +53,7 @@ public class MetaTileEntityHeatChemicalReactor extends HeatMultiblockController 
         super(metaTileEntityId, GTSRecipeMaps.HEAT_CHEMICAL_RECIPES);
     }
 
-    private static IBlockState getCasingState() {
+    public static IBlockState getCasingState() {
         return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
     }
 

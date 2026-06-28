@@ -40,7 +40,7 @@ public class MetaTileEntitySteamLavaFurnace extends RecipeMapSteamMultiblockCont
                             .or(abilities(MultiblockAbility.STEAM).setExactLimit(1))
                     )
 
-                    .casing('C', CasingDefinition.simple(getCasingState()))
+                    .casing('C', getCasingState())
                     .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1, 2)
 

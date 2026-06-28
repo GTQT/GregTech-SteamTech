@@ -35,13 +35,14 @@ public class MetaTileEntityHeatCrackingUnit extends HeatMultiblockController {
     private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:heat_cracking_unit", () ->
             DeclarativePatternBuilder.start()
                     .aisle("CFCFC", "CFCFC", "CFCFC")
-                    .aisle("CCCCC", "I###O", "CCICC")
+                    .aisle("CCCCC", "IPPPO", "CCICC")
                     .aisle("CFCFC", "CFSFC", "CFCFC")
                     .self('S', MetaTileEntityHeatCrackingUnit.class)
                     .where('C', states(getCasingState()).or(abilities(MultiblockAbility.INPUT_HEAT).setExactLimit(1)))
                     .where('I', states(getCasingState()).or(abilities(MultiblockAbility.IMPORT_FLUIDS).setExactLimit(2)))
                     .where('O', states(getCasingState()).or(abilities(MultiblockAbility.EXPORT_FLUIDS).setExactLimit(1)))
                     .where('F', states(getFireBoxState()))
+                    .where('P', states(getPipeState()))
                     .where('#', air())
                     .buildTemplate()
     );
@@ -50,7 +51,7 @@ public class MetaTileEntityHeatCrackingUnit extends HeatMultiblockController {
         super(metaTileEntityId, GTSRecipeMaps.HEAT_CRACKING_RECIPES);
     }
 
-    private static IBlockState getCasingState() {
+    public static IBlockState getCasingState() {
         return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
     }
 

@@ -11,9 +11,9 @@ import gregtech.api.metatileentity.multiblock.ui.MultiblockUIBuilder;
 import gregtech.api.metatileentity.multiblock.ui.UISyncer;
 import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.pattern.*;
-import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.pattern.casing.GTStructureChannels;
+import gregtech.api.pattern.element.StructureDefinition;
 import gregtech.api.recipes.logic.OCResult;
 import gregtech.api.recipes.properties.RecipePropertyStorage;
 import gregtech.api.unification.material.Materials;
@@ -60,31 +60,32 @@ public class MetaTileEntityIndustrialCokeOven extends NoEnergyMultiblockControll
     private static final String PIECE_BODY = "body";
     private static final StructurePieceKey BODY_PIECE = StructurePieceKey.of(PIECE_BODY);
 
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:industrial_coke_oven", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, FRONT)
-                    .piece("bottom")
-                    .aisle("XXXXX", "#XYX#", "#XXX#", "#####", "#####", "#####")
-                    .aisle("XXXXX", "#XPX#", "#XXX#", "#####", "#####", "#####")
-                    .aisle("XXXXX", "FXPXF", "FXXXF", "FFFFF", "#####", "#####")
-                    .aisle("BXXXB", "X#P#X", "X###X", "FXXXF", "##X##", "##X##")
-                    .repeatablePiece("body", 1, 8)
-                    .aisle("BXXXB", "X#P#X", "X###X", "FX&XF", "#X#X#", "#X#X#")
-                    .withAisleChannel(GTStructureChannels.STRUCTURE_HEIGHT.getName())
-                    .piece("top")
-                    .aisle("BXXXB", "X#P#X", "X###X", "FXXXF", "##X##", "##X##")
-                    .aisle("XXXXX", "FXXXF", "FXXXF", "FFFFF", "#####", "#####")
-                    .self('Y', MetaTileEntityIndustrialCokeOven.class)
-                    .where('B', states(getFireBoxState()))
-                    .where('P', states(getBoilerState()))
-                    .where('F', states(getFrameState()))
-                    .casing('X', CasingDefinition.simple(getCasingState()))
-                    .optionalItemInput(4)
-                    .optionalItemOutput(4)
-                    .optionalFluidOutput(4)
-                    .where('#', any())
-                    .where('&', air().or(SNOW_PREDICATE)) // this won't stay in the structure, and will be broken while
-                    .buildTemplate()
-    );
+    private static final SoftReferenceHolder<? extends StructureDefinition<?>> STRUCTURE_DEFINITION =
+            TemplatePool.getInstance().registerStructure("gtsteam:industrial_coke_oven", () ->
+                    DeclarativePatternBuilder.start(RIGHT, UP, FRONT)
+                            .piece("bottom")
+                            .aisle("XXXXX", "#XYX#", "#XXX#", "#####", "#####", "#####")
+                            .aisle("XXXXX", "#XPX#", "#XXX#", "#####", "#####", "#####")
+                            .aisle("XXXXX", "FXPXF", "FXXXF", "FFFFF", "#####", "#####")
+                            .aisle("BXXXB", "X#P#X", "X###X", "FXXXF", "##X##", "##X##")
+                            .repeatablePiece("body", 1, 8)
+                            .aisle("BXXXB", "X#P#X", "X###X", "FX&XF", "#X#X#", "#X#X#")
+                            .withAisleChannel(GTStructureChannels.STRUCTURE_HEIGHT.getName())
+                            .piece("top")
+                            .aisle("BXXXB", "X#P#X", "X###X", "FXXXF", "##X##", "##X##")
+                            .aisle("XXXXX", "FXXXF", "FXXXF", "FFFFF", "#####", "#####")
+                            .self('Y', MetaTileEntityIndustrialCokeOven.class)
+                            .where('B', states(getFireBoxState()))
+                            .where('P', states(getBoilerState()))
+                            .where('F', states(getFrameState()))
+                            .casing('X', getCasingState())
+                            .optionalItemInput(4)
+                            .optionalItemOutput(4)
+                            .optionalFluidOutput(4)
+                            .where('#', any())
+                            .where('&', air().or(SNOW_PREDICATE))
+                            .buildStructureDefinition()
+            );
     int size;
     private int TEMP = MIN_TEMP;
 
@@ -105,7 +106,7 @@ public class MetaTileEntityIndustrialCokeOven extends NoEnergyMultiblockControll
         return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.STEEL_FIREBOX);
     }
 
-    protected static IBlockState getCasingState() {
+    public static IBlockState getCasingState() {
         return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES);
     }
 
@@ -134,8 +135,8 @@ public class MetaTileEntityIndustrialCokeOven extends NoEnergyMultiblockControll
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return STRUCTURE_DEFINITION.get();
     }
 
     @SideOnly(Side.CLIENT)

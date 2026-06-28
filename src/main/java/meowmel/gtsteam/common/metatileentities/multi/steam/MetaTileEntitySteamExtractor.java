@@ -48,7 +48,7 @@ public class MetaTileEntitySteamExtractor extends RecipeMapSteamMultiblockContro
                     .aisle("XXX", "FTF", "XXX")
                     .aisle("XXX", "XSX", "XXX")
                     .self('S', MetaTileEntitySteamExtractor.class)
-                    .casing('X', CasingDefinition.simple(getCasingState()))
+                    .casing('X', getCasingState())
                     .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM, 1)

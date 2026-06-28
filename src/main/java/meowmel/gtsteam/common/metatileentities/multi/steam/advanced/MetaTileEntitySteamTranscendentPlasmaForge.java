@@ -73,7 +73,7 @@ public class MetaTileEntitySteamTranscendentPlasmaForge extends RecipeMapSteamMu
                     .aisle(" NNN   NNN             NNN   NNN ", "                                 ", "                                 ", "                                 ", " NNN   NNN             NNN   NNN ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", " NNN   NNN             NNN   NNN ", "                                 ", "                                 ", "                                 ", " NNN   NNN   N     N   NNN   NNN ", "         N   N     N   N         ", "         N   N     N   N         ", "                                 ", "                                 ", "                                 ", "         N   N     N   N         ", "         N   N     N   N         ", "         N   N     N   N         ", "                                 ")
                     .self('~', MetaTileEntitySteamTranscendentPlasmaForge.class)
                     .where('C', states(getFrameState()))
-                    .casing('N', CasingDefinition.simple(getCasingState()))
+                    .casing('N', getCasingState())
                     .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1, 16)
                     .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1, 16)
                     .hatch(MultiblockAbility.STEAM, 1)
@@ -84,7 +84,7 @@ public class MetaTileEntitySteamTranscendentPlasmaForge extends RecipeMapSteamMu
     );
 
     public MetaTileEntitySteamTranscendentPlasmaForge(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, RecipeMaps.FURNACE_RECIPES, CONVERSION_RATE, ParallelLogicType.APPEND_ITEMS);
+        super(metaTileEntityId, RecipeMaps.FURNACE_RECIPES, CONVERSION_RATE, ParallelLogicType.MULTIPLY);
         this.recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 

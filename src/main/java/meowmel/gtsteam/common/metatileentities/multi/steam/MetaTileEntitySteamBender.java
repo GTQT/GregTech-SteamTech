@@ -41,7 +41,7 @@ public class MetaTileEntitySteamBender extends RecipeMapSteamMultiblockControlle
                     .aisle("TXT    ", "XPPPPPX", "XXXXXXX")
                     .aisle("TTTFFFF", "XSXXXXX", "XXXXXXX")
                     .self('S', MetaTileEntitySteamBender.class)
-                    .casing('X', CasingDefinition.simple(getCasingState()))
+                    .casing('X', getCasingState())
                     .hatch(MultiblockAbility.STEAM, 1)
                     .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1,4)
                     .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1,4)
