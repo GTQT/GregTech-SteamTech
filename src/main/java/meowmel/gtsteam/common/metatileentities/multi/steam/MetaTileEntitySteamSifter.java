@@ -18,6 +18,7 @@ import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
+import meowmel.gtsteam.client.textures.GTSteamTextures;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -89,7 +90,7 @@ public class MetaTileEntitySteamSifter extends RecipeMapSteamMultiblockControlle
     @SideOnly(Side.CLIENT)
     @Override
     protected @NotNull ICubeRenderer getFrontOverlay() {
-        return Textures.ELECTRIC_FURNACE_OVERLAY;
+        return GTSteamTextures.LARGE_SIFTER_OVERLAY;
     }
 
     @Override

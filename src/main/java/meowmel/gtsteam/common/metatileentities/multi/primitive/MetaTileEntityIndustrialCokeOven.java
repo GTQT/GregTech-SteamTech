@@ -148,7 +148,7 @@ public class MetaTileEntityIndustrialCokeOven extends NoEnergyMultiblockControll
     @SideOnly(Side.CLIENT)
     @Override
     protected @NotNull ICubeRenderer getFrontOverlay() {
-        return Textures.COKE_OVEN_OVERLAY;
+        return GTSteamTextures.INDUSTRIAL_COKE_OVEN_OVERLAY;
     }
 
     @Override

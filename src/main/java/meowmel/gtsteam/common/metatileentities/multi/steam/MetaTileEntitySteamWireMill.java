@@ -19,6 +19,7 @@ import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
+import meowmel.gtsteam.client.textures.GTSteamTextures;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -86,8 +87,8 @@ public class MetaTileEntitySteamWireMill extends RecipeMapSteamMultiblockControl
 
     @SideOnly(Side.CLIENT)
     @Override
-    protected ICubeRenderer getFrontOverlay() {
-        return Textures.ELECTRIC_FURNACE_OVERLAY;
+    protected @NotNull ICubeRenderer getFrontOverlay() {
+        return GTSteamTextures.LARGE_COMPRESSOR_OVERLAY;
     }
 
     @Override

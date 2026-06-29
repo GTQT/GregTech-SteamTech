@@ -33,6 +33,19 @@ public class GTSteamTextures {
 
     public static final SimpleOverlayRenderer HU_BURRING_BOX_SIDE_OVERLAY = new SimpleOverlayRenderer("casings/hu_burring_box_side_overlay");
     public static final SimpleOverlayRenderer HU_BURRING_BOX_SIDE_FULL_OVERLAY = new SimpleOverlayRenderer("casings/hu_burring_box_side_full_overlay");
+
+
+    public static final OrientedOverlayRenderer LARGE_ORE_WASHER_OVERLAY = new OrientedOverlayRenderer(
+            "gtsteam_multi/large_ore_washer");
+    public static final OrientedOverlayRenderer LARGE_SIFTER_OVERLAY = new OrientedOverlayRenderer(
+            "gtsteam_multi/large_sifter");
+    public static final OrientedOverlayRenderer LARGE_COMPRESSOR_OVERLAY = new OrientedOverlayRenderer(
+            "gtsteam_multi/large_compressor");
+    public static final OrientedOverlayRenderer INDUSTRIAL_COKE_OVEN_OVERLAY = new OrientedOverlayRenderer(
+            "gtsteam_multi/industrial_coke_oven");
+    public static final OrientedOverlayRenderer LARGE_BREWERY_OVERLAY = new OrientedOverlayRenderer(
+            "gtsteam_multi/large_brewery");
+
     public static void init() {
 
     }

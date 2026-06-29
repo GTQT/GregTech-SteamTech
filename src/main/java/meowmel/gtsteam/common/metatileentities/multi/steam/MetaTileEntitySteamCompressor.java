@@ -17,6 +17,7 @@ import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.MetaBlocks;
+import meowmel.gtsteam.client.textures.GTSteamTextures;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -47,7 +48,7 @@ public class MetaTileEntitySteamCompressor extends RecipeMapSteamMultiblockContr
     );
 
     public MetaTileEntitySteamCompressor(ResourceLocation metaTileEntityId) {
-        super(metaTileEntityId, RecipeMaps.COMPRESSOR_RECIPES, CONVERSION_RATE, ParallelLogicType.APPEND_ITEMS);
+        super(metaTileEntityId, RecipeMaps.COMPRESSOR_RECIPES, CONVERSION_RATE, ParallelLogicType.MULTIPLY);
         this.recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 
@@ -74,7 +75,7 @@ public class MetaTileEntitySteamCompressor extends RecipeMapSteamMultiblockContr
     @SideOnly(Side.CLIENT)
     @Override
     protected @NotNull ICubeRenderer getFrontOverlay() {
-        return Textures.ELECTRIC_FURNACE_OVERLAY;
+        return GTSteamTextures.LARGE_COMPRESSOR_OVERLAY;
     }
 
     @Override

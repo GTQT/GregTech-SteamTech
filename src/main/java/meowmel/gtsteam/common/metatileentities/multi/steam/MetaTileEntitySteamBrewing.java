@@ -95,7 +95,7 @@ public class MetaTileEntitySteamBrewing extends RecipeMapSteamMultiblockControll
     @SideOnly(Side.CLIENT)
     @Override
     protected @NotNull ICubeRenderer getFrontOverlay() {
-        return Textures.PRIMITIVE_PUMP_OVERLAY;
+        return GTSteamTextures.LARGE_BREWERY_OVERLAY;
     }
 
     @Override
