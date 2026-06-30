@@ -1,13 +1,14 @@
 package meowmel.gtsteam.common.metatileentities.multi.steam.advanced;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
-import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
@@ -37,7 +38,7 @@ import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.BRONZE_P
 public class MetaTileEntitySteamBiomimeticFactory extends RecipeMapSteamMultiblockController {
 
     private static final int PARALLEL_LIMIT = 32768;
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:steam_biomimetic_factory", () ->
+    private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_biomimetic_factory", () ->
             DeclarativePatternBuilder.start(RIGHT, FRONT, UP)
 
                     .aisle("                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "               A A               ", "               A A               ", "               A A               ", "            AAAAAAAAA            ", "               A A               ", "            AAAAAAAAA            ", "               A A               ", "               A A               ", "               A A               ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ", "                                 ")
@@ -80,16 +81,16 @@ public class MetaTileEntitySteamBiomimeticFactory extends RecipeMapSteamMultiblo
                     .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM, 1)
-                    .where('B', states(getBoilerState()))
-                    .where('A', states(getPipeState()))
+                    .where('B', blocks(getBoilerState()))
+                    .where('A', blocks(getPipeState()))
 
-                    .where('C', states(getFrameState()))
-                    .where('D', states(getFrameState()))
-                    .where('E', states(getFrameState()))
-                    .where('G', states(getFrameState()))
+                    .where('C', blocks(getFrameState()))
+                    .where('D', blocks(getFrameState()))
+                    .where('E', blocks(getFrameState()))
+                    .where('G', blocks(getFrameState()))
 
                     .where(' ', any())
-                    .buildTemplate()
+                    .buildStructureDefinition()
     );
 
     public MetaTileEntitySteamBiomimeticFactory(ResourceLocation metaTileEntityId) {
@@ -119,8 +120,8 @@ public class MetaTileEntitySteamBiomimeticFactory extends RecipeMapSteamMultiblo
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return DEFINITION;
     }
 
     @SideOnly(Side.CLIENT)

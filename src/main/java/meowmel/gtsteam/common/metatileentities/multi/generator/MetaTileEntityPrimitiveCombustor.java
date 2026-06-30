@@ -1,5 +1,8 @@
 package meowmel.gtsteam.common.metatileentities.multi.generator;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
@@ -34,9 +37,7 @@ import gregtech.api.metatileentity.multiblock.ui.*;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.mui.GTGuis;
-import gregtech.api.pattern.BlockPatternTemplate;
 import gregtech.api.pattern.FormedStructureView;
-import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.util.KeyUtil;
@@ -72,17 +73,17 @@ import static meowmel.gtsteam.common.metatileentities.multi.generator.PrimitiveC
 public class MetaTileEntityPrimitiveCombustor extends MultiblockWithDisplayBase implements ProgressBarMultiblock,
         IControllable, IHeatMachine {
 
-    private static final Map<PrimitiveCombustorType, SoftTemplate> TEMPLATES = new HashMap<>();
+    private static final Map<PrimitiveCombustorType, StructureDefinition<?>> STRUCTURE_DEFINITIONS = new HashMap<>();
 
     static {
-        TEMPLATES.put(LOW_PRESSURE_SOLID, TemplatePool.getInstance()
-                .register("gtsteam:solid_combustor.low_pressure", () -> buildTemplate(LOW_PRESSURE_SOLID)));
-        TEMPLATES.put(HIGH_PRESSURE_SOLID, TemplatePool.getInstance()
-                .register("gtsteam:solid_combustor.high_pressure", () -> buildTemplate(HIGH_PRESSURE_SOLID)));
-        TEMPLATES.put(LOW_PRESSURE_FLUID, TemplatePool.getInstance()
-                .register("gtsteam:fluid_combustor.low_pressure", () -> buildTemplate(LOW_PRESSURE_FLUID)));
-        TEMPLATES.put(HIGH_PRESSURE_FLUID, TemplatePool.getInstance()
-                .register("gtsteam:fluid_combustor.high_pressure", () -> buildTemplate(HIGH_PRESSURE_FLUID)));
+        STRUCTURE_DEFINITIONS.put(LOW_PRESSURE_SOLID, StructureDefinition.getOrBuild(
+                "gtsteam:solid_combustor.low_pressure", () -> buildStructureDefinition(LOW_PRESSURE_SOLID)));
+        STRUCTURE_DEFINITIONS.put(HIGH_PRESSURE_SOLID, StructureDefinition.getOrBuild(
+                "gtsteam:solid_combustor.high_pressure", () -> buildStructureDefinition(HIGH_PRESSURE_SOLID)));
+        STRUCTURE_DEFINITIONS.put(LOW_PRESSURE_FLUID, StructureDefinition.getOrBuild(
+                "gtsteam:fluid_combustor.low_pressure", () -> buildStructureDefinition(LOW_PRESSURE_FLUID)));
+        STRUCTURE_DEFINITIONS.put(HIGH_PRESSURE_FLUID, StructureDefinition.getOrBuild(
+                "gtsteam:fluid_combustor.high_pressure", () -> buildStructureDefinition(HIGH_PRESSURE_FLUID)));
     }
 
     public final PrimitiveCombustorType boilerType;
@@ -99,7 +100,7 @@ public class MetaTileEntityPrimitiveCombustor extends MultiblockWithDisplayBase 
         resetTileAbilities();
     }
 
-    private static BlockPatternTemplate buildTemplate(PrimitiveCombustorType boilerType) {
+    private static StructureDefinition<?> buildStructureDefinition(PrimitiveCombustorType boilerType) {
 
         if (boilerType == LOW_PRESSURE_SOLID || boilerType == HIGH_PRESSURE_SOLID) {
             return DeclarativePatternBuilder.start()
@@ -107,26 +108,24 @@ public class MetaTileEntityPrimitiveCombustor extends MultiblockWithDisplayBase 
                     .aisle("XXX", "C C", "C C", "CCC")
                     .aisle("XXX", "CSC", "CCC", "CCC")
                     .self('S', MetaTileEntityPrimitiveCombustor.class)
-                    .where('X', states(boilerType.fireboxState)
-                            .or(abilities(MultiblockAbility.IMPORT_ITEMS).setExactLimit(1))
-                    )
-                    .where('C', states(boilerType.casingState)
-                            .or(abilities(MultiblockAbility.OUTPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(6)))
+                    .where('X', chain(blocks(boilerType.fireboxState),
+                            abilities(1, 1, MultiblockAbility.IMPORT_ITEMS)))
+                    .where('C', chain(blocks(boilerType.casingState),
+                            abilities(1, 6, MultiblockAbility.OUTPUT_HEAT)))
                     .where(' ', air())
-                    .buildTemplate();
+                    .buildStructureDefinition();
         } else {
             return DeclarativePatternBuilder.start()
                     .aisle("XXX", "CCC", "CCC", "CCC")
                     .aisle("XXX", "C C", "C C", "CCC")
                     .aisle("XXX", "CSC", "CCC", "CCC")
                     .self('S', MetaTileEntityPrimitiveCombustor.class)
-                    .where('X', states(boilerType.fireboxState)
-                            .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setExactLimit(1))
-                    )
-                    .where('C', states(boilerType.casingState)
-                            .or(abilities(MultiblockAbility.OUTPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(6)))
+                    .where('X', chain(blocks(boilerType.fireboxState),
+                            abilities(1, 1, MultiblockAbility.IMPORT_FLUIDS)))
+                    .where('C', chain(blocks(boilerType.casingState),
+                            abilities(1, 6, MultiblockAbility.OUTPUT_HEAT)))
                     .where(' ', air())
-                    .buildTemplate();
+                    .buildStructureDefinition();
         }
     }
 
@@ -336,12 +335,12 @@ public class MetaTileEntityPrimitiveCombustor extends MultiblockWithDisplayBase 
 
     @NotNull
     @Override
-    protected BlockPatternTemplate createStructureTemplate() {
-        SoftTemplate softTemplate = TEMPLATES.get(boilerType);
-        if (softTemplate == null) {
+    protected StructureDefinition<?> createStructureDefinition() {
+        StructureDefinition<?> definition = STRUCTURE_DEFINITIONS.get(boilerType);
+        if (definition == null) {
             throw new IllegalStateException("Unknown turbine type: " + boilerType);
         }
-        return softTemplate.get();
+        return definition;
     }
 
     @Override

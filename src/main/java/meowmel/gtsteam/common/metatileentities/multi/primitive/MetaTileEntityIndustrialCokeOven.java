@@ -1,5 +1,6 @@
 package meowmel.gtsteam.common.metatileentities.multi.primitive;
 
+import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.GTValues;
 import gregtech.api.capability.impl.NoEnergyMultiblockRecipeLogic;
 import gregtech.api.metatileentity.MetaTileEntity;
@@ -13,6 +14,7 @@ import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.pattern.*;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.pattern.casing.GTStructureChannels;
+import gregtech.api.pattern.element.IStructureElement;
 import gregtech.api.pattern.element.StructureDefinition;
 import gregtech.api.recipes.logic.OCResult;
 import gregtech.api.recipes.properties.RecipePropertyStorage;
@@ -50,8 +52,7 @@ import static gregtech.api.util.RelativeDirection.*;
 
 public class MetaTileEntityIndustrialCokeOven extends NoEnergyMultiblockController {
 
-    private static final gregtech.api.pattern.TraceabilityPredicate SNOW_PREDICATE = new gregtech.api.pattern.TraceabilityPredicate(
-            bws -> GTUtility.isBlockSnow(bws.getBlockState()));
+    private static final IStructureElement SNOW_PREDICATE = blockPredicate(GTUtility::isBlockSnow);
 
     private static final int MIN_TEMP = 300;
     private static final int MAX_TEMP = 1500;
@@ -75,15 +76,15 @@ public class MetaTileEntityIndustrialCokeOven extends NoEnergyMultiblockControll
                             .aisle("BXXXB", "X#P#X", "X###X", "FXXXF", "##X##", "##X##")
                             .aisle("XXXXX", "FXXXF", "FXXXF", "FFFFF", "#####", "#####")
                             .self('Y', MetaTileEntityIndustrialCokeOven.class)
-                            .where('B', states(getFireBoxState()))
-                            .where('P', states(getBoilerState()))
-                            .where('F', states(getFrameState()))
+                            .where('B', blocks(getFireBoxState()))
+                            .where('P', blocks(getBoilerState()))
+                            .where('F', blocks(getFrameState()))
                             .casing('X', getCasingState())
                             .optionalItemInput(4)
                             .optionalItemOutput(4)
                             .optionalFluidOutput(4)
                             .where('#', any())
-                            .where('&', air().or(SNOW_PREDICATE))
+                            .where('&', chain(air(), SNOW_PREDICATE))
                             .buildStructureDefinition()
             );
     int size;

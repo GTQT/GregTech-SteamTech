@@ -1,13 +1,14 @@
 package meowmel.gtsteam.common.metatileentities.multi.steam;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
-import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
@@ -34,7 +35,7 @@ import java.util.List;
 public class MetaTileEntitySteamBrewing extends RecipeMapSteamMultiblockController {
 
     private static final int PARALLEL_LIMIT = 4;
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:steam_brewing", () ->
+    private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_brewing", () ->
             DeclarativePatternBuilder.start()
                     .aisle("F#F", "BBB", "CCC", "CCC", "CCC")
                     .aisle("###", "BOB", "G#G", "G#G", "CCC")
@@ -45,14 +46,13 @@ public class MetaTileEntitySteamBrewing extends RecipeMapSteamMultiblockControll
                     .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1, 4)
                     .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1, 4)
                     .hatch(MultiblockAbility.STEAM_IMPORT_FLUID, 1, 4)
-                    .where('O', states(getCasingState())
-                            .or(abilities(MultiblockAbility.STEAM_EXPORT_FLUID).setPreviewCount(1))
-                    )
-                    .where('G', states(getGlassState()))
-                    .where('B', states(getButtonState()))
-                    .where('F', states(getFrameState()))
+                    .where('O', chain(blocks(getCasingState()),
+                            abilities(0, -1, 1, MultiblockAbility.STEAM_EXPORT_FLUID)))
+                    .where('G', blocks(getGlassState()))
+                    .where('B', blocks(getButtonState()))
+                    .where('F', blocks(getFrameState()))
                     .where('#', air())
-                    .buildTemplate()
+                    .buildStructureDefinition()
     );
 
     public MetaTileEntitySteamBrewing(ResourceLocation metaTileEntityId) {
@@ -82,8 +82,8 @@ public class MetaTileEntitySteamBrewing extends RecipeMapSteamMultiblockControll
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return DEFINITION;
     }
 
     @SideOnly(Side.CLIENT)

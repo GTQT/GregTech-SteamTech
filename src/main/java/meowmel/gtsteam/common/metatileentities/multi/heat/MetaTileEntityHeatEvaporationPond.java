@@ -1,5 +1,6 @@
 package meowmel.gtsteam.common.metatileentities.multi.heat;
 
+import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.capability.impl.HeatMultiblockRecipeLogic;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
@@ -7,9 +8,9 @@ import gregtech.api.metatileentity.multiblock.HeatMultiblockController;
 import gregtech.api.metatileentity.multiblock.IMultiblockAbilityPart;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.pattern.MultiblockShapeInfo;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
+import gregtech.api.pattern.element.StructureDefinition;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
@@ -75,9 +76,9 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
     }
 
     @Override
-    protected @NotNull BlockPattern createStructurePattern() {
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
         if (getWorld() != null) updateStructureDimensions();
-        var pattern = FactoryBlockPattern.start();
+        DeclarativePatternBuilder pattern = DeclarativePatternBuilder.start();
         if (tier < 1 || tier > 5) tier = 1;
 
         if (tier == 1)//TIER 1
@@ -138,18 +139,17 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
                     .aisle("FCCCCCCCCCCCF", " CCCCCSCCCCC ")
                     .aisle("FFFFFFFFFFFFF", "             ");
 
-        return pattern.where('S', selfPredicate())
-                .where('C', states(getCasingState())
-                        .or(abilities(MultiblockAbility.EXPORT_ITEMS).setMaxGlobalLimited(2))
-                        .or(abilities(MultiblockAbility.IMPORT_ITEMS).setMaxGlobalLimited(1))
-                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMaxGlobalLimited(2))
-                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setMaxGlobalLimited(1))
-                        .or(abilities(MultiblockAbility.INPUT_HEAT).setExactLimit(1))
-                )
-                .where('F', states(getFireBoxState()))
-                .where('P', states(getPipeState()))
+        return pattern.self('S', MetaTileEntityHeatEvaporationPond.class)
+                .where('C', chain(blocks(getCasingState()),
+                        abilities(0, 2, MultiblockAbility.EXPORT_ITEMS),
+                        abilities(0, 1, MultiblockAbility.IMPORT_ITEMS),
+                        abilities(0, 2, MultiblockAbility.EXPORT_FLUIDS),
+                        abilities(0, 1, MultiblockAbility.IMPORT_FLUIDS),
+                        abilities(1, 1, MultiblockAbility.INPUT_HEAT)))
+                .where('F', blocks(getFireBoxState()))
+                .where('P', blocks(getPipeState()))
                 .where(' ', any())
-                .build();
+                .buildStructureDefinition();
 
     }
 

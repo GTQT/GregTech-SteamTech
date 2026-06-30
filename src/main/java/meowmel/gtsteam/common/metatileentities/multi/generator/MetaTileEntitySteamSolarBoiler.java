@@ -1,5 +1,6 @@
 package meowmel.gtsteam.common.metatileentities.multi.generator;
 
+import static gregtech.api.pattern.element.Elements.*;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
@@ -31,10 +32,10 @@ import gregtech.api.metatileentity.multiblock.ui.*;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.mui.GTGuis;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.FormedStructureView;
 import gregtech.api.pattern.MultiblockShapeInfo;
-import gregtech.api.pattern.PatternMatchContext;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
+import gregtech.api.pattern.element.StructureDefinition;
 import gregtech.api.util.KeyUtil;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
@@ -104,8 +105,8 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
     }
 
     @Override
-    protected void formStructure(PatternMatchContext context) {
-        super.formStructure(context);
+    protected void formStructure(@NotNull FormedStructureView formed) {
+        super.formStructure(formed);
         initializeAbilities();
     }
 
@@ -330,9 +331,9 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
     }
 
     @Override
-    protected @NotNull BlockPattern createStructurePattern() {
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
         if (getWorld() != null) updateStructureDimensions();
-        var pattern = FactoryBlockPattern.start();
+        DeclarativePatternBuilder pattern = DeclarativePatternBuilder.start();
 
         if (Width < 3 || Length < 3) {
             Width = 3;
@@ -360,17 +361,16 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
                     str.append('Y');
                 }
             }
-            pattern = pattern.aisle(str.toString());
+            pattern.aisle(str.toString());
         }
 
         return pattern
-                .where('S', selfPredicate())
-                .where('X', states(getULVCasingState())
-                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setMinGlobalLimited(1, 1))
-                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMinGlobalLimited(1, 1))
-                )
-                .where('Y', states(getSolarCasingState()))
-                .build();
+                .self('S', MetaTileEntitySteamSolarBoiler.class)
+                .where('X', chain(blocks(getULVCasingState()),
+                        abilities(1, -1, 1, MultiblockAbility.IMPORT_FLUIDS),
+                        abilities(1, -1, 1, MultiblockAbility.EXPORT_FLUIDS)))
+                .where('Y', blocks(getSolarCasingState()))
+                .buildStructureDefinition();
     }
 
     @Override

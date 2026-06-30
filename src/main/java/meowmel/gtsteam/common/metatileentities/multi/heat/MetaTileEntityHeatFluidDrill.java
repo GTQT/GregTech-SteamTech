@@ -1,5 +1,8 @@
 package meowmel.gtsteam.common.metatileentities.multi.heat;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
@@ -59,7 +62,7 @@ import java.util.function.UnaryOperator;
 
 public class MetaTileEntityHeatFluidDrill extends MultiblockWithDisplayBase implements IWorkable, ProgressBarMultiblock {
 
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:heat_fluid_drill", () ->
+    private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_fluid_drill", () ->
             DeclarativePatternBuilder.start()
                     .aisle("FF           FF", "FF           FF", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
                     .aisle("FF           FF", "FF           FF", " FF         FF ", " FF         FF ", "               ", "     FFFFF     ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
@@ -80,11 +83,11 @@ public class MetaTileEntityHeatFluidDrill extends MultiblockWithDisplayBase impl
                     .casing('C', getCasingState())
                     .fluidOutput(1)
                     .hatch(MultiblockAbility.INPUT_HEAT, 1)
-                    .where('P', states(getPipeCasingState()))
+                    .where('P', blocks(getPipeCasingState()))
                     .where('F', frames(Materials.Steel))
-                    .where('G', states(getGrateState()))
+                    .where('G', blocks(getGrateState()))
                     .where(' ', any())
-                    .buildTemplate()
+                    .buildStructureDefinition()
     );
     private final HeatFluidDrillLogic minerLogic;
     protected IMultipleTankHandler inputFluidInventory;
@@ -254,8 +257,8 @@ public class MetaTileEntityHeatFluidDrill extends MultiblockWithDisplayBase impl
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return DEFINITION;
     }
 
 

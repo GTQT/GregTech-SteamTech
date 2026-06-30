@@ -1,12 +1,13 @@
 package meowmel.gtsteam.common.metatileentities.multi.heat;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.HeatMultiblockController;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
-import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
@@ -33,7 +34,7 @@ import java.util.List;
 public class MetaTileEntityHeatAlloyFurnace extends HeatMultiblockController {
 
     private static final int PARALLEL_LIMIT = 8;
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:heat_alloy_furnace", () ->
+    private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_alloy_furnace", () ->
             DeclarativePatternBuilder.start()
                     .aisle("CCC", "XXX", "XXX", "CCC")
                     .aisle("CCC", "X#X", "X#X", "CCC")
@@ -43,9 +44,9 @@ public class MetaTileEntityHeatAlloyFurnace extends HeatMultiblockController {
                     .itemOutput(1, 3)
                     .itemInput(1, 3)
                     .hatch(MultiblockAbility.INPUT_HEAT, 1)
-                    .where('X', states(getFireBoxState()))
+                    .where('X', blocks(getFireBoxState()))
                     .where('#', any())
-                    .buildTemplate()
+                    .buildStructureDefinition()
     );
 
     public MetaTileEntityHeatAlloyFurnace(ResourceLocation metaTileEntityId) {
@@ -62,8 +63,8 @@ public class MetaTileEntityHeatAlloyFurnace extends HeatMultiblockController {
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return DEFINITION;
     }
 
     @Override

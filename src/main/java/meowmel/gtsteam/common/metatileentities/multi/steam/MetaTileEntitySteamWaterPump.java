@@ -1,5 +1,8 @@
 package meowmel.gtsteam.common.metatileentities.multi.steam;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
@@ -43,7 +46,7 @@ import java.util.Set;
 import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
 
 public class MetaTileEntitySteamWaterPump extends MultiblockControllerBase implements IPrimitivePump {
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:steam_water_pump", () ->
+    private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_water_pump", () ->
             DeclarativePatternBuilder.start()
                     .aisle("A   A", "A   A", "BBBBB", "A   A", "A   A", "BBBBB")
                     .aisle("     ", "     ", "BBBBB", " CCC ", " CCC ", "BBBBB")
@@ -52,12 +55,12 @@ public class MetaTileEntitySteamWaterPump extends MultiblockControllerBase imple
                     .aisle("A   A", "A   A", "BBBBB", "A   A", "A   A", "BBBBB")
                     .self('S', MetaTileEntitySteamWaterPump.class)
                     .where('A', frames(Materials.TreatedWood))
-                    .where('B', states(MetaBlocks.PLANKS.getState(BlockGregPlanks.BlockType.TREATED_PLANK)))
-                    .where('C', states(getCasingState())
-                            .or(metaTileEntities(MetaTileEntities.FLUID_EXPORT_HATCH[0], MetaTileEntities.FLUID_EXPORT_HATCH[1]).setExactLimit(1))
-                            .or(metaTileEntities(MetaTileEntities.STEAM_HATCH).setExactLimit(1)))
+                    .where('B', blocks(MetaBlocks.PLANKS.getState(BlockGregPlanks.BlockType.TREATED_PLANK)))
+                    .where('C', chain(blocks(getCasingState()),
+                            metaTileEntities(1, 1, MetaTileEntities.FLUID_EXPORT_HATCH[0], MetaTileEntities.FLUID_EXPORT_HATCH[1]),
+                            metaTileEntities(1, 1, MetaTileEntities.STEAM_HATCH)))
                     .where(' ', any())
-                    .buildTemplate()
+                    .buildStructureDefinition()
     );
     private IFluidTank waterTank;
     private int biomeModifier = 0;
@@ -171,8 +174,8 @@ public class MetaTileEntitySteamWaterPump extends MultiblockControllerBase imple
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return DEFINITION;
     }
 
     @SideOnly(Side.CLIENT)

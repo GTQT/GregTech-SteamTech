@@ -1,5 +1,6 @@
 package meowmel.gtsteam.common.metatileentities.multi.heat;
 
+import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.HeatMultiblockController;
@@ -49,14 +50,14 @@ public class MetaTileEntityHeatDistillationTower extends HeatMultiblockControlle
                             .piece("top")
                             .aisle("XXX", "XXX", "XXX")
                             .self('S', MetaTileEntityHeatDistillationTower.class)
-                            .where('F', states(getFireBoxState()))
-                            .where('C', states(getCasingState())
-                                    .or(abilities(MultiblockAbility.EXPORT_ITEMS).setMaxGlobalLimited(1))
-                                    .or(abilities(MultiblockAbility.INPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(3))
-                                    .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setExactLimit(1)))
-                            .where('X', states(getTankCasingState())
-                                    .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMaxLayerLimited(1, 1))
-                                    .maintenance())
+                            .where('F', blocks(getFireBoxState()))
+                            .where('C', chain(blocks(getCasingState()),
+                                    abilities(0, 1, MultiblockAbility.EXPORT_ITEMS),
+                                    abilities(1, 3, MultiblockAbility.INPUT_HEAT),
+                                    abilities(1, 1, MultiblockAbility.IMPORT_FLUIDS)))
+                            .where('X', chain(blocks(getTankCasingState()),
+                                    abilitiesPerLayer(0, 1, 1, MultiblockAbility.EXPORT_FLUIDS),
+                                    hatch(MultiblockAbility.MAINTENANCE_HATCH, 1, 1)))
                             .where('#', air())
                             .buildStructureDefinition()
             );

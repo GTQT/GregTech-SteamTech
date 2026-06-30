@@ -3,6 +3,7 @@
 //https://github.com/iristhepianist/ScalableStorageCEu/
 package meowmel.gtsteam.common.metatileentities.multi.store;
 
+import gregtech.api.pattern.element.StructureDefinition;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
@@ -44,7 +45,7 @@ public class MetaTileEntityScalableStorage extends MultiblockWithDisplayBase {
 
     private static final int BASE_CAPACITY = 4000000;
     private static final int DURABILITY_INTERVAL = 200;
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:scalable_storage", () ->
+    private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:scalable_storage", () ->
             DeclarativePatternBuilder.start()
                     .aisle("CCC", "CCC", "CCC")
                     .aisle("CCC", "CCC", "CCC")
@@ -53,7 +54,7 @@ public class MetaTileEntityScalableStorage extends MultiblockWithDisplayBase {
                     .casing('C', getCasingState())
                     .itemInput(1, 4)
                     .itemOutput(1, 4)
-                    .buildTemplate()
+                    .buildStructureDefinition()
     );
     private ItemStackHandler storageHandler;
     private ItemStack storedItemType = ItemStack.EMPTY;
@@ -318,8 +319,8 @@ public class MetaTileEntityScalableStorage extends MultiblockWithDisplayBase {
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return DEFINITION;
     }
 
     @Override

@@ -1,5 +1,8 @@
 package meowmel.gtsteam.common.metatileentities.multi.primitive;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
@@ -20,8 +23,6 @@ import gregtech.api.metatileentity.multiblock.ui.MultiblockUIFactory;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.mui.widget.RecipeProgressWidget;
-import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
@@ -59,7 +60,7 @@ import java.util.List;
 
 public class MetaTileEntityPrimitiveFurnace extends RecipeMapPrimitiveMultiblockController {
 
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:primitive_furnace", () ->
+    private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:primitive_furnace", () ->
             DeclarativePatternBuilder.start()
                     .aisle("XXX", "XXX", "XXX")
                     .aisle("XXX", "X X", "XXX")
@@ -69,7 +70,7 @@ public class MetaTileEntityPrimitiveFurnace extends RecipeMapPrimitiveMultiblock
                     .custom(Elements.metaTileEntities(0, 2, 2, GTSteamMetaTileEntities.PRIMITIVE_EXPORT_HATCH), 2)
                     .where(' ', air())
                     .self('Y', MetaTileEntityPrimitiveFurnace.class)
-                    .buildTemplate()
+                    .buildStructureDefinition()
     );
     protected IItemHandlerModifiable fuelStack;
 
@@ -107,8 +108,8 @@ public class MetaTileEntityPrimitiveFurnace extends RecipeMapPrimitiveMultiblock
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return DEFINITION;
     }
 
     @SideOnly(Side.CLIENT)

@@ -1,5 +1,6 @@
 package meowmel.gtsteam.common.metatileentities.multi.heat;
 
+import static gregtech.api.pattern.element.Elements.*;
 
 import gregtech.api.GTValues;
 import gregtech.api.capability.GregtechDataCodes;
@@ -14,16 +15,15 @@ import gregtech.api.metatileentity.multiblock.MetaTileEntityBaseWithControl;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 
 import gregtech.api.metatileentity.multiblock.MultiblockWithDisplayBase;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
 import gregtech.api.pattern.MultiblockShapeInfo;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
+import gregtech.api.pattern.element.StructureDefinition;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.ConfigHolder;
 import gregtech.common.blocks.BlockMetalCasing.MetalCasingType;
 import gregtech.common.blocks.MetaBlocks;
 import gregtech.common.metatileentities.MetaTileEntities;
-import gtqt.common.metatileentities.GTQTMetaTileEntities;
 import lombok.Getter;
 import meowmel.gtsteam.client.textures.GTSteamTextures;
 import meowmel.gtsteam.common.block.GTSteamMetaBlocks;
@@ -104,25 +104,26 @@ public class MetaTileEntityHeatRadiator extends MetaTileEntityBaseWithControl {
     }
 
     @Override
-    protected @NotNull BlockPattern createStructurePattern() {
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
         if (getWorld() != null) updateStructureDimensions();
         if (sDist < MIN_RADIUS) sDist = MIN_RADIUS;
         if (bDist < MIN_HEIGHT) bDist = MIN_HEIGHT;
 
-        return FactoryBlockPattern.start(RIGHT, FRONT, UP)
+        return DeclarativePatternBuilder.start(RIGHT, FRONT, UP)
+                .piece("bottom")
                 .aisle(rowPattern(rowType.BOTTOM, sDist))
-                .aisle(rowPattern(rowType.MIDDLE, sDist)).setRepeatable(1, bDist)
+                .repeatablePiece("body", 1, bDist)
+                .aisle(rowPattern(rowType.MIDDLE, sDist))
+                .piece("top")
                 .aisle(rowPattern(rowType.TOP, sDist))
-                .self('S')
-                .where('A', states(getCasingState())
-                        .or(abilities(MultiblockAbility.INPUT_HEAT).setMinGlobalLimited(1, 1))
-                )
-                .where('B', states(getRadiatorElementState()))
-                .where('C', states(getCasingState())
-                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setMinGlobalLimited(1, 1))
-                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMinGlobalLimited(1, 1))
-                )
-                .build();
+                .self('S', MetaTileEntityHeatRadiator.class)
+                .where('A', chain(blocks(getCasingState()),
+                        abilities(1, -1, 1, MultiblockAbility.INPUT_HEAT)))
+                .where('B', blocks(getRadiatorElementState()))
+                .where('C', chain(blocks(getCasingState()),
+                        abilities(1, -1, 1, MultiblockAbility.IMPORT_FLUIDS),
+                        abilities(1, -1, 1, MultiblockAbility.EXPORT_FLUIDS)))
+                .buildStructureDefinition();
     }
 
     private String rowPattern(rowType rowType, int radius) {
@@ -240,7 +241,7 @@ public class MetaTileEntityHeatRadiator extends MetaTileEntityBaseWithControl {
         // From the evap branch, thanks to @EightXOR8
         // This is here so that it automatically updates the dimensions once a second if it isn't formed
         // hope this doesn't put too much of a toll on TPS - It really should not
-        if (!isStructureFormed() || structurePattern == null) {
+        if (!isStructureFormed()) {
             reinitializeStructurePattern();
         }
         super.checkStructurePattern();
@@ -273,7 +274,7 @@ public class MetaTileEntityHeatRadiator extends MetaTileEntityBaseWithControl {
                 .where('S', GTSteamMetaTileEntities.HEAT_RADIATOR, EnumFacing.SOUTH)
                 .where('I', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.LV], EnumFacing.SOUTH)
                 .where('O', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.LV], EnumFacing.SOUTH)
-                .where('M', GTQTMetaTileEntities.HEAT_INPUT_HATCH[GTValues.LV], EnumFacing.SOUTH)
+                .where('M', MetaTileEntities.HEAT_INPUT_HATCH[GTValues.LV], EnumFacing.SOUTH)
                 .where('A', getCasingState())
                 .where('C', getCasingState())
                 .where('B', getRadiatorElementState())

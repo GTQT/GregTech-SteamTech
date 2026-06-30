@@ -1,5 +1,8 @@
 package meowmel.gtsteam.common.metatileentities.multi.generator;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
@@ -66,17 +69,17 @@ import static meowmel.gtsteam.common.metatileentities.multi.generator.CombustorT
 public class MetaTileEntityCombustionCombustor extends MultiblockWithDisplayBase implements ProgressBarMultiblock,
         IControllable, IHeatMachine {
 
-    private static final Map<CombustorType, SoftTemplate> TEMPLATES = new HashMap<>();
+    private static final Map<CombustorType, StructureDefinition<?>> STRUCTURE_DEFINITIONS = new HashMap<>();
 
     static {
-        TEMPLATES.put(BRONZE, TemplatePool.getInstance()
-                .register("gtsteam:combustion_combustor.bronze", () -> buildTemplate(BRONZE)));
-        TEMPLATES.put(STEEL, TemplatePool.getInstance()
-                .register("gtsteam:combustion_combustor.steel", () -> buildTemplate(STEEL)));
-        TEMPLATES.put(TITANIUM, TemplatePool.getInstance()
-                .register("gtsteam:combustion_combustor", () -> buildTemplate(TITANIUM)));
-        TEMPLATES.put(TUNGSTENSTEEL, TemplatePool.getInstance()
-                .register("gtsteam:extreme_combustion_combustor", () -> buildTemplate(TUNGSTENSTEEL)));
+        STRUCTURE_DEFINITIONS.put(BRONZE, StructureDefinition.getOrBuild(
+                "gtsteam:combustion_combustor.bronze", () -> buildStructureDefinition(BRONZE)));
+        STRUCTURE_DEFINITIONS.put(STEEL, StructureDefinition.getOrBuild(
+                "gtsteam:combustion_combustor.steel", () -> buildStructureDefinition(STEEL)));
+        STRUCTURE_DEFINITIONS.put(TITANIUM, StructureDefinition.getOrBuild(
+                "gtsteam:combustion_combustor", () -> buildStructureDefinition(TITANIUM)));
+        STRUCTURE_DEFINITIONS.put(TUNGSTENSTEEL, StructureDefinition.getOrBuild(
+                "gtsteam:extreme_combustion_combustor", () -> buildStructureDefinition(TUNGSTENSTEEL)));
     }
 
     public final CombustorType combustorType;
@@ -92,22 +95,22 @@ public class MetaTileEntityCombustionCombustor extends MultiblockWithDisplayBase
         resetTileAbilities();
     }
 
-    private static BlockPatternTemplate buildTemplate(CombustorType combustorType) {
+    private static StructureDefinition<?> buildStructureDefinition(CombustorType combustorType) {
         return DeclarativePatternBuilder.start()
                 .aisle("CCCFFFFFC", "CCCOOOOOC", "CCCAAAAAC")
                 .aisle("CCCCCCCCC", "CPPPPPPCC", "CCCMMMMMC")
                 .aisle("CCCFFFFFC", "CSCIIIIIC", "CCCAAAAAC")
                 .self('S', MetaTileEntityCombustionCombustor.class)
-                .where('P', states(combustorType.pipeState))
-                .where('F', states(combustorType.fireboxState))
-                .where('I', states(combustorType.casingState)
-                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS)))
-                .where('C', states(combustorType.casingState))
+                .where('P', blocks(combustorType.pipeState))
+                .where('F', blocks(combustorType.fireboxState))
+                .where('I', chain(blocks(combustorType.casingState),
+                        abilities(MultiblockAbility.IMPORT_FLUIDS)))
+                .where('C', blocks(combustorType.casingState))
                 .where('M', abilities(MultiblockAbility.MUFFLER_HATCH))
-                .where('A', states(getIntakeState(combustorType)))
-                .where('O', states(combustorType.casingState)
-                        .or(abilities(MultiblockAbility.OUTPUT_HEAT)))
-                .buildTemplate();
+                .where('A', blocks(getIntakeState(combustorType)))
+                .where('O', chain(blocks(combustorType.casingState),
+                        abilities(MultiblockAbility.OUTPUT_HEAT)))
+                .buildStructureDefinition();
     }
 
     @Override
@@ -335,12 +338,12 @@ public class MetaTileEntityCombustionCombustor extends MultiblockWithDisplayBase
 
     @NotNull
     @Override
-    protected BlockPatternTemplate createStructureTemplate() {
-        SoftTemplate softTemplate = TEMPLATES.get(combustorType);
-        if (softTemplate == null) {
+    protected StructureDefinition<?> createStructureDefinition() {
+        StructureDefinition<?> definition = STRUCTURE_DEFINITIONS.get(combustorType);
+        if (definition == null) {
             throw new IllegalStateException("Unknown turbine type: " + combustorType);
         }
-        return softTemplate.get();
+        return definition;
     }
 
     @Override

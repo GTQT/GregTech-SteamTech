@@ -1,12 +1,13 @@
 package meowmel.gtsteam.common.metatileentities.multi.heat;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.HeatMultiblockController;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
-import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
@@ -33,7 +34,7 @@ import java.util.List;
 
 public class MetaTileEntityHeatChemicalReactor extends HeatMultiblockController {
 
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:heat_chemical_reactor", () ->
+    private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_chemical_reactor", () ->
             DeclarativePatternBuilder.start()
                     .aisle("CCC", "CFC", "CCC")
                     .aisle("CCC", "CPC", "CCC")
@@ -43,10 +44,10 @@ public class MetaTileEntityHeatChemicalReactor extends HeatMultiblockController 
                     .itemInput(1, 3)
                     .itemOutput(1, 3)
                     .hatch(MultiblockAbility.INPUT_HEAT, 1)
-                    .where('F', states(getFireBoxState()))
-                    .where('P', states(getPipeState()))
+                    .where('F', blocks(getFireBoxState()))
+                    .where('P', blocks(getPipeState()))
                     .where('#', any())
-                    .buildTemplate()
+                    .buildStructureDefinition()
     );
 
     public MetaTileEntityHeatChemicalReactor(ResourceLocation metaTileEntityId) {
@@ -66,8 +67,8 @@ public class MetaTileEntityHeatChemicalReactor extends HeatMultiblockController 
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return DEFINITION;
     }
 
     @Override

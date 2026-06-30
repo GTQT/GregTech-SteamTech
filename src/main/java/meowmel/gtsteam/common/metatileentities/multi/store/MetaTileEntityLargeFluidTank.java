@@ -1,5 +1,6 @@
 package meowmel.gtsteam.common.metatileentities.multi.store;
 
+import static gregtech.api.pattern.element.Elements.*;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
@@ -17,10 +18,10 @@ import gregtech.api.metatileentity.multiblock.ui.TemplateBarBuilder;
 import gregtech.api.metatileentity.multiblock.ui.UISyncer;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuiTheme;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.FormedStructureView;
 import gregtech.api.pattern.MultiblockShapeInfo;
-import gregtech.api.pattern.PatternMatchContext;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
+import gregtech.api.pattern.element.StructureDefinition;
 import gregtech.api.util.KeyUtil;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
@@ -99,8 +100,8 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
     }
 
     @Override
-    public void formStructure(PatternMatchContext context) {
-        super.formStructure(context);
+    public void formStructure(@NotNull FormedStructureView formed) {
+        super.formStructure(formed);
         initializeAbilities();
     }
 
@@ -175,9 +176,9 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
     }
 
     @Override
-    protected @NotNull BlockPattern createStructurePattern() {
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
         if (getWorld() != null) updateStructureDimensions();
-        var pattern = FactoryBlockPattern.start();
+        DeclarativePatternBuilder pattern = DeclarativePatternBuilder.start();
         if (Length % 2 == 0) {
             Width = 3;
             Height = 3;
@@ -218,15 +219,15 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
             pattern.aisle(PatternStringLayer);
         }
         return pattern
-                .where('#', selfPredicate())
-                .where('A', states(getTankCasingState())
+                .self('#', MetaTileEntityLargeFluidTank.class)
+                .where('A', blocks(getTankCasingState())
                 )
-                .where('B', states(getTankCasingState())
-                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setExactLimit(1))
-                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setExactLimit(1))
-                        .or(states(Blocks.GLASS.getDefaultState())))
+                .where('B', chain(blocks(getTankCasingState()),
+                        abilities(1, 1, MultiblockAbility.IMPORT_FLUIDS),
+                        abilities(1, 1, MultiblockAbility.EXPORT_FLUIDS),
+                        blocks(Blocks.GLASS.getDefaultState())))
                 .where('C', air())
-                .build();
+                .buildStructureDefinition();
     }
 
     @Override

@@ -1,5 +1,8 @@
 package meowmel.gtsteam.common.metatileentities.multi.primitive;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import codechicken.lib.raytracer.CuboidRayTraceResult;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
@@ -17,8 +20,6 @@ import gregtech.api.metatileentity.multiblock.RecipeMapPrimitiveMultiblockContro
 import gregtech.api.metatileentity.multiblock.ui.MultiblockUIFactory;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuiTheme;
-import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.pattern.element.Elements;
@@ -52,7 +53,7 @@ import java.util.List;
 
 public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockController {
 
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:alloy_kiln", () ->
+    private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:alloy_kiln", () ->
             DeclarativePatternBuilder.start()
                     .aisle("XXX", "XXX", "#X#")
                     .aisle("XXX", "X&X", "#X#")
@@ -63,7 +64,7 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
                     .custom(Elements.metaTileEntities(0, 2, 2, GTSteamMetaTileEntities.PRIMITIVE_EXPORT_HATCH), 2)
                     .where('#', any())
                     .where('&', air())
-                    .buildTemplate()
+                    .buildStructureDefinition()
     );
 
     public MetaTileEntityAlloyKiln(ResourceLocation metaTileEntityId) {
@@ -80,8 +81,8 @@ public class MetaTileEntityAlloyKiln extends RecipeMapPrimitiveMultiblockControl
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return DEFINITION;
     }
 
     @Override

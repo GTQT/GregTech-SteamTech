@@ -1,5 +1,6 @@
 package meowmel.gtsteam.common.metatileentities.multi.primitive;
 
+import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.GTValues;
 import gregtech.api.capability.impl.NoEnergyMultiblockRecipeLogic;
 import gregtech.api.metatileentity.MetaTileEntity;
@@ -12,6 +13,7 @@ import gregtech.api.metatileentity.multiblock.ui.UISyncer;
 import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.pattern.*;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
+import gregtech.api.pattern.element.IStructureElement;
 import gregtech.api.pattern.element.StructureDefinition;
 import gregtech.api.recipes.logic.OCResult;
 import gregtech.api.recipes.properties.RecipePropertyStorage;
@@ -52,8 +54,7 @@ import static gregtech.api.recipes.RecipeMaps.PRIMITIVE_BLAST_FURNACE_RECIPES;
 
 public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMultiblockController {
 
-    private static final gregtech.api.pattern.TraceabilityPredicate SNOW_PREDICATE = new gregtech.api.pattern.TraceabilityPredicate(
-            bws -> GTUtility.isBlockSnow(bws.getBlockState()));
+    private static final IStructureElement SNOW_PREDICATE = blockPredicate(GTUtility::isBlockSnow);
 
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild(
             "gtsteam:industrial_primitive_blast_furnace", () ->
@@ -66,13 +67,13 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
                             .aisle("    CDDDC    ", "    CDSDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
                             .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
                             .self('S', MetaTileEntityIndustrialPrimitiveBlastFurnace.class)
-                            .where('A', states(getFireBoxState()))
-                            .where('C', states(getFrameState()))
+                            .where('A', blocks(getFireBoxState()))
+                            .where('C', blocks(getFrameState()))
                             .casing('D', getCasingState())
                             .optionalItemInput(4)
                             .optionalItemOutput(4)
-                            .where('H', states(getBoilerState()))
-                            .where('&', air().or(SNOW_PREDICATE))
+                            .where('H', blocks(getBoilerState()))
+                            .where('&', chain(air(), SNOW_PREDICATE))
                             .where('#', air())
                             .where('@', any())
                             .where('*', any())

@@ -1,5 +1,6 @@
 package meowmel.gtsteam.common.metatileentities.multi.primitive;
 
+import static gregtech.api.pattern.element.Elements.*;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.texture.TextureUtils;
@@ -14,6 +15,7 @@ import gregtech.api.pattern.*;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.pattern.casing.GTStructureChannels;
+import gregtech.api.pattern.element.IStructureElement;
 import gregtech.api.pattern.element.StructureDefinition;
 import gregtech.api.util.GTUtility;
 import gregtech.api.util.tooltips.InformationHandler;
@@ -45,8 +47,7 @@ import static gregtech.api.util.RelativeDirection.*;
 
 public class MetaTileEntityCoagulationTank extends NoEnergyMultiblockController {
 
-    private static final TraceabilityPredicate SNOW_PREDICATE = new TraceabilityPredicate(
-            bws -> GTUtility.isBlockSnow(bws.getBlockState()));
+    private static final IStructureElement SNOW_PREDICATE = blockPredicate(GTUtility::isBlockSnow);
     /** Piece name for the repeatable body section */
     private static final String PIECE_BODY = "body";
     private static final StructurePieceKey BODY_PIECE = StructurePieceKey.of(PIECE_BODY);
@@ -61,14 +62,14 @@ public class MetaTileEntityCoagulationTank extends NoEnergyMultiblockController 
                             .piece("top")
                             .aisle("BBB", "XXX", "XXX")
                             .self('Y', MetaTileEntityCoagulationTank.class)
-                            .where('B', states(getCasingBottomState()))
+                            .where('B', blocks(getCasingBottomState()))
                             .casing('X', getCasingState())
                             .optionalItemInput(4)
                             .optionalItemOutput(4)
                             .optionalFluidInput(4)
                             .optionalFluidOutput(4)
                             .where('#', air())
-                            .where('&', air().or(SNOW_PREDICATE))
+                            .where('&', chain(air(), SNOW_PREDICATE))
                             .buildStructureDefinition()
             );
     int size;

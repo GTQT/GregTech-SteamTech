@@ -1,12 +1,13 @@
 package meowmel.gtsteam.common.metatileentities.multi.heat;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.HeatMultiblockController;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
-import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
@@ -30,19 +31,19 @@ import java.util.List;
 public class MetaTileEntityHeatLavaFurnace extends HeatMultiblockController {
 
     private static final int PARALLEL_LIMIT = 4;
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:heat_lava_furnace", () ->
+    private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_lava_furnace", () ->
             DeclarativePatternBuilder.start()
                     .aisle("XXX", "CCC", "CCC")
                     .aisle("XCX", "C#C", "CCC")
                     .aisle("XXX", "CSC", "CCC")
                     .self('S', MetaTileEntityHeatLavaFurnace.class)
-                    .where('X', states(getFireboxState()))
+                    .where('X', blocks(getFireboxState()))
                     .casing('C', getCasingState())
                     .itemInput(1, 2)
                     .fluidOutput(1, 2)
                     .hatch(MultiblockAbility.INPUT_HEAT, 1)
                     .where('#', any())
-                    .buildTemplate()
+                    .buildStructureDefinition()
     );
 
     public MetaTileEntityHeatLavaFurnace(ResourceLocation metaTileEntityId) {
@@ -64,8 +65,8 @@ public class MetaTileEntityHeatLavaFurnace extends HeatMultiblockController {
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return DEFINITION;
     }
 
     private boolean isFireboxPart(IMultiblockPart sourcePart) {

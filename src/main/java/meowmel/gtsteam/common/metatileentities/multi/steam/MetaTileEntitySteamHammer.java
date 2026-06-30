@@ -1,5 +1,8 @@
 package meowmel.gtsteam.common.metatileentities.multi.steam;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.GTValues;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
@@ -7,8 +10,6 @@ import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
-import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
@@ -41,7 +42,7 @@ import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
 public class MetaTileEntitySteamHammer extends RecipeMapSteamMultiblockController {
 
     private static final int PARALLEL_LIMIT = 8;
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:steam_hammer", () ->
+    private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_hammer", () ->
             DeclarativePatternBuilder.start()
                     .aisle("XXX", "XXX", "XXX")
                     .aisle("XXX", "XFX", "XXX")
@@ -51,9 +52,9 @@ public class MetaTileEntitySteamHammer extends RecipeMapSteamMultiblockControlle
                     .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM, 1)
-                    .where('F', states(getFrameState()))
+                    .where('F', blocks(getFrameState()))
                     .where('#', air())
-                    .buildTemplate()
+                    .buildStructureDefinition()
     );
 
     public MetaTileEntitySteamHammer(ResourceLocation metaTileEntityId) {
@@ -71,8 +72,8 @@ public class MetaTileEntitySteamHammer extends RecipeMapSteamMultiblockControlle
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return DEFINITION;
     }
 
     public static IBlockState getCasingState() {

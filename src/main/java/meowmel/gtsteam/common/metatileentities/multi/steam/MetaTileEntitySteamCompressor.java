@@ -1,13 +1,14 @@
 package meowmel.gtsteam.common.metatileentities.multi.steam;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
-import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
@@ -33,7 +34,7 @@ import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
 public class MetaTileEntitySteamCompressor extends RecipeMapSteamMultiblockController {
 
     private static final int PARALLEL_LIMIT = 8;
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:steam_compressor", () ->
+    private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_compressor", () ->
             DeclarativePatternBuilder.start()
                     .aisle("XXX", "XXX", "XXX")
                     .aisle("XXX", "X#X", "XXX")
@@ -44,7 +45,7 @@ public class MetaTileEntitySteamCompressor extends RecipeMapSteamMultiblockContr
                     .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM, 1)
                     .where('#', air())
-                    .buildTemplate()
+                    .buildStructureDefinition()
     );
 
     public MetaTileEntitySteamCompressor(ResourceLocation metaTileEntityId) {
@@ -62,8 +63,8 @@ public class MetaTileEntitySteamCompressor extends RecipeMapSteamMultiblockContr
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return DEFINITION;
     }
 
     @SideOnly(Side.CLIENT)

@@ -1,13 +1,14 @@
 package meowmel.gtsteam.common.metatileentities.multi.steam;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
-import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
@@ -36,7 +37,7 @@ import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.BRONZE_P
 public class MetaTileEntitySteamBender extends RecipeMapSteamMultiblockController {
 
     private static final int PARALLEL_LIMIT = 4;
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:steam_bender", () ->
+    private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_bender", () ->
             DeclarativePatternBuilder.start()
                     .aisle("TTTFFFF", "XXXXXXX", "XXXXXXX")
                     .aisle("TXT    ", "XPPPPPX", "XXXXXXX")
@@ -46,11 +47,11 @@ public class MetaTileEntitySteamBender extends RecipeMapSteamMultiblockControlle
                     .hatch(MultiblockAbility.STEAM, 1)
                     .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1,4)
                     .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1,4)
-                    .where('P', states(getBoilerState()))
-                    .where('F', states(getFrameState()))
-                    .where('T', states(getFireboxState()))
+                    .where('P', blocks(getBoilerState()))
+                    .where('F', blocks(getFrameState()))
+                    .where('T', blocks(getFireboxState()))
                     .where(' ', any())
-                    .buildTemplate()
+                    .buildStructureDefinition()
     );
 
     public MetaTileEntitySteamBender(ResourceLocation metaTileEntityId) {
@@ -80,8 +81,8 @@ public class MetaTileEntitySteamBender extends RecipeMapSteamMultiblockControlle
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return DEFINITION;
     }
 
     @SideOnly(Side.CLIENT)

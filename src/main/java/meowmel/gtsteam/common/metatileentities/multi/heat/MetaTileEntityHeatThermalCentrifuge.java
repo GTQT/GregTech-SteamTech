@@ -1,12 +1,13 @@
 package meowmel.gtsteam.common.metatileentities.multi.heat;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.HeatMultiblockController;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
-import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
@@ -34,7 +35,7 @@ import java.util.List;
 public class MetaTileEntityHeatThermalCentrifuge extends HeatMultiblockController {
 
     private static final int PARALLEL_LIMIT = 8;
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:heat_thermal_centrifuge", () ->
+    private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_thermal_centrifuge", () ->
             DeclarativePatternBuilder.start()
                     .aisle("#CCC#", "#FFF#", "#CCC#")
                     .aisle("CCCCC", "F###F", "CCCCC")
@@ -46,10 +47,10 @@ public class MetaTileEntityHeatThermalCentrifuge extends HeatMultiblockControlle
                     .itemInput(1, 2)
                     .itemOutput(1, 2)
                     .hatch(MultiblockAbility.INPUT_HEAT, 1)
-                    .where('F', states(getFireBoxState()))
-                    .where('P', states(getPipeState()))
+                    .where('F', blocks(getFireBoxState()))
+                    .where('P', blocks(getPipeState()))
                     .where('#', any())
-                    .buildTemplate()
+                    .buildStructureDefinition()
     );
 
     public MetaTileEntityHeatThermalCentrifuge(ResourceLocation metaTileEntityId) {
@@ -70,8 +71,8 @@ public class MetaTileEntityHeatThermalCentrifuge extends HeatMultiblockControlle
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return DEFINITION;
     }
 
     @Override

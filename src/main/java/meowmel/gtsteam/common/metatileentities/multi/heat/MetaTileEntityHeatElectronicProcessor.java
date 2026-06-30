@@ -1,12 +1,13 @@
 package meowmel.gtsteam.common.metatileentities.multi.heat;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.HeatMultiblockController;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
-import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
@@ -34,7 +35,7 @@ import java.util.List;
 
 public class MetaTileEntityHeatElectronicProcessor extends HeatMultiblockController {
 
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:heat_electronic_processor", () ->
+    private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_electronic_processor", () ->
             DeclarativePatternBuilder.start()
                     .aisle("FFFGGG", "CCCCCC", "CCCCCC")
                     .aisle("FCF###", "CPPPPC", "CCCCCC")
@@ -44,11 +45,11 @@ public class MetaTileEntityHeatElectronicProcessor extends HeatMultiblockControl
                     .itemInput(1, 3)
                     .itemOutput(1, 3)
                     .hatch(MultiblockAbility.INPUT_HEAT, 1)
-                    .where('F', states(getFireBoxState()))
-                    .where('G', states(getFrameState()))
-                    .where('P', states(getPipeState()))
+                    .where('F', blocks(getFireBoxState()))
+                    .where('G', blocks(getFrameState()))
+                    .where('P', blocks(getPipeState()))
                     .where('#', any())
-                    .buildTemplate()
+                    .buildStructureDefinition()
     );
 
     public MetaTileEntityHeatElectronicProcessor(ResourceLocation metaTileEntityId) {
@@ -72,8 +73,8 @@ public class MetaTileEntityHeatElectronicProcessor extends HeatMultiblockControl
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return DEFINITION;
     }
 
     @Override

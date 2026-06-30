@@ -1,12 +1,13 @@
 package meowmel.gtsteam.common.metatileentities.multi.heat;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.HeatMultiblockController;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
-import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
@@ -34,7 +35,7 @@ import java.util.List;
 public class MetaTileEntityHeatCokeOven extends HeatMultiblockController {
 
     private static final int PARALLEL_LIMIT = 4;
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:heat_coke_oven", () ->
+    private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_coke_oven", () ->
             DeclarativePatternBuilder.start()
                     .aisle("CCC", "CCC", "CCC")
                     .aisle("FCF", "FPF", "FCF")
@@ -45,9 +46,9 @@ public class MetaTileEntityHeatCokeOven extends HeatMultiblockController {
                     .itemInput(1, 3)
                     .itemOutput(1, 3)
                     .hatch(MultiblockAbility.INPUT_HEAT, 1)
-                    .where('F', states(getFireBoxState()))
-                    .where('P', states(getPipeState()))
-                    .buildTemplate()
+                    .where('F', blocks(getFireBoxState()))
+                    .where('P', blocks(getPipeState()))
+                    .buildStructureDefinition()
     );
 
     public MetaTileEntityHeatCokeOven(ResourceLocation metaTileEntityId) {
@@ -68,8 +69,8 @@ public class MetaTileEntityHeatCokeOven extends HeatMultiblockController {
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return DEFINITION;
     }
 
     @Override

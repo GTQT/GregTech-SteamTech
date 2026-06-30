@@ -1,11 +1,12 @@
 package meowmel.gtsteam.common.metatileentities.multi.primitive;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.NoEnergyMultiblockController;
-import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
@@ -29,7 +30,7 @@ import static gregtech.common.blocks.BlockWireCoil.CoilType.CUPRONICKEL;
 
 public class MetaTileEntitySepticTank extends NoEnergyMultiblockController {
 
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:septic_tank", () ->
+    private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:septic_tank", () ->
             DeclarativePatternBuilder.start()
                     .aisle("CCCCC", "CFFFC", "CFFFC", "CCCCC")
                     .aisle("CCCCC", "F###F", "F###F", "CCCCC")
@@ -42,9 +43,9 @@ public class MetaTileEntitySepticTank extends NoEnergyMultiblockController {
                     .itemOutput(1, 3)
                     .fluidInput(1, 3)
                     .fluidOutput(1, 3)
-                    .where('F', states(getCoilState()))
+                    .where('F', blocks(getCoilState()))
                     .where('#', any())
-                    .buildTemplate()
+                    .buildStructureDefinition()
     );
 
     public MetaTileEntitySepticTank(ResourceLocation metaTileEntityId) {
@@ -60,8 +61,8 @@ public class MetaTileEntitySepticTank extends NoEnergyMultiblockController {
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return DEFINITION;
     }
 
     @Override

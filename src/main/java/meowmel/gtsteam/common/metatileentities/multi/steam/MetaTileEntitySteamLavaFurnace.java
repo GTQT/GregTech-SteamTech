@@ -1,13 +1,14 @@
 package meowmel.gtsteam.common.metatileentities.multi.steam;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
-import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
@@ -30,22 +31,21 @@ import java.util.List;
 
 public class MetaTileEntitySteamLavaFurnace extends RecipeMapSteamMultiblockController {
 
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:steam_lava_furnace", () ->
+    private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_lava_furnace", () ->
             DeclarativePatternBuilder.start()
                     .aisle("XXX", "CCC", "CCC")
                     .aisle("XCX", "C#C", "CCC")
                     .aisle("XXX", "CSC", "CCC")
                     .self('S', MetaTileEntitySteamLavaFurnace.class)
-                    .where('X', states(getFireboxState())
-                            .or(abilities(MultiblockAbility.STEAM).setExactLimit(1))
-                    )
+                    .where('X', chain(blocks(getFireboxState()),
+                            abilities(1, 1, MultiblockAbility.STEAM)))
 
                     .casing('C', getCasingState())
                     .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1, 2)
 
                     .where('#', any())
-                    .buildTemplate()
+                    .buildStructureDefinition()
     );
 
     public MetaTileEntitySteamLavaFurnace(ResourceLocation metaTileEntityId) {
@@ -66,8 +66,8 @@ public class MetaTileEntitySteamLavaFurnace extends RecipeMapSteamMultiblockCont
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return DEFINITION;
     }
 
     private boolean isFireboxPart(IMultiblockPart sourcePart) {

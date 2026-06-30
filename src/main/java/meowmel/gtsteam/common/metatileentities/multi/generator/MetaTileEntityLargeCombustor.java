@@ -37,7 +37,9 @@ import gregtech.api.mui.GTGuis;
 import gregtech.api.pattern.FormedStructureView;
 import gregtech.api.pattern.SoftReferenceHolder;
 import gregtech.api.pattern.TemplatePool;
-import gregtech.api.pattern.TraceabilityPredicate;
+import gregtech.api.pattern.element.IStructureElement;
+
+import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.pattern.element.StructureDefinition;
 import gregtech.api.util.GTUtility;
@@ -78,8 +80,7 @@ public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase impl
 
     private static final Map<String, SoftReferenceHolder<? extends StructureDefinition<?>>> STRUCTURE_DEFINITIONS =
             new HashMap<>();
-    private static final TraceabilityPredicate SNOW_PREDICATE = new TraceabilityPredicate(
-            bws -> GTUtility.isBlockSnow(bws.getBlockState()));
+    private static final IStructureElement SNOW_PREDICATE = blockPredicate(GTUtility::isBlockSnow);
 
     static {
         STRUCTURE_DEFINITIONS.put("bronze", TemplatePool.getInstance()
@@ -114,13 +115,13 @@ public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase impl
                 .aisle("XCCCX", "CPPPC", "P  &P", "PPC C", "  C C", "  C C")
                 .aisle("XXXXX", "CCCSC", " CCC ", "   C ", "   C ", "   C ")
                 .self('S', MetaTileEntityLargeCombustor.class)
-                .where('P', states(combustorType.pipeState))
-                .where('X', states(combustorType.fireboxState))
+                .where('P', blocks(combustorType.pipeState))
+                .where('X', blocks(combustorType.fireboxState))
                 .casing('C', combustorType.casingState)
                 .fluidInput(1, 2)
                 .itemInput(1, 2)
                 .hatch(MultiblockAbility.OUTPUT_HEAT, 1, 6)
-                .where('&', air().or(SNOW_PREDICATE)) // this won't stay in the structure, and will be broken while
+                .where('&', chain(air(), SNOW_PREDICATE)) // this won't stay in the structure, and will be broken while
                 .where(' ', air())
                 .buildStructureDefinition();
     }

@@ -1,5 +1,6 @@
 package meowmel.gtsteam.common.metatileentities.multi.heat;
 
+import static gregtech.api.pattern.element.Elements.*;
 import codechicken.lib.render.CCRenderState;
 import codechicken.lib.render.pipeline.IVertexOperation;
 import codechicken.lib.vec.Matrix4;
@@ -28,10 +29,10 @@ import gregtech.api.metatileentity.multiblock.ui.*;
 import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.mui.GTGuis;
-import gregtech.api.pattern.BlockPattern;
-import gregtech.api.pattern.FactoryBlockPattern;
+import gregtech.api.pattern.FormedStructureView;
 import gregtech.api.pattern.MultiblockShapeInfo;
-import gregtech.api.pattern.PatternMatchContext;
+import gregtech.api.pattern.casing.DeclarativePatternBuilder;
+import gregtech.api.pattern.element.StructureDefinition;
 import gregtech.api.util.KeyUtil;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
@@ -118,8 +119,8 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
     }
 
     @Override
-    public void formStructure(PatternMatchContext context) {
-        super.formStructure(context);
+    public void formStructure(@NotNull FormedStructureView formed) {
+        super.formStructure(formed);
         initializeAbilities();
         refreshCAP();
     }
@@ -286,9 +287,9 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
     }
 
     @Override
-    protected @NotNull BlockPattern createStructurePattern() {
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
         if (getWorld() != null) updateStructureDimensions();
-        var pattern = FactoryBlockPattern.start();
+        DeclarativePatternBuilder pattern = DeclarativePatternBuilder.start();
         if (Length % 2 == 0) {
             Width = 3;
             Height = 3;
@@ -332,15 +333,15 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
             pattern.aisle(PatternStringLayer);
         }
         return pattern
-                .where('#', selfPredicate())
-                .where('A', states(getULVCasingState()))
-                .where('B', states(getULVCasingState())
-                        .or(abilities(MultiblockAbility.IMPORT_FLUIDS).setMinGlobalLimited(1).setMaxGlobalLimited(minSize))
-                        .or(abilities(MultiblockAbility.EXPORT_FLUIDS).setMinGlobalLimited(1).setMaxGlobalLimited(minSize))
-                        .or(abilities(MultiblockAbility.INPUT_HEAT).setMinGlobalLimited(1).setMaxGlobalLimited(minSize * 2))
-                        .or(states(Blocks.GLASS.getDefaultState())))
+                .self('#', MetaTileEntityHeatSteamBoiler.class)
+                .where('A', blocks(getULVCasingState()))
+                .where('B', chain(blocks(getULVCasingState()),
+                        abilities(1, minSize, MultiblockAbility.IMPORT_FLUIDS),
+                        abilities(1, minSize, MultiblockAbility.EXPORT_FLUIDS),
+                        abilities(1, minSize * 2, MultiblockAbility.INPUT_HEAT),
+                        blocks(Blocks.GLASS.getDefaultState())))
                 .where('C', air())
-                .build();
+                .buildStructureDefinition();
     }
 
     @Override

@@ -1,12 +1,13 @@
 package meowmel.gtsteam.common.metatileentities.multi.heat;
 
+import gregtech.api.pattern.element.StructureDefinition;
+
+import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.HeatMultiblockController;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
-import gregtech.api.pattern.BlockPatternTemplate;
-import gregtech.api.pattern.SoftTemplate;
 import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
@@ -32,7 +33,7 @@ import java.util.List;
 public class MetaTileEntityHeatBrewingVat extends HeatMultiblockController {
 
     private static final int PARALLEL_LIMIT = 16;
-    private static final SoftTemplate TEMPLATE = TemplatePool.getInstance().register("gtsteam:heat_brewing_vat", () ->
+    private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_brewing_vat", () ->
             DeclarativePatternBuilder.start()
                     .aisle("     ", "     ", " XXX ", " XXX ", " XXX ", "     ")
                     .aisle(" F F ", " XXX ", "X###X", "X###X", "X###X", " XXX ")
@@ -49,7 +50,7 @@ public class MetaTileEntityHeatBrewingVat extends HeatMultiblockController {
                     .where('F', frames(Materials.Steel))
                     .where(' ', any())
                     .where('#', air())
-                    .buildTemplate()
+                    .buildStructureDefinition()
     );
 
     public MetaTileEntityHeatBrewingVat(ResourceLocation metaTileEntityId) {
@@ -67,8 +68,8 @@ public class MetaTileEntityHeatBrewingVat extends HeatMultiblockController {
     }
 
     @Override
-    protected @NotNull BlockPatternTemplate createStructureTemplate() {
-        return TEMPLATE.get();
+    protected @NotNull StructureDefinition<?> createStructureDefinition() {
+        return DEFINITION;
     }
 
     @Override
