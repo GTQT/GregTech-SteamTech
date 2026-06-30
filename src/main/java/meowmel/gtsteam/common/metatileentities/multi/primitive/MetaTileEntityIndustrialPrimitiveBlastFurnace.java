@@ -13,13 +13,17 @@ import gregtech.api.metatileentity.multiblock.ui.UISyncer;
 import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.pattern.*;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
+import gregtech.api.pattern.casing.SimpleStructureChannel;
+import gregtech.api.pattern.casing.StructureChannel;
 import gregtech.api.pattern.element.IStructureElement;
 import gregtech.api.pattern.element.StructureDefinition;
 import gregtech.api.recipes.logic.OCResult;
 import gregtech.api.recipes.properties.RecipePropertyStorage;
 import gregtech.api.unification.material.Materials;
+import gregtech.api.util.BlockInfo;
 import gregtech.api.util.GTUtility;
 import gregtech.api.util.KeyUtil;
+import gregtech.api.util.RelativeDirection;
 import gregtech.api.util.tooltips.InformationHandler;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
@@ -46,45 +50,67 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static gregtech.api.recipes.RecipeMaps.PRIMITIVE_BLAST_FURNACE_RECIPES;
 
 public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMultiblockController {
 
     private static final IStructureElement SNOW_PREDICATE = blockPredicate(GTUtility::isBlockSnow);
+    private static final RelativeDirection[] STRUCTURE_DIRECTIONS = new RelativeDirection[]{
+            RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK};
+    private static final int CONTROLLER_X = 6;
+    private static final int CONTROLLER_Y = 1;
+    private static final int CONTROLLER_Z = 5;
+    private static final String AUXILIARY_PREVIEW_CHANNEL_NAME = "gtsteam_auxiliary_blast_furnaces";
+    private static final StructureChannel AUXILIARY_PREVIEW_CHANNEL =
+            new SimpleStructureChannel(AUXILIARY_PREVIEW_CHANNEL_NAME);
 
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild(
             "gtsteam:industrial_primitive_blast_furnace", () ->
                     DeclarativePatternBuilder.start()
                             .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
                             .aisle("    CDDDC    ", "    CDDDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
-                            .aisle("AAADDDDDDAHHH", "DDD D###D DDD", " D  D###D  D ", " D  D###D  D ", " D   DDD   D ", " D    D    D ", "      D      ", "      D      ", "      D      ")
-                            .aisle("AAADDDDDDAHHH", "D@DHD#&#DHH$D", "D D D###D D D", "D*D D###D D!D", "D*D D###D D!D", "D*D  D#D  D!D", "     D#D     ", "     D#D     ", "     D#D     ")
-                            .aisle("AAADDDDDDAHHH", "DDD D###D DDD", " D  D###D  D ", " D  D###D  D ", " D   DDD   D ", " D    D    D ", "      D      ", "      D      ", "      D      ")
+                            .aisle("aaadDDDDDqrrr", "dddlD###Dmeee", "ldllD###Dmmem", "ldllD###Dmmem", "ldll DDD mmem", "ldll  D  mmem", "      D      ", "      D      ", "      D      ")
+                            .aisle("aaadDDDDDqrrr", "dldhD#&#Drrme", "dldlD###Dmeme", "dldlD###Dmeme", "dldlD###Dmeme", "dldl D#D meme", "     D#D     ", "     D#D     ", "     D#D     ")
+                            .aisle("aaadDDDDDqrrr", "dddlD###Dmeee", "ldllD###Dmmem", "ldllD###Dmmem", "ldll DDD mmem", "ldll  D  mmem", "      D      ", "      D      ", "      D      ")
                             .aisle("    CDDDC    ", "    CDSDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
                             .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
                             .self('S', MetaTileEntityIndustrialPrimitiveBlastFurnace.class)
                             .where('A', blocks(getFireBoxState()))
+                            .where('a', optionalAuxiliaryBlock(getFireBoxState()))
+                            .where('q', optionalAuxiliaryBlock(getFireBoxState()))
                             .where('C', blocks(getFrameState()))
                             .casing('D', getCasingState())
                             .optionalItemInput(4)
                             .optionalItemOutput(4)
+                            .where('d', optionalAuxiliaryBlock(getCasingState()))
+                            .where('e', optionalAuxiliaryBlock(getCasingState()))
                             .where('H', blocks(getBoilerState()))
+                            .where('h', optionalAuxiliaryBlock(getBoilerState()))
+                            .where('r', optionalAuxiliaryBlock(getBoilerState()))
                             .where('&', chain(air(), SNOW_PREDICATE))
                             .where('#', air())
                             .where('@', any())
                             .where('*', any())
                             .where('$', any())
                             .where('!', any())
+                            .where('l', optionalAuxiliaryAny())
+                            .where('m', optionalAuxiliaryAny())
                             .where(' ', any())
                             .buildStructureDefinition()
     );
     int TEMP = 300;
     int MIN_TEMP = 300;
     int MAX_TEMP = 1500;
+    private int auxiliaryBlastFurnaces = 0;
 
     public MetaTileEntityIndustrialPrimitiveBlastFurnace(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId, PRIMITIVE_BLAST_FURNACE_RECIPES);
@@ -105,6 +131,156 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
 
     public static IBlockState getCasingState() {
         return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES);
+    }
+
+    private static IStructureElement<MetaTileEntityIndustrialPrimitiveBlastFurnace> optionalAuxiliaryBlock(
+            IBlockState expectedState) {
+        return new IStructureElement<MetaTileEntityIndustrialPrimitiveBlastFurnace>() {
+            @NotNull
+            @Override
+            public StructureIncrementalSupport getIncrementalSupport() {
+                return StructureIncrementalSupport.OPAQUE;
+            }
+
+            @NotNull
+            @Override
+            public Set<StructureDependency> getDependencies() {
+                return Collections.emptySet();
+            }
+
+            @Override
+            public boolean hasExplicitIncrementalContract() {
+                return true;
+            }
+
+            @Override
+            public boolean check(@NotNull StructureEvaluationContext<MetaTileEntityIndustrialPrimitiveBlastFurnace> context) {
+                return context.getController() != null;
+            }
+
+            @Override
+            public BlockInfo[] getCandidates() {
+                return new BlockInfo[]{new BlockInfo(expectedState)};
+            }
+        };
+    }
+
+    private static IStructureElement<MetaTileEntityIndustrialPrimitiveBlastFurnace> optionalAuxiliaryAny() {
+        return new IStructureElement<MetaTileEntityIndustrialPrimitiveBlastFurnace>() {
+            @NotNull
+            @Override
+            public StructureIncrementalSupport getIncrementalSupport() {
+                return StructureIncrementalSupport.OPAQUE;
+            }
+
+            @NotNull
+            @Override
+            public Set<StructureDependency> getDependencies() {
+                return Collections.emptySet();
+            }
+
+            @Override
+            public boolean hasExplicitIncrementalContract() {
+                return true;
+            }
+
+            @Override
+            public boolean check(@NotNull StructureEvaluationContext<MetaTileEntityIndustrialPrimitiveBlastFurnace> context) {
+                return context.getController() != null;
+            }
+
+            @Override
+            public BlockInfo[] getCandidates() {
+                return new BlockInfo[0];
+            }
+        };
+    }
+
+    private boolean isAuxiliaryModuleInstalled(boolean left) {
+        if (getWorld() == null) {
+            return false;
+        }
+        AuxiliaryBlock[] blocks = left ? LEFT_AUXILIARY_BLOCKS : RIGHT_AUXILIARY_BLOCKS;
+        for (AuxiliaryBlock block : blocks) {
+            IBlockState actual = getWorld().getBlockState(getAuxiliaryBlockPos(block.x, block.y, block.z));
+            if (!actual.equals(block.state)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void refreshAuxiliaryBlastFurnaces() {
+        int auxiliaryCount = 0;
+        if (isAuxiliaryModuleInstalled(true)) {
+            auxiliaryCount++;
+        }
+        if (isAuxiliaryModuleInstalled(false)) {
+            auxiliaryCount++;
+        }
+        auxiliaryBlastFurnaces = auxiliaryCount;
+    }
+
+    private BlockPos getAuxiliaryBlockPos(int x, int y, int z) {
+        BlockPos offset = RelativeDirection.setActualRelativeOffset(
+                x - CONTROLLER_X, y - CONTROLLER_Y, z - CONTROLLER_Z,
+                getFrontFacingForStructure(), getUpwardsFacing(), isFlipped(), STRUCTURE_DIRECTIONS);
+        return getPos().add(offset);
+    }
+
+    private static final AuxiliaryBlock[] LEFT_AUXILIARY_BLOCKS = new AuxiliaryBlock[]{
+            aux(0, 0, 2, getFireBoxState()), aux(1, 0, 2, getFireBoxState()), aux(2, 0, 2, getFireBoxState()),
+            aux(3, 0, 2, getCasingState()), aux(0, 1, 2, getCasingState()), aux(1, 1, 2, getCasingState()),
+            aux(2, 1, 2, getCasingState()), aux(1, 2, 2, getCasingState()), aux(1, 3, 2, getCasingState()),
+            aux(1, 4, 2, getCasingState()), aux(1, 5, 2, getCasingState()),
+
+            aux(0, 0, 3, getFireBoxState()), aux(1, 0, 3, getFireBoxState()), aux(2, 0, 3, getFireBoxState()),
+            aux(3, 0, 3, getCasingState()), aux(0, 1, 3, getCasingState()), aux(2, 1, 3, getCasingState()),
+            aux(3, 1, 3, getBoilerState()), aux(0, 2, 3, getCasingState()), aux(2, 2, 3, getCasingState()),
+            aux(0, 3, 3, getCasingState()), aux(2, 3, 3, getCasingState()), aux(0, 4, 3, getCasingState()),
+            aux(2, 4, 3, getCasingState()), aux(0, 5, 3, getCasingState()), aux(2, 5, 3, getCasingState()),
+
+            aux(0, 0, 4, getFireBoxState()), aux(1, 0, 4, getFireBoxState()), aux(2, 0, 4, getFireBoxState()),
+            aux(3, 0, 4, getCasingState()), aux(0, 1, 4, getCasingState()), aux(1, 1, 4, getCasingState()),
+            aux(2, 1, 4, getCasingState()), aux(1, 2, 4, getCasingState()), aux(1, 3, 4, getCasingState()),
+            aux(1, 4, 4, getCasingState()), aux(1, 5, 4, getCasingState())
+    };
+
+    private static final AuxiliaryBlock[] RIGHT_AUXILIARY_BLOCKS = new AuxiliaryBlock[]{
+            aux(9, 0, 2, getFireBoxState()), aux(10, 0, 2, getBoilerState()), aux(11, 0, 2, getBoilerState()),
+            aux(12, 0, 2, getBoilerState()), aux(10, 1, 2, getCasingState()), aux(11, 1, 2, getCasingState()),
+            aux(12, 1, 2, getCasingState()), aux(11, 2, 2, getCasingState()), aux(11, 3, 2, getCasingState()),
+            aux(11, 4, 2, getCasingState()), aux(11, 5, 2, getCasingState()),
+
+            aux(9, 0, 3, getFireBoxState()), aux(10, 0, 3, getBoilerState()), aux(11, 0, 3, getBoilerState()),
+            aux(12, 0, 3, getBoilerState()), aux(9, 1, 3, getBoilerState()), aux(10, 1, 3, getBoilerState()),
+            aux(12, 1, 3, getCasingState()), aux(10, 2, 3, getCasingState()), aux(12, 2, 3, getCasingState()),
+            aux(10, 3, 3, getCasingState()), aux(12, 3, 3, getCasingState()), aux(10, 4, 3, getCasingState()),
+            aux(12, 4, 3, getCasingState()), aux(10, 5, 3, getCasingState()), aux(12, 5, 3, getCasingState()),
+
+            aux(9, 0, 4, getFireBoxState()), aux(10, 0, 4, getBoilerState()), aux(11, 0, 4, getBoilerState()),
+            aux(12, 0, 4, getBoilerState()), aux(10, 1, 4, getCasingState()), aux(11, 1, 4, getCasingState()),
+            aux(12, 1, 4, getCasingState()), aux(11, 2, 4, getCasingState()), aux(11, 3, 4, getCasingState()),
+            aux(11, 4, 4, getCasingState()), aux(11, 5, 4, getCasingState())
+    };
+
+    private static AuxiliaryBlock aux(int x, int y, int z, IBlockState state) {
+        return new AuxiliaryBlock(x, y, z, state);
+    }
+
+    private static class AuxiliaryBlock {
+
+        private final int x;
+        private final int y;
+        private final int z;
+        private final IBlockState state;
+
+        private AuxiliaryBlock(int x, int y, int z, IBlockState state) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.state = state;
+        }
     }
 
     @Override
@@ -129,11 +305,13 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
     @Override
     protected void formStructure(@NotNull FormedStructureView formed) {
         super.formStructure(formed);
+        refreshAuxiliaryBlastFurnaces();
     }
 
     @Override
     public void invalidateStructure() {
         super.invalidateStructure();
+        auxiliaryBlastFurnaces = 0;
     }
 
     @SideOnly(Side.CLIENT)
@@ -161,6 +339,7 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
 
     public void addCustomCapacity(KeyManager keyManager, UISyncer syncer) {
         keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.multiblock.ip.amount.1", syncer.syncInt(TEMP), MAX_TEMP));
+        keyManager.add(KeyUtil.lang(TextFormatting.GRAY, "gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace", syncer.syncInt(auxiliaryBlastFurnaces)));
     }
 
     @Override
@@ -175,33 +354,66 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
 
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
-        ArrayList<MultiblockShapeInfo> shapeInfo = new ArrayList<>();
-        if (Blocks.AIR != null) {
-            shapeInfo.add(MultiblockShapeInfo.builder()
-                    .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
-                    .aisle("    CDDDC    ", "    CDDDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
-                    .aisle("AAADDDDDDAHHH", "DDD D   D DDD", " D  D   D  D ", " D  D   D  D ", " D   DDD   D ", " D    D    D ", "      D      ", "      D      ", "      D      ")
-                    .aisle("AAADDDDDDAHHH", "D DHD   DHH D", "D D D   D D D", "D*D D   D D!D", "D D D   D D D", "D D  D D  D D", "     D D     ", "     D D     ", "     D D     ")
-                    .aisle("AAADDDDDDAHHH", "DDD D   D DDD", " D  D   D  D ", " D  D   D  D ", " D   DDD   D ", " D    D    D ", "      D      ", "      D      ", "      D      ")
-                    .aisle("    CDDDC    ", "    CXSYC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
-                    .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
-                    .where('S', GTSteamMetaTileEntities.INDUSTRIAL_PRIMITIVE_BLAST_FURNACE, EnumFacing.SOUTH)
-                    .where('C', getFrameState())
-                    .where('D', getCasingState())
-                    .where('A', getFireBoxState())
-                    .where('H', getBoilerState())
-                    .where('X', MetaTileEntities.ITEM_IMPORT_BUS[GTValues.ULV], EnumFacing.SOUTH)
-                    .where('Y', MetaTileEntities.ITEM_EXPORT_BUS[GTValues.ULV], EnumFacing.SOUTH)
-                    .where('@', Blocks.AIR.getDefaultState())
-                    .where('*', Blocks.AIR.getDefaultState())
-                    .where('$', Blocks.AIR.getDefaultState())
-                    .where('!', Blocks.AIR.getDefaultState())
-                    .where('#', Blocks.AIR.getDefaultState())
-                    .where('&', Blocks.AIR.getDefaultState())
-                    .where(' ', Blocks.AIR.getDefaultState())
-                    .build());
+        return getMatchingShapes(Collections.emptyMap());
+    }
+
+    @Override
+    public List<MultiblockShapeInfo> getMatchingShapes(@Nullable Map<String, Integer> channelValues) {
+        if (channelValues != null && channelValues.containsKey(AUXILIARY_PREVIEW_CHANNEL_NAME)) {
+            return Collections.singletonList(
+                    buildPreviewShape(channelValues.get(AUXILIARY_PREVIEW_CHANNEL_NAME)));
         }
-        return shapeInfo;
+        return Arrays.asList(buildPreviewShape(0), buildPreviewShape(1), buildPreviewShape(2));
+    }
+
+    @Override
+    public List<StructureChannel> getSupportedChannels() {
+        List<StructureChannel> channels = new ArrayList<>(super.getSupportedChannels());
+        channels.add(AUXILIARY_PREVIEW_CHANNEL);
+        return channels;
+    }
+
+    @Override
+    public int[] getChannelRange(@NotNull StructureChannel channel) {
+        if (AUXILIARY_PREVIEW_CHANNEL_NAME.equals(channel.getName())) {
+            return new int[]{0, 2};
+        }
+        return super.getChannelRange(channel);
+    }
+
+    private static MultiblockShapeInfo buildPreviewShape(int auxiliaryCount) {
+        int count = Math.max(0, Math.min(2, auxiliaryCount));
+        return MultiblockShapeInfo.builder()
+                .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
+                .aisle("    CDDDC    ", "    CDDDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
+                .aisle(previewAux("AAADDDDDDAHHH", count), previewAux("DDD D   D DDD", count), previewAux(" D  D   D  D ", count), previewAux(" D  D   D  D ", count), previewAux(" D   DDD   D ", count), previewAux(" D    D    D ", count), "      D      ", "      D      ", "      D      ")
+                .aisle(previewAux("AAADDDDDDAHHH", count), previewAux("D DHD   DHH D", count), previewAux("D D D   D D D", count), previewAux("D*D D   D D!D", count), previewAux("D D D   D D D", count), previewAux("D D  D D  D D", count), "     D D     ", "     D D     ", "     D D     ")
+                .aisle(previewAux("AAADDDDDDAHHH", count), previewAux("DDD D   D DDD", count), previewAux(" D  D   D  D ", count), previewAux(" D  D   D  D ", count), previewAux(" D   DDD   D ", count), previewAux(" D    D    D ", count), "      D      ", "      D      ", "      D      ")
+                .aisle("    CDDDC    ", "    CXSYC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
+                .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
+                .where('S', GTSteamMetaTileEntities.INDUSTRIAL_PRIMITIVE_BLAST_FURNACE, EnumFacing.SOUTH)
+                .where('C', getFrameState())
+                .where('D', getCasingState())
+                .where('A', getFireBoxState())
+                .where('H', getBoilerState())
+                .where('X', MetaTileEntities.ITEM_IMPORT_BUS[GTValues.ULV], EnumFacing.SOUTH)
+                .where('Y', MetaTileEntities.ITEM_EXPORT_BUS[GTValues.ULV], EnumFacing.SOUTH)
+                .where('@', Blocks.AIR.getDefaultState())
+                .where('*', Blocks.AIR.getDefaultState())
+                .where('$', Blocks.AIR.getDefaultState())
+                .where('!', Blocks.AIR.getDefaultState())
+                .where('#', Blocks.AIR.getDefaultState())
+                .where('&', Blocks.AIR.getDefaultState())
+                .where(' ', Blocks.AIR.getDefaultState())
+                .build();
+    }
+
+    private static String previewAux(String row, int auxiliaryCount) {
+        if (auxiliaryCount >= 2) {
+            return row;
+        }
+        String left = auxiliaryCount >= 1 ? row.substring(0, 4) : "    ";
+        return left + row.substring(4, 9) + "    ";
     }
 
     @Override
@@ -219,6 +431,9 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
             TEMP = Math.max(MIN_TEMP, TEMP);
         }
 
+        if (!getWorld().isRemote && isStructureFormed() && getOffsetTimer() % 20 == 0) {
+            refreshAuxiliaryBlastFurnaces();
+        }
 
         if (this.isActive()) {
             if (getOffsetTimer() % 20 == 0 && getWorld().isRemote) {
@@ -288,7 +503,7 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
                 //持续工作温度增加
                 if (getOffsetTimer() % 20 == 0) {
                     if (TEMP < MAX_TEMP) {
-                        TEMP += 5;
+                        TEMP += auxiliaryBlastFurnaces + 1;
                         TEMP = Math.min(MAX_TEMP, TEMP);
                     }
                 }

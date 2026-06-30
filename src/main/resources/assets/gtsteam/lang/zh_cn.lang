@@ -122,6 +122,7 @@ gtsteam.machine.primitive_furnace.tooltip.3=允许与原始输入仓/输出仓�
 # 工业土高炉
 gtsteam.machine.industrial_primitive_blast_furnace.name=工业级土高炉
 gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace=附属高炉： %s 座
+gregtech.structure_channel.gtsteam_auxiliary_blast_furnaces=附属高炉预览
 gtsteam.multiblock.ip.amount.1=温度：%sK(最高温度 %s K)
 
 gtsteam.machine.industrial_primitive_blast_furnace.tooltip.1=可拓展两个附属高炉，附属高炉数量决定每秒提升的温度。
