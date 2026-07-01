@@ -6,17 +6,20 @@ import gregtech.api.capability.impl.NoEnergyMultiblockRecipeLogic;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
+import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.NoEnergyMultiblockController;
 import gregtech.api.metatileentity.multiblock.ui.KeyManager;
 import gregtech.api.metatileentity.multiblock.ui.MultiblockUIBuilder;
 import gregtech.api.metatileentity.multiblock.ui.UISyncer;
 import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.pattern.*;
-import gregtech.api.pattern.casing.DeclarativePatternBuilder;
-import gregtech.api.pattern.casing.SimpleStructureChannel;
+import gregtech.api.pattern.casing.CasingDefinition;
+import gregtech.api.pattern.casing.GTStructureChannels;
 import gregtech.api.pattern.casing.StructureChannel;
 import gregtech.api.pattern.element.IStructureElement;
 import gregtech.api.pattern.element.StructureDefinition;
+import gregtech.api.pattern.element.impl.CasingElement;
+import gregtech.api.pattern.element.impl.HatchElement;
 import gregtech.api.recipes.logic.OCResult;
 import gregtech.api.recipes.properties.RecipePropertyStorage;
 import gregtech.api.unification.material.Materials;
@@ -31,32 +34,27 @@ import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.MetaBlocks;
-import gregtech.common.metatileentities.MetaTileEntities;
 import meowmel.gtsteam.client.textures.GTSteamTextures;
 import meowmel.gtsteam.common.block.GTSteamMetaBlocks;
 import meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing0;
-import meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static gregtech.api.recipes.RecipeMaps.PRIMITIVE_BLAST_FURNACE_RECIPES;
@@ -69,44 +67,13 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
     private static final int CONTROLLER_X = 6;
     private static final int CONTROLLER_Y = 1;
     private static final int CONTROLLER_Z = 6;
-    private static final String AUXILIARY_PREVIEW_CHANNEL_NAME = "gtsteam_auxiliary_blast_furnaces";
-    private static final StructureChannel AUXILIARY_PREVIEW_CHANNEL =
-            new SimpleStructureChannel(AUXILIARY_PREVIEW_CHANNEL_NAME);
+    private static final int CORE_CASING_COUNT = 87;
+    private static final int OPTIONAL_ITEM_INPUTS = 4;
+    private static final int OPTIONAL_ITEM_OUTPUTS = 4;
 
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild(
-            "gtsteam:industrial_primitive_blast_furnace", () ->
-                    DeclarativePatternBuilder.start()
-                            .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
-                            .aisle("    CDDDC    ", "    CDDDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
-                            .aisle("aaadDDDDDqrrr", "dddlD###Dmeee", "ldllD###Dmmem", "ldllD###Dmmem", "ldll DDD mmem", "ldll  D  mmem", "      D      ", "      D      ", "      D      ")
-                            .aisle("aaadDDDDDqrrr", "dldhD#&#Drrme", "dldlD###Dmeme", "dldlD###Dmeme", "dldlD###Dmeme", "dldl D#D meme", "     D#D     ", "     D#D     ", "     D#D     ")
-                            .aisle("aaadDDDDDqrrr", "dddlD###Dmeee", "ldllD###Dmmem", "ldllD###Dmmem", "ldll DDD mmem", "ldll  D  mmem", "      D      ", "      D      ", "      D      ")
-                            .aisle("    CDDDC    ", "    CDDDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
-                            .aisle("     DDD     ", "      S      ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
-                            .self('S', MetaTileEntityIndustrialPrimitiveBlastFurnace.class)
-                            .where('A', blocks(getFireBoxState()))
-                            .where('a', optionalAuxiliaryBlock(getFireBoxState()))
-                            .where('q', optionalAuxiliaryBlock(getFireBoxState()))
-                            .where('C', blocks(getFrameState()))
-                            .casing('D', getCasingState())
-                            .optionalItemInput(4)
-                            .optionalItemOutput(4)
-                            .where('d', optionalAuxiliaryBlock(getCasingState()))
-                            .where('e', optionalAuxiliaryBlock(getCasingState()))
-                            .where('H', blocks(getBoilerState()))
-                            .where('h', optionalAuxiliaryBlock(getBoilerState()))
-                            .where('r', optionalAuxiliaryBlock(getBoilerState()))
-                            .where('&', chain(air(), SNOW_PREDICATE))
-                            .where('#', air())
-                            .where('@', any())
-                            .where('*', any())
-                            .where('$', any())
-                            .where('!', any())
-                            .where('l', optionalAuxiliaryAny())
-                            .where('m', optionalAuxiliaryAny())
-                            .where(' ', any())
-                            .buildStructureDefinition()
-    );
+            "gtsteam:industrial_primitive_blast_furnace",
+            MetaTileEntityIndustrialPrimitiveBlastFurnace::buildStructureDefinition);
     int TEMP = 300;
     int MIN_TEMP = 300;
     int MAX_TEMP = 1500;
@@ -133,6 +100,73 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
         return GTSteamMetaBlocks.blockMultiblockCasing0.getState(BlockMultiblockCasing0.CasingType.GALVANIZED_PORCELAIN_TILES);
     }
 
+    private static StructureDefinition<?> buildStructureDefinition() {
+        StructureDefinition.Builder<MetaTileEntityIndustrialPrimitiveBlastFurnace> builder =
+                StructureDefinition.builder(
+                        RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK);
+
+        builder.piece("core", new String[][]{
+                        {"     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             "},
+                        {"    CDDDC    ", "    CDDDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             "},
+                        {"    DDDDD    ", "    D###D    ", "    D###D    ", "    D###D    ", "     DDD     ", "      D      ", "      D      ", "      D      ", "      D      "},
+                        {"    DDDDD    ", "    D#&#D    ", "    D###D    ", "    D###D    ", "    D###D    ", "     D#D     ", "     D#D     ", "     D#D     ", "     D#D     "},
+                        {"    DDDDD    ", "    D###D    ", "    D###D    ", "    D###D    ", "     DDD     ", "      D      ", "      D      ", "      D      ", "      D      "},
+                        {"    CDDDC    ", "    CDDDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             "},
+                        {"     DDD     ", "      S      ", "             ", "             ", "             ", "             ", "             ", "             ", "             "}
+                }, Vec3i.NULL_VECTOR)
+                .where('S', self(MetaTileEntityIndustrialPrimitiveBlastFurnace.class))
+                .where('C', blocks(getFrameState()))
+                .where('D', coreCasingWithBuses())
+                .where('&', chain(air(), SNOW_PREDICATE))
+                .where('#', air())
+                .where(' ', any())
+                .end();
+
+        builder.piece("aux_left", new String[][]{
+                        {"             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             "},
+                        {"             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             "},
+                        {"aaad         ", "dddl         ", "ldll         ", "ldll         ", "ldll         ", "ldll         ", "             ", "             ", "             "},
+                        {"aaad         ", "dldh         ", "dldl         ", "dldl         ", "dldl         ", "dldl         ", "             ", "             ", "             "},
+                        {"aaad         ", "dddl         ", "ldll         ", "ldll         ", "ldll         ", "ldll         ", "             ", "             ", "             "},
+                        {"             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             "},
+                        {"             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             "}
+                }, Vec3i.NULL_VECTOR)
+                .centerOffset(CONTROLLER_X, CONTROLLER_Y, CONTROLLER_Z)
+                .where('a', optionalAuxiliaryBlock(getFireBoxState()))
+                .where('d', optionalAuxiliaryBlock(getCasingState()))
+                .where('h', optionalAuxiliaryBlock(getBoilerState()))
+                .where('l', optionalAuxiliaryAny())
+                .where(' ', any())
+                .end();
+
+        builder.piece("aux_right", new String[][]{
+                        {"             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             "},
+                        {"             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             "},
+                        {"         qrrr", "         meee", "         mmem", "         mmem", "         mmem", "         mmem", "             ", "             ", "             "},
+                        {"         qrrr", "         rrme", "         meme", "         meme", "         meme", "         meme", "             ", "             ", "             "},
+                        {"         qrrr", "         meee", "         mmem", "         mmem", "         mmem", "         mmem", "             ", "             ", "             "},
+                        {"             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             "},
+                        {"             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             "}
+                }, Vec3i.NULL_VECTOR)
+                .centerOffset(CONTROLLER_X, CONTROLLER_Y, CONTROLLER_Z)
+                .where('q', optionalAuxiliaryBlock(getFireBoxState()))
+                .where('e', optionalAuxiliaryBlock(getCasingState()))
+                .where('r', optionalAuxiliaryBlock(getBoilerState()))
+                .where('m', optionalAuxiliaryAny())
+                .where(' ', any())
+                .end();
+
+        return builder.build();
+    }
+
+    private static IStructureElement coreCasingWithBuses() {
+        int minCasings = Math.max(0, CORE_CASING_COUNT - OPTIONAL_ITEM_INPUTS - OPTIONAL_ITEM_OUTPUTS);
+        return chain(
+                new CasingElement(CasingDefinition.simple(getCasingState()), minCasings),
+                new HatchElement(MultiblockAbility.IMPORT_ITEMS, 0, OPTIONAL_ITEM_INPUTS, 1),
+                new HatchElement(MultiblockAbility.EXPORT_ITEMS, 0, OPTIONAL_ITEM_OUTPUTS, 1));
+    }
+
     private static IStructureElement<MetaTileEntityIndustrialPrimitiveBlastFurnace> optionalAuxiliaryBlock(
             IBlockState expectedState) {
         return new IStructureElement<MetaTileEntityIndustrialPrimitiveBlastFurnace>() {
@@ -155,6 +189,9 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
 
             @Override
             public boolean check(@NotNull StructureEvaluationContext<MetaTileEntityIndustrialPrimitiveBlastFurnace> context) {
+                if (context.getOperation().isBuild()) {
+                    return expectedState.equals(context.getBlockState());
+                }
                 return context.getController() != null;
             }
 
@@ -353,67 +390,20 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
     }
 
     @Override
-    public List<MultiblockShapeInfo> getMatchingShapes() {
-        return getMatchingShapes(Collections.emptyMap());
-    }
-
-    @Override
-    public List<MultiblockShapeInfo> getMatchingShapes(@Nullable Map<String, Integer> channelValues) {
-        if (channelValues != null && channelValues.containsKey(AUXILIARY_PREVIEW_CHANNEL_NAME)) {
-            return Collections.singletonList(
-                    buildPreviewShape(channelValues.get(AUXILIARY_PREVIEW_CHANNEL_NAME)));
-        }
-        return Arrays.asList(buildPreviewShape(0), buildPreviewShape(1), buildPreviewShape(2));
-    }
-
-    @Override
     public List<StructureChannel> getSupportedChannels() {
         List<StructureChannel> channels = new ArrayList<>(super.getSupportedChannels());
-        channels.add(AUXILIARY_PREVIEW_CHANNEL);
+        if (!channels.contains(GTStructureChannels.STRUCTURE_PIECE)) {
+            channels.add(GTStructureChannels.STRUCTURE_PIECE);
+        }
         return channels;
     }
 
     @Override
     public int[] getChannelRange(@NotNull StructureChannel channel) {
-        if (AUXILIARY_PREVIEW_CHANNEL_NAME.equals(channel.getName())) {
-            return new int[]{0, 2};
+        if (channel == GTStructureChannels.STRUCTURE_PIECE) {
+            return new int[]{0, multiPiecePattern != null ? multiPiecePattern.getToolingPieceCount() : 0};
         }
         return super.getChannelRange(channel);
-    }
-
-    private static MultiblockShapeInfo buildPreviewShape(int auxiliaryCount) {
-        int count = Math.max(0, Math.min(2, auxiliaryCount));
-        return MultiblockShapeInfo.builder()
-                .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
-                .aisle("    CDDDC    ", "    CDDDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
-                .aisle(previewAux("AAADDDDDDAHHH", count), previewAux("DDD D   D DDD", count), previewAux(" D  D   D  D ", count), previewAux(" D  D   D  D ", count), previewAux(" D   DDD   D ", count), previewAux(" D    D    D ", count), "      D      ", "      D      ", "      D      ")
-                .aisle(previewAux("AAADDDDDDAHHH", count), previewAux("D DHD   DHH D", count), previewAux("D D D   D D D", count), previewAux("D*D D   D D!D", count), previewAux("D D D   D D D", count), previewAux("D D  D D  D D", count), "     D D     ", "     D D     ", "     D D     ")
-                .aisle(previewAux("AAADDDDDDAHHH", count), previewAux("DDD D   D DDD", count), previewAux(" D  D   D  D ", count), previewAux(" D  D   D  D ", count), previewAux(" D   DDD   D ", count), previewAux(" D    D    D ", count), "      D      ", "      D      ", "      D      ")
-                .aisle("    CDDDC    ", "    CXDYC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
-                .aisle("     DDD     ", "      S      ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
-                .where('S', GTSteamMetaTileEntities.INDUSTRIAL_PRIMITIVE_BLAST_FURNACE, EnumFacing.SOUTH)
-                .where('C', getFrameState())
-                .where('D', getCasingState())
-                .where('A', getFireBoxState())
-                .where('H', getBoilerState())
-                .where('X', MetaTileEntities.ITEM_IMPORT_BUS[GTValues.ULV], EnumFacing.SOUTH)
-                .where('Y', MetaTileEntities.ITEM_EXPORT_BUS[GTValues.ULV], EnumFacing.SOUTH)
-                .where('@', Blocks.AIR.getDefaultState())
-                .where('*', Blocks.AIR.getDefaultState())
-                .where('$', Blocks.AIR.getDefaultState())
-                .where('!', Blocks.AIR.getDefaultState())
-                .where('#', Blocks.AIR.getDefaultState())
-                .where('&', Blocks.AIR.getDefaultState())
-                .where(' ', Blocks.AIR.getDefaultState())
-                .build();
-    }
-
-    private static String previewAux(String row, int auxiliaryCount) {
-        if (auxiliaryCount >= 2) {
-            return row;
-        }
-        String left = auxiliaryCount >= 1 ? row.substring(0, 4) : "    ";
-        return left + row.substring(4, 9) + "    ";
     }
 
     @Override

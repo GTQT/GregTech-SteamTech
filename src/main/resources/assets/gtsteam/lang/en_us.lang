@@ -122,7 +122,6 @@ gtsteam.machine.primitive_furnace.tooltip.3=Allows interaction with Primitive Im
 # 工业土高炉
 gtsteam.machine.industrial_primitive_blast_furnace.name=Industrial Primitive Blast Furnace
 gtsteam.machine.industrial_primitive_blast_furnace.auxiliary_blast_furnace=Attached blast furnace: %s
-gregtech.structure_channel.gtsteam_auxiliary_blast_furnaces=Auxiliary Blast Furnace Preview
 gtsteam.multiblock.ip.amount.1=Temperature: %sK (maximum temperature %sK)
 
 gtsteam.machine.industrial_primitive_blast_furnace.tooltip.1=Two auxiliary blast furnaces can be expanded, and the number of auxiliary blast furnaces determines the temperature increase per second.
