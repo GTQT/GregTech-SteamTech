@@ -68,7 +68,7 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
             RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK};
     private static final int CONTROLLER_X = 6;
     private static final int CONTROLLER_Y = 1;
-    private static final int CONTROLLER_Z = 5;
+    private static final int CONTROLLER_Z = 6;
     private static final String AUXILIARY_PREVIEW_CHANNEL_NAME = "gtsteam_auxiliary_blast_furnaces";
     private static final StructureChannel AUXILIARY_PREVIEW_CHANNEL =
             new SimpleStructureChannel(AUXILIARY_PREVIEW_CHANNEL_NAME);
@@ -81,8 +81,8 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
                             .aisle("aaadDDDDDqrrr", "dddlD###Dmeee", "ldllD###Dmmem", "ldllD###Dmmem", "ldll DDD mmem", "ldll  D  mmem", "      D      ", "      D      ", "      D      ")
                             .aisle("aaadDDDDDqrrr", "dldhD#&#Drrme", "dldlD###Dmeme", "dldlD###Dmeme", "dldlD###Dmeme", "dldl D#D meme", "     D#D     ", "     D#D     ", "     D#D     ")
                             .aisle("aaadDDDDDqrrr", "dddlD###Dmeee", "ldllD###Dmmem", "ldllD###Dmmem", "ldll DDD mmem", "ldll  D  mmem", "      D      ", "      D      ", "      D      ")
-                            .aisle("    CDDDC    ", "    CDSDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
-                            .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
+                            .aisle("    CDDDC    ", "    CDDDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
+                            .aisle("     DDD     ", "      S      ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
                             .self('S', MetaTileEntityIndustrialPrimitiveBlastFurnace.class)
                             .where('A', blocks(getFireBoxState()))
                             .where('a', optionalAuxiliaryBlock(getFireBoxState()))
@@ -389,8 +389,8 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
                 .aisle(previewAux("AAADDDDDDAHHH", count), previewAux("DDD D   D DDD", count), previewAux(" D  D   D  D ", count), previewAux(" D  D   D  D ", count), previewAux(" D   DDD   D ", count), previewAux(" D    D    D ", count), "      D      ", "      D      ", "      D      ")
                 .aisle(previewAux("AAADDDDDDAHHH", count), previewAux("D DHD   DHH D", count), previewAux("D D D   D D D", count), previewAux("D*D D   D D!D", count), previewAux("D D D   D D D", count), previewAux("D D  D D  D D", count), "     D D     ", "     D D     ", "     D D     ")
                 .aisle(previewAux("AAADDDDDDAHHH", count), previewAux("DDD D   D DDD", count), previewAux(" D  D   D  D ", count), previewAux(" D  D   D  D ", count), previewAux(" D   DDD   D ", count), previewAux(" D    D    D ", count), "      D      ", "      D      ", "      D      ")
-                .aisle("    CDDDC    ", "    CXSYC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
-                .aisle("     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
+                .aisle("    CDDDC    ", "    CXDYC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             ")
+                .aisle("     DDD     ", "      S      ", "             ", "             ", "             ", "             ", "             ", "             ", "             ")
                 .where('S', GTSteamMetaTileEntities.INDUSTRIAL_PRIMITIVE_BLAST_FURNACE, EnumFacing.SOUTH)
                 .where('C', getFrameState())
                 .where('D', getCasingState())
