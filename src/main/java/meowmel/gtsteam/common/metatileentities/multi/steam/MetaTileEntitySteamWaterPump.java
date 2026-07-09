@@ -43,11 +43,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import static gregtech.api.util.RelativeDirection.*;
 import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
 
 public class MetaTileEntitySteamWaterPump extends MultiblockControllerBase implements IPrimitivePump {
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_water_pump", () ->
-            DeclarativePatternBuilder.start()
+            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                     .aisle("A   A", "A   A", "BBBBB", "A   A", "A   A", "BBBBB")
                     .aisle("     ", "     ", "BBBBB", " CCC ", " CCC ", "BBBBB")
                     .aisle("     ", "     ", "BBBBB", " CCC ", " CCC ", "BBBBB")

@@ -29,11 +29,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static gregtech.api.util.RelativeDirection.*;
+
 public class MetaTileEntitySteamAlloyFurnace extends RecipeMapSteamMultiblockController {
 
     private static final int PARALLEL_LIMIT = 8;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_alloy_furnace", () ->
-            DeclarativePatternBuilder.start()
+            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                     .aisle("CCC", "XXX", "XXX", "CCC")
                     .aisle("CCC", "X#X", "X#X", "CCC")
                     .aisle("CSC", "XXX", "XXX", "CCC")

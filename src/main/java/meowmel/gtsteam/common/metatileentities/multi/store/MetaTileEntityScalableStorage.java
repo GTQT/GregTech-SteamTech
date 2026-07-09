@@ -41,12 +41,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static gregtech.api.util.RelativeDirection.*;
+
 public class MetaTileEntityScalableStorage extends MultiblockWithDisplayBase {
 
     private static final int BASE_CAPACITY = 4000000;
     private static final int DURABILITY_INTERVAL = 200;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:scalable_storage", () ->
-            DeclarativePatternBuilder.start()
+            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                     .aisle("CCC", "CCC", "CCC")
                     .aisle("CCC", "CCC", "CCC")
                     .aisle("CCC", "CSC", "CCC")

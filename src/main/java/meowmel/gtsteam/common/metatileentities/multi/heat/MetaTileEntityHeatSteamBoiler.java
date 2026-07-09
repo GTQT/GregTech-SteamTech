@@ -16,7 +16,6 @@ import com.cleanroommc.modularui.widgets.ButtonWidget;
 import com.cleanroommc.modularui.widgets.SliderWidget;
 import com.cleanroommc.modularui.widgets.layout.Flow;
 import com.cleanroommc.modularui.widgets.textfield.TextFieldWidget;
-import gregtech.api.GTValues;
 import gregtech.api.capability.IControllable;
 import gregtech.api.capability.IHeatable;
 import gregtech.api.capability.ISteamMachine;
@@ -31,14 +30,24 @@ import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.mui.GTGuis;
 import gregtech.api.pattern.FormedStructureView;
 import gregtech.api.pattern.MultiblockShapeInfo;
+import gregtech.api.pattern.StructureContributionKey;
+import gregtech.api.pattern.StructureElementPreviewEntry;
+import gregtech.api.pattern.StructureHintResult;
+import gregtech.api.pattern.StructureMatchCollector;
+import gregtech.api.pattern.StructureOperationRequest;
+import gregtech.api.pattern.StructureRuntime;
+import gregtech.api.pattern.StructureRuntimeDetectionContext;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
+import gregtech.api.pattern.casing.GTStructureChannels;
+import gregtech.api.pattern.casing.StructureChannel;
+import gregtech.api.pattern.element.IStructureElement;
 import gregtech.api.pattern.element.StructureDefinition;
 import gregtech.api.util.KeyUtil;
+import gregtech.api.util.RelativeDirection;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
-import gregtech.common.metatileentities.MetaTileEntities;
 import meowmel.gtsteam.client.textures.GTSteamTextures;
-import meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
+import meowmel.gtsteam.common.metatileentities.multi.DynamicStructureTooling;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
@@ -55,17 +64,40 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.UnaryOperator;
 
-import static gregtech.common.metatileentities.MetaTileEntities.HEAT_INPUT_HATCH;
 import static meowmel.gtsteam.common.block.GTSteamMetaBlocks.blockMultiblockCasing0;
 import static meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing0.CasingType.TANK_WALL;
 import static net.minecraft.util.EnumFacing.*;
 
 public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase implements ProgressBarMultiblock, IControllable, ISteamMachine {
+    private static final int MIN_STRUCTURE_SIZE = 3;
+    private static final int MAX_STRUCTURE_SIZE = 15;
+    private static final int DEFAULT_STRUCTURE_SIZE = 3;
+    private static final String RUNTIME_PIECE = "runtime";
+    private static final StructureContributionKey<BoilerDimensions, BoilerDimensions> DIMENSIONS_KEY =
+            StructureContributionKey.uniform("gtsteam:heat_steam_boiler/dimensions");
+    private static final StructureContributionKey<Integer, Integer> WIDTH_KEY =
+            StructureMatchCollector.channelValueKey(GTStructureChannels.STRUCTURE_WIDTH.getName());
+    private static final StructureContributionKey<Integer, Integer> HEIGHT_KEY =
+            StructureMatchCollector.channelValueKey(GTStructureChannels.STRUCTURE_HEIGHT.getName());
+    private static final StructureContributionKey<Integer, Integer> LENGTH_KEY =
+            StructureMatchCollector.channelValueKey(GTStructureChannels.STRUCTURE_LENGTH.getName());
+    private static final StructureDefinition<MetaTileEntityHeatSteamBoiler> STRUCTURE_DEFINITION =
+            StructureDefinition.getOrBuild("gtsteam:heat_steam_boiler", () ->
+                    StructureDefinition.<MetaTileEntityHeatSteamBoiler>builder(
+                                    RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK)
+                            .piece(RUNTIME_PIECE, "S")
+                            .where('S', self(MetaTileEntityHeatSteamBoiler.class))
+                            .end()
+                            .runtimeDetector(MetaTileEntityHeatSteamBoiler::detectRuntimeStructure)
+                            .build());
 
     protected HeatSteamBoilerRecipeLogic recipeLogic;
     private List<IHeatable> heatHatch = null;
@@ -121,6 +153,12 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
     @Override
     public void formStructure(@NotNull FormedStructureView formed) {
         super.formStructure(formed);
+        BoilerDimensions dimensions = formed.getAggregate(DIMENSIONS_KEY);
+        if (dimensions == null) {
+            invalidateStructure();
+            return;
+        }
+        applyStructureDimensions(dimensions);
         initializeAbilities();
         refreshCAP();
     }
@@ -243,9 +281,6 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
 
     @Override
     public void checkStructurePattern() {
-        if (!this.isStructureFormed()) {
-            reinitializeStructurePattern();
-        }
         super.checkStructurePattern();
     }
 
@@ -288,50 +323,165 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
 
     @Override
     protected @NotNull StructureDefinition<?> createStructureDefinition() {
-        if (getWorld() != null) updateStructureDimensions();
-        DeclarativePatternBuilder pattern = DeclarativePatternBuilder.start();
-        if (Length % 2 == 0) {
-            Width = 3;
-            Height = 3;
-            Length = 3;
-        }
-        if (Width < 3 || Height < 3 || Length < 3) {
-            Width = 3;
-            Height = 3;
-            Length = 3;
-        }
-        if (Width > 15 || Height > 15 || Length > 15) {
-            Width = 3;
-            Height = 3;
+        return STRUCTURE_DEFINITION;
+    }
+
+    private static boolean detectRuntimeStructure(
+            @NotNull StructureRuntimeDetectionContext<MetaTileEntityHeatSteamBoiler> context) {
+        MetaTileEntityHeatSteamBoiler controller = context.getController();
+        DimensionScanResult scan = controller.scanStructureDimensions();
+        if (!scan.isSuccess()) {
+            return context.fail(scan.failurePos, scan.expected, scan.actual);
         }
 
-        int minSize = Math.min(Math.min(Width, Height), Length);
+        BoilerDimensions dimensions = scan.dimensions;
+        context.emit(DIMENSIONS_KEY, dimensions);
+        context.emit(WIDTH_KEY, dimensions.width);
+        context.emit(HEIGHT_KEY, dimensions.height);
+        context.emit(LENGTH_KEY, dimensions.length);
 
-        for (int i = 1; i <= Width; i++) {
-            String[] PatternStringLayer = new String[Height];
-            for (int j = 1; j <= Height; j++) {
-                StringBuilder str = new StringBuilder();
-                if (i == 1 || i == Width) {
-                    if (j == 1 || j == Height) {
-                        if (i == Width && j == 1) {
-                            str.append(repeat("A", Length / 2)).append("#").append(repeat("A", Length / 2));
-                        } else {
-                            str.append(repeat("A", Length));
-                        }
-                    } else {
-                        str.append(repeat("A", 1)).append(repeat("B", Length - 2)).append(repeat("A", 1));
-                    }
-                } else {
-                    if (j == 1 || j == Height) {
-                        str.append(repeat("A", 1)).append(repeat("B", Length - 2)).append(repeat("A", 1));
-                    } else {
-                        str.append(repeat("B", 1)).append(repeat("C", Length - 2)).append(repeat("B", 1));
+        RuntimeCellElements elements = controller.createRuntimeCellElements(dimensions);
+        int center = dimensions.length / 2;
+        for (int back = 0; back < dimensions.width; back++) {
+            for (int vertical = 0; vertical < dimensions.height; vertical++) {
+                for (int lateral = -center; lateral <= center; lateral++) {
+                    BoilerCellType cellType = classifyBoilerCell(lateral, vertical, back, dimensions);
+                    BlockPos pos = context.localPos(
+                            lateral, vertical, back,
+                            RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK);
+                    IStructureElement<?> element = elements.get(cellType);
+                    if (!context.match(pos, element)) {
+                        return context.fail(pos, cellType.expected,
+                                String.valueOf(context.getWorld().getBlockState(pos)));
                     }
                 }
-                PatternStringLayer[j - 1] = str.toString();
             }
-            pattern.aisle(PatternStringLayer);
         }
+        return true;
+    }
+
+    @NotNull
+    private RuntimeCellElements createRuntimeCellElements(@NotNull BoilerDimensions dimensions) {
+        int minSize = dimensions.minSize();
+        return new RuntimeCellElements(
+                self(MetaTileEntityHeatSteamBoiler.class),
+                blocks(getULVCasingState()),
+                chain(blocks(getULVCasingState()),
+                        abilities(1, minSize, MultiblockAbility.IMPORT_FLUIDS),
+                        abilities(1, minSize, MultiblockAbility.EXPORT_FLUIDS),
+                        abilities(1, minSize * 2, MultiblockAbility.INPUT_HEAT),
+                        blocks(Blocks.GLASS.getDefaultState())),
+                air());
+    }
+
+    @NotNull
+    private static BoilerCellType classifyBoilerCell(int lateral,
+                                                     int vertical,
+                                                     int back,
+                                                     @NotNull BoilerDimensions dimensions) {
+        if (back == 0 && vertical == 0 && lateral == 0) {
+            return BoilerCellType.CONTROLLER;
+        }
+
+        int boundaryCount = 0;
+        if (back == 0 || back == dimensions.width - 1) {
+            boundaryCount++;
+        }
+        if (vertical == 0 || vertical == dimensions.height - 1) {
+            boundaryCount++;
+        }
+        if (Math.abs(lateral) == dimensions.length / 2) {
+            boundaryCount++;
+        }
+
+        if (boundaryCount >= 2) {
+            return BoilerCellType.EDGE;
+        }
+        if (boundaryCount == 1) {
+            return BoilerCellType.FACE;
+        }
+        return BoilerCellType.INTERIOR;
+    }
+
+    @NotNull
+    @Override
+    public List<StructureChannel> getSupportedChannels() {
+        return Arrays.asList(
+                GTStructureChannels.STRUCTURE_WIDTH,
+                GTStructureChannels.STRUCTURE_HEIGHT,
+                GTStructureChannels.STRUCTURE_LENGTH);
+    }
+
+    @Override
+    public int[] getChannelRange(@NotNull StructureChannel channel) {
+        String channelName = channel.getName();
+        if (GTStructureChannels.STRUCTURE_WIDTH.getName().equals(channelName) ||
+                GTStructureChannels.STRUCTURE_HEIGHT.getName().equals(channelName) ||
+                GTStructureChannels.STRUCTURE_LENGTH.getName().equals(channelName)) {
+            return new int[] { MIN_STRUCTURE_SIZE, MAX_STRUCTURE_SIZE };
+        }
+        return super.getChannelRange(channel);
+    }
+
+    @Override
+    public List<MultiblockShapeInfo> getMatchingShapes(@Nullable Map<String, Integer> channelValues) {
+        BoilerDimensions dimensions = resolveToolingDimensions(channelValues);
+        StructureRuntime runtime = createToolingRuntime(dimensions);
+        return Collections.singletonList(DynamicStructureTooling.previewShape(runtime, dimensions.width, channelValues));
+    }
+
+    @NotNull
+    @Override
+    public Map<BlockPos, StructureElementPreviewEntry> buildStructurePreviewEntries(
+            @Nullable Map<String, Integer> channelValues) {
+        BoilerDimensions dimensions = resolveToolingDimensions(channelValues);
+        StructureRuntime runtime = createToolingRuntime(dimensions);
+        return DynamicStructureTooling.buildPreviewEntries(runtime, dimensions.width, channelValues);
+    }
+
+    @Override
+    public boolean autoBuildStructure(@NotNull StructureOperationRequest request) {
+        request.requireBuildKind();
+        createToolingRuntime(resolveToolingDimensions(request.getChannelValues())).buildAllPieces(request);
+        return true;
+    }
+
+    @Override
+    public void spawnStructureHints(@NotNull StructureOperationRequest request) {
+        hintStructure(request);
+    }
+
+    @Override
+    @NotNull
+    public StructureHintResult hintStructure(@NotNull StructureOperationRequest request) {
+        request.requireKind(StructureOperationRequest.Kind.HINT);
+        return createToolingRuntime(resolveToolingDimensions(request.getChannelValues())).hintAllPieces(request);
+    }
+
+    @NotNull
+    private StructureRuntime createToolingRuntime(@NotNull BoilerDimensions dimensions) {
+        return createDynamicStructureRuntime(buildToolingDefinition(dimensions));
+    }
+
+    @NotNull
+    private StructureDefinition<?> buildToolingDefinition(@NotNull BoilerDimensions dimensions) {
+        DeclarativePatternBuilder pattern = DeclarativePatternBuilder.start(
+                RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK);
+        int center = dimensions.length / 2;
+        for (int aisle = 0; aisle < dimensions.width; aisle++) {
+            int back = dimensions.width - 1 - aisle;
+            String[] rows = new String[dimensions.height];
+            for (int vertical = 0; vertical < dimensions.height; vertical++) {
+                StringBuilder row = new StringBuilder();
+                for (int x = 0; x < dimensions.length; x++) {
+                    int lateral = x - center;
+                    row.append(classifyBoilerCell(lateral, vertical, back, dimensions).pattern);
+                }
+                rows[vertical] = row.toString();
+            }
+            pattern.aisle(rows);
+        }
+        int minSize = dimensions.minSize();
         return pattern
                 .self('#', MetaTileEntityHeatSteamBoiler.class)
                 .where('A', blocks(getULVCasingState()))
@@ -344,116 +494,23 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
                 .buildStructureDefinition();
     }
 
+    @NotNull
+    private static BoilerDimensions resolveToolingDimensions(@Nullable Map<String, Integer> channelValues) {
+        int width = DynamicStructureTooling.resolveChannel(
+                channelValues, GTStructureChannels.STRUCTURE_WIDTH.getName(),
+                DEFAULT_STRUCTURE_SIZE, MIN_STRUCTURE_SIZE, MAX_STRUCTURE_SIZE);
+        int height = DynamicStructureTooling.resolveChannel(
+                channelValues, GTStructureChannels.STRUCTURE_HEIGHT.getName(),
+                DEFAULT_STRUCTURE_SIZE, MIN_STRUCTURE_SIZE, MAX_STRUCTURE_SIZE);
+        int length = DynamicStructureTooling.resolveOddChannel(
+                channelValues, GTStructureChannels.STRUCTURE_LENGTH.getName(),
+                DEFAULT_STRUCTURE_SIZE, MIN_STRUCTURE_SIZE, MAX_STRUCTURE_SIZE);
+        return new BoilerDimensions(length, width, height);
+    }
+
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
-        List<MultiblockShapeInfo> shapeInfo = new ArrayList<>();
-
-        // 3x3x3 示例结构
-        {
-            MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder();
-            builder.aisle("CCC", "CNC", "CCC");
-            builder.aisle("CMC", "G H", "CGC");
-            builder.aisle("CSC", "CGC", "CCC");
-            builder
-                    .where('S', GTSteamMetaTileEntities.HEAT_STEAM_BOILER, SOUTH)
-                    .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], DOWN)
-                    .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], NORTH)
-                    .where('H', HEAT_INPUT_HATCH[GTValues.ULV], WEST)
-                    .where('C', getULVCasingState())
-                    .where('G', Blocks.GLASS.getDefaultState())
-                    .where(' ', Blocks.AIR.getDefaultState());
-            shapeInfo.add(builder.build());
-        }
-
-        // 5x5x5 结构
-        {
-            MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder();
-            builder.aisle("CCCCC", "CGGGC", "CGGGC", "CGGGC", "CCCCC");
-            builder.aisle("CCCCC", "G   G", "G   G", "G   G", "CCCCC");
-            builder.aisle("CCCCC", "G   G", "G   G", "G   G", "CCCCC");
-            builder.aisle("CCCCC", "G   G", "G   G", "G   G", "CCCCC");
-            builder.aisle("CCSCC", "CMHNC", "CGGGC", "CGGGC", "CCCCC");
-            builder
-                    .where('S', GTSteamMetaTileEntities.HEAT_STEAM_BOILER, SOUTH)
-                    .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], SOUTH)
-                    .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], SOUTH)
-                    .where('H', HEAT_INPUT_HATCH[GTValues.ULV], SOUTH)
-                    .where('C', getULVCasingState())
-                    .where('G', Blocks.GLASS.getDefaultState())
-                    .where(' ', Blocks.AIR.getDefaultState());
-            shapeInfo.add(builder.build());
-        }
-
-        // 7x7x7 结构
-        {
-            MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder();
-            builder.aisle("CCCCCCC", "CGGGGGC", "CGGGGGC", "CGGGGGC", "CGGGGGC", "CGGGGGC", "CCCCCCC");
-            builder.aisle("CCCCCCC", "G     G", "G     G", "G     G", "G     G", "G     G", "CCCCCCC");
-            builder.aisle("CCCCCCC", "G     G", "G     G", "G     G", "G     G", "G     G", "CCCCCCC");
-            builder.aisle("CCCCCCC", "G     G", "G     G", "G     G", "G     G", "G     G", "CCCCCCC");
-            builder.aisle("CCCCCCC", "G     G", "G     G", "G     G", "G     G", "G     G", "CCCCCCC");
-            builder.aisle("CCCCCCC", "G     G", "G     G", "G     G", "G     G", "G     G", "CCCCCCC");
-            builder.aisle("CCCSCCC", "CMHGGNC", "CGGGGGC", "CGGGGGC", "CGGGGGC", "CGGGGGC", "CCCCCCC");
-            builder
-                    .where('S', GTSteamMetaTileEntities.HEAT_STEAM_BOILER, SOUTH)
-                    .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], SOUTH)
-                    .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], SOUTH)
-                    .where('H', HEAT_INPUT_HATCH[GTValues.ULV], SOUTH)
-                    .where('C', getULVCasingState())
-                    .where('G', Blocks.GLASS.getDefaultState())
-                    .where(' ', Blocks.AIR.getDefaultState());
-            shapeInfo.add(builder.build());
-        }
-
-        // 9x9x9 结构
-        {
-            MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder();
-            builder.aisle("CCCCCCCCC", "CGGGGGGGC", "CGGGGGGGC", "CGGGGGGGC", "CGGGGGGGC", "CGGGGGGGC", "CGGGGGGGC", "CGGGGGGGC", "CCCCCCCCC");
-            builder.aisle("CCCCCCCCC", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "CCCCCCCCC");
-            builder.aisle("CCCCCCCCC", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "CCCCCCCCC");
-            builder.aisle("CCCCCCCCC", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "CCCCCCCCC");
-            builder.aisle("CCCCCCCCC", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "CCCCCCCCC");
-            builder.aisle("CCCCCCCCC", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "CCCCCCCCC");
-            builder.aisle("CCCCCCCCC", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "CCCCCCCCC");
-            builder.aisle("CCCCCCCCC", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "G       G", "CCCCCCCCC");
-            builder.aisle("CCCCSCCCC", "CMHGGGGNC", "CGGGGGGGC", "CGGGGGGGC", "CGGGGGGGC", "CGGGGGGGC", "CGGGGGGGC", "CGGGGGGGC", "CCCCCCCCC");
-            builder
-                    .where('S', GTSteamMetaTileEntities.HEAT_STEAM_BOILER, SOUTH)
-                    .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], SOUTH)
-                    .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], SOUTH)
-                    .where('H', HEAT_INPUT_HATCH[GTValues.ULV], SOUTH)
-                    .where('C', getULVCasingState())
-                    .where('G', Blocks.GLASS.getDefaultState())
-                    .where(' ', Blocks.AIR.getDefaultState());
-            shapeInfo.add(builder.build());
-        }
-
-        // 11x11x11 结构
-        {
-            MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder();
-            builder.aisle("CCCCCCCCCCC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CCCCCCCCCCC");
-            builder.aisle("CCCCCCCCCCC", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "CCCCCCCCCCC");
-            builder.aisle("CCCCCCCCCCC", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "CCCCCCCCCCC");
-            builder.aisle("CCCCCCCCCCC", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "CCCCCCCCCCC");
-            builder.aisle("CCCCCCCCCCC", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "CCCCCCCCCCC");
-            builder.aisle("CCCCCCCCCCC", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "CCCCCCCCCCC");
-            builder.aisle("CCCCCCCCCCC", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "CCCCCCCCCCC");
-            builder.aisle("CCCCCCCCCCC", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "CCCCCCCCCCC");
-            builder.aisle("CCCCCCCCCCC", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "CCCCCCCCCCC");
-            builder.aisle("CCCCCCCCCCC", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "G         G", "CCCCCCCCCCC");
-            builder.aisle("CCCCCSCCCCC", "CMHGGGGGGNC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CGGGGGGGGGC", "CCCCCCCCCCC");
-            builder
-                    .where('S', GTSteamMetaTileEntities.HEAT_STEAM_BOILER, SOUTH)
-                    .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[GTValues.ULV], SOUTH)
-                    .where('N', MetaTileEntities.FLUID_EXPORT_HATCH[GTValues.ULV], SOUTH)
-                    .where('H', HEAT_INPUT_HATCH[GTValues.ULV], SOUTH)
-                    .where('C', getULVCasingState())
-                    .where('G', Blocks.GLASS.getDefaultState())
-                    .where(' ', Blocks.AIR.getDefaultState());
-            shapeInfo.add(builder.build());
-        }
-
-        return shapeInfo;
+        return getMatchingShapes(Collections.emptyMap());
     }
 
     public boolean isBlockEdge(@NotNull World world, @NotNull BlockPos.MutableBlockPos pos, @NotNull EnumFacing direction) {
@@ -471,10 +528,18 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
         }
     }
 
-    private void updateStructureDimensions() {
+    @NotNull
+    private DimensionScanResult scanStructureDimensions() {
         World world = getWorld();
+        if (world == null) {
+            return DimensionScanResult.failure(
+                    getPos(), "loaded world", "heat steam boiler controller has no world");
+        }
         EnumFacing front = getFrontFacing();
-        if (front == UP || front == DOWN) return;
+        if (front == UP || front == DOWN) {
+            return DimensionScanResult.failure(
+                    getPos(), "horizontal controller facing", String.valueOf(front));
+        }
         EnumFacing back = front.getOpposite();
         EnumFacing left = front.rotateYCCW();
         EnumFacing right = left.getOpposite();
@@ -503,9 +568,143 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
             if (isBlockEdge(world, hPos, EnumFacing.UP)) hDist = i;
             if (hDist != 0) break;
         }
-        this.Length = lDist + rDist - 1;
-        this.Width = bDist;
-        this.Height = hDist;
+        BoilerDimensions dimensions = new BoilerDimensions(lDist + rDist - 1, bDist, hDist);
+        if (dimensions.length < MIN_STRUCTURE_SIZE || dimensions.width < MIN_STRUCTURE_SIZE ||
+                dimensions.height < MIN_STRUCTURE_SIZE) {
+            return DimensionScanResult.failure(
+                    getPos(), "boiler dimensions at least 3x3x3", dimensions.toString());
+        }
+        if (dimensions.length > MAX_STRUCTURE_SIZE || dimensions.width > MAX_STRUCTURE_SIZE ||
+                dimensions.height > MAX_STRUCTURE_SIZE) {
+            return DimensionScanResult.failure(
+                    getPos(), "boiler dimensions at most 15x15x15", dimensions.toString());
+        }
+        if (dimensions.length % 2 == 0) {
+            return DimensionScanResult.failure(
+                    getPos(), "odd boiler length so the controller can be centered", dimensions.toString());
+        }
+        return DimensionScanResult.success(dimensions);
+    }
+
+    private void applyStructureDimensions(@NotNull BoilerDimensions dimensions) {
+        this.Length = dimensions.length;
+        this.Width = dimensions.width;
+        this.Height = dimensions.height;
+    }
+
+    private enum BoilerCellType {
+
+        CONTROLLER('#', "heat steam boiler controller"),
+        EDGE('A', "boiler wall casing"),
+        FACE('B', "boiler wall casing, glass, fluid hatch, or heat input hatch"),
+        INTERIOR('C', "air inside the boiler");
+
+        private final char pattern;
+        @NotNull
+        private final String expected;
+
+        BoilerCellType(char pattern, @NotNull String expected) {
+            this.pattern = pattern;
+            this.expected = expected;
+        }
+    }
+
+    private static final class RuntimeCellElements {
+
+        @NotNull
+        private final IStructureElement<?> controller;
+        @NotNull
+        private final IStructureElement<?> edge;
+        @NotNull
+        private final IStructureElement<?> face;
+        @NotNull
+        private final IStructureElement<?> interior;
+
+        private RuntimeCellElements(@NotNull IStructureElement<?> controller,
+                                    @NotNull IStructureElement<?> edge,
+                                    @NotNull IStructureElement<?> face,
+                                    @NotNull IStructureElement<?> interior) {
+            this.controller = controller.compile();
+            this.edge = edge.compile();
+            this.face = face.compile();
+            this.interior = interior.compile();
+        }
+
+        @NotNull
+        private IStructureElement<?> get(@NotNull BoilerCellType type) {
+            switch (type) {
+                case CONTROLLER:
+                    return controller;
+                case EDGE:
+                    return edge;
+                case FACE:
+                    return face;
+                case INTERIOR:
+                    return interior;
+                default:
+                    throw new IllegalStateException("Unhandled boiler cell type " + type);
+            }
+        }
+    }
+
+    private static final class BoilerDimensions {
+
+        private final int length;
+        private final int width;
+        private final int height;
+
+        private BoilerDimensions(int length, int width, int height) {
+            this.length = length;
+            this.width = width;
+            this.height = height;
+        }
+
+        private int minSize() {
+            return Math.min(Math.min(width, height), length);
+        }
+
+        @Override
+        public String toString() {
+            return "length=" + length + ", width=" + width + ", height=" + height;
+        }
+    }
+
+    private static final class DimensionScanResult {
+
+        @Nullable
+        private final BoilerDimensions dimensions;
+        @NotNull
+        private final BlockPos failurePos;
+        @NotNull
+        private final String expected;
+        @NotNull
+        private final String actual;
+
+        private DimensionScanResult(@Nullable BoilerDimensions dimensions,
+                                    @NotNull BlockPos failurePos,
+                                    @NotNull String expected,
+                                    @NotNull String actual) {
+            this.dimensions = dimensions;
+            this.failurePos = failurePos.toImmutable();
+            this.expected = expected;
+            this.actual = actual;
+        }
+
+        @NotNull
+        private static DimensionScanResult success(@NotNull BoilerDimensions dimensions) {
+            return new DimensionScanResult(dimensions, BlockPos.ORIGIN, "detected boiler dimensions", "matched");
+        }
+
+        @NotNull
+        private static DimensionScanResult failure(@NotNull BlockPos pos,
+                                                   @NotNull String expected,
+                                                   @NotNull String actual) {
+            return new DimensionScanResult(null, pos, expected, actual);
+        }
+
+        private boolean isSuccess() {
+            return dimensions != null;
+        }
     }
 
     private void initializeAbilities() {

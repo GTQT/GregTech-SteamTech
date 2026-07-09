@@ -92,6 +92,11 @@ public class MetaTileEntityCoagulationTank extends NoEnergyMultiblockController 
     }
 
     @Override
+    public EnumFacing getFrontFacingForStructure() {
+        return getFrontFacing().getOpposite();
+    }
+
+    @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity tileEntity) {
         return new MetaTileEntityCoagulationTank(metaTileEntityId);
     }

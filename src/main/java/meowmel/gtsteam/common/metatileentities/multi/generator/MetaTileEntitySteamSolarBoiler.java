@@ -34,19 +34,29 @@ import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.mui.GTGuis;
 import gregtech.api.pattern.FormedStructureView;
 import gregtech.api.pattern.MultiblockShapeInfo;
-import gregtech.api.pattern.casing.DeclarativePatternBuilder;
+import gregtech.api.pattern.PieceTemplate;
+import gregtech.api.pattern.StructureContributionKey;
+import gregtech.api.pattern.StructureElementPreviewEntry;
+import gregtech.api.pattern.StructureHintResult;
+import gregtech.api.pattern.StructureMatchCollector;
+import gregtech.api.pattern.StructureOperationRequest;
+import gregtech.api.pattern.StructureRuntime;
+import gregtech.api.pattern.StructureRuntimeDetectionContext;
+import gregtech.api.pattern.casing.GTStructureChannels;
+import gregtech.api.pattern.casing.StructureChannel;
+import gregtech.api.pattern.element.IStructureElement;
 import gregtech.api.pattern.element.StructureDefinition;
 import gregtech.api.util.KeyUtil;
+import gregtech.api.util.RelativeDirection;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.client.utils.TooltipHelper;
 import gregtech.common.blocks.BlockMachineCasing;
-import gregtech.common.metatileentities.MetaTileEntities;
 import gregtech.core.sound.GTSoundEvents;
 import meowmel.gtsteam.api.capability.impl.SolarBoilerRecipeLogic;
 import meowmel.gtsteam.common.block.GTSteamMetaBlocks;
 import meowmel.gtsteam.common.block.blocks.BlockMultiblockCasing1;
-import meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
+import meowmel.gtsteam.common.metatileentities.multi.DynamicStructureTooling;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -66,17 +76,39 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.UnaryOperator;
 
-import static gregtech.api.GTValues.ULV;
 import static gregtech.common.blocks.MetaBlocks.MACHINE_CASING;
 import static net.minecraft.util.EnumFacing.*;
 
 public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase implements ProgressBarMultiblock,
         IControllable, ISteamMachine {
+    private static final int MIN_STRUCTURE_SIZE = 3;
+    private static final int MAX_STRUCTURE_SIZE = 15;
+    private static final int DEFAULT_STRUCTURE_SIZE = 3;
+    private static final String RUNTIME_PIECE = "runtime";
+    private static final StructureContributionKey<SolarDimensions, SolarDimensions> DIMENSIONS_KEY =
+            StructureContributionKey.uniform("gtsteam:steam_solar_boiler/dimensions");
+    private static final StructureContributionKey<Integer, Integer> WIDTH_KEY =
+            StructureMatchCollector.channelValueKey(GTStructureChannels.STRUCTURE_WIDTH.getName());
+    private static final StructureContributionKey<Integer, Integer> LENGTH_KEY =
+            StructureMatchCollector.channelValueKey(GTStructureChannels.STRUCTURE_LENGTH.getName());
+    private static final StructureDefinition<MetaTileEntitySteamSolarBoiler> STRUCTURE_DEFINITION =
+            StructureDefinition.getOrBuild("gtsteam:steam_solar_boiler", () ->
+                    StructureDefinition.<MetaTileEntitySteamSolarBoiler>builder(
+                                    RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK)
+                            .piece(RUNTIME_PIECE, "S")
+                            .where('S', self(MetaTileEntitySteamSolarBoiler.class))
+                            .end()
+                            .globalAbilityLimit(MultiblockAbility.IMPORT_FLUIDS, 1, -1)
+                            .globalAbilityLimit(MultiblockAbility.EXPORT_FLUIDS, 1, -1)
+                            .runtimeDetector(MetaTileEntitySteamSolarBoiler::detectRuntimeStructure)
+                            .build());
+
     public static final int STEAM_PER_BLOCK = 10;
 
     public static final int HEAT_INCREMENT_PER_BLOCK = 5;
@@ -107,6 +139,12 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
     @Override
     protected void formStructure(@NotNull FormedStructureView formed) {
         super.formStructure(formed);
+        SolarDimensions dimensions = formed.getAggregate(DIMENSIONS_KEY);
+        if (dimensions == null) {
+            invalidateStructure();
+            return;
+        }
+        applyStructureDimensions(dimensions);
         initializeAbilities();
     }
 
@@ -324,109 +362,200 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
 
     @Override
     public void checkStructurePattern() {
-        if (!this.isStructureFormed()) {
-            reinitializeStructurePattern();
-        }
         super.checkStructurePattern();
     }
 
     @Override
     protected @NotNull StructureDefinition<?> createStructureDefinition() {
-        if (getWorld() != null) updateStructureDimensions();
-        DeclarativePatternBuilder pattern = DeclarativePatternBuilder.start();
+        return STRUCTURE_DEFINITION;
+    }
 
-        if (Width < 3 || Length < 3) {
-            Width = 3;
-            Length = 3;
-        }
-        if (Width > 15 || Length > 15) {
-            Width = 15;
-            Length = 15;
+    private static boolean detectRuntimeStructure(
+            @NotNull StructureRuntimeDetectionContext<MetaTileEntitySteamSolarBoiler> context) {
+        MetaTileEntitySteamSolarBoiler controller = context.getController();
+        DimensionScanResult scan = controller.scanStructureDimensions();
+        if (!scan.isSuccess()) {
+            return context.fail(scan.failurePos, scan.expected, scan.actual);
         }
 
-        // 创建单层太阳能结构
-        for (int i = 0; i < Width; i++) {
-            StringBuilder str = new StringBuilder();
-            for (int j = 0; j < Length; j++) {
-                // 最底行中间位置放控制器
-                if (i == Width - 1 && j == Length / 2) {
-                    str.append('S');
-                }
-                // 边界（第一行、最后一行、第一列、最后一列）使用X
-                else if (i == 0 || i == Width - 1 || j == 0 || j == Length - 1) {
-                    str.append('X');
-                }
-                // 中间区域使用Y
-                else {
-                    str.append('Y');
+        SolarDimensions dimensions = scan.dimensions;
+        context.emit(DIMENSIONS_KEY, dimensions);
+        context.emit(WIDTH_KEY, dimensions.width);
+        context.emit(LENGTH_KEY, dimensions.length);
+
+        RuntimeCellElements elements = controller.createRuntimeCellElements();
+        int center = dimensions.length / 2;
+        for (int back = 0; back < dimensions.width; back++) {
+            for (int lateral = -center; lateral <= center; lateral++) {
+                SolarCellType cellType = classifySolarCell(lateral, back, dimensions);
+                BlockPos pos = context.localPos(
+                        lateral, 0, back,
+                        RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.FRONT);
+                IStructureElement<?> element = elements.get(cellType);
+                if (!context.match(pos, element)) {
+                    return context.fail(pos, cellType.expected,
+                            String.valueOf(context.getWorld().getBlockState(pos)));
                 }
             }
-            pattern.aisle(str.toString());
+        }
+        return true;
+    }
+
+    @NotNull
+    private RuntimeCellElements createRuntimeCellElements() {
+        return new RuntimeCellElements(
+                self(MetaTileEntitySteamSolarBoiler.class),
+                chain(blocks(getULVCasingState()),
+                        abilities(1, -1, 1, MultiblockAbility.IMPORT_FLUIDS),
+                        abilities(1, -1, 1, MultiblockAbility.EXPORT_FLUIDS)),
+                blocks(getSolarCasingState()));
+    }
+
+    @NotNull
+    private static SolarCellType classifySolarCell(int lateral,
+                                                   int back,
+                                                   @NotNull SolarDimensions dimensions) {
+        if (back == 0 && lateral == 0) {
+            return SolarCellType.CONTROLLER;
+        }
+        if (back == 0 || back == dimensions.width - 1 || Math.abs(lateral) == dimensions.length / 2) {
+            return SolarCellType.FRAME;
+        }
+        return SolarCellType.COLLECTOR;
+    }
+
+    @NotNull
+    @Override
+    public List<StructureChannel> getSupportedChannels() {
+        return Arrays.asList(
+                GTStructureChannels.STRUCTURE_WIDTH,
+                GTStructureChannels.STRUCTURE_LENGTH);
+    }
+
+    @Override
+    public int[] getChannelRange(@NotNull StructureChannel channel) {
+        String channelName = channel.getName();
+        if (GTStructureChannels.STRUCTURE_WIDTH.getName().equals(channelName) ||
+                GTStructureChannels.STRUCTURE_LENGTH.getName().equals(channelName)) {
+            return new int[] { MIN_STRUCTURE_SIZE, MAX_STRUCTURE_SIZE };
+        }
+        return super.getChannelRange(channel);
+    }
+
+    @Override
+    public List<MultiblockShapeInfo> getMatchingShapes(@Nullable Map<String, Integer> channelValues) {
+        SolarDimensions dimensions = resolveToolingDimensions(channelValues);
+        StructureRuntime runtime = createToolingRuntime(dimensions);
+        return Collections.singletonList(DynamicStructureTooling.previewShape(runtime, dimensions.width, channelValues));
+    }
+
+    @NotNull
+    @Override
+    public Map<BlockPos, StructureElementPreviewEntry> buildStructurePreviewEntries(
+            @Nullable Map<String, Integer> channelValues) {
+        SolarDimensions dimensions = resolveToolingDimensions(channelValues);
+        StructureRuntime runtime = createToolingRuntime(dimensions);
+        return DynamicStructureTooling.buildPreviewEntries(runtime, dimensions.width, channelValues);
+    }
+
+    @Override
+    public boolean autoBuildStructure(@NotNull StructureOperationRequest request) {
+        request.requireBuildKind();
+        createToolingRuntime(resolveToolingDimensions(request.getChannelValues())).buildAllPieces(request);
+        return true;
+    }
+
+    @Override
+    public void spawnStructureHints(@NotNull StructureOperationRequest request) {
+        hintStructure(request);
+    }
+
+    @Override
+    @NotNull
+    public StructureHintResult hintStructure(@NotNull StructureOperationRequest request) {
+        request.requireKind(StructureOperationRequest.Kind.HINT);
+        return createToolingRuntime(resolveToolingDimensions(request.getChannelValues())).hintAllPieces(request);
+    }
+
+    @NotNull
+    private StructureRuntime createToolingRuntime(@NotNull SolarDimensions dimensions) {
+        return createDynamicStructureRuntime(buildToolingDefinition(dimensions));
+    }
+
+    @NotNull
+    private StructureDefinition<?> buildToolingDefinition(@NotNull SolarDimensions dimensions) {
+        return StructureDefinition.<MetaTileEntitySteamSolarBoiler>builder(
+                        RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK)
+                .pieceFromTemplate(RUNTIME_PIECE, buildToolingTemplate(dimensions))
+                .end()
+                .globalAbilityLimit(MultiblockAbility.IMPORT_FLUIDS, 1, -1)
+                .globalAbilityLimit(MultiblockAbility.EXPORT_FLUIDS, 1, -1)
+                .build();
+    }
+
+    @NotNull
+    private PieceTemplate buildToolingTemplate(@NotNull SolarDimensions dimensions) {
+        IStructureElement<?>[][][] template =
+                new IStructureElement<?>[dimensions.width][1][dimensions.length];
+        RuntimeCellElements elements = createRuntimeCellElements();
+        int center = dimensions.length / 2;
+        for (int aisle = 0; aisle < dimensions.width; aisle++) {
+            int back = dimensions.width - 1 - aisle;
+            for (int x = 0; x < dimensions.length; x++) {
+                int lateral = x - center;
+                template[aisle][0][x] = elements.get(classifySolarCell(lateral, back, dimensions));
+            }
         }
 
-        return pattern
-                .self('S', MetaTileEntitySteamSolarBoiler.class)
-                .where('X', chain(blocks(getULVCasingState()),
-                        abilities(1, -1, 1, MultiblockAbility.IMPORT_FLUIDS),
-                        abilities(1, -1, 1, MultiblockAbility.EXPORT_FLUIDS)))
-                .where('Y', blocks(getSolarCasingState()))
-                .buildStructureDefinition();
+        int[][] repetitions = new int[dimensions.width][2];
+        for (int i = 0; i < repetitions.length; i++) {
+            repetitions[i][0] = 1;
+            repetitions[i][1] = 1;
+        }
+        int[] centerOffset = new int[] {
+                center, 0, dimensions.width - 1, dimensions.width - 1, dimensions.width - 1
+        };
+        return new PieceTemplate(
+                template,
+                new RelativeDirection[] {
+                        RelativeDirection.RIGHT,
+                        RelativeDirection.UP,
+                        RelativeDirection.BACK
+                },
+                repetitions,
+                new String[repetitions.length],
+                centerOffset,
+                null);
+    }
+
+    @NotNull
+    private static SolarDimensions resolveToolingDimensions(@Nullable Map<String, Integer> channelValues) {
+        int width = DynamicStructureTooling.resolveChannel(
+                channelValues, GTStructureChannels.STRUCTURE_WIDTH.getName(),
+                DEFAULT_STRUCTURE_SIZE, MIN_STRUCTURE_SIZE, MAX_STRUCTURE_SIZE);
+        int length = DynamicStructureTooling.resolveOddChannel(
+                channelValues, GTStructureChannels.STRUCTURE_LENGTH.getName(),
+                DEFAULT_STRUCTURE_SIZE, MIN_STRUCTURE_SIZE, MAX_STRUCTURE_SIZE);
+        return new SolarDimensions(length, width);
     }
 
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
-        List<MultiblockShapeInfo> shapeInfo = new ArrayList<>();
-
-        // 生成从3到15的所有奇数尺寸预览结构
-        for (int size = 3; size <= 15; size += 2) {
-            MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder();
-
-            // 构建每一层
-            for (int i = 0; i < size; i++) {
-                StringBuilder aisle = new StringBuilder();
-                for (int j = 0; j < size; j++) {
-                    // 最底行中间位置放控制器，两侧放舱室
-                    if (i == size - 1) {
-                        if (j == size / 2) {
-                            aisle.append('S'); // 控制器
-                        } else if (j == size / 2 - 1) {
-                            aisle.append('M'); // 流体输入舱
-                        } else if (j == size / 2 + 1) {
-                            aisle.append('Q'); // 流体输出舱
-                        } else {
-                            // 最底行的其他位置按边界处理
-                            aisle.append('X');
-                        }
-                    } else {
-                        // 其他行：边界用X，内部用Y
-                        if (i == 0 || i == size - 1 || j == 0 || j == size - 1) {
-                            aisle.append('X'); // 边界
-                        } else {
-                            aisle.append('Y'); // 内部
-                        }
-                    }
-                }
-                builder.aisle(aisle.toString());
-            }
-
-            // 设置方块映射
-            builder
-                    .where('S', GTSteamMetaTileEntities.STEAM_SOLAR_BOILER, SOUTH)
-                    .where('M', MetaTileEntities.FLUID_IMPORT_HATCH[ULV], SOUTH)
-                    .where('Q', MetaTileEntities.FLUID_EXPORT_HATCH[ULV], SOUTH)
-                    .where('X', getULVCasingState())
-                    .where('Y', getSolarCasingState());
-
-            shapeInfo.add(builder.build());
-        }
-
-        return shapeInfo;
+        return getMatchingShapes(Collections.emptyMap());
     }
 
-    private void updateStructureDimensions() {
+    @NotNull
+    private DimensionScanResult scanStructureDimensions() {
         World world = getWorld();
+        if (world == null) {
+            return DimensionScanResult.failure(
+                    getPos(), "loaded world", "steam solar boiler controller has no world");
+        }
         EnumFacing front = getFrontFacing();
-        if (front == UP || front == DOWN) return;
+        if (front == UP || front == DOWN) {
+            return DimensionScanResult.failure(
+                    getPos(), "horizontal controller facing", String.valueOf(front));
+        }
         EnumFacing back = front.getOpposite();
         EnumFacing left = front.rotateYCCW();
         EnumFacing right = left.getOpposite();
@@ -448,16 +577,141 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
             if ((isBlockEdge(world, bPos, back))) bDist = i;
             if (bDist != 0) break;
         }
-        this.Length = lDist + rDist - 1;
-        this.Width = bDist;
+        SolarDimensions dimensions = new SolarDimensions(lDist + rDist - 1, bDist);
+        if (dimensions.length < MIN_STRUCTURE_SIZE || dimensions.width < MIN_STRUCTURE_SIZE) {
+            return DimensionScanResult.failure(
+                    getPos(), "solar boiler dimensions at least 3x3", dimensions.toString());
+        }
+        if (dimensions.length > MAX_STRUCTURE_SIZE || dimensions.width > MAX_STRUCTURE_SIZE) {
+            return DimensionScanResult.failure(
+                    getPos(), "solar boiler dimensions at most 15x15", dimensions.toString());
+        }
+        if (dimensions.length % 2 == 0) {
+            return DimensionScanResult.failure(
+                    getPos(), "odd solar boiler length so the controller can be centered", dimensions.toString());
+        }
+        return DimensionScanResult.success(dimensions);
+    }
+
+    private void applyStructureDimensions(@NotNull SolarDimensions dimensions) {
+        this.Length = dimensions.length;
+        this.Width = dimensions.width;
+    }
+
+    private enum SolarCellType {
+
+        CONTROLLER("steam solar boiler controller"),
+        FRAME("ULV casing or fluid hatch"),
+        COLLECTOR("solar collector casing");
+
+        @NotNull
+        private final String expected;
+
+        SolarCellType(@NotNull String expected) {
+            this.expected = expected;
+        }
+    }
+
+    private static final class RuntimeCellElements {
+
+        @NotNull
+        private final IStructureElement<?> controller;
+        @NotNull
+        private final IStructureElement<?> frame;
+        @NotNull
+        private final IStructureElement<?> collector;
+
+        private RuntimeCellElements(@NotNull IStructureElement<?> controller,
+                                    @NotNull IStructureElement<?> frame,
+                                    @NotNull IStructureElement<?> collector) {
+            this.controller = controller.compile();
+            this.frame = frame.compile();
+            this.collector = collector.compile();
+        }
+
+        @NotNull
+        private IStructureElement<?> get(@NotNull SolarCellType type) {
+            switch (type) {
+                case CONTROLLER:
+                    return controller;
+                case FRAME:
+                    return frame;
+                case COLLECTOR:
+                    return collector;
+                default:
+                    throw new IllegalStateException("Unhandled solar cell type " + type);
+            }
+        }
+    }
+
+    private static final class SolarDimensions {
+
+        private final int length;
+        private final int width;
+
+        private SolarDimensions(int length, int width) {
+            this.length = length;
+            this.width = width;
+        }
+
+        @Override
+        public String toString() {
+            return "length=" + length + ", width=" + width;
+        }
+    }
+
+    private static final class DimensionScanResult {
+
+        @Nullable
+        private final SolarDimensions dimensions;
+        @NotNull
+        private final BlockPos failurePos;
+        @NotNull
+        private final String expected;
+        @NotNull
+        private final String actual;
+
+        private DimensionScanResult(@Nullable SolarDimensions dimensions,
+                                    @NotNull BlockPos failurePos,
+                                    @NotNull String expected,
+                                    @NotNull String actual) {
+            this.dimensions = dimensions;
+            this.failurePos = failurePos.toImmutable();
+            this.expected = expected;
+            this.actual = actual;
+        }
+
+        @NotNull
+        private static DimensionScanResult success(@NotNull SolarDimensions dimensions) {
+            return new DimensionScanResult(dimensions, BlockPos.ORIGIN, "detected solar boiler dimensions", "matched");
+        }
+
+        @NotNull
+        private static DimensionScanResult failure(@NotNull BlockPos pos,
+                                                   @NotNull String expected,
+                                                   @NotNull String actual) {
+            return new DimensionScanResult(null, pos, expected, actual);
+        }
+
+        private boolean isSuccess() {
+            return dimensions != null;
+        }
     }
 
 
     public IBlockState getULVCasingState() {
-        return MACHINE_CASING.getState(BlockMachineCasing.MachineCasingType.ULV);
+        return getStaticULVCasingState();
     }
 
     public IBlockState getSolarCasingState() {
+        return getStaticSolarCasingState();
+    }
+
+    private static IBlockState getStaticULVCasingState() {
+        return MACHINE_CASING.getState(BlockMachineCasing.MachineCasingType.ULV);
+    }
+
+    private static IBlockState getStaticSolarCasingState() {
         return GTSteamMetaBlocks.blockMultiblockCasing1.getState(BlockMultiblockCasing1.CasingType.SOLAR_COLLECTOR);
     }
 

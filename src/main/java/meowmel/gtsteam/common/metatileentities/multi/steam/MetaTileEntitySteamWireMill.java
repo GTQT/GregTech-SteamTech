@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static gregtech.api.util.RelativeDirection.*;
 import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
 import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.BRONZE_PIPE;
 
@@ -38,7 +39,7 @@ public class MetaTileEntitySteamWireMill extends RecipeMapSteamMultiblockControl
 
     private static final int PARALLEL_LIMIT = 4;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_wire_mill", () ->
-            DeclarativePatternBuilder.start()
+            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                     .aisle("TTTFXXXX", "XXXFXXXX", "TTTFXXXX")
                     .aisle("TXXFXXXX", "XGGGGGGX", "TXXFXXXX")
                     .aisle("TTTFXXXX", "XSXFXXXX", "TTTFXXXX")

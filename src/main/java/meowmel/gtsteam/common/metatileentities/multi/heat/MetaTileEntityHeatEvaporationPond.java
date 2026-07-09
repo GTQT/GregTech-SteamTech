@@ -8,8 +8,19 @@ import gregtech.api.metatileentity.multiblock.HeatMultiblockController;
 import gregtech.api.metatileentity.multiblock.IMultiblockAbilityPart;
 import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
+import gregtech.api.pattern.FormedStructureView;
 import gregtech.api.pattern.MultiblockShapeInfo;
+import gregtech.api.pattern.StructureContributionKey;
+import gregtech.api.pattern.StructureElementPreviewEntry;
+import gregtech.api.pattern.StructureHintResult;
+import gregtech.api.pattern.StructureMatchCollector;
+import gregtech.api.pattern.StructureOperationRequest;
+import gregtech.api.pattern.StructureRuntime;
+import gregtech.api.pattern.StructureRuntimeDetectionContext;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
+import gregtech.api.pattern.casing.GTStructureChannels;
+import gregtech.api.pattern.casing.StructureChannel;
+import gregtech.api.pattern.element.IStructureElement;
 import gregtech.api.pattern.element.StructureDefinition;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
@@ -21,10 +32,9 @@ import gregtech.core.sound.GTSoundEvents;
 import meowmel.gtsteam.api.recipes.GTSRecipeMaps;
 import meowmel.gtsteam.common.block.GTSteamMetaBlocks;
 import meowmel.gtsteam.common.block.blocks.BlockEvaporationBed;
-import meowmel.gtsteam.common.metatileentities.GTSteamMetaTileEntities;
+import meowmel.gtsteam.common.metatileentities.multi.DynamicStructureTooling;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
@@ -39,14 +49,34 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
-import static gregtech.common.metatileentities.MetaTileEntities.HEAT_INPUT_HATCH;
-import static net.minecraft.util.EnumFacing.NORTH;
-import static net.minecraft.util.EnumFacing.SOUTH;
+import static gregtech.api.util.RelativeDirection.*;
 
 public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController {
+    private static final int MIN_TIER = 1;
+    private static final int MAX_TIER = 5;
+    private static final int DEFAULT_TIER = 1;
+    private static final String RUNTIME_PIECE = "runtime";
+    private static final StructureContributionKey<Integer, Integer> POND_TIER_KEY =
+            StructureContributionKey.uniform("gtsteam:heat_evaporation_pond/tier");
+    private static final StructureContributionKey<Integer, Integer> STRUCTURE_TIER_KEY =
+            StructureMatchCollector.channelValueKey(GTStructureChannels.STRUCTURE_TIER.getName());
+    private static final StructureDefinition<MetaTileEntityHeatEvaporationPond> STRUCTURE_DEFINITION =
+            StructureDefinition.getOrBuild("gtsteam:heat_evaporation_pond", () ->
+                    StructureDefinition.<MetaTileEntityHeatEvaporationPond>builder(RIGHT, UP, BACK)
+                            .piece(RUNTIME_PIECE, "S")
+                            .where('S', self(MetaTileEntityHeatEvaporationPond.class))
+                            .end()
+                            .globalAbilityLimit(MultiblockAbility.EXPORT_ITEMS, 0, 2)
+                            .globalAbilityLimit(MultiblockAbility.IMPORT_ITEMS, 0, 1)
+                            .globalAbilityLimit(MultiblockAbility.EXPORT_FLUIDS, 0, 2)
+                            .globalAbilityLimit(MultiblockAbility.IMPORT_FLUIDS, 0, 1)
+                            .globalAbilityLimit(MultiblockAbility.INPUT_HEAT, 1, 1)
+                            .runtimeDetector(MetaTileEntityHeatEvaporationPond::detectRuntimeStructure)
+                            .build());
 
     private int tier;
 
@@ -68,77 +98,183 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
     }
 
     @Override
-    public void checkStructurePattern() {
-        if (!this.isStructureFormed()) {
-            reinitializeStructurePattern();
+    protected void formStructure(@NotNull FormedStructureView formed) {
+        super.formStructure(formed);
+        Integer matchedTier = formed.getAggregate(POND_TIER_KEY);
+        if (matchedTier == null) {
+            invalidateStructure();
+            return;
         }
+        this.tier = matchedTier;
+    }
+
+    @Override
+    public void checkStructurePattern() {
         super.checkStructurePattern();
     }
 
     @Override
     protected @NotNull StructureDefinition<?> createStructureDefinition() {
-        if (getWorld() != null) updateStructureDimensions();
-        DeclarativePatternBuilder pattern = DeclarativePatternBuilder.start();
-        if (tier < 1 || tier > 5) tier = 1;
+        return STRUCTURE_DEFINITION;
+    }
 
-        if (tier == 1)//TIER 1
-            pattern = pattern
-                    .aisle("FFFFF", "     ")
-                    .aisle("FCCCF", " CCC ")
-                    .aisle("FCPCF", " C C ")
-                    .aisle("FCCCF", " CSC ")
-                    .aisle("FFFFF", "     ");
-        else if (tier == 2)//TIER 2
-            pattern = pattern
-                    .aisle("FFFFFFF", "       ")
-                    .aisle("FCCCCCF", " CCCCC ")
-                    .aisle("FCPPPCF", " C   C ")
-                    .aisle("FCPPPCF", " C   C ")
-                    .aisle("FCPPPCF", " C   C ")
-                    .aisle("FCCCCCF", " CCSCC ")
-                    .aisle("FFFFFFF", "       ");
-        else if (tier == 3)//TIER 3
-            pattern = pattern
-                    .aisle("FFFFFFFFF", "         ")
-                    .aisle("FCCCCCCCF", " CCCCCCC ")
-                    .aisle("FCPPPPPCF", " C     C ")
-                    .aisle("FCPPPPPCF", " C     C ")
-                    .aisle("FCPPPPPCF", " C     C ")
-                    .aisle("FCPPPPPCF", " C     C ")
-                    .aisle("FCPPPPPCF", " C     C ")
-                    .aisle("FCCCCCCCF", " CCCSCCC ")
-                    .aisle("FFFFFFFFF", "         ");
+    private static boolean detectRuntimeStructure(
+            @NotNull StructureRuntimeDetectionContext<MetaTileEntityHeatEvaporationPond> context) {
+        MetaTileEntityHeatEvaporationPond controller = context.getController();
+        TierScanResult scan = controller.scanStructureTier();
+        if (!scan.isSuccess()) {
+            return context.fail(scan.failurePos, scan.expected, scan.actual);
+        }
 
-        else if (tier == 4)//TIER 4
-            pattern = pattern
-                    .aisle("FFFFFFFFFFF", "           ")
-                    .aisle("FCCCCCCCCCF", " CCCCCCCCC ")
-                    .aisle("FCPPPPPPPCF", " C       C ")
-                    .aisle("FCPPPPPPPCF", " C       C ")
-                    .aisle("FCPPPPPPPCF", " C       C ")
-                    .aisle("FCPPPPPPPCF", " C       C ")
-                    .aisle("FCPPPPPPPCF", " C       C ")
-                    .aisle("FCPPPPPPPCF", " C       C ")
-                    .aisle("FCPPPPPPPCF", " C       C ")
-                    .aisle("FCCCCCCCCCF", " CCCCSCCCC ")
-                    .aisle("FFFFFFFFFFF", "           ");
+        int detectedTier = scan.tier;
+        context.emit(POND_TIER_KEY, detectedTier);
+        context.emit(STRUCTURE_TIER_KEY, detectedTier);
 
-        else if (tier == 5)//TIER 5
-            pattern = pattern
-                    .aisle("FFFFFFFFFFFFF", "             ")
-                    .aisle("FCCCCCCCCCCCF", " CCCCCCCCCCC ")
-                    .aisle("FCPPPPPPPPPCF", " C         C ")
-                    .aisle("FCPPPPPPPPPCF", " C         C ")
-                    .aisle("FCPPPPPPPPPCF", " C         C ")
-                    .aisle("FCPPPPPPPPPCF", " C         C ")
-                    .aisle("FCPPPPPPPPPCF", " C         C ")
-                    .aisle("FCPPPPPPPPPCF", " C         C ")
-                    .aisle("FCPPPPPPPPPCF", " C         C ")
-                    .aisle("FCPPPPPPPPPCF", " C         C ")
-                    .aisle("FCPPPPPPPPPCF", " C         C ")
-                    .aisle("FCCCCCCCCCCCF", " CCCCCSCCCCC ")
-                    .aisle("FFFFFFFFFFFFF", "             ");
+        RuntimeCellElements elements = controller.createRuntimeCellElements();
+        int size = sizeForTier(detectedTier);
+        int center = size / 2;
+        int controllerAisle = controllerAisleForTier(detectedTier);
+        for (int aisle = 0; aisle < size; aisle++) {
+            int localBack = controllerAisle - aisle;
+            for (int y = 0; y < 2; y++) {
+                int localY = y - 1;
+                for (int x = 0; x < size; x++) {
+                    PondCellType cellType = classifyPondCell(x, y, aisle, detectedTier);
+                    BlockPos pos = context.localPos(
+                            x - center, localY, localBack,
+                            RIGHT, UP, BACK);
+                    IStructureElement<?> element = elements.get(cellType);
+                    if (!context.match(pos, element)) {
+                        return context.fail(pos, cellType.expected,
+                                String.valueOf(context.getWorld().getBlockState(pos)));
+                    }
+                }
+            }
+        }
+        return true;
+    }
 
+    @NotNull
+    private RuntimeCellElements createRuntimeCellElements() {
+        return new RuntimeCellElements(
+                self(MetaTileEntityHeatEvaporationPond.class),
+                chain(blocks(getCasingState()),
+                        abilities(0, 2, MultiblockAbility.EXPORT_ITEMS),
+                        abilities(0, 1, MultiblockAbility.IMPORT_ITEMS),
+                        abilities(0, 2, MultiblockAbility.EXPORT_FLUIDS),
+                        abilities(0, 1, MultiblockAbility.IMPORT_FLUIDS),
+                        abilities(1, 1, MultiblockAbility.INPUT_HEAT)),
+                blocks(getFireBoxState()),
+                blocks(getPipeState()),
+                any());
+    }
+
+    @NotNull
+    private static PondCellType classifyPondCell(int x, int y, int aisle, int tier) {
+        int size = sizeForTier(tier);
+        int center = size / 2;
+        int controllerAisle = controllerAisleForTier(tier);
+
+        if (y == 0) {
+            if (aisle == 0 || aisle == size - 1 || x == 0 || x == size - 1) {
+                return PondCellType.FIREBOX;
+            }
+            if (aisle >= 2 && aisle <= size - 3 && x >= 2 && x <= size - 3) {
+                return PondCellType.PIPE;
+            }
+            return PondCellType.CASING;
+        }
+
+        if (aisle == controllerAisle && x == center) {
+            return PondCellType.CONTROLLER;
+        }
+        if (aisle == 0 || aisle == size - 1 || x == 0 || x == size - 1) {
+            return PondCellType.ANY;
+        }
+        if (aisle == 1 || aisle == controllerAisle || x == 1 || x == size - 2) {
+            return PondCellType.CASING;
+        }
+        return PondCellType.ANY;
+    }
+
+    private static int sizeForTier(int tier) {
+        return tier * 2 + 3;
+    }
+
+    private static int controllerAisleForTier(int tier) {
+        return sizeForTier(tier) - 2;
+    }
+
+    @NotNull
+    @Override
+    public List<StructureChannel> getSupportedChannels() {
+        return Collections.singletonList(GTStructureChannels.STRUCTURE_TIER);
+    }
+
+    @Override
+    public int[] getChannelRange(@NotNull StructureChannel channel) {
+        if (GTStructureChannels.STRUCTURE_TIER.getName().equals(channel.getName())) {
+            return new int[] { MIN_TIER, MAX_TIER };
+        }
+        return super.getChannelRange(channel);
+    }
+
+    @Override
+    public List<MultiblockShapeInfo> getMatchingShapes(@Nullable Map<String, Integer> channelValues) {
+        int toolingTier = resolveToolingTier(channelValues);
+        StructureRuntime runtime = createToolingRuntime(toolingTier);
+        return Collections.singletonList(DynamicStructureTooling.previewShape(
+                runtime, sizeForTier(toolingTier), channelValues));
+    }
+
+    @NotNull
+    @Override
+    public Map<BlockPos, StructureElementPreviewEntry> buildStructurePreviewEntries(
+            @Nullable Map<String, Integer> channelValues) {
+        int toolingTier = resolveToolingTier(channelValues);
+        StructureRuntime runtime = createToolingRuntime(toolingTier);
+        return DynamicStructureTooling.buildPreviewEntries(runtime, sizeForTier(toolingTier), channelValues);
+    }
+
+    @Override
+    public boolean autoBuildStructure(@NotNull StructureOperationRequest request) {
+        request.requireBuildKind();
+        createToolingRuntime(resolveToolingTier(request.getChannelValues())).buildAllPieces(request);
+        return true;
+    }
+
+    @Override
+    public void spawnStructureHints(@NotNull StructureOperationRequest request) {
+        hintStructure(request);
+    }
+
+    @Override
+    @NotNull
+    public StructureHintResult hintStructure(@NotNull StructureOperationRequest request) {
+        request.requireKind(StructureOperationRequest.Kind.HINT);
+        return createToolingRuntime(resolveToolingTier(request.getChannelValues())).hintAllPieces(request);
+    }
+
+    @NotNull
+    private StructureRuntime createToolingRuntime(int toolingTier) {
+        return createDynamicStructureRuntime(buildToolingDefinition(toolingTier));
+    }
+
+    @NotNull
+    private StructureDefinition<?> buildToolingDefinition(int toolingTier) {
+        DeclarativePatternBuilder pattern = DeclarativePatternBuilder.start(RIGHT, UP, BACK);
+        int size = sizeForTier(toolingTier);
+        for (int aisle = 0; aisle < size; aisle++) {
+            String[] rows = new String[2];
+            for (int y = 0; y < 2; y++) {
+                StringBuilder row = new StringBuilder();
+                for (int x = 0; x < size; x++) {
+                    row.append(classifyPondCell(x, y, aisle, toolingTier).pattern);
+                }
+                rows[y] = row.toString();
+            }
+            pattern.aisle(rows);
+        }
         return pattern.self('S', MetaTileEntityHeatEvaporationPond.class)
                 .where('C', chain(blocks(getCasingState()),
                         abilities(0, 2, MultiblockAbility.EXPORT_ITEMS),
@@ -150,122 +286,38 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
                 .where('P', blocks(getPipeState()))
                 .where(' ', any())
                 .buildStructureDefinition();
+    }
 
+    private static int resolveToolingTier(@Nullable Map<String, Integer> channelValues) {
+        return DynamicStructureTooling.resolveChannel(
+                channelValues, GTStructureChannels.STRUCTURE_TIER.getName(),
+                DEFAULT_TIER, MIN_TIER, MAX_TIER);
     }
 
     @Override
     public List<MultiblockShapeInfo> getMatchingShapes() {
-        List<MultiblockShapeInfo> shapeInfo = new ArrayList<>();
-
-        MultiblockShapeInfo.Builder builder = MultiblockShapeInfo.builder();
-
-        // TIER 1
-        builder
-                .aisle("FFFFF", "     ")
-                .aisle("FCCCF", " CIC ")
-                .aisle("FCPCF", " C C ")
-                .aisle("FCCCF", " CSC ")
-                .aisle("FFFFF", "     ")
-                .where('S', GTSteamMetaTileEntities.HEAT_EVAPORATION_POND, SOUTH)
-                .where('I', HEAT_INPUT_HATCH[0], NORTH)
-                .where('C', getCasingState())
-                .where('F', getFireBoxState())
-                .where('P', getPipeState())
-                .where(' ', Blocks.AIR.getDefaultState());
-        shapeInfo.add(builder.build());
-
-        // TIER 2
-        builder = MultiblockShapeInfo.builder()
-                .aisle("FFFFFFF", "       ")
-                .aisle("FCCCCCF", " CCICC ")
-                .aisle("FCPPPCF", " C   C ")
-                .aisle("FCPPPCF", " C   C ")
-                .aisle("FCPPPCF", " C   C ")
-                .aisle("FCCCCCF", " CCSCC ")
-                .aisle("FFFFFFF", "       ")
-                .where('S', GTSteamMetaTileEntities.HEAT_EVAPORATION_POND, SOUTH)
-                .where('I', HEAT_INPUT_HATCH[0], NORTH)
-                .where('C', getCasingState())
-                .where('F', getFireBoxState())
-                .where('P', getPipeState())
-                .where(' ', Blocks.AIR.getDefaultState());
-        shapeInfo.add(builder.build());
-
-        // TIER 3
-        builder = MultiblockShapeInfo.builder()
-                .aisle("FFFFFFFFF", "         ")
-                .aisle("FCCCCCCCF", " CCCICCC ")
-                .aisle("FCPPPPPCF", " C     C ")
-                .aisle("FCPPPPPCF", " C     C ")
-                .aisle("FCPPPPPCF", " C     C ")
-                .aisle("FCPPPPPCF", " C     C ")
-                .aisle("FCPPPPPCF", " C     C ")
-                .aisle("FCCCCCCCF", " CCCSCCC ")
-                .aisle("FFFFFFFFF", "         ")
-                .where('S', GTSteamMetaTileEntities.HEAT_EVAPORATION_POND, SOUTH)
-                .where('I', HEAT_INPUT_HATCH[0], NORTH)
-                .where('C', getCasingState())
-                .where('F', getFireBoxState())
-                .where('P', getPipeState())
-                .where(' ', Blocks.AIR.getDefaultState());
-        shapeInfo.add(builder.build());
-
-        // TIER 4
-        builder = MultiblockShapeInfo.builder()
-                .aisle("FFFFFFFFFFF", "           ")
-                .aisle("FCCCCCCCCCF", " CCCCICCCC ")
-                .aisle("FCPPPPPPPCF", " C       C ")
-                .aisle("FCPPPPPPPCF", " C       C ")
-                .aisle("FCPPPPPPPCF", " C       C ")
-                .aisle("FCPPPPPPPCF", " C       C ")
-                .aisle("FCPPPPPPPCF", " C       C ")
-                .aisle("FCPPPPPPPCF", " C       C ")
-                .aisle("FCPPPPPPPCF", " C       C ")
-                .aisle("FCCCCCCCCCF", " CCCCSCCCC ")
-                .aisle("FFFFFFFFFFF", "           ")
-                .where('S', GTSteamMetaTileEntities.HEAT_EVAPORATION_POND, SOUTH)
-                .where('I', HEAT_INPUT_HATCH[0], NORTH)
-                .where('C', getCasingState())
-                .where('F', getFireBoxState())
-                .where('P', getPipeState())
-                .where(' ', Blocks.AIR.getDefaultState());
-        shapeInfo.add(builder.build());
-
-        // TIER 5
-        builder = MultiblockShapeInfo.builder()
-                .aisle("FFFFFFFFFFFFF", "             ")
-                .aisle("FCCCCCCCCCCCF", " CCCCCICCCCC ")
-                .aisle("FCPPPPPPPPPCF", " C         C ")
-                .aisle("FCPPPPPPPPPCF", " C         C ")
-                .aisle("FCPPPPPPPPPCF", " C         C ")
-                .aisle("FCPPPPPPPPPCF", " C         C ")
-                .aisle("FCPPPPPPPPPCF", " C         C ")
-                .aisle("FCPPPPPPPPPCF", " C         C ")
-                .aisle("FCPPPPPPPPPCF", " C         C ")
-                .aisle("FCPPPPPPPPPCF", " C         C ")
-                .aisle("FCPPPPPPPPPCF", " C         C ")
-                .aisle("FCCCCCCCCCCCF", " CCCCCSCCCCC ")
-                .aisle("FFFFFFFFFFFFF", "             ")
-                .where('S', GTSteamMetaTileEntities.HEAT_EVAPORATION_POND, SOUTH)
-                .where('I', HEAT_INPUT_HATCH[0], NORTH)
-                .where('C', getCasingState())
-                .where('F', getFireBoxState())
-                .where('P', getPipeState())
-                .where(' ', Blocks.AIR.getDefaultState());
-        shapeInfo.add(builder.build());
-
-        return shapeInfo;
+        return getMatchingShapes(Collections.emptyMap());
     }
 
-    private void updateStructureDimensions() {
+    @NotNull
+    private TierScanResult scanStructureTier() {
         World world = getWorld();
+        if (world == null) {
+            return TierScanResult.failure(
+                    getPos(), "loaded world", "heat evaporation pond controller has no world");
+        }
         BlockPos.MutableBlockPos bPos = new BlockPos.MutableBlockPos(getPos());
         EnumFacing front = getFrontFacing();
         EnumFacing back = front.getOpposite();
-        tier = 0;
+        int detectedTier = 0;
         for (int i = 0; i < 16; i += 1) {
-            if ((isBlockEdge(world, bPos, back))) tier = (i + 1) / 2;
+            if (isBlockEdge(world, bPos, back)) detectedTier = (i + 1) / 2;
         }
+        if (detectedTier < MIN_TIER || detectedTier > MAX_TIER) {
+            return TierScanResult.failure(
+                    getPos(), "evaporation pond tier from 1 to 5", "detected tier " + detectedTier);
+        }
+        return TierScanResult.success(detectedTier);
     }
 
     public boolean isBlockEdge(@NotNull World world, @NotNull BlockPos.MutableBlockPos pos,
@@ -281,6 +333,105 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
             }
         } else {
             return block == getCasingState();
+        }
+    }
+
+    private enum PondCellType {
+
+        CONTROLLER('S', "heat evaporation pond controller"),
+        CASING('C', "steel casing or allowed hatch"),
+        FIREBOX('F', "steel firebox casing"),
+        PIPE('P', "evaporation bed"),
+        ANY(' ', "any block");
+
+        private final char pattern;
+        @NotNull
+        private final String expected;
+
+        PondCellType(char pattern, @NotNull String expected) {
+            this.pattern = pattern;
+            this.expected = expected;
+        }
+    }
+
+    private static final class RuntimeCellElements {
+
+        @NotNull
+        private final IStructureElement<?> controller;
+        @NotNull
+        private final IStructureElement<?> casing;
+        @NotNull
+        private final IStructureElement<?> firebox;
+        @NotNull
+        private final IStructureElement<?> pipe;
+        @NotNull
+        private final IStructureElement<?> any;
+
+        private RuntimeCellElements(@NotNull IStructureElement<?> controller,
+                                    @NotNull IStructureElement<?> casing,
+                                    @NotNull IStructureElement<?> firebox,
+                                    @NotNull IStructureElement<?> pipe,
+                                    @NotNull IStructureElement<?> any) {
+            this.controller = controller.compile();
+            this.casing = casing.compile();
+            this.firebox = firebox.compile();
+            this.pipe = pipe.compile();
+            this.any = any.compile();
+        }
+
+        @NotNull
+        private IStructureElement<?> get(@NotNull PondCellType type) {
+            switch (type) {
+                case CONTROLLER:
+                    return controller;
+                case CASING:
+                    return casing;
+                case FIREBOX:
+                    return firebox;
+                case PIPE:
+                    return pipe;
+                case ANY:
+                    return any;
+                default:
+                    throw new IllegalStateException("Unhandled pond cell type " + type);
+            }
+        }
+    }
+
+    private static final class TierScanResult {
+
+        private final int tier;
+        @NotNull
+        private final BlockPos failurePos;
+        @NotNull
+        private final String expected;
+        @NotNull
+        private final String actual;
+
+        private TierScanResult(int tier,
+                               @NotNull BlockPos failurePos,
+                               @NotNull String expected,
+                               @NotNull String actual) {
+            this.tier = tier;
+            this.failurePos = failurePos.toImmutable();
+            this.expected = expected;
+            this.actual = actual;
+        }
+
+        @NotNull
+        private static TierScanResult success(int tier) {
+            return new TierScanResult(tier, BlockPos.ORIGIN, "detected pond tier", "matched");
+        }
+
+        @NotNull
+        private static TierScanResult failure(@NotNull BlockPos pos,
+                                              @NotNull String expected,
+                                              @NotNull String actual) {
+            return new TierScanResult(0, pos, expected, actual);
+        }
+
+        private boolean isSuccess() {
+            return tier >= MIN_TIER && tier <= MAX_TIER;
         }
     }
 

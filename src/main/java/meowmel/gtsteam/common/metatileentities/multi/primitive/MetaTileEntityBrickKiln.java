@@ -55,11 +55,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static gregtech.api.util.RelativeDirection.*;
+
 public class MetaTileEntityBrickKiln extends RecipeMapPrimitiveMultiblockController {
 
 
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:brick_kiln", () ->
-            DeclarativePatternBuilder.start()
+            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                     .aisle("XXX", "XXX", "#X#")
                     .aisle("XXX", "X&X", "X&X")
                     .aisle("XXX", "XYX", "#X#")

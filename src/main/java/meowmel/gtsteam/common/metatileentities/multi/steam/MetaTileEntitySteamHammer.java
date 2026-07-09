@@ -37,13 +37,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static gregtech.api.util.RelativeDirection.*;
 import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
 
 public class MetaTileEntitySteamHammer extends RecipeMapSteamMultiblockController {
 
     private static final int PARALLEL_LIMIT = 8;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_hammer", () ->
-            DeclarativePatternBuilder.start()
+            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                     .aisle("XXX", "XXX", "XXX")
                     .aisle("XXX", "XFX", "XXX")
                     .aisle("XXX", "XSX", "XXX")

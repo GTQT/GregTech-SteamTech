@@ -140,6 +140,11 @@ public class MetaTileEntityIndustrialCokeOven extends NoEnergyMultiblockControll
         return STRUCTURE_DEFINITION.get();
     }
 
+    @Override
+    public EnumFacing getFrontFacingForStructure() {
+        return getFrontFacing().getOpposite();
+    }
+
     @SideOnly(Side.CLIENT)
     @Override
     public ICubeRenderer getBaseTexture(IMultiblockPart sourcePart) {

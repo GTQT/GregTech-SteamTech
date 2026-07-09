@@ -31,11 +31,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static gregtech.api.util.RelativeDirection.*;
+
 public class MetaTileEntityHeatFurnace extends HeatMultiblockController {
 
     private static final int PARALLEL_LIMIT = 16;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_furnace", () ->
-            DeclarativePatternBuilder.start()
+            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                     .aisle("FFF", "CCC", "#C#")
                     .aisle("FCF", "C#C", "#C#")
                     .aisle("FFF", "CSC", "#C#")

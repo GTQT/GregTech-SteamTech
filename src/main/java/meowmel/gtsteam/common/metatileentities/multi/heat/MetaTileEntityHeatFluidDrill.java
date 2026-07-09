@@ -60,10 +60,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
+import static gregtech.api.util.RelativeDirection.*;
+
 public class MetaTileEntityHeatFluidDrill extends MultiblockWithDisplayBase implements IWorkable, ProgressBarMultiblock {
 
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_fluid_drill", () ->
-            DeclarativePatternBuilder.start()
+            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                     .aisle("FF           FF", "FF           FF", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
                     .aisle("FF           FF", "FF           FF", " FF         FF ", " FF         FF ", "               ", "     FFFFF     ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")
                     .aisle("               ", "               ", " FF         FF ", " FF         FF ", "  FFFFFFFFFFF  ", "    FF   FF    ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ", "               ")

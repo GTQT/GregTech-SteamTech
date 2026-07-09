@@ -33,10 +33,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static gregtech.api.util.RelativeDirection.*;
+
 public class MetaTileEntityHeatElectronicProcessor extends HeatMultiblockController {
 
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_electronic_processor", () ->
-            DeclarativePatternBuilder.start()
+            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                     .aisle("FFFGGG", "CCCCCC", "CCCCCC")
                     .aisle("FCF###", "CPPPPC", "CCCCCC")
                     .aisle("FFFGGG", "CSCCCC", "CCCCCC")

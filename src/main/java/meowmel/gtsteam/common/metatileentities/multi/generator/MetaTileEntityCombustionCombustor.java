@@ -64,6 +64,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
+import static gregtech.api.util.RelativeDirection.*;
 import static meowmel.gtsteam.common.metatileentities.multi.generator.CombustorType.*;
 
 public class MetaTileEntityCombustionCombustor extends MultiblockWithDisplayBase implements ProgressBarMultiblock,
@@ -96,7 +97,7 @@ public class MetaTileEntityCombustionCombustor extends MultiblockWithDisplayBase
     }
 
     private static StructureDefinition<?> buildStructureDefinition(CombustorType combustorType) {
-        return DeclarativePatternBuilder.start()
+        return DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                 .aisle("CCCFFFFFC", "CCCOOOOOC", "CCCAAAAAC")
                 .aisle("CCCCCCCCC", "CPPPPPPCC", "CCCMMMMMC")
                 .aisle("CCCFFFFFC", "CSCIIIIIC", "CCCAAAAAC")

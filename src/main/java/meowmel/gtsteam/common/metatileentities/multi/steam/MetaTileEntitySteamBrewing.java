@@ -32,11 +32,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static gregtech.api.util.RelativeDirection.*;
+
 public class MetaTileEntitySteamBrewing extends RecipeMapSteamMultiblockController {
 
     private static final int PARALLEL_LIMIT = 4;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_brewing", () ->
-            DeclarativePatternBuilder.start()
+            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                     .aisle("F#F", "BBB", "CCC", "CCC", "CCC")
                     .aisle("###", "BOB", "G#G", "G#G", "CCC")
                     .aisle("F#F", "BBB", "CSC", "CCC", "CCC")

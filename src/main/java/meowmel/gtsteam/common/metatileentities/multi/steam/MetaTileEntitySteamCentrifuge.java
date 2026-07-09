@@ -29,13 +29,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static gregtech.api.util.RelativeDirection.*;
 import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
 
 public class MetaTileEntitySteamCentrifuge extends RecipeMapSteamMultiblockController {
 
     private static final int PARALLEL_LIMIT = 4;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_centrifuge", () ->
-            DeclarativePatternBuilder.start()
+            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                     .aisle("XXXXX", " XXX ", " XXX ", " XXX ", "  X  ")
                     .aisle("XXXXX", "XT TX", "XT TX", "XT TX", " XXX ")
                     .aisle("XXXXX", "X X X", "X X X", "X X X", "XXXXX")

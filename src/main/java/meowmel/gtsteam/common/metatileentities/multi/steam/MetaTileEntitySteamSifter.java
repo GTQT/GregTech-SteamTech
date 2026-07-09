@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static gregtech.api.util.RelativeDirection.*;
 import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
 import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.BRONZE_PIPE;
 
@@ -37,7 +38,7 @@ public class MetaTileEntitySteamSifter extends RecipeMapSteamMultiblockControlle
 
     private static final int PARALLEL_LIMIT = 8;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_sifter", () ->
-            DeclarativePatternBuilder.start()
+            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                     .aisle("XXXXX", "F F F", "F F F", "XXXXX", "XXXXX")
                     .aisle("XXXXX", "     ", "     ", "XTTTX", "X   X")
                     .aisle("XXXXX", "F T F", "F T F", "XTTTX", "X   X")

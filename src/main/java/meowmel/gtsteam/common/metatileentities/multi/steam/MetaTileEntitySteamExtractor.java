@@ -36,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import static gregtech.api.util.RelativeDirection.*;
 import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
 import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.BRONZE_PIPE;
 
@@ -43,7 +44,7 @@ public class MetaTileEntitySteamExtractor extends RecipeMapSteamMultiblockContro
 
     private static final int PARALLEL_LIMIT = 4;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_extractor", () ->
-            DeclarativePatternBuilder.start()
+            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                     .aisle("XXX", "XXX", "XXX")
                     .aisle("XXX", "FTF", "XXX")
                     .aisle("XXX", "FTF", "XXX")

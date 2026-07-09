@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+import static gregtech.api.util.RelativeDirection.*;
 import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
 import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.BRONZE_PIPE;
 
@@ -39,7 +40,7 @@ public class MetaTileEntitySteamOreWasher extends RecipeMapSteamMultiblockContro
 
     private static final int PARALLEL_LIMIT = 8;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_ore_washer", () ->
-            DeclarativePatternBuilder.start()
+            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                     .aisle("MTTTM", "MMMMM", "MMMMM")
                     .aisle("TPPPT", "MFFFM", "M###M")
                     .aisle("TPPPT", "MFFFM", "M###M")

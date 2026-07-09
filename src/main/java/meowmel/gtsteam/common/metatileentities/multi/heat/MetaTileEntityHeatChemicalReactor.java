@@ -32,10 +32,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static gregtech.api.util.RelativeDirection.*;
+
 public class MetaTileEntityHeatChemicalReactor extends HeatMultiblockController {
 
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_chemical_reactor", () ->
-            DeclarativePatternBuilder.start()
+            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                     .aisle("CCC", "CFC", "CCC")
                     .aisle("CCC", "CPC", "CCC")
                     .aisle("CCC", "CSC", "CCC")

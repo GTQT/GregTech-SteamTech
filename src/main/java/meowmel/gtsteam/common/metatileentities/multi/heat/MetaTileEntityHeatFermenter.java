@@ -31,11 +31,13 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+import static gregtech.api.util.RelativeDirection.*;
+
 public class MetaTileEntityHeatFermenter extends HeatMultiblockController {
 
     private static final int PARALLEL_LIMIT = 16;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_fermenter", () ->
-            DeclarativePatternBuilder.start()
+            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                     .aisle("CCCCC", "CFFFC", "CFFFC", "CCCCC")
                     .aisle("CCCCC", "F###F", "F###F", "CCCCC")
                     .aisle("CCCCC", "F###F", "F###F", "CCCCC")

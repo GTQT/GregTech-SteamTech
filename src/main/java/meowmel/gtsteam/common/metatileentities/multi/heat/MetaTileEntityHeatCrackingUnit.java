@@ -31,10 +31,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static gregtech.api.util.RelativeDirection.*;
+
 public class MetaTileEntityHeatCrackingUnit extends HeatMultiblockController {
 
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_cracking_unit", () ->
-            DeclarativePatternBuilder.start()
+            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                     .aisle("CFCFC", "CFCFC", "CFCFC")
                     .aisle("CCCCC", "IPPPO", "CCICC")
                     .aisle("CFCFC", "CFSFC", "CFCFC")

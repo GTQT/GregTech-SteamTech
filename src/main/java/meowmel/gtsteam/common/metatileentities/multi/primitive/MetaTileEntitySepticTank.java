@@ -26,12 +26,13 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+import static gregtech.api.util.RelativeDirection.*;
 import static gregtech.common.blocks.BlockWireCoil.CoilType.CUPRONICKEL;
 
 public class MetaTileEntitySepticTank extends NoEnergyMultiblockController {
 
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:septic_tank", () ->
-            DeclarativePatternBuilder.start()
+            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                     .aisle("CCCCC", "CFFFC", "CFFFC", "CCCCC")
                     .aisle("CCCCC", "F###F", "F###F", "CCCCC")
                     .aisle("CCCCC", "F###F", "F###F", "CCCCC")
@@ -75,7 +76,6 @@ public class MetaTileEntitySepticTank extends NoEnergyMultiblockController {
     protected ICubeRenderer getFrontOverlay() {
         return Textures.PYROLYSE_OVEN_OVERLAY;
     }
-
 
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity iGregTechTileEntity) {

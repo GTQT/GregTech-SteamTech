@@ -32,11 +32,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static gregtech.api.util.RelativeDirection.*;
+
 public class MetaTileEntityHeatThermalCentrifuge extends HeatMultiblockController {
 
     private static final int PARALLEL_LIMIT = 8;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_thermal_centrifuge", () ->
-            DeclarativePatternBuilder.start()
+            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                     .aisle("#CCC#", "#FFF#", "#CCC#")
                     .aisle("CCCCC", "F###F", "CCCCC")
                     .aisle("CCCCC", "F###F", "CCCCC")

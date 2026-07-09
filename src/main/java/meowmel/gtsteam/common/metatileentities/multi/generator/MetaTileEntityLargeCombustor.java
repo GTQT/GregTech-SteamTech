@@ -75,6 +75,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
+import static gregtech.api.util.RelativeDirection.*;
+
 public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase implements ProgressBarMultiblock,
         IControllable, IHeatMachine {
 
@@ -110,7 +112,7 @@ public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase impl
     }
 
     private static StructureDefinition<?> buildStructureDefinition(CombustorType combustorType) {
-        return DeclarativePatternBuilder.start()
+        return DeclarativePatternBuilder.start(RIGHT, UP, BACK)
                 .aisle("XXXXX", "CCCCC", " CCC ", "   C ", "   C ", "   C ")
                 .aisle("XCCCX", "CPPPC", "P  &P", "PPC C", "  C C", "  C C")
                 .aisle("XXXXX", "CCCSC", " CCC ", "   C ", "   C ", "   C ")
