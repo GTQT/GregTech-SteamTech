@@ -60,7 +60,8 @@ public final class DynamicStructureTooling {
                                                    int aisleCount,
                                                    @Nullable Map<String, Integer> channelValues) {
         return new MultiblockShapeInfo(runtime.previewSingle(
-                StructureOperationRequest.preview(unitRepetitions(aisleCount), channelValues)));
+                StructureOperationRequest.preview(
+                        unitRepetitions(aisleCount), channelValues, null)));
     }
 
     @NotNull
@@ -69,7 +70,8 @@ public final class DynamicStructureTooling {
             int aisleCount,
             @Nullable Map<String, Integer> channelValues) {
         StructurePreviewResult result = runtime.previewSingleResult(
-                StructureOperationRequest.preview(unitRepetitions(aisleCount), channelValues));
+                StructureOperationRequest.preview(
+                        unitRepetitions(aisleCount), channelValues, null));
         PieceRuntimeState.PreviewCells cells = result.getSinglePieceCells();
         if (cells == null || cells.getPreviewEntries().isEmpty()) {
             return Collections.emptyMap();
@@ -93,4 +95,5 @@ public final class DynamicStructureTooling {
         }
         return normalized;
     }
+
 }

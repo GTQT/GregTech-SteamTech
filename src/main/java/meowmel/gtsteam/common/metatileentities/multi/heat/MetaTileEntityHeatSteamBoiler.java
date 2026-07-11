@@ -30,6 +30,7 @@ import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.mui.GTGuis;
 import gregtech.api.pattern.FormedStructureView;
 import gregtech.api.pattern.MultiblockShapeInfo;
+import gregtech.api.pattern.PieceTemplate;
 import gregtech.api.pattern.StructureContributionKey;
 import gregtech.api.pattern.StructureElementPreviewEntry;
 import gregtech.api.pattern.StructureHintResult;
@@ -37,7 +38,6 @@ import gregtech.api.pattern.StructureMatchCollector;
 import gregtech.api.pattern.StructureOperationRequest;
 import gregtech.api.pattern.StructureRuntime;
 import gregtech.api.pattern.StructureRuntimeDetectionContext;
-import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.pattern.casing.GTStructureChannels;
 import gregtech.api.pattern.casing.StructureChannel;
 import gregtech.api.pattern.element.IStructureElement;
@@ -348,7 +348,7 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
                     BoilerCellType cellType = classifyBoilerCell(lateral, vertical, back, dimensions);
                     BlockPos pos = context.localPos(
                             lateral, vertical, back,
-                            RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK);
+                            RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.FRONT);
                     IStructureElement<?> element = elements.get(cellType);
                     if (!context.match(pos, element)) {
                         return context.fail(pos, cellType.expected,
@@ -465,33 +465,54 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
 
     @NotNull
     private StructureDefinition<?> buildToolingDefinition(@NotNull BoilerDimensions dimensions) {
-        DeclarativePatternBuilder pattern = DeclarativePatternBuilder.start(
-                RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK);
+        int minSize = dimensions.minSize();
+        return StructureDefinition.<MetaTileEntityHeatSteamBoiler>builder(
+                        RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK)
+                .pieceFromTemplate(RUNTIME_PIECE, buildToolingTemplate(dimensions))
+                .end()
+                .globalAbilityLimit(MultiblockAbility.IMPORT_FLUIDS, 1, minSize)
+                .globalAbilityLimit(MultiblockAbility.EXPORT_FLUIDS, 1, minSize)
+                .globalAbilityLimit(MultiblockAbility.INPUT_HEAT, 1, minSize * 2)
+                .build();
+    }
+
+    @NotNull
+    private PieceTemplate buildToolingTemplate(@NotNull BoilerDimensions dimensions) {
+        IStructureElement<?>[][][] template =
+                new IStructureElement<?>[dimensions.width][dimensions.height][dimensions.length];
+        RuntimeCellElements elements = createRuntimeCellElements(dimensions);
         int center = dimensions.length / 2;
         for (int aisle = 0; aisle < dimensions.width; aisle++) {
             int back = dimensions.width - 1 - aisle;
-            String[] rows = new String[dimensions.height];
             for (int vertical = 0; vertical < dimensions.height; vertical++) {
-                StringBuilder row = new StringBuilder();
                 for (int x = 0; x < dimensions.length; x++) {
                     int lateral = x - center;
-                    row.append(classifyBoilerCell(lateral, vertical, back, dimensions).pattern);
+                    template[aisle][vertical][x] =
+                            elements.get(classifyBoilerCell(lateral, vertical, back, dimensions));
                 }
-                rows[vertical] = row.toString();
             }
-            pattern.aisle(rows);
         }
-        int minSize = dimensions.minSize();
-        return pattern
-                .self('#', MetaTileEntityHeatSteamBoiler.class)
-                .where('A', blocks(getULVCasingState()))
-                .where('B', chain(blocks(getULVCasingState()),
-                        abilities(1, minSize, MultiblockAbility.IMPORT_FLUIDS),
-                        abilities(1, minSize, MultiblockAbility.EXPORT_FLUIDS),
-                        abilities(1, minSize * 2, MultiblockAbility.INPUT_HEAT),
-                        blocks(Blocks.GLASS.getDefaultState())))
-                .where('C', air())
-                .buildStructureDefinition();
+
+        int[][] repetitions = new int[dimensions.width][2];
+        for (int i = 0; i < repetitions.length; i++) {
+            repetitions[i][0] = 1;
+            repetitions[i][1] = 1;
+        }
+        int[] centerOffset = new int[] {
+                center, 0, dimensions.width - 1,
+                dimensions.width - 1, dimensions.width - 1
+        };
+        return new PieceTemplate(
+                template,
+                new RelativeDirection[] {
+                        RelativeDirection.RIGHT,
+                        RelativeDirection.UP,
+                        RelativeDirection.BACK
+                },
+                repetitions,
+                new String[repetitions.length],
+                centerOffset,
+                null);
     }
 
     @NotNull
@@ -521,10 +542,10 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
             if (metaTileEntity instanceof IMultiblockAbilityPart<?>) {
                 return false;
             } else {
-                return (block != getULVCasingState()) && (block != Blocks.GLASS.getDefaultState());
+                return !getULVCasingState().equals(block) && !Blocks.GLASS.getDefaultState().equals(block);
             }
         } else {
-            return (block != getULVCasingState()) && (block != Blocks.GLASS.getDefaultState());
+            return !getULVCasingState().equals(block) && !Blocks.GLASS.getDefaultState().equals(block);
         }
     }
 
@@ -594,17 +615,15 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
 
     private enum BoilerCellType {
 
-        CONTROLLER('#', "heat steam boiler controller"),
-        EDGE('A', "boiler wall casing"),
-        FACE('B', "boiler wall casing, glass, fluid hatch, or heat input hatch"),
-        INTERIOR('C', "air inside the boiler");
+        CONTROLLER("heat steam boiler controller"),
+        EDGE("boiler wall casing"),
+        FACE("boiler wall casing, glass, fluid hatch, or heat input hatch"),
+        INTERIOR("air inside the boiler");
 
-        private final char pattern;
         @NotNull
         private final String expected;
 
-        BoilerCellType(char pattern, @NotNull String expected) {
-            this.pattern = pattern;
+        BoilerCellType(@NotNull String expected) {
             this.expected = expected;
         }
     }

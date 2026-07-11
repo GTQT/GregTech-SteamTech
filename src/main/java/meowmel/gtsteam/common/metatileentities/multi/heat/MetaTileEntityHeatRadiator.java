@@ -16,6 +16,7 @@ import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.MultiblockWithDisplayBase;
 import gregtech.api.pattern.FormedStructureView;
 import gregtech.api.pattern.MultiblockShapeInfo;
+import gregtech.api.pattern.PieceTemplate;
 import gregtech.api.pattern.StructureContributionKey;
 import gregtech.api.pattern.StructureElementPreviewEntry;
 import gregtech.api.pattern.StructureHintResult;
@@ -23,11 +24,11 @@ import gregtech.api.pattern.StructureMatchCollector;
 import gregtech.api.pattern.StructureOperationRequest;
 import gregtech.api.pattern.StructureRuntime;
 import gregtech.api.pattern.StructureRuntimeDetectionContext;
-import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.pattern.casing.GTStructureChannels;
 import gregtech.api.pattern.casing.StructureChannel;
 import gregtech.api.pattern.element.IStructureElement;
 import gregtech.api.pattern.element.StructureDefinition;
+import gregtech.api.util.RelativeDirection;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.ConfigHolder;
@@ -270,22 +271,40 @@ public class MetaTileEntityHeatRadiator extends MetaTileEntityBaseWithControl {
 
     @NotNull
     private StructureDefinition<?> buildToolingDefinition(@NotNull RadiatorDimensions dimensions) {
-        DeclarativePatternBuilder pattern = DeclarativePatternBuilder.start(RIGHT, FRONT, UP);
+        return StructureDefinition.<MetaTileEntityHeatRadiator>builder(RIGHT, FRONT, UP)
+                .pieceFromTemplate(RUNTIME_PIECE, buildToolingTemplate(dimensions))
+                .end()
+                .globalAbilityLimit(MultiblockAbility.INPUT_HEAT, 1, -1)
+                .globalAbilityLimit(MultiblockAbility.IMPORT_FLUIDS, 1, -1)
+                .globalAbilityLimit(MultiblockAbility.EXPORT_FLUIDS, 1, -1)
+                .build();
+    }
+
+    @NotNull
+    private PieceTemplate buildToolingTemplate(@NotNull RadiatorDimensions dimensions) {
+        int structureHeight = dimensions.getStructureHeight();
+        int structureWidth = dimensions.getStructureWidth();
+        IStructureElement<?>[][][] template = new IStructureElement<?>[structureHeight][1][structureWidth];
+        RuntimeCellElements elements = createRuntimeCellElements();
         for (int vertical = 0; vertical < dimensions.getStructureHeight(); vertical++) {
-            StringBuilder row = new StringBuilder();
             for (int lateral = -dimensions.radius; lateral <= dimensions.radius; lateral++) {
-                row.append(classifyRadiatorCell(lateral, vertical, dimensions).pattern);
+                template[vertical][0][lateral + dimensions.radius] =
+                        elements.get(classifyRadiatorCell(lateral, vertical, dimensions));
             }
-            pattern.aisle(row.toString());
         }
-        return pattern.self('S', MetaTileEntityHeatRadiator.class)
-                .where('A', chain(blocks(getCasingState()),
-                        abilities(1, -1, 1, MultiblockAbility.INPUT_HEAT)))
-                .where('B', blocks(getRadiatorElementState()))
-                .where('C', chain(blocks(getCasingState()),
-                        abilities(1, -1, 1, MultiblockAbility.IMPORT_FLUIDS),
-                        abilities(1, -1, 1, MultiblockAbility.EXPORT_FLUIDS)))
-                .buildStructureDefinition();
+
+        int[][] repetitions = new int[structureHeight][2];
+        for (int i = 0; i < repetitions.length; i++) {
+            repetitions[i][0] = 1;
+            repetitions[i][1] = 1;
+        }
+        return new PieceTemplate(
+                template,
+                new RelativeDirection[] { RIGHT, FRONT, UP },
+                repetitions,
+                new String[repetitions.length],
+                new int[] { dimensions.radius, 0, 0, 0, 0 },
+                null);
     }
 
     @NotNull
@@ -369,17 +388,15 @@ public class MetaTileEntityHeatRadiator extends MetaTileEntityBaseWithControl {
 
     private enum RadiatorCellType {
 
-        CONTROLLER('S', "heat radiator controller"),
-        CASING_OR_HEAT('A', "steel casing or heat input hatch"),
-        RADIATOR_ELEMENT('B', "radiator element"),
-        CASING_OR_FLUID('C', "steel casing or fluid hatch");
+        CONTROLLER("heat radiator controller"),
+        CASING_OR_HEAT("steel casing or heat input hatch"),
+        RADIATOR_ELEMENT("radiator element"),
+        CASING_OR_FLUID("steel casing or fluid hatch");
 
-        private final char pattern;
         @NotNull
         private final String expected;
 
-        RadiatorCellType(char pattern, @NotNull String expected) {
-            this.pattern = pattern;
+        RadiatorCellType(@NotNull String expected) {
             this.expected = expected;
         }
     }
@@ -549,7 +566,7 @@ public class MetaTileEntityHeatRadiator extends MetaTileEntityBaseWithControl {
 
     public boolean isBlockEdge(@Nonnull World world, @Nonnull BlockPos.MutableBlockPos pos,
                                @Nonnull EnumFacing direction) {
-        return world.getBlockState(pos.move(direction)) == getCasingState() ||
+        return getCasingState().equals(world.getBlockState(pos.move(direction))) ||
                 world.getTileEntity(pos) instanceof MetaTileEntityHolder;
     }
 

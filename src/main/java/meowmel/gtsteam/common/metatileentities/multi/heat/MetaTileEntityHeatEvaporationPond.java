@@ -10,6 +10,7 @@ import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.pattern.FormedStructureView;
 import gregtech.api.pattern.MultiblockShapeInfo;
+import gregtech.api.pattern.PieceTemplate;
 import gregtech.api.pattern.StructureContributionKey;
 import gregtech.api.pattern.StructureElementPreviewEntry;
 import gregtech.api.pattern.StructureHintResult;
@@ -17,11 +18,11 @@ import gregtech.api.pattern.StructureMatchCollector;
 import gregtech.api.pattern.StructureOperationRequest;
 import gregtech.api.pattern.StructureRuntime;
 import gregtech.api.pattern.StructureRuntimeDetectionContext;
-import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.pattern.casing.GTStructureChannels;
 import gregtech.api.pattern.casing.StructureChannel;
 import gregtech.api.pattern.element.IStructureElement;
 import gregtech.api.pattern.element.StructureDefinition;
+import gregtech.api.util.RelativeDirection;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
@@ -142,7 +143,7 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
                     PondCellType cellType = classifyPondCell(x, y, aisle, detectedTier);
                     BlockPos pos = context.localPos(
                             x - center, localY, localBack,
-                            RIGHT, UP, BACK);
+                            RIGHT, UP, FRONT);
                     IStructureElement<?> element = elements.get(cellType);
                     if (!context.match(pos, element)) {
                         return context.fail(pos, cellType.expected,
@@ -262,30 +263,48 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
 
     @NotNull
     private StructureDefinition<?> buildToolingDefinition(int toolingTier) {
-        DeclarativePatternBuilder pattern = DeclarativePatternBuilder.start(RIGHT, UP, BACK);
+        return StructureDefinition.<MetaTileEntityHeatEvaporationPond>builder(RIGHT, UP, BACK)
+                .pieceFromTemplate(RUNTIME_PIECE, buildToolingTemplate(toolingTier))
+                .end()
+                .globalAbilityLimit(MultiblockAbility.EXPORT_ITEMS, 0, 2)
+                .globalAbilityLimit(MultiblockAbility.IMPORT_ITEMS, 0, 1)
+                .globalAbilityLimit(MultiblockAbility.EXPORT_FLUIDS, 0, 2)
+                .globalAbilityLimit(MultiblockAbility.IMPORT_FLUIDS, 0, 1)
+                .globalAbilityLimit(MultiblockAbility.INPUT_HEAT, 1, 1)
+                .build();
+    }
+
+    @NotNull
+    private PieceTemplate buildToolingTemplate(int toolingTier) {
         int size = sizeForTier(toolingTier);
+        int center = size / 2;
+        int controllerAisle = controllerAisleForTier(toolingTier);
+        IStructureElement<?>[][][] template = new IStructureElement<?>[size][2][size];
+        RuntimeCellElements elements = createRuntimeCellElements();
         for (int aisle = 0; aisle < size; aisle++) {
-            String[] rows = new String[2];
             for (int y = 0; y < 2; y++) {
-                StringBuilder row = new StringBuilder();
                 for (int x = 0; x < size; x++) {
-                    row.append(classifyPondCell(x, y, aisle, toolingTier).pattern);
+                    template[aisle][y][x] = elements.get(classifyPondCell(x, y, aisle, toolingTier));
                 }
-                rows[y] = row.toString();
             }
-            pattern.aisle(rows);
         }
-        return pattern.self('S', MetaTileEntityHeatEvaporationPond.class)
-                .where('C', chain(blocks(getCasingState()),
-                        abilities(0, 2, MultiblockAbility.EXPORT_ITEMS),
-                        abilities(0, 1, MultiblockAbility.IMPORT_ITEMS),
-                        abilities(0, 2, MultiblockAbility.EXPORT_FLUIDS),
-                        abilities(0, 1, MultiblockAbility.IMPORT_FLUIDS),
-                        abilities(1, 1, MultiblockAbility.INPUT_HEAT)))
-                .where('F', blocks(getFireBoxState()))
-                .where('P', blocks(getPipeState()))
-                .where(' ', any())
-                .buildStructureDefinition();
+
+        int[][] repetitions = new int[size][2];
+        for (int i = 0; i < repetitions.length; i++) {
+            repetitions[i][0] = 1;
+            repetitions[i][1] = 1;
+        }
+        int[] centerOffset = new int[] {
+                center, 1, controllerAisle,
+                controllerAisle, controllerAisle
+        };
+        return new PieceTemplate(
+                template,
+                new RelativeDirection[] { RIGHT, UP, BACK },
+                repetitions,
+                new String[repetitions.length],
+                centerOffset,
+                null);
     }
 
     private static int resolveToolingTier(@Nullable Map<String, Integer> channelValues) {
@@ -329,27 +348,25 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
             if (metaTileEntity instanceof IMultiblockAbilityPart<?>) {
                 return true;
             } else {
-                return block == getCasingState();
+                return getCasingState().equals(block);
             }
         } else {
-            return block == getCasingState();
+            return getCasingState().equals(block);
         }
     }
 
     private enum PondCellType {
 
-        CONTROLLER('S', "heat evaporation pond controller"),
-        CASING('C', "steel casing or allowed hatch"),
-        FIREBOX('F', "steel firebox casing"),
-        PIPE('P', "evaporation bed"),
-        ANY(' ', "any block");
+        CONTROLLER("heat evaporation pond controller"),
+        CASING("steel casing or allowed hatch"),
+        FIREBOX("steel firebox casing"),
+        PIPE("evaporation bed"),
+        ANY("any block");
 
-        private final char pattern;
         @NotNull
         private final String expected;
 
-        PondCellType(char pattern, @NotNull String expected) {
-            this.pattern = pattern;
+        PondCellType(@NotNull String expected) {
             this.expected = expected;
         }
     }

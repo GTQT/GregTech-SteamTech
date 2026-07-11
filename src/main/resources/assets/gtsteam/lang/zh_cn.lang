@@ -194,6 +194,17 @@ gtsteam.machine.large_fluid_tank.empty=流体类型: 空
 gtsteam.machine.large_fluid_tank.fluid_capacity_text=储罐容量: %d L
 gtsteam.machine.large_fluid_tank.fluid_amount_text=流体容量: %d L
 gtsteam.machine.large_fluid_tank.amount=流体容量: %d / %d L
+gtsteam.machine.large_fluid_tank.structure_error.controller=结构检测失败，位置 (%d, %d, %d)，朝向 %s：需要大型流体储罐控制器，实际为 %s
+gtsteam.machine.large_fluid_tank.structure_error.edge=结构检测失败，位置 (%d, %d, %d)，朝向 %s：需要储罐外壳，实际为 %s
+gtsteam.machine.large_fluid_tank.structure_error.face=结构检测失败，位置 (%d, %d, %d)，朝向 %s：需要储罐外壳、玻璃或流体仓，实际为 %s
+gtsteam.machine.large_fluid_tank.structure_error.interior=结构检测失败，位置 (%d, %d, %d)，朝向 %s：储罐内部需要空气，实际为 %s
+gtsteam.machine.large_fluid_tank.structure_error.hatches=结构检测失败，位置 (%d, %d, %d)，朝向 %s：需要 1 个流体输入仓和 1 个流体输出仓；检测到输入 %d、输出 %d
+gtsteam.machine.large_fluid_tank.structure_error.world=结构检测失败，位置 (%d, %d, %d)，朝向 %s：需要已加载的世界，实际为 %s
+gtsteam.machine.large_fluid_tank.structure_error.facing=结构检测失败，位置 (%d, %d, %d)，朝向 %s：控制器需要水平朝向，实际为 %s
+gtsteam.machine.large_fluid_tank.structure_error.minimum_size=结构检测失败，位置 (%d, %d, %d)，朝向 %s：储罐至少需要 3x3x3，实际为 %s
+gtsteam.machine.large_fluid_tank.structure_error.maximum_size=结构检测失败，位置 (%d, %d, %d)，朝向 %s：储罐最大为 15x15x15，实际为 %s
+gtsteam.machine.large_fluid_tank.structure_error.odd_length=结构检测失败，位置 (%d, %d, %d)，朝向 %s：储罐长度必须为奇数以使控制器居中，实际为 %s
+gtsteam.machine.large_fluid_tank.structure_error.generic=结构检测失败，位置 (%d, %d, %d)，朝向 %s：需要 %s，实际为 %s
 
 gtsteam.machine.large_fluid_tank.tooltip.1=可存储流体：容量为(长*宽*高) × 16000 L，其中各边长为奇数，各边长不必相等，范围从3到15。
 gtsteam.machine.large_fluid_tank.tooltip.2=结构为长方体，最小体积3×3×3，最大体积15×15×15。除边框（外壳）外，面的其他部分可用玻璃填充，长方体内部保持空心。

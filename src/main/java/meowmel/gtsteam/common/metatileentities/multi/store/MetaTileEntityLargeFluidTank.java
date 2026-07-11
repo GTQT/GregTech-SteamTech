@@ -19,14 +19,16 @@ import gregtech.api.mui.GTGuiTextures;
 import gregtech.api.mui.GTGuiTheme;
 import gregtech.api.pattern.FormedStructureView;
 import gregtech.api.pattern.MultiblockShapeInfo;
+import gregtech.api.pattern.PieceTemplate;
 import gregtech.api.pattern.StructureContributionKey;
+import gregtech.api.pattern.StructureBuildResult;
 import gregtech.api.pattern.StructureElementPreviewEntry;
+import gregtech.api.pattern.StructureFailureTrace;
 import gregtech.api.pattern.StructureHintResult;
 import gregtech.api.pattern.StructureMatchCollector;
 import gregtech.api.pattern.StructureOperationRequest;
 import gregtech.api.pattern.StructureRuntime;
 import gregtech.api.pattern.StructureRuntimeDetectionContext;
-import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.pattern.casing.GTStructureChannels;
 import gregtech.api.pattern.casing.StructureChannel;
 import gregtech.api.pattern.element.IStructureElement;
@@ -105,6 +107,9 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
     private long lastStructureFailureLogTick = Long.MIN_VALUE;
     private long lastStructureCheckLogTick = Long.MIN_VALUE;
     private long lastStructureDetectionLogTick = Long.MIN_VALUE;
+    private long lastStructureAutoBuildLogTick = Long.MIN_VALUE;
+    @Nullable
+    private TankStructureFailure lastStructureFailure;
 
     public MetaTileEntityLargeFluidTank(ResourceLocation metaTileEntityId) {
         super(metaTileEntityId);
@@ -157,6 +162,38 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
     @Override
     protected void configureDisplayText(MultiblockUIBuilder builder) {
         builder.addCustom(this::addFluidAmountCapacity);
+    }
+
+    @Override
+    protected void configureErrorText(MultiblockUIBuilder builder) {
+        super.configureErrorText(builder);
+        builder.addCustom((keyManager, syncer) -> {
+            TankStructureFailure failure = getLastStructureFailure();
+            if (failure != null) {
+                failure.addTo(keyManager, syncer);
+            }
+        });
+    }
+
+    @Nullable
+    private TankStructureFailure getLastStructureFailure() {
+        if (isStructureFormed()) {
+            return null;
+        }
+        if (lastStructureFailure != null) {
+            return lastStructureFailure;
+        }
+        StructureRuntime runtime = getStructureRuntime();
+        if (runtime == null) {
+            return null;
+        }
+        StructureFailureTrace failure = runtime.getLastFailure();
+        if (failure == null) {
+            return null;
+        }
+        return TankStructureFailure.generic(
+                failure.getErrorPos() == null ? getPos() : failure.getErrorPos(),
+                getFrontFacing(), failure.getExpected(), failure.getActual());
     }
 
     private void addFluidAmountCapacity(KeyManager keyManager, UISyncer syncer) {
@@ -232,7 +269,7 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
         MetaTileEntityLargeFluidTank controller = context.getController();
         DimensionScanResult scan = controller.scanStructureDimensions();
         if (!scan.isSuccess()) {
-            controller.logStructureFailure(scan.failurePos, scan.expected, scan.actual);
+            controller.logStructureFailure(scan.failurePos, scan.failureKind, scan.expected, scan.actual);
             return context.fail(scan.failurePos, scan.expected, scan.actual);
         }
 
@@ -252,16 +289,24 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
                     stats.recordCell(cellType);
                     BlockPos pos = context.localPos(
                             lateral, vertical, back,
-                            RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK);
+                            RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.FRONT);
                     stats.recordWorldCell(context.getWorld(), pos);
                     IStructureElement<?> element = elements.get(cellType);
                     if (!context.match(pos, element)) {
                         String actual = String.valueOf(context.getWorld().getBlockState(pos));
-                        controller.logStructureFailure(pos, cellType.expected, actual);
+                        controller.logStructureFailure(pos, cellType.failureKind, cellType.expected, actual);
                         return context.fail(pos, cellType.expected, actual);
                     }
                 }
             }
+        }
+        if (stats.importFluidAbilities != 1 || stats.exportFluidAbilities != 1) {
+            String actual = "found importFluid=" + stats.importFluidAbilities +
+                    ", exportFluid=" + stats.exportFluidAbilities;
+            controller.logStructureHatchFailure(
+                    context.getControllerPos(), stats.importFluidAbilities, stats.exportFluidAbilities);
+            return context.fail(context.getControllerPos(),
+                    TankStructureFailureKind.HATCH_COUNTS.getDiagnosticExpected(), actual);
         }
         controller.logStructureDetectionMatched(dimensions, stats);
         return true;
@@ -347,7 +392,9 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
     @Override
     public boolean autoBuildStructure(@NotNull StructureOperationRequest request) {
         request.requireBuildKind();
-        createToolingRuntime(resolveToolingDimensions(request.getChannelValues())).buildAllPieces(request);
+        StructureBuildResult result = createToolingRuntime(
+                resolveToolingDimensions(request.getChannelValues())).buildAllPieces(request);
+        logStructureAutoBuild(request, result);
         return true;
     }
 
@@ -370,31 +417,52 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
 
     @NotNull
     private StructureDefinition<?> buildToolingDefinition(@NotNull TankDimensions dimensions) {
-        DeclarativePatternBuilder pattern = DeclarativePatternBuilder.start(
-                RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK);
+        return StructureDefinition.<MetaTileEntityLargeFluidTank>builder(
+                        RelativeDirection.RIGHT, RelativeDirection.UP, RelativeDirection.BACK)
+                .pieceFromTemplate(RUNTIME_PIECE, buildToolingTemplate(dimensions))
+                .end()
+                .globalAbilityLimit(MultiblockAbility.IMPORT_FLUIDS, 1, 1)
+                .globalAbilityLimit(MultiblockAbility.EXPORT_FLUIDS, 1, 1)
+                .build();
+    }
+
+    @NotNull
+    private PieceTemplate buildToolingTemplate(@NotNull TankDimensions dimensions) {
+        IStructureElement<?>[][][] template =
+                new IStructureElement<?>[dimensions.width][dimensions.height][dimensions.length];
+        RuntimeCellElements elements = createRuntimeCellElements();
         int center = dimensions.length / 2;
         for (int aisle = 0; aisle < dimensions.width; aisle++) {
             int back = dimensions.width - 1 - aisle;
-            String[] rows = new String[dimensions.height];
             for (int vertical = 0; vertical < dimensions.height; vertical++) {
-                StringBuilder row = new StringBuilder();
                 for (int x = 0; x < dimensions.length; x++) {
                     int lateral = x - center;
-                    row.append(classifyTankCell(lateral, vertical, back, dimensions).pattern);
+                    template[aisle][vertical][x] =
+                            elements.get(classifyTankCell(lateral, vertical, back, dimensions));
                 }
-                rows[vertical] = row.toString();
             }
-            pattern.aisle(rows);
         }
-        return pattern
-                .self('#', MetaTileEntityLargeFluidTank.class)
-                .where('A', blocks(getTankCasingState()))
-                .where('B', chain(blocks(getTankCasingState()),
-                        abilities(1, 1, MultiblockAbility.IMPORT_FLUIDS),
-                        abilities(1, 1, MultiblockAbility.EXPORT_FLUIDS),
-                        blocks(Blocks.GLASS.getDefaultState())))
-                .where('C', air())
-                .buildStructureDefinition();
+
+        int[][] repetitions = new int[dimensions.width][2];
+        for (int i = 0; i < repetitions.length; i++) {
+            repetitions[i][0] = 1;
+            repetitions[i][1] = 1;
+        }
+        int[] centerOffset = new int[] {
+                center, 0, dimensions.width - 1,
+                dimensions.width - 1, dimensions.width - 1
+        };
+        return new PieceTemplate(
+                template,
+                new RelativeDirection[] {
+                        RelativeDirection.RIGHT,
+                        RelativeDirection.UP,
+                        RelativeDirection.BACK
+                },
+                repetitions,
+                new String[repetitions.length],
+                centerOffset,
+                null);
     }
 
     @NotNull
@@ -425,12 +493,12 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
             if (metaTileEntity instanceof IMultiblockAbilityPart<?> iMultiblockAbilityPart) {
                 return false;
             } else {
-                return (block != getTankCasingState())
-                        && (block != Blocks.GLASS.getDefaultState());
+                return !getTankCasingState().equals(block)
+                        && !Blocks.GLASS.getDefaultState().equals(block);
             }
         } else {
-            return (block != getTankCasingState())
-                    && (block != Blocks.GLASS.getDefaultState());
+            return !getTankCasingState().equals(block)
+                    && !Blocks.GLASS.getDefaultState().equals(block);
         }
     }
 
@@ -439,12 +507,13 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
         World world = getWorld();
         if (world == null) {
             return DimensionScanResult.failure(
-                    getPos(), "loaded world", "large fluid tank controller has no world");
+                    getPos(), TankStructureFailureKind.WORLD_UNAVAILABLE,
+                    "large fluid tank controller has no world");
         }
         EnumFacing front = getFrontFacing();
         if (front == UP || front == DOWN) {
             return DimensionScanResult.failure(
-                    getPos(), "horizontal controller facing", String.valueOf(front));
+                    getPos(), TankStructureFailureKind.HORIZONTAL_FACING, String.valueOf(front));
         }
         EnumFacing back = front.getOpposite();
         EnumFacing left = front.rotateYCCW();
@@ -477,21 +546,25 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
         if (dimensions.length < MIN_STRUCTURE_SIZE || dimensions.width < MIN_STRUCTURE_SIZE ||
                 dimensions.height < MIN_STRUCTURE_SIZE) {
             return DimensionScanResult.failure(
-                    getPos(), "tank dimensions at least 3x3x3", dimensions.toString());
+                    getPos(), TankStructureFailureKind.MINIMUM_SIZE, dimensions.toString());
         }
         if (dimensions.length > MAX_STRUCTURE_SIZE || dimensions.width > MAX_STRUCTURE_SIZE ||
                 dimensions.height > MAX_STRUCTURE_SIZE) {
             return DimensionScanResult.failure(
-                    getPos(), "tank dimensions at most 15x15x15", dimensions.toString());
+                    getPos(), TankStructureFailureKind.MAXIMUM_SIZE, dimensions.toString());
         }
         if (dimensions.length % 2 == 0) {
             return DimensionScanResult.failure(
-                    getPos(), "odd tank length so the controller can be centered", dimensions.toString());
+                    getPos(), TankStructureFailureKind.ODD_LENGTH, dimensions.toString());
         }
         return DimensionScanResult.success(dimensions);
     }
 
-    private void logStructureFailure(@NotNull BlockPos pos, @NotNull String expected, @NotNull String actual) {
+    private void logStructureFailure(@NotNull BlockPos pos,
+                                     @NotNull TankStructureFailureKind kind,
+                                     @NotNull String expected,
+                                     @NotNull String actual) {
+        lastStructureFailure = TankStructureFailure.block(pos, getFrontFacing(), kind, actual);
         long now = getServerWorldTime();
         if (now == Long.MIN_VALUE) {
             return;
@@ -502,6 +575,33 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
         lastStructureFailureLogTick = now;
         GTLog.logger.info("Large fluid tank structure check failed near controller {} at {}: expected {}, got {}",
                 getPos(), pos, expected, actual);
+    }
+
+    private void logStructureHatchFailure(@NotNull BlockPos pos,
+                                          int importFluidAbilities,
+                                          int exportFluidAbilities) {
+        TankStructureFailure failure = TankStructureFailure.hatches(
+                pos, getFrontFacing(), importFluidAbilities, exportFluidAbilities);
+        logStructureFailure(pos, TankStructureFailureKind.HATCH_COUNTS,
+                TankStructureFailureKind.HATCH_COUNTS.getDiagnosticExpected(),
+                "importFluid=" + importFluidAbilities + ", exportFluid=" + exportFluidAbilities);
+        lastStructureFailure = failure;
+    }
+
+    private void logStructureAutoBuild(@NotNull StructureOperationRequest request,
+                                       @NotNull StructureBuildResult result) {
+        long now = getServerWorldTime();
+        if (now == Long.MIN_VALUE || now - lastStructureAutoBuildLogTick < STRUCTURE_LOG_INTERVAL_TICKS) {
+            return;
+        }
+        lastStructureAutoBuildLogTick = now;
+        var orientation = request.requireOrientation();
+        GTLog.logger.info("Large fluid tank auto-build near controller {}: controllerFront={}, requestFront={}, "
+                        + "structureFront={}, up={}, flipped={}, noHatch={}, channels={}, {}",
+                getPos(), getFrontFacing(), orientation.getFront(), orientation.getStructureFront(),
+                orientation.getUp(), orientation.isFlipped(),
+                StructureOperationRequest.isNoHatch(request.getChannelValues()),
+                request.getChannelValues(), result.describeCounts());
     }
 
     private void logStructureCheckRequested() {
@@ -519,6 +619,7 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
 
     private void logStructureDetectionMatched(@NotNull TankDimensions dimensions,
                                               @NotNull RuntimeDetectionStats stats) {
+        lastStructureFailure = null;
         long now = getServerWorldTime();
         if (now == Long.MIN_VALUE) {
             return;
@@ -563,20 +664,138 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
         this.Height = dimensions.height;
     }
 
-    private enum TankCellType {
+    private enum TankStructureFailureKind {
 
-        CONTROLLER('#', "large fluid tank controller"),
-        EDGE('A', "tank wall casing"),
-        FACE('B', "tank wall casing, glass, or fluid hatch"),
-        INTERIOR('C', "air inside the tank");
+        CONTROLLER("gtsteam.machine.large_fluid_tank.structure_error.controller",
+                "large fluid tank controller"),
+        EDGE("gtsteam.machine.large_fluid_tank.structure_error.edge", "tank wall casing"),
+        FACE("gtsteam.machine.large_fluid_tank.structure_error.face",
+                "tank wall casing, glass, or fluid hatch"),
+        INTERIOR("gtsteam.machine.large_fluid_tank.structure_error.interior", "air inside the tank"),
+        HATCH_COUNTS("gtsteam.machine.large_fluid_tank.structure_error.hatches",
+                "exactly 1 fluid import hatch and 1 fluid export hatch"),
+        WORLD_UNAVAILABLE("gtsteam.machine.large_fluid_tank.structure_error.world", "loaded world"),
+        HORIZONTAL_FACING("gtsteam.machine.large_fluid_tank.structure_error.facing",
+                "horizontal controller facing"),
+        MINIMUM_SIZE("gtsteam.machine.large_fluid_tank.structure_error.minimum_size",
+                "tank dimensions at least 3x3x3"),
+        MAXIMUM_SIZE("gtsteam.machine.large_fluid_tank.structure_error.maximum_size",
+                "tank dimensions at most 15x15x15"),
+        ODD_LENGTH("gtsteam.machine.large_fluid_tank.structure_error.odd_length",
+                "odd tank length so the controller can be centered"),
+        GENERIC("gtsteam.machine.large_fluid_tank.structure_error.generic", "structure component");
 
-        private final char pattern;
+        @NotNull
+        private final String langKey;
+        @NotNull
+        private final String diagnosticExpected;
+
+        TankStructureFailureKind(@NotNull String langKey, @NotNull String diagnosticExpected) {
+            this.langKey = langKey;
+            this.diagnosticExpected = diagnosticExpected;
+        }
+
+        @NotNull
+        private String getDiagnosticExpected() {
+            return diagnosticExpected;
+        }
+    }
+
+    private static final class TankStructureFailure {
+
+        @NotNull
+        private final BlockPos pos;
+        @NotNull
+        private final EnumFacing front;
+        @NotNull
+        private final TankStructureFailureKind kind;
         @NotNull
         private final String expected;
+        @NotNull
+        private final String actual;
+        private final int importFluidAbilities;
+        private final int exportFluidAbilities;
 
-        TankCellType(char pattern, @NotNull String expected) {
-            this.pattern = pattern;
+        private TankStructureFailure(@NotNull BlockPos pos,
+                                     @NotNull EnumFacing front,
+                                     @NotNull TankStructureFailureKind kind,
+                                     @NotNull String expected,
+                                     @NotNull String actual,
+                                     int importFluidAbilities,
+                                     int exportFluidAbilities) {
+            this.pos = pos.toImmutable();
+            this.front = front;
+            this.kind = kind;
             this.expected = expected;
+            this.actual = actual;
+            this.importFluidAbilities = importFluidAbilities;
+            this.exportFluidAbilities = exportFluidAbilities;
+        }
+
+        @NotNull
+        private static TankStructureFailure block(@NotNull BlockPos pos,
+                                                  @NotNull EnumFacing front,
+                                                  @NotNull TankStructureFailureKind kind,
+                                                  @NotNull String actual) {
+            return new TankStructureFailure(pos, front, kind, "", actual, 0, 0);
+        }
+
+        @NotNull
+        private static TankStructureFailure hatches(@NotNull BlockPos pos,
+                                                    @NotNull EnumFacing front,
+                                                    int importFluidAbilities,
+                                                    int exportFluidAbilities) {
+            return new TankStructureFailure(pos, front, TankStructureFailureKind.HATCH_COUNTS,
+                    "", "", importFluidAbilities, exportFluidAbilities);
+        }
+
+        @NotNull
+        private static TankStructureFailure generic(@NotNull BlockPos pos,
+                                                    @NotNull EnumFacing front,
+                                                    @Nullable String expected,
+                                                    @Nullable String actual) {
+            return new TankStructureFailure(pos, front, TankStructureFailureKind.GENERIC,
+                    expected == null ? "" : expected, actual == null ? "" : actual, 0, 0);
+        }
+
+        private void addTo(@NotNull KeyManager keyManager, @NotNull UISyncer syncer) {
+            int x = syncer.syncInt(pos.getX());
+            int y = syncer.syncInt(pos.getY());
+            int z = syncer.syncInt(pos.getZ());
+            String facing = syncer.syncString(front.getName());
+            if (kind == TankStructureFailureKind.HATCH_COUNTS) {
+                keyManager.add(KeyUtil.lang(TextFormatting.RED, kind.langKey,
+                        x, y, z, facing,
+                        syncer.syncInt(importFluidAbilities),
+                        syncer.syncInt(exportFluidAbilities)));
+                return;
+            }
+            if (kind == TankStructureFailureKind.GENERIC) {
+                keyManager.add(KeyUtil.lang(TextFormatting.RED, kind.langKey,
+                        x, y, z, facing,
+                        syncer.syncString(expected), syncer.syncString(actual)));
+                return;
+            }
+            keyManager.add(KeyUtil.lang(TextFormatting.RED, kind.langKey,
+                    x, y, z, facing, syncer.syncString(actual)));
+        }
+    }
+
+    private enum TankCellType {
+
+        CONTROLLER(TankStructureFailureKind.CONTROLLER),
+        EDGE(TankStructureFailureKind.EDGE),
+        FACE(TankStructureFailureKind.FACE),
+        INTERIOR(TankStructureFailureKind.INTERIOR);
+
+        @NotNull
+        private final String expected;
+        @NotNull
+        private final TankStructureFailureKind failureKind;
+
+        TankCellType(@NotNull TankStructureFailureKind failureKind) {
+            this.failureKind = failureKind;
+            this.expected = failureKind.getDiagnosticExpected();
         }
     }
 
@@ -713,27 +932,32 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
         private final String expected;
         @NotNull
         private final String actual;
+        @NotNull
+        private final TankStructureFailureKind failureKind;
 
         private DimensionScanResult(@Nullable TankDimensions dimensions,
                                     @NotNull BlockPos failurePos,
                                     @NotNull String expected,
-                                    @NotNull String actual) {
+                                    @NotNull String actual,
+                                    @NotNull TankStructureFailureKind failureKind) {
             this.dimensions = dimensions;
             this.failurePos = failurePos.toImmutable();
             this.expected = expected;
             this.actual = actual;
+            this.failureKind = failureKind;
         }
 
         @NotNull
         private static DimensionScanResult success(@NotNull TankDimensions dimensions) {
-            return new DimensionScanResult(dimensions, BlockPos.ORIGIN, "detected tank dimensions", "matched");
+            return new DimensionScanResult(dimensions, BlockPos.ORIGIN,
+                    "detected tank dimensions", "matched", TankStructureFailureKind.GENERIC);
         }
 
         @NotNull
         private static DimensionScanResult failure(@NotNull BlockPos pos,
-                                                   @NotNull String expected,
+                                                   @NotNull TankStructureFailureKind failureKind,
                                                    @NotNull String actual) {
-            return new DimensionScanResult(null, pos, expected, actual);
+            return new DimensionScanResult(null, pos, failureKind.getDiagnosticExpected(), actual, failureKind);
         }
 
         private boolean isSuccess() {

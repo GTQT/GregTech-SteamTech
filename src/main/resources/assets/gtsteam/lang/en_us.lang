@@ -195,6 +195,17 @@ gtsteam.machine.large_fluid_tank.empty=Fluid Type: Empty
 gtsteam.machine.large_fluid_tank.fluid_capacity_text=Tank Capacity: %d L
 gtsteam.machine.large_fluid_tank.fluid_amount_text=Fluid Amount: %d L
 gtsteam.machine.large_fluid_tank.amount=Fluid Amount: %d / %d L
+gtsteam.machine.large_fluid_tank.structure_error.controller=Structure check failed at (%d, %d, %d), facing %s: expected the Large Fluid Tank controller; found %s
+gtsteam.machine.large_fluid_tank.structure_error.edge=Structure check failed at (%d, %d, %d), facing %s: expected a tank wall casing; found %s
+gtsteam.machine.large_fluid_tank.structure_error.face=Structure check failed at (%d, %d, %d), facing %s: expected a tank wall casing, glass, or fluid hatch; found %s
+gtsteam.machine.large_fluid_tank.structure_error.interior=Structure check failed at (%d, %d, %d), facing %s: expected air inside the tank; found %s
+gtsteam.machine.large_fluid_tank.structure_error.hatches=Structure check failed at (%d, %d, %d), facing %s: expected 1 fluid import hatch and 1 fluid export hatch; found input %d, output %d
+gtsteam.machine.large_fluid_tank.structure_error.world=Structure check failed at (%d, %d, %d), facing %s: expected a loaded world; found %s
+gtsteam.machine.large_fluid_tank.structure_error.facing=Structure check failed at (%d, %d, %d), facing %s: expected a horizontal controller facing; found %s
+gtsteam.machine.large_fluid_tank.structure_error.minimum_size=Structure check failed at (%d, %d, %d), facing %s: expected a tank at least 3x3x3; found %s
+gtsteam.machine.large_fluid_tank.structure_error.maximum_size=Structure check failed at (%d, %d, %d), facing %s: expected a tank at most 15x15x15; found %s
+gtsteam.machine.large_fluid_tank.structure_error.odd_length=Structure check failed at (%d, %d, %d), facing %s: expected an odd tank length so the controller is centered; found %s
+gtsteam.machine.large_fluid_tank.structure_error.generic=Structure check failed at (%d, %d, %d), facing %s: expected %s; found %s
 
 gtsteam.machine.large_fluid_tank.tooltip.1=Stored fluid: Capacity (L*W*H) × 16000 L, where each side length is odd, and each side length does not have to be equal, ranging from 3 to 15.
 gtsteam.machine.large_fluid_tank.tooltip.2=The structure is cuboid, with a minimum volume of 3×3×3 and a maximum volume of 15×15×15. Except for the border (shell), the rest of the face can be filled with glass, and the inside of the cuboid remains hollow.

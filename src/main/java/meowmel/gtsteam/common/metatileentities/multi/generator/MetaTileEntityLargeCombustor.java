@@ -112,7 +112,7 @@ public class MetaTileEntityLargeCombustor extends MultiblockWithDisplayBase impl
     }
 
     private static StructureDefinition<?> buildStructureDefinition(CombustorType combustorType) {
-        return DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+        return DeclarativePatternBuilder.start(RIGHT, UP, FRONT)
                 .aisle("XXXXX", "CCCCC", " CCC ", "   C ", "   C ", "   C ")
                 .aisle("XCCCX", "CPPPC", "P  &P", "PPC C", "  C C", "  C C")
                 .aisle("XXXXX", "CCCSC", " CCC ", "   C ", "   C ", "   C ")
