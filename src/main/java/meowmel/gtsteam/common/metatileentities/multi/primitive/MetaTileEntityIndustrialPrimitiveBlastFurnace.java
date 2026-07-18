@@ -111,8 +111,8 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
                         {"    DDDDD    ", "    D###D    ", "    D###D    ", "    D###D    ", "     DDD     ", "      D      ", "      D      ", "      D      ", "      D      "},
                         {"    DDDDD    ", "    D#&#D    ", "    D###D    ", "    D###D    ", "    D###D    ", "     D#D     ", "     D#D     ", "     D#D     ", "     D#D     "},
                         {"    DDDDD    ", "    D###D    ", "    D###D    ", "    D###D    ", "     DDD     ", "      D      ", "      D      ", "      D      ", "      D      "},
-                        {"    CDDDC    ", "    CDDDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             "},
-                        {"     DDD     ", "      S      ", "             ", "             ", "             ", "             ", "             ", "             ", "             "}
+                        {"    CDDDC    ", "    CDSDC    ", "    CDDDC    ", "     DDD     ", "             ", "             ", "             ", "             ", "             "},
+                        {"     DDD     ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             "}
                 }, Vec3i.NULL_VECTOR)
                 .where('S', self(MetaTileEntityIndustrialPrimitiveBlastFurnace.class))
                 .where('C', blocks(getFrameState()))
@@ -169,7 +169,7 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
 
     private static IStructureElement<MetaTileEntityIndustrialPrimitiveBlastFurnace> optionalAuxiliaryBlock(
             IBlockState expectedState) {
-        return new IStructureElement<MetaTileEntityIndustrialPrimitiveBlastFurnace>() {
+        return new IStructureElement<>() {
             @NotNull
             @Override
             public StructureIncrementalSupport getIncrementalSupport() {
@@ -203,7 +203,7 @@ public class MetaTileEntityIndustrialPrimitiveBlastFurnace extends NoEnergyMulti
     }
 
     private static IStructureElement<MetaTileEntityIndustrialPrimitiveBlastFurnace> optionalAuxiliaryAny() {
-        return new IStructureElement<MetaTileEntityIndustrialPrimitiveBlastFurnace>() {
+        return new IStructureElement<>() {
             @NotNull
             @Override
             public StructureIncrementalSupport getIncrementalSupport() {

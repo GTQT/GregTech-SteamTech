@@ -355,11 +355,6 @@ public class MetaTileEntityPrimitiveCombustor extends MultiblockWithDisplayBase 
     }
 
     @Override
-    public String[] getDescription() {
-        return new String[]{I18n.format("gtsteam.multiblock.large_combustor.description")};
-    }
-
-    @Override
     public void addInformation(ItemStack stack, @Nullable World player, @NotNull List<String> tooltip,
                                boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);

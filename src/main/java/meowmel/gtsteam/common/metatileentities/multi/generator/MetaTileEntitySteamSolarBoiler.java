@@ -699,25 +699,16 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
     }
 
 
-    public IBlockState getULVCasingState() {
-        return getStaticULVCasingState();
+    public static IBlockState getULVCasingState() {
+        return MACHINE_CASING.getState(BlockMachineCasing.MachineCasingType.ULV);
     }
 
     public IBlockState getSolarCasingState() {
         return getStaticSolarCasingState();
     }
 
-    private static IBlockState getStaticULVCasingState() {
-        return MACHINE_CASING.getState(BlockMachineCasing.MachineCasingType.ULV);
-    }
-
     private static IBlockState getStaticSolarCasingState() {
         return GTSteamMetaBlocks.blockMultiblockCasing1.getState(BlockMultiblockCasing1.CasingType.SOLAR_COLLECTOR);
-    }
-
-    @Override
-    public String[] getDescription() {
-        return new String[]{I18n.format("gtsteam.multiblock.steam_solar_boiler.description")};
     }
 
     @Override

@@ -37,7 +37,9 @@ public class MetaTileEntityPrimitiveExportHatch extends MetaTileEntityMultiblock
 
     @Override
     public ICubeRenderer getBaseTexture() {
-        return GTSteamTextures.PORCELAIN_TILES;
+        if(getController()==null)
+            return GTSteamTextures.PORCELAIN_TILES;
+        return super.getBaseTexture();
     }
 
     @Override
