@@ -23,6 +23,7 @@ import gregtech.common.blocks.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -47,7 +48,7 @@ public class MetaTileEntityLeapForwardOneBlastFurnace extends NoEnergyMultiblock
 
     private static final SoftReferenceHolder<? extends StructureDefinition<?>> STRUCTURE_DEFINITION =
             TemplatePool.getInstance().registerStructure("gtsteam:leap_forward_one_blast_furnace", () ->
-                    DeclarativePatternBuilder.start(RIGHT, BACK, UP)
+                    DeclarativePatternBuilder.start(RIGHT, FRONT, UP)
                             .piece("bottom")
                             .aisle("     AAAAA     ", "  DDDDDDDDDDD  ", " DDDDDDDDDDDDD ", " DDDDDDDDDDDDD ", " DDDDDDDDDDDDD ", "ADDDDDDDDDDDDDA", "ADDDDDDDDDDDDDA", "ADDDDDDDDDDDDDA", "ADDDDDDDDDDDDDA", "ADDDDDDDDDDDDDA", " DDDDDDDDDDDDD ", " DDDDDDDDDDDDD ", " DDDDDDDDDDDDD ", "  DDDDDDDDDDD  ", "     AAAAA     ")
                             .aisle("     AAGAA     ", "    DEEEEED    ", "   DEJJJJJED   ", "  DEJJJJJJJED  ", " DEJJJJJJJJJED ", "AEJJJJJJJJJJJEA", "AEJJJJJJJJJJJEA", "AEJJJJJJJJJJJEA", "AEJJJJJJJJJJJEA", "AEJJJJJJJJJJJEA", " DEJJJJJJJJJED ", "  DEJJJJJJJED  ", "   DEJJJJJED   ", "    DEEEEED    ", "     AAAAA     ")
@@ -126,6 +127,10 @@ public class MetaTileEntityLeapForwardOneBlastFurnace extends NoEnergyMultiblock
         return STRUCTURE_DEFINITION.get();
     }
 
+    @Override
+    public EnumFacing getFrontFacingForStructure() {
+        return getFrontFacing().getOpposite();
+    }
 
     @SideOnly(Side.CLIENT)
     @Override

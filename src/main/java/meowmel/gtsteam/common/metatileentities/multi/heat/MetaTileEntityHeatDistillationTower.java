@@ -22,6 +22,7 @@ import meowmel.gtsteam.api.recipes.GTSRecipeMaps;
 import meowmel.gtsteam.client.textures.GTSteamTextures;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
@@ -40,7 +41,7 @@ public class MetaTileEntityHeatDistillationTower extends HeatMultiblockControlle
 
     private static final SoftReferenceHolder<? extends StructureDefinition<?>> STRUCTURE_DEFINITION =
             TemplatePool.getInstance().registerStructure("gtsteam:heat_distillation_tower", () ->
-                    DeclarativePatternBuilder.start(RIGHT, BACK, UP)
+                    DeclarativePatternBuilder.start(RIGHT, FRONT, UP)
                             .piece("bottom")
                             .aisle("FFF", "FCF", "FFF")
                             .aisle("CSC", "C#C", "CCC")
@@ -80,6 +81,11 @@ public class MetaTileEntityHeatDistillationTower extends HeatMultiblockControlle
     @Override
     protected @NotNull StructureDefinition<?> createStructureDefinition() {
         return STRUCTURE_DEFINITION.get();
+    }
+
+    @Override
+    public EnumFacing getFrontFacingForStructure() {
+        return getFrontFacing().getOpposite();
     }
 
     @Override
