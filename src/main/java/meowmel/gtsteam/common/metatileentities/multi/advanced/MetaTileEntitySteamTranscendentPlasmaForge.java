@@ -1,4 +1,4 @@
-package meowmel.gtsteam.common.metatileentities.multi.steam.advanced;
+package meowmel.gtsteam.common.metatileentities.multi.advanced;
 
 import gregtech.api.pattern.element.StructureDefinition;
 
@@ -9,8 +9,6 @@ import gregtech.api.metatileentity.multiblock.IMultiblockPart;
 import gregtech.api.metatileentity.multiblock.MultiblockAbility;
 import gregtech.api.metatileentity.multiblock.ParallelLogicType;
 import gregtech.api.metatileentity.multiblock.RecipeMapSteamMultiblockController;
-import gregtech.api.pattern.TemplatePool;
-import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.recipes.RecipeMaps;
 import gregtech.api.unification.material.Materials;

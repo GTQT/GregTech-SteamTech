@@ -56,8 +56,7 @@ public class MetaTileEntityHeatDistillationTower extends HeatMultiblockControlle
                                     abilities(1, 3, MultiblockAbility.INPUT_HEAT),
                                     abilities(1, 1, MultiblockAbility.IMPORT_FLUIDS)))
                             .where('X', chain(blocks(getTankCasingState()),
-                                    abilitiesPerLayer(0, 1, 1, MultiblockAbility.EXPORT_FLUIDS),
-                                    hatch(MultiblockAbility.MAINTENANCE_HATCH, 1, 1)))
+                                    abilitiesPerLayer(0, 1, 1, MultiblockAbility.EXPORT_FLUIDS)))
                             .where('#', air())
                             .buildStructureDefinition()
             );

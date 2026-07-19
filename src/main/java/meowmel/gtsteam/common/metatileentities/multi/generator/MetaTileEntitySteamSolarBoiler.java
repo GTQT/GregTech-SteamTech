@@ -351,11 +351,11 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
             if (metaTileEntity instanceof IMultiblockAbilityPart<?>) {
                 return false;
             } else {
-                return (block != getULVCasingState())
+                return (block != getCasingState())
                         && (block != getSolarCasingState());
             }
         } else {
-            return (block != getULVCasingState())
+            return (block != getCasingState())
                     && (block != getSolarCasingState());
         }
     }
@@ -405,7 +405,7 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
     private RuntimeCellElements createRuntimeCellElements() {
         return new RuntimeCellElements(
                 self(MetaTileEntitySteamSolarBoiler.class),
-                chain(blocks(getULVCasingState()),
+                chain(blocks(getCasingState()),
                         abilities(1, -1, 1, MultiblockAbility.IMPORT_FLUIDS),
                         abilities(1, -1, 1, MultiblockAbility.EXPORT_FLUIDS)),
                 blocks(getSolarCasingState()));
@@ -699,7 +699,7 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
     }
 
 
-    public static IBlockState getULVCasingState() {
+    public static IBlockState getCasingState() {
         return MACHINE_CASING.getState(BlockMachineCasing.MachineCasingType.ULV);
     }
 

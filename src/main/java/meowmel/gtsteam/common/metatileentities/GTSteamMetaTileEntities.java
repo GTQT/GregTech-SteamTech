@@ -19,8 +19,9 @@ import meowmel.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityPri
 import meowmel.gtsteam.common.metatileentities.multi.multipart.MetaTileEntityPrimitiveImportHatch;
 import meowmel.gtsteam.common.metatileentities.multi.primitive.*;
 import meowmel.gtsteam.common.metatileentities.multi.steam.*;
-import meowmel.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamBiomimeticFactory;
-import meowmel.gtsteam.common.metatileentities.multi.steam.advanced.MetaTileEntitySteamTranscendentPlasmaForge;
+import meowmel.gtsteam.common.metatileentities.multi.advanced.MetaTileEntityLeapForwardOneBlastFurnace;
+import meowmel.gtsteam.common.metatileentities.multi.advanced.MetaTileEntitySteamBiomimeticFactory;
+import meowmel.gtsteam.common.metatileentities.multi.advanced.MetaTileEntitySteamTranscendentPlasmaForge;
 import meowmel.gtsteam.common.metatileentities.multi.store.*;
 import meowmel.gtsteam.common.metatileentities.single.MetaTileEntityLatexCollector;
 import net.minecraft.util.ResourceLocation;
@@ -59,6 +60,7 @@ public class GTSteamMetaTileEntities {
 
     public static MetaTileEntitySteamTranscendentPlasmaForge STEAM_TRANSCENDENT_PLASMA_FORGE;
     public static MetaTileEntitySteamBiomimeticFactory STEAM_BIOMIMETIC_FACTORY;
+    public static MetaTileEntityLeapForwardOneBlastFurnace LEAP_FORWARD_ONE_BLAST_FURNACE;
 
     public static MetaTileEntityHeatFurnace HEAT_FURNACE;
     public static MetaTileEntityHeatAlloyFurnace HEAT_ALLOY_FURNACE;
@@ -178,6 +180,7 @@ public class GTSteamMetaTileEntities {
 
         STEAM_TRANSCENDENT_PLASMA_FORGE = registerMetaTileEntity(60, new MetaTileEntitySteamTranscendentPlasmaForge(gtsId("steam_transcendent_plasma_forge")));
         STEAM_BIOMIMETIC_FACTORY = registerMetaTileEntity(61, new MetaTileEntitySteamBiomimeticFactory(gtsId("steam_biomimetic_factory")));
+        LEAP_FORWARD_ONE_BLAST_FURNACE = registerMetaTileEntity(62, new MetaTileEntityLeapForwardOneBlastFurnace(gtsId("leap_forward_one_blast_furnace")));
 
         // ID 70：
         HEAT_FURNACE = registerMetaTileEntity(70, new MetaTileEntityHeatFurnace(gtsId("heat_furnace")));
