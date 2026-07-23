@@ -63,6 +63,10 @@ metaitem.cover.conveyor_module.ulv.name=Conveyor Module (ULV)
 metaitem.cover.conveyor_module.ulv.tooltip=When used as a §fcover§7, transfers §fitems§7 at a specific rate./n§bTransfer rate: §f8 items/s§7
 metaitem.cover.robot_arm.ulv.name=Robot Arm (ULV)
 metaitem.cover.robot_arm.ulv.tooltip=When used as a §fcover§7, restricts the quantity of §fitems§7./n§bTransfer rate: §f8 items/s§7
+metaitem.cover.emitter.steam.name=Emitter (ULV)
+metaitem.cover.sensor.steam.name=Sensor (ULV)
+metaitem.cover.field_generator.steam.name=Field Generator (ULV)
+
 
 metaitem.unburned_ceramic_tiles.name=Unfired Ceramic Tiles
 metaitem.burned_ceramic_tiles.name=Burned Ceramic Tiles
