@@ -86,7 +86,7 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
         this.recipeMapWorkable = new HeatEvaporationPondMultiblockRecipeLogic(this);
     }
 
-    private static IBlockState getCasingState() {
+    public static IBlockState getCasingState() {
         return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
     }
 

@@ -47,13 +47,14 @@ import static gregtech.api.util.RelativeDirection.*;
 import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
 
 public class MetaTileEntitySteamWaterPump extends MultiblockControllerBase implements IPrimitivePump {
+
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_water_pump", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("A   A", "A   A", "BBBBB", "A   A", "A   A", "BBBBB")
                     .aisle("     ", "     ", "BBBBB", " CCC ", " CCC ", "BBBBB")
                     .aisle("     ", "     ", "BBBBB", " CCC ", " CCC ", "BBBBB")
-                    .aisle("     ", "     ", "BBBBB", " CCC ", " CCC ", "BBBBB")
-                    .aisle("A   A", "A   A", "BBBBB", "A S A", "A   A", "BBBBB")
+                    .aisle("     ", "     ", "BBBBB", " CSC ", " CCC ", "BBBBB")
+                    .aisle("A   A", "A   A", "BBBBB", "A   A", "A   A", "BBBBB")
                     .self('S', MetaTileEntitySteamWaterPump.class)
                     .where('A', frames(Materials.TreatedWood))
                     .where('B', blocks(MetaBlocks.PLANKS.getState(BlockGregPlanks.BlockType.TREATED_PLANK)))

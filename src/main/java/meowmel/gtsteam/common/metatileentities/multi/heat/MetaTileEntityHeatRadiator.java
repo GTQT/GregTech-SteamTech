@@ -32,6 +32,7 @@ import gregtech.api.util.RelativeDirection;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.ConfigHolder;
+import gregtech.common.blocks.BlockMetalCasing;
 import gregtech.common.blocks.BlockMetalCasing.MetalCasingType;
 import gregtech.common.blocks.MetaBlocks;
 import lombok.Getter;
@@ -574,8 +575,8 @@ public class MetaTileEntityHeatRadiator extends MetaTileEntityBaseWithControl {
         return GTSteamMetaBlocks.blockSerpentine.getState(BlockSerpentine.SerpentineType.BASIC);
     }
 
-    public IBlockState getCasingState() {
-        return MetaBlocks.METAL_CASING.getState(MetalCasingType.STEEL_SOLID);
+    public static IBlockState getCasingState() {
+        return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.STEEL_SOLID);
     }
 
     @Override

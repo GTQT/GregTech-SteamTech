@@ -116,13 +116,8 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
         resetTileAbilities();
     }
 
-    public static String repeat(String a, int count) {
-        //return String.valueOf(a).repeat(Math.max(0, count));
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < count; i++) {
-            builder.append(a);
-        }
-        return builder.toString();
+    public static IBlockState getCasingState() {
+        return blockMultiblockCasing0.getState(TANK_WALL);
     }
 
     @Override

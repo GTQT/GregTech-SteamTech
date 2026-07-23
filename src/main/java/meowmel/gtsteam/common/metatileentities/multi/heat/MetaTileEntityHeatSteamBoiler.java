@@ -267,7 +267,7 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
         }
     }
 
-    public IBlockState getULVCasingState() {
+    public static IBlockState getCasingState() {
         return blockMultiblockCasing0.getState(TANK_WALL);
     }
 
@@ -365,8 +365,8 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
         int minSize = dimensions.minSize();
         return new RuntimeCellElements(
                 self(MetaTileEntityHeatSteamBoiler.class),
-                blocks(getULVCasingState()),
-                chain(blocks(getULVCasingState()),
+                blocks(getCasingState()),
+                chain(blocks(getCasingState()),
                         abilities(1, minSize, MultiblockAbility.IMPORT_FLUIDS),
                         abilities(1, minSize, MultiblockAbility.EXPORT_FLUIDS),
                         abilities(1, minSize * 2, MultiblockAbility.INPUT_HEAT),
@@ -542,10 +542,10 @@ public class MetaTileEntityHeatSteamBoiler extends MultiblockWithDisplayBase imp
             if (metaTileEntity instanceof IMultiblockAbilityPart<?>) {
                 return false;
             } else {
-                return !getULVCasingState().equals(block) && !Blocks.GLASS.getDefaultState().equals(block);
+                return !getCasingState().equals(block) && !Blocks.GLASS.getDefaultState().equals(block);
             }
         } else {
-            return !getULVCasingState().equals(block) && !Blocks.GLASS.getDefaultState().equals(block);
+            return !getCasingState().equals(block) && !Blocks.GLASS.getDefaultState().equals(block);
         }
     }
 
