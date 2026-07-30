@@ -257,6 +257,13 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
     }
 
     @NotNull
+    @Override
+    protected StructureRuntime createToolingPreviewRuntime(
+            @Nullable Map<String, Integer> channelValues) {
+        return createToolingRuntime(resolveToolingTier(channelValues));
+    }
+
+    @NotNull
     private StructureRuntime createToolingRuntime(int toolingTier) {
         return createDynamicStructureRuntime(buildToolingDefinition(toolingTier));
     }

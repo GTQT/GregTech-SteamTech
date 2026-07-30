@@ -266,6 +266,13 @@ public class MetaTileEntityHeatRadiator extends MetaTileEntityBaseWithControl {
     }
 
     @NotNull
+    @Override
+    protected StructureRuntime createToolingPreviewRuntime(
+            @Nullable Map<String, Integer> channelValues) {
+        return createToolingRuntime(resolveToolingDimensions(channelValues));
+    }
+
+    @NotNull
     private StructureRuntime createToolingRuntime(@NotNull RadiatorDimensions dimensions) {
         return createDynamicStructureRuntime(buildToolingDefinition(dimensions));
     }

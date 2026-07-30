@@ -406,6 +406,13 @@ public class MetaTileEntityLargeFluidTank extends MultiblockWithDisplayBase impl
     }
 
     @NotNull
+    @Override
+    protected StructureRuntime createToolingPreviewRuntime(
+            @Nullable Map<String, Integer> channelValues) {
+        return createToolingRuntime(resolveToolingDimensions(channelValues));
+    }
+
+    @NotNull
     private StructureRuntime createToolingRuntime(@NotNull TankDimensions dimensions) {
         return createDynamicStructureRuntime(buildToolingDefinition(dimensions));
     }

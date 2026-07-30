@@ -478,6 +478,13 @@ public class MetaTileEntitySteamSolarBoiler extends MultiblockWithDisplayBase im
     }
 
     @NotNull
+    @Override
+    protected StructureRuntime createToolingPreviewRuntime(
+            @Nullable Map<String, Integer> channelValues) {
+        return createToolingRuntime(resolveToolingDimensions(channelValues));
+    }
+
+    @NotNull
     private StructureRuntime createToolingRuntime(@NotNull SolarDimensions dimensions) {
         return createDynamicStructureRuntime(buildToolingDefinition(dimensions));
     }
