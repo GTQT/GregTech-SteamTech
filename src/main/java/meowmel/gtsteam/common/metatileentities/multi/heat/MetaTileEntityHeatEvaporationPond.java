@@ -67,7 +67,7 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
             StructureMatchCollector.channelValueKey(GTStructureChannels.STRUCTURE_TIER.getName());
     private static final StructureDefinition<MetaTileEntityHeatEvaporationPond> STRUCTURE_DEFINITION =
             StructureDefinition.getOrBuild("gtsteam:heat_evaporation_pond", () ->
-                    StructureDefinition.<MetaTileEntityHeatEvaporationPond>builder(RIGHT, UP, BACK)
+                    StructureDefinition.<MetaTileEntityHeatEvaporationPond>builder()
                             .piece(RUNTIME_PIECE, "S")
                             .where('S', self(MetaTileEntityHeatEvaporationPond.class))
                             .end()
@@ -270,7 +270,7 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
 
     @NotNull
     private StructureDefinition<?> buildToolingDefinition(int toolingTier) {
-        return StructureDefinition.<MetaTileEntityHeatEvaporationPond>builder(RIGHT, UP, BACK)
+        return StructureDefinition.<MetaTileEntityHeatEvaporationPond>builder()
                 .pieceFromTemplate(RUNTIME_PIECE, buildToolingTemplate(toolingTier))
                 .end()
                 .globalAbilityLimit(MultiblockAbility.EXPORT_ITEMS, 0, 2)
@@ -307,7 +307,7 @@ public class MetaTileEntityHeatEvaporationPond extends HeatMultiblockController 
         };
         return new PieceTemplate(
                 template,
-                new RelativeDirection[] { RIGHT, UP, BACK },
+                new RelativeDirection[] {  },
                 repetitions,
                 new String[repetitions.length],
                 centerOffset,

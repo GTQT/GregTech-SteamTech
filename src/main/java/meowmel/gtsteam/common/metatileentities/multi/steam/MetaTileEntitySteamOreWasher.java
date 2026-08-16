@@ -2,6 +2,7 @@ package meowmel.gtsteam.common.metatileentities.multi.steam;
 
 import gregtech.api.pattern.element.StructureDefinition;
 
+import static gregtech.api.pattern.FluidStructureElements.fluidElement;
 import static gregtech.api.pattern.element.Elements.*;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.interfaces.IGregTechTileEntity;
@@ -19,12 +20,15 @@ import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.BlockFireboxCasing;
 import gregtech.common.blocks.BlockMetalCasing;
+import gregtech.common.blocks.BlockTurbineCasing;
 import gregtech.common.blocks.MetaBlocks;
 import meowmel.gtsteam.client.textures.GTSteamTextures;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
@@ -40,22 +44,24 @@ public class MetaTileEntitySteamOreWasher extends RecipeMapSteamMultiblockContro
 
     private static final int PARALLEL_LIMIT = 8;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_ore_washer", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
-                    .aisle("MTTTM", "MMMMM", "MMMMM")
-                    .aisle("TPPPT", "MFFFM", "M###M")
-                    .aisle("TPPPT", "MFFFM", "M###M")
-                    .aisle("TPPPT", "MFFFM", "M###M")
-                    .aisle("MTTTM", "MMCMM", "MMMMM")
-                    .self('C', MetaTileEntitySteamOreWasher.class)
+            DeclarativePatternBuilder.start()
+                    .aisle("    TTTTT", "    MGGGM", "    MGGGM", "     MMM ", "         ", "         ")
+                    .aisle("MMM TFFFT", "MMM GLLLG", "MMM G   G", "    M   M", "         ", "         ")
+                    .aisle("MMM TFFFT", "MPM GLPLG", "MPM G P G", " P  M P M", " P    P  ", " PPPPPP  ")
+                    .aisle("MMM TFFFT", "MSM GLLLG", "MMM G   G", "    M   M", "         ", "         ")
+                    .aisle("    TTTTT", "    MGGGM", "    MGGGM", "     MMM ", "         ", "         ")
+                    .self('S', MetaTileEntitySteamOreWasher.class)
                     .casing('M', getCasingState())
                     .optionalHatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 4)
                     .optionalHatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 4)
                     .optionalHatch(MultiblockAbility.STEAM_IMPORT_FLUID, 4)
                     .optionalHatch(MultiblockAbility.STEAM_EXPORT_FLUID, 4)
                     .hatch(MultiblockAbility.STEAM, 1)
-                    .where('F', blocks(getFrameState()))
+                    .where('F', blocks(getGearboxState()))
                     .where('P', blocks(getBoilerState()))
                     .where('T', blocks(getFireboxState()))
+                    .where('G', blocks(getGlassState()))
+                    .where('L', fluidElement(FluidRegistry.WATER))
                     .where('#', air())
                     .buildStructureDefinition()
     );
@@ -65,12 +71,16 @@ public class MetaTileEntitySteamOreWasher extends RecipeMapSteamMultiblockContro
         this.recipeMapWorkable.setParallelLimit(PARALLEL_LIMIT);
     }
 
-    private static IBlockState getFrameState() {
-        return MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
+    private static IBlockState getGearboxState() {
+        return MetaBlocks.TURBINE_CASING.getState(BlockTurbineCasing.TurbineCasingType.BRONZE_GEARBOX);
     }
 
     public static IBlockState getFireboxState() {
         return MetaBlocks.BOILER_FIREBOX_CASING.getState(BlockFireboxCasing.FireboxCasingType.BRONZE_FIREBOX);
+    }
+
+    private static IBlockState getGlassState() {
+        return Blocks.GLASS.getDefaultState();
     }
 
     private static IBlockState getBoilerState() {

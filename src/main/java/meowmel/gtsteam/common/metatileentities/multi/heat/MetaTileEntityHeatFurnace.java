@@ -37,7 +37,7 @@ public class MetaTileEntityHeatFurnace extends HeatMultiblockController {
 
     private static final int PARALLEL_LIMIT = 16;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_furnace", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("FFF", "CCC", "#C#")
                     .aisle("FCF", "C#C", "#C#")
                     .aisle("FFF", "CSC", "#C#")

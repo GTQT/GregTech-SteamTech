@@ -13,6 +13,7 @@ import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.recipes.RecipeMaps;
+import gregtech.api.unification.material.Materials;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
@@ -31,21 +32,28 @@ import java.util.List;
 
 import static gregtech.api.util.RelativeDirection.*;
 import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
+import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.BRONZE_PIPE;
 
 public class MetaTileEntitySteamCompressor extends RecipeMapSteamMultiblockController {
 
     private static final int PARALLEL_LIMIT = 8;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_compressor", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("XXX", "XXX", "XXX")
-                    .aisle("XXX", "X#X", "XXX")
-                    .aisle("XXX", "XSX", "XXX")
+                    .aisle("XXX", " P ", "   ")
+                    .aisle("XXX", "BPB", "BBB")
+                    .aisle("XXX", " P ", "   ")
+                    .aisle("XXX", " P ", "   ")
+                    .aisle("XXX", "XXX", "XXX")
+                    .aisle("PPP", "PSP", "PPP")
                     .self('S', MetaTileEntitySteamCompressor.class)
                     .casing('X', getCasingState())
                     .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM, 1)
-                    .where('#', air())
+                    .where('P', blocks(getBoilerState()))
+                    .where('B', blocks(getBlockState()))
+                    .where(' ', any())
                     .buildStructureDefinition()
     );
 
@@ -57,6 +65,15 @@ public class MetaTileEntitySteamCompressor extends RecipeMapSteamMultiblockContr
     public static IBlockState getCasingState() {
         return MetaBlocks.METAL_CASING.getState(BlockMetalCasing.MetalCasingType.BRONZE_BRICKS);
     }
+
+    private static IBlockState getBoilerState() {
+        return MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
+    }
+
+    private static IBlockState getBlockState() {
+        return MetaBlocks.COMPRESSED.get(Materials.Iron).getBlock(Materials.Iron);
+    }
+
 
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity metaTileEntityHolder) {

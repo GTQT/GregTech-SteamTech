@@ -38,7 +38,7 @@ public class MetaTileEntityHeatThermalCentrifuge extends HeatMultiblockControlle
 
     private static final int PARALLEL_LIMIT = 8;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_thermal_centrifuge", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("#CCC#", "#FFF#", "#CCC#")
                     .aisle("CCCCC", "F###F", "CCCCC")
                     .aisle("CCCCC", "F###F", "CCCCC")

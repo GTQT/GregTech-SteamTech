@@ -39,22 +39,27 @@ import java.util.List;
 
 import static gregtech.api.util.RelativeDirection.*;
 import static gregtech.client.renderer.texture.Textures.BRONZE_PLATED_BRICKS;
+import static gregtech.common.blocks.BlockBoilerCasing.BoilerCasingType.BRONZE_PIPE;
 
 public class MetaTileEntitySteamHammer extends RecipeMapSteamMultiblockController {
 
     private static final int PARALLEL_LIMIT = 8;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_hammer", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
-                    .aisle("XXX", "XXX", "XXX")
-                    .aisle("XXX", "XFX", "XXX")
-                    .aisle("XXX", "XSX", "XXX")
+            DeclarativePatternBuilder.start()
+                    .aisle(" XXX ", "     ", "     ", "     ", "     ", "     ", "     ")
+                    .aisle("XXXXX", " XXX ", "     ", "     ", "     ", "  X  ", "     ")
+                    .aisle("XXXXX", "XX XX", "X   X", "X B X", "X B X", "XXXXX", "  P  ")
+                    .aisle("XXXXX", " XXX ", "     ", "     ", "     ", "  X  ", "     ")
+                    .aisle(" XSX ", "     ", "     ", "     ", "     ", "     ", "     ")
                     .self('S', MetaTileEntitySteamHammer.class)
                     .casing('X', getCasingState())
                     .hatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM_EXPORT_ITEMS, 1, 2)
                     .hatch(MultiblockAbility.STEAM, 1)
                     .where('F', blocks(getFrameState()))
-                    .where('#', air())
+                    .where('P', blocks(getBoilerState()))
+                    .where('B', blocks(getBlockState()))
+                    .where(' ', any())
                     .buildStructureDefinition()
     );
 
@@ -66,6 +71,15 @@ public class MetaTileEntitySteamHammer extends RecipeMapSteamMultiblockControlle
     private static IBlockState getFrameState() {
         return MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
     }
+
+    private static IBlockState getBlockState() {
+        return MetaBlocks.COMPRESSED.get(Materials.Iron).getBlock(Materials.Iron);
+    }
+
+    private static IBlockState getBoilerState() {
+        return MetaBlocks.BOILER_CASING.getState(BRONZE_PIPE);
+    }
+
 
     @Override
     public MetaTileEntity createMetaTileEntity(IGregTechTileEntity metaTileEntityHolder) {

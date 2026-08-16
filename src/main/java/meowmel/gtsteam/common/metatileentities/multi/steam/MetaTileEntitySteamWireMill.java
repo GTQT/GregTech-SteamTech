@@ -39,7 +39,7 @@ public class MetaTileEntitySteamWireMill extends RecipeMapSteamMultiblockControl
 
     private static final int PARALLEL_LIMIT = 4;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_wire_mill", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("TTTFXXXX", "XXXFXXXX", "TTTFXXXX")
                     .aisle("TXXFXXXX", "XGGGGGGX", "TXXFXXXX")
                     .aisle("TTTFXXXX", "XSXFXXXX", "TTTFXXXX")

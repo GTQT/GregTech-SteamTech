@@ -37,7 +37,7 @@ import static gregtech.api.util.RelativeDirection.*;
 public class MetaTileEntityHeatChemicalReactor extends HeatMultiblockController {
 
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_chemical_reactor", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("CCC", "CFC", "CCC")
                     .aisle("CCC", "CPC", "CCC")
                     .aisle("CCC", "CSC", "CCC")

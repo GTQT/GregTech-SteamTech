@@ -39,7 +39,7 @@ public class MetaTileEntitySteamBender extends RecipeMapSteamMultiblockControlle
 
     private static final int PARALLEL_LIMIT = 4;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_bender", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("TTTFFFF", "XXXXXXX", "XXXXXXX")
                     .aisle("TXT    ", "XPPPPPX", "XXXXXXX")
                     .aisle("TTTFFFF", "XSXXXXX", "XXXXXXX")

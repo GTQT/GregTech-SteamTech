@@ -37,7 +37,7 @@ public class MetaTileEntityHeatFermenter extends HeatMultiblockController {
 
     private static final int PARALLEL_LIMIT = 16;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_fermenter", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("CCCCC", "CFFFC", "CFFFC", "CCCCC")
                     .aisle("CCCCC", "F###F", "F###F", "CCCCC")
                     .aisle("CCCCC", "F###F", "F###F", "CCCCC")

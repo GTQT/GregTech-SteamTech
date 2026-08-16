@@ -38,7 +38,7 @@ public class MetaTileEntityHeatCokeOven extends HeatMultiblockController {
 
     private static final int PARALLEL_LIMIT = 4;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_coke_oven", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("CCC", "CCC", "CCC")
                     .aisle("FCF", "FPF", "FCF")
                     .aisle("FCF", "FPF", "FCF")

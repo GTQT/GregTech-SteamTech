@@ -18,6 +18,7 @@ import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.BlockMetalCasing;
+import gregtech.common.blocks.BlockTurbineCasing;
 import gregtech.common.blocks.MetaBlocks;
 import meowmel.gtsteam.client.textures.GTSteamTextures;
 import net.minecraft.block.state.IBlockState;
@@ -38,11 +39,11 @@ public class MetaTileEntitySteamMixer extends RecipeMapSteamMultiblockController
 
     private static final int PARALLEL_LIMIT = 4;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_mixer", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle(" XXX ", " XXX ", " XXX ")
-                    .aisle("XXXXX", "XTTTX", "XXXXX")
-                    .aisle("XXXXX", "XTFTX", "XXXXX")
-                    .aisle("XXXXX", "XTTTX", "XXXXX")
+                    .aisle("XXXXX", "XTGTX", "XXXXX")
+                    .aisle("XXXXX", "XGFGX", "XXXXX")
+                    .aisle("XXXXX", "XTGTX", "XXXXX")
                     .aisle(" XXX ", " XSX ", " XXX ")
                     .self('S', MetaTileEntitySteamMixer.class)
                     .casing('X', getCasingState())
@@ -51,9 +52,9 @@ public class MetaTileEntitySteamMixer extends RecipeMapSteamMultiblockController
                     .optionalHatch(MultiblockAbility.STEAM_IMPORT_FLUID, 4)
                     .optionalHatch(MultiblockAbility.STEAM_EXPORT_FLUID, 4)
                     .hatch(MultiblockAbility.STEAM,1)
-
                     .where('T', blocks(getBoilerState()))
                     .where('F', blocks(getFrameState()))
+                    .where('G', blocks(getGearboxState()))
                     .where(' ', any())
                     .buildStructureDefinition()
     );
@@ -65,6 +66,10 @@ public class MetaTileEntitySteamMixer extends RecipeMapSteamMultiblockController
 
     private static IBlockState getFrameState() {
         return MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
+    }
+
+    private static IBlockState getGearboxState() {
+        return MetaBlocks.TURBINE_CASING.getState(BlockTurbineCasing.TurbineCasingType.BRONZE_GEARBOX);
     }
 
     private static IBlockState getBoilerState() {

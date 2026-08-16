@@ -38,7 +38,7 @@ public class MetaTileEntitySteamSifter extends RecipeMapSteamMultiblockControlle
 
     private static final int PARALLEL_LIMIT = 8;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_sifter", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("XXXXX", "F F F", "F F F", "XXXXX", "XXXXX")
                     .aisle("XXXXX", "     ", "     ", "XTTTX", "X   X")
                     .aisle("XXXXX", "F T F", "F T F", "XTTTX", "X   X")

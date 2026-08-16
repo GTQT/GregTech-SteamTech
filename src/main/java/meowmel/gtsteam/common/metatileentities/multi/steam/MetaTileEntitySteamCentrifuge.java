@@ -13,11 +13,13 @@ import gregtech.api.pattern.TemplatePool;
 import gregtech.api.pattern.casing.CasingDefinition;
 import gregtech.api.pattern.casing.DeclarativePatternBuilder;
 import gregtech.api.recipes.RecipeMaps;
+import gregtech.api.unification.material.Materials;
 import gregtech.api.util.tooltips.TooltipBuilder;
 import gregtech.client.renderer.ICubeRenderer;
 import gregtech.client.renderer.texture.Textures;
 import gregtech.common.blocks.BlockBoilerCasing;
 import gregtech.common.blocks.BlockMetalCasing;
+import gregtech.common.blocks.BlockTurbineCasing;
 import gregtech.common.blocks.MetaBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
@@ -36,12 +38,12 @@ public class MetaTileEntitySteamCentrifuge extends RecipeMapSteamMultiblockContr
 
     private static final int PARALLEL_LIMIT = 4;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_centrifuge", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
-                    .aisle("XXXXX", " XXX ", " XXX ", " XXX ", "  X  ")
-                    .aisle("XXXXX", "XT TX", "XT TX", "XT TX", " XXX ")
-                    .aisle("XXXXX", "X X X", "X X X", "X X X", "XXXXX")
-                    .aisle("XXXXX", "XT TX", "XT TX", "XT TX", " XXX ")
-                    .aisle("XXXXX", " XSX ", " XXX ", " XXX ", "  X  ")
+            DeclarativePatternBuilder.start()
+                    .aisle(" XXX ", " XXX ", "  X  ", "     ", " XXX ")
+                    .aisle("XXXXX", "XFTFX", " X X ", "  X  ", "XXXXX")
+                    .aisle("XXXXX", "XTGTX", "X G X", " XGX ", "XXXXX")
+                    .aisle("XXXXX", "XFTFX", " X X ", "  X  ", "XXXXX")
+                    .aisle(" XXX ", " XSX ", "  X  ", "     ", " XXX ")
                     .self('S', MetaTileEntitySteamCentrifuge.class)
                     .casing('X', getCasingState())
                     .optionalHatch(MultiblockAbility.STEAM_IMPORT_ITEMS, 4)
@@ -50,6 +52,8 @@ public class MetaTileEntitySteamCentrifuge extends RecipeMapSteamMultiblockContr
                     .optionalHatch(MultiblockAbility.STEAM_EXPORT_FLUID, 4)
                     .hatch(MultiblockAbility.STEAM, 1)
                     .where('T', blocks(getBoilerState()))
+                    .where('F', blocks(getFrameState()))
+                    .where('G', blocks(getGearboxState()))
                     .where(' ', any())
                     .buildStructureDefinition()
     );
@@ -61,6 +65,14 @@ public class MetaTileEntitySteamCentrifuge extends RecipeMapSteamMultiblockContr
 
     private static IBlockState getBoilerState() {
         return MetaBlocks.BOILER_CASING.getState(BlockBoilerCasing.BoilerCasingType.BRONZE_PIPE);
+    }
+
+    private static IBlockState getFrameState() {
+        return MetaBlocks.FRAMES.get(Materials.Bronze).getBlock(Materials.Bronze);
+    }
+
+    private static IBlockState getGearboxState() {
+        return MetaBlocks.TURBINE_CASING.getState(BlockTurbineCasing.TurbineCasingType.BRONZE_GEARBOX);
     }
 
     public static IBlockState getCasingState() {

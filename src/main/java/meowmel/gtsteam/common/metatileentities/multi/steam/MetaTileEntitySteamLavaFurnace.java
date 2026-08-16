@@ -34,7 +34,7 @@ import static gregtech.api.util.RelativeDirection.*;
 public class MetaTileEntitySteamLavaFurnace extends RecipeMapSteamMultiblockController {
 
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_lava_furnace", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("XXX", "CCC", "CCC")
                     .aisle("XCX", "C#C", "CCC")
                     .aisle("XXX", "CSC", "CCC")

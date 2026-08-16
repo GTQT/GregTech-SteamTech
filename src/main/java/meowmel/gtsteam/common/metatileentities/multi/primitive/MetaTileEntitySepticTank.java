@@ -32,7 +32,7 @@ import static gregtech.common.blocks.BlockWireCoil.CoilType.CUPRONICKEL;
 public class MetaTileEntitySepticTank extends NoEnergyMultiblockController {
 
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:septic_tank", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("CCCCC", "CFFFC", "CFFFC", "CCCCC")
                     .aisle("CCCCC", "F###F", "F###F", "CCCCC")
                     .aisle("CCCCC", "F###F", "F###F", "CCCCC")

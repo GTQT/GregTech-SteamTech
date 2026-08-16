@@ -35,7 +35,7 @@ public class MetaTileEntitySteamAlloyFurnace extends RecipeMapSteamMultiblockCon
 
     private static final int PARALLEL_LIMIT = 8;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_alloy_furnace", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("CCC", "XXX", "XXX", "CCC")
                     .aisle("CCC", "X#X", "X#X", "CCC")
                     .aisle("CSC", "XXX", "XXX", "CCC")

@@ -39,7 +39,7 @@ public class MetaTileEntitySteamLathe extends RecipeMapSteamMultiblockController
 
     private static final int PARALLEL_LIMIT = 4;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_lathe", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("FFFTTTFFF", "XXXXXXXXX", "FFFTTTFFF")
                     .aisle("XXXXXXXXX", "XPPPPPPPX", "XXXXXXXXX")
                     .aisle("FFFTTTFFF", "XXXXSXXXX", "FFFTTTFFF")

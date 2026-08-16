@@ -36,7 +36,7 @@ public class MetaTileEntityHeatBrewingVat extends HeatMultiblockController {
 
     private static final int PARALLEL_LIMIT = 16;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_brewing_vat", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("     ", "     ", " XXX ", " XXX ", " XXX ", "     ")
                     .aisle(" F F ", " XXX ", "X###X", "X###X", "X###X", " XXX ")
                     .aisle("     ", " XXX ", "X###X", "X###X", "X###X", " XXX ")

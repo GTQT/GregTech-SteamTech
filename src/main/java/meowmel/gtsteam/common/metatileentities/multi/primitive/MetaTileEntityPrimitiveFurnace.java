@@ -63,7 +63,7 @@ import static gregtech.api.util.RelativeDirection.*;
 public class MetaTileEntityPrimitiveFurnace extends RecipeMapPrimitiveMultiblockController {
 
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:primitive_furnace", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("XXX", "XXX", "XXX")
                     .aisle("XXX", "X X", "XXX")
                     .aisle("XXX", "XYX", "XXX")

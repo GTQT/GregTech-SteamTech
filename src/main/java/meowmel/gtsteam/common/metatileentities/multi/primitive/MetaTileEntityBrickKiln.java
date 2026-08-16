@@ -61,7 +61,7 @@ public class MetaTileEntityBrickKiln extends RecipeMapPrimitiveMultiblockControl
 
 
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:brick_kiln", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("XXX", "XXX", "#X#")
                     .aisle("XXX", "X&X", "X&X")
                     .aisle("XXX", "XYX", "#X#")

@@ -38,7 +38,7 @@ import static gregtech.api.util.RelativeDirection.*;
 public class MetaTileEntityHeatElectronicProcessor extends HeatMultiblockController {
 
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:heat_electronic_processor", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("FFFGGG", "CCCCCC", "CCCCCC")
                     .aisle("FCF###", "CPPPPC", "CCCCCC")
                     .aisle("FFFGGG", "CSCCCC", "CCCCCC")

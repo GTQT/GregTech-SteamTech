@@ -38,7 +38,7 @@ public class MetaTileEntitySteamBrewing extends RecipeMapSteamMultiblockControll
 
     private static final int PARALLEL_LIMIT = 4;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_brewing", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("F#F", "BBB", "CCC", "CCC", "CCC")
                     .aisle("###", "BOB", "G#G", "G#G", "CCC")
                     .aisle("F#F", "BBB", "CSC", "CCC", "CCC")

@@ -44,7 +44,7 @@ public class MetaTileEntitySteamExtractor extends RecipeMapSteamMultiblockContro
 
     private static final int PARALLEL_LIMIT = 4;
     private static final StructureDefinition<?> DEFINITION = StructureDefinition.getOrBuild("gtsteam:steam_extractor", () ->
-            DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            DeclarativePatternBuilder.start()
                     .aisle("XXX", "XXX", "XXX")
                     .aisle("XXX", "FTF", "XXX")
                     .aisle("XXX", "FTF", "XXX")

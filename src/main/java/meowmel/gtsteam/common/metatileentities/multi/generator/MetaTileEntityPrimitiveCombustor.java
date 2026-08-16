@@ -104,7 +104,7 @@ public class MetaTileEntityPrimitiveCombustor extends MultiblockWithDisplayBase 
     private static StructureDefinition<?> buildStructureDefinition(PrimitiveCombustorType boilerType) {
 
         if (boilerType == LOW_PRESSURE_SOLID || boilerType == HIGH_PRESSURE_SOLID) {
-            return DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            return DeclarativePatternBuilder.start()
                     .aisle("XXX", "CCC", "CCC", "CCC")
                     .aisle("XXX", "C C", "C C", "CCC")
                     .aisle("XXX", "CSC", "CCC", "CCC")
@@ -116,7 +116,7 @@ public class MetaTileEntityPrimitiveCombustor extends MultiblockWithDisplayBase 
                     .where(' ', air())
                     .buildStructureDefinition();
         } else {
-            return DeclarativePatternBuilder.start(RIGHT, UP, BACK)
+            return DeclarativePatternBuilder.start()
                     .aisle("XXX", "CCC", "CCC", "CCC")
                     .aisle("XXX", "C C", "C C", "CCC")
                     .aisle("XXX", "CSC", "CCC", "CCC")
